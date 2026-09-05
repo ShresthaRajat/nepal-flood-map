@@ -34,6 +34,7 @@ const state = {
 
 let catalog = { layers: [], default_pre: null, default_post: null };
 let terrain = null;
+let hotTiles = null;        // {flood:Set<sourceLayer>, corridor:Set, minzoom, maxzoom} once built
 let catalogNote = '';
 let GROUPS = [];            // sidebar model
 let ENTRY = {};             // key -> entry
@@ -67,17 +68,79 @@ async function loadTerrain() {
   try { return await getJSON('data/terrain.json'); } catch (e) { return null; }
 }
 
+/* Attribute-complete per-layer vector tiles, if the data agent has built them.
+ * metadata.json shape is not pinned down, so accept the usual spellings. */
+function metaLayerNames(j) {
+  const raw = j && (j.vector_layers || j.layers || j.sourceLayers || (Array.isArray(j) ? j : null));
+  if (!raw) return null;
+  const names = (Array.isArray(raw) ? raw : Object.keys(raw))
+    .map(x => typeof x === 'string' ? x : (x && (x.id || x.name)))
+    .filter(Boolean);
+  return names.length ? new Set(names) : null;
+}
+async function loadHotTiles() {
+  const out = { minzoom: 0, maxzoom: 15 };
+  for (const [ds, dir] of [['flood', 'hot_flood_npl'], ['corridor', 'hot_flood_npl_corridor']]) {
+    try {
+      const j = await getJSON(HDX + 'tiles/' + dir + '/metadata.json');
+      const names = metaLayerNames(j);
+      if (!names) continue;
+      out[ds] = names;
+      if (j.minzoom != null) out.minzoom = +j.minzoom;
+      if (j.maxzoom != null) out.maxzoom = +j.maxzoom;
+    } catch (e) { /* not built yet */ }
+  }
+  return (out.flood || out.corridor) ? out : null;
+}
+
+const NO_IMAGERY = 'none';
 const layersFor = side => catalog.layers.filter(l => l.side === side);
+const hasImagery = side => !!byId(state[side]);
 const byId = id => catalog.layers.find(l => l.id === id) || null;
 
 // --------------------------------------------------------- style definition
-const STATUS_FALLBACK = ['match', ['to-string', ['get', 'category']],
-  'destroyed_features', CFG.STATUS.destroyed, CFG.STATUS.standing];
-const STATUS_EXPR = ['match', ['to-string', ['get', 'status']],
+/* Feature status.  `status` is absent from the current PMTiles build, so each
+ * expression carries a per-category fallback rather than reading `category`. */
+const statusExpr = fallback => ['match', ['to-string', ['get', 'status']],
   ['Standing', 'Intact', 'standing', 'intact'], CFG.STATUS.standing,
   ['Damaged', 'damaged', 'major-damage', 'Major Damage'], CFG.STATUS.damaged,
   ['Destroyed', 'destroyed', 'Washed out', 'washed out'], CFG.STATUS.destroyed,
-  STATUS_FALLBACK];
+  fallback];
+const statusExprFor = cat => statusExpr(cat === 'destroyed_features' ? CFG.STATUS.destroyed : CFG.STATUS.standing);
+const STATUS_EXPR = statusExprFor('');
+
+/* Roads and bridges: white with a thin dark casing, weighted by OSM highway
+ * class.  line-dasharray is not data-driven in MapLibre, so the dashed and
+ * dotted classes have to be separate layers with their own filters. */
+const ROAD_WHITE = '#ffffff';
+const HW = {
+  trunk: ['motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link'],
+  sec: ['secondary', 'secondary_link', 'tertiary', 'tertiary_link'],
+  minor: ['unclassified', 'residential', 'service', 'living_street'],
+  track: ['track'],
+  path: ['footway', 'path', 'steps', 'bridleway', 'cycleway'],
+};
+const HW_ROADLIKE = [...HW.trunk, ...HW.sec, ...HW.minor, ...HW.track];
+const inHw = list => ['in', ['to-string', ['get', 'highway']], ['literal', list]];
+/* Width by class, interpolated over zoom.  `add` widens every stop, for casings. */
+function hwWidth(add) {
+  const at = (t, sc, m, tr, pa, unk) => ['match', ['to-string', ['get', 'highway']],
+    HW.trunk, t + add, HW.sec, sc + add, HW.minor, m + add, HW.track, tr + add, HW.path, pa + add, unk + add];
+  return ['interpolate', ['linear'], ['zoom'],
+    14, at(3.2, 2.2, 1.4, 1.2, 1.0, 1.2),
+    18, at(6, 4.5, 3, 2.2, 2.0, 2.4)];
+}
+/* White unless the feature is recorded as damaged or destroyed. */
+const ROAD_STATUS = ['match', ['to-string', ['get', 'status']],
+  ['Damaged', 'damaged'], CFG.STATUS.damaged,
+  ['Destroyed', 'destroyed', 'Washed out', 'washed out'], CFG.STATUS.destroyed,
+  ROAD_WHITE];
+/* A footbridge is a path-class span, or a suspension deck that is not a road. */
+const IS_FOOTBRIDGE = ['any', inHw(HW.path),
+  ['all', ['in', ['to-string', ['get', 'bridge_structure']], ['literal', ['simple-suspension', 'suspension']]],
+          ['!', inHw(HW_ROADLIKE)]]];
+const gt = t => ['==', ['geometry-type'], t];
+const andF = (...fs) => ['all', ...fs.filter(Boolean)];
 
 const HDX = 'data/hdx/';
 const ATTR_HDX = CFG.HDX_CREDIT + ' via <a href="' + CFG.HDX_URL + '" target="_blank" rel="noopener">HDX</a>';
@@ -126,8 +189,16 @@ function buildDefs() {
     fair_aoi: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage_analyzed_aoi.geojson' },
     waterways_np: { type: 'geojson', data: HDX + 'hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson' },
     footprints: { type: 'geojson', data: footprintCollection() },
+    search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   };
+  if (hotTiles) {
+    for (const [ds, dir] of [['flood', 'hot_flood_npl'], ['corridor', 'hot_flood_npl_corridor']]) {
+      if (!hotTiles[ds]) continue;
+      sources[ds + '_mvt'] = { type: 'vector', tiles: [abs(HDX + 'tiles/' + dir + '/{z}/{x}/{y}.pbf')],
+        minzoom: hotTiles.minzoom, maxzoom: hotTiles.maxzoom, attribution: ATTR_HDX };
+    }
+  }
   if (terrain && terrain.contours) {
     sources.contours = { type: 'vector', tiles: [abs(terrain.contours.tiles)],
       minzoom: terrain.contours.minzoom != null ? terrain.contours.minzoom : 8,
@@ -195,39 +266,89 @@ function buildDefs() {
        { id: 'aoi_corridor-line', type: 'line', source: 'aoi_corridor', layout: { visibility: 'none' },
          paint: { 'line-color': '#7c3aed', 'line-width': 1.5, 'line-dasharray': [3, 2] } });
 
-  function vectorGroup(src, ds, on) {
+  /* Where a category's features live.  The PMTiles build packs every category
+   * into one source-layer keyed by category|source; the per-layer tile build
+   * gives each HOT layer its own source-layer and needs no filter. */
+  function resolve(ds, cat, src) {
+    const pm = { source: ds, sl: ds === 'corridor' ? 'hot_flood_npl_corridor' : 'hot_flood_npl',
+                 filter: ['==', ['concat', ['get', 'category'], '|', ['get', 'source']], cat + '|' + src] };
+    const names = hotTiles && hotTiles[ds];
+    if (!names) return pm;
+    const hit = [cat + '_' + src, src === 'osm' ? cat : null].filter(Boolean).find(n => names.has(n));
+    return hit ? { source: ds + '_mvt', sl: hit, filter: null } : pm;
+  }
+
+  /* Roads and bridges get a casing + white line per dash class. */
+  function roadLayers(id, r, isBridge) {
+    const specs = isBridge
+      ? [['span', ['!', IS_FOOTBRIDGE], 2.5, null, 'butt'],
+         ['foot', IS_FOOTBRIDGE, 1.5, [1, 2], 'round']]
+      : [['road', ['!', ['any', inHw(HW.track), inHw(HW.path)]], 1.5, null, 'butt'],
+         ['track', inHw(HW.track), 1.5, [4, 2], 'butt'],
+         ['path', inHw(HW.path), 1.5, [1, 2], 'round']];
+    const out = [];
+    for (const [suffix, extra, casingAdd, dash, cap] of specs) {
+      const filter = andF(gt('LineString'), r.filter, extra);
+      const casing = { id: id + '-' + suffix + '-casing', type: 'line', source: r.source, 'source-layer': r.sl,
+        filter, layout: { visibility: 'none', 'line-join': 'round', 'line-cap': cap },
+        paint: { 'line-color': '#000000', 'line-opacity': 0.35, 'line-width': hwWidth(casingAdd) } };
+      const line = { id: id + '-' + suffix, type: 'line', source: r.source, 'source-layer': r.sl,
+        filter, layout: { visibility: 'none', 'line-join': 'round', 'line-cap': cap },
+        paint: { 'line-color': isBridge ? ROAD_STATUS : ROAD_WHITE, 'line-width': hwWidth(0) } };
+      if (dash) { casing.paint['line-dasharray'] = dash; line.paint['line-dasharray'] = dash; }
+      out.push(casing, line);
+      PAINT_TARGETS.push({ id: line.id, prop: 'line-color',
+        def: isBridge ? ROAD_STATUS : ROAD_WHITE, status: ROAD_STATUS });
+    }
+    return out;
+  }
+
+  function vectorGroup(ds, on) {
     const entries = [];
-    const sl = ds === 'corridor' ? 'hot_flood_npl_corridor' : 'hot_flood_npl';
+    // Three passes so roads always sit above building fills and below points.
+    const fills = [], lines = [], roads = [], points = [];
     for (const [cat, s, label, color] of CFG.CATS) {
       const key = cat + '|' + s;
       const count = CFG.COUNTS[ds][key];
       if (count === undefined) continue;
       const id = ds + '-' + cat + '-' + s;
-      const f = ['==', ['concat', ['get', 'category'], '|', ['get', 'source']], key];
-      push({ id: id + '-fill', type: 'fill', source: src, 'source-layer': sl, layout: { visibility: 'none' },
-              filter: ['all', ['==', ['geometry-type'], 'Polygon'], f],
-              paint: { 'fill-color': color, 'fill-opacity': 0.5, 'fill-outline-color': color } },
-            { id: id + '-line', type: 'line', source: src, 'source-layer': sl, layout: { visibility: 'none' },
-              filter: ['all', ['==', ['geometry-type'], 'LineString'], f],
-              paint: { 'line-color': color, 'line-width': 1.3 } },
-            { id: id + '-point', type: 'circle', source: src, 'source-layer': sl, layout: { visibility: 'none' },
-              filter: ['all', ['==', ['geometry-type'], 'Point'], f],
-              paint: { 'circle-color': color, 'circle-radius': 3, 'circle-stroke-width': 0.5, 'circle-stroke-color': '#fff' } });
-      PAINT_TARGETS.push({ id: id + '-fill', prop: 'fill-color', def: color },
-                         { id: id + '-fill', prop: 'fill-outline-color', def: color },
-                         { id: id + '-line', prop: 'line-color', def: color },
-                         { id: id + '-point', prop: 'circle-color', def: color });
-      entries.push({ key: id, label, color, ids: [id + '-fill', id + '-line', id + '-point'], on, count });
+      const r = resolve(ds, cat, s);
+      const roadish = cat === 'roads' || cat === 'bridges';
+      const ids = [];
+      fills.push({ id: id + '-fill', type: 'fill', source: r.source, 'source-layer': r.sl,
+        layout: { visibility: 'none' }, filter: andF(gt('Polygon'), r.filter),
+        paint: { 'fill-color': roadish ? ROAD_WHITE : color, 'fill-opacity': roadish ? 0.55 : 0.5,
+                 'fill-outline-color': roadish ? '#000000' : color } });
+      ids.push(id + '-fill');
+      if (roadish) {
+        for (const l of roadLayers(id, r, cat === 'bridges')) { roads.push(l); ids.push(l.id); }
+      } else {
+        lines.push({ id: id + '-line', type: 'line', source: r.source, 'source-layer': r.sl,
+          layout: { visibility: 'none', 'line-join': 'round' }, filter: andF(gt('LineString'), r.filter),
+          paint: { 'line-color': color, 'line-width': 1.3 } });
+        ids.push(id + '-line');
+        PAINT_TARGETS.push({ id: id + '-line', prop: 'line-color', def: color, status: statusExprFor(cat) });
+      }
+      points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
+        layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),
+        paint: { 'circle-color': color, 'circle-radius': 3, 'circle-stroke-width': 0.5, 'circle-stroke-color': '#fff' } });
+      ids.push(id + '-point');
+      PAINT_TARGETS.push({ id: id + '-point', prop: 'circle-color', def: color, status: statusExprFor(cat) });
+      if (!roadish) PAINT_TARGETS.push(
+        { id: id + '-fill', prop: 'fill-color', def: color, status: statusExprFor(cat) },
+        { id: id + '-fill', prop: 'fill-outline-color', def: color, status: statusExprFor(cat) });
+      entries.push({ key: id, label, color: roadish ? ROAD_WHITE : color, ids, on, count });
     }
+    push(...fills, ...lines, ...roads, ...points);
     return entries;
   }
 
   groups.push({ title: 'Flood-affected area (extent + 200 m)', entries: [
     { key: 'aoi_flood', label: 'Area of interest outline', color: '#e11d48', ids: ['aoi_flood-line'], on: true, outline: true },
-    ...vectorGroup('flood', 'flood', true) ] });
+    ...vectorGroup('flood', true) ] });
   groups.push({ title: 'River corridor (1 km buffer)', entries: [
     { key: 'aoi_corridor', label: 'Area of interest outline', color: '#7c3aed', ids: ['aoi_corridor-line'], on: false, outline: true },
-    ...vectorGroup('corridor', 'corridor', false) ] });
+    ...vectorGroup('corridor', false) ] });
 
   const fairColor = ['match', ['get', 'damage'],
     'destroyed', CFG.FAIR['destroyed'], 'major-damage', CFG.FAIR['major-damage'],
@@ -276,6 +397,11 @@ function buildDefs() {
     { id: 'footprints-label', type: 'symbol', source: 'footprints', layout: { visibility: 'none',
       'text-field': ['get', 'label'], 'text-font': FONT, 'text-size': 10, 'text-anchor': 'top-left', 'text-offset': [0.4, 0.4] },
       paint: { 'text-color': '#a5f3fc', 'text-halo-color': 'rgba(0,20,25,.85)', 'text-halo-width': 1.4 } },
+    { id: 'search_pin-halo', type: 'circle', source: 'search_pin',
+      paint: { 'circle-radius': 13, 'circle-color': '#5eb0ff', 'circle-opacity': 0.28,
+               'circle-stroke-width': 1.5, 'circle-stroke-color': '#5eb0ff' } },
+    { id: 'search_pin-dot', type: 'circle', source: 'search_pin',
+      paint: { 'circle-radius': 4.5, 'circle-color': '#5eb0ff', 'circle-stroke-width': 2, 'circle-stroke-color': '#fff' } },
     { id: 'sel_footprint-line', type: 'line', source: 'sel_footprint',
       paint: { 'line-color': '#ffffff', 'line-width': 1.6, 'line-dasharray': [6, 3], 'line-opacity': 0.9 } },
   );
@@ -293,7 +419,7 @@ function buildDefs() {
     for (const id of e.ids) LABEL_OF[id] = e.label;
   }
   QUERY_IDS = Object.keys(LABEL_OF).filter(id =>
-    !id.startsWith('aoi_') && !id.startsWith('contour-') && !id.endsWith('-label'));
+    !id.startsWith('aoi_') && !id.startsWith('contour-') && !id.endsWith('-label') && !id.endsWith('-casing'));
 
   IMAGERY_BEFORE = (sources.hillshade ? 'hillshade' : null)
     || (contourEntries.length ? contourEntries[0].ids[0] : null)
@@ -323,7 +449,10 @@ function makeMap(container, defs, side) {
 }
 
 function applyImagery(side) {
-  const m = maps[side]; if (!m || !m.isStyleLoaded()) return;
+  const m = maps[side]; if (!m) return;
+  // The style can still be settling right after 'load' (GeoJSON/PMTiles sources
+  // fetching); never drop the request silently, re-run once the map is idle.
+  if (!m.isStyleLoaded()) { m.once('idle', () => applyImagery(side)); return; }
   const l = byId(state[side]);
   if (m.getLayer('imagery')) m.removeLayer('imagery');
   if (m.getSource('imagery')) m.removeSource('imagery');
@@ -333,6 +462,7 @@ function applyImagery(side) {
     const before = m.getLayer(IMAGERY_BEFORE) ? IMAGERY_BEFORE : undefined;
     m.addLayer({ id: 'imagery', type: 'raster', source: 'imagery', paint: { 'raster-fade-duration': 120 } }, before);
   }
+  applyBaseOpacity();
   const fp = m.getSource('sel_footprint');
   if (fp) fp.setData(state.footprintOutline ? boundsFeature(l) : { type: 'FeatureCollection', features: [] });
   refreshTags();
@@ -354,13 +484,22 @@ function applyBase() {
   setVis(['base-osm'], state.base === 'osm');
   setVis(['base-esri'], state.base === 'esri');
   setVis(['hillshade'], state.hillshade);
+  applyBaseOpacity();
+}
+/* The OSM basemap is dimmed under imagery, full strength when a side is showing
+ * the basemap alone.  Per map, since the two sides can differ. */
+function applyBaseOpacity() {
+  eachMap((m, side) => {
+    if (!m.getLayer('base-osm')) return;
+    try { m.setPaintProperty('base-osm', 'raster-opacity', hasImagery(side) ? 0.6 : 1); } catch (e) { /* ignore */ }
+  });
 }
 function applyColorBy() {
   const useStatus = state.colorBy === 'status';
   eachMap(m => {
     for (const t of PAINT_TARGETS) {
       if (!m.getLayer(t.id)) continue;
-      try { m.setPaintProperty(t.id, t.prop, useStatus ? STATUS_EXPR : t.def); } catch (e) { /* ignore */ }
+      try { m.setPaintProperty(t.id, t.prop, useStatus ? (t.status || STATUS_EXPR) : t.def); } catch (e) { /* ignore */ }
     }
   });
 }
@@ -490,6 +629,7 @@ const optionText = (side, l) =>
 
 /* Appends this side's scenes to a <select>, grouped by coverage. */
 function fillScenes(sel, side) {
+  sel.appendChild(new Option('None \u00b7 basemap only', NO_IMAGERY));
   const list = layersFor(side);
   if (!list.length) { sel.appendChild(new Option('(no ' + side + ' imagery in catalogue)', '')); return 0; }
   const order = ['trisuli_bazar', 'upper_valley', 'corridor'];
@@ -550,6 +690,7 @@ function updateMeta(side) {
   if (n) n.innerHTML = describe(state[side]);
 }
 function describe(id) {
+  if (id === NO_IMAGERY) return 'No imagery, basemap only';
   const l = byId(id);
   if (!l) return '<i>no layer selected</i>';
   const bits = [];
@@ -563,6 +704,9 @@ function describe(id) {
 
 function renderSidebar() {
   const pad = $('#panel .pad');
+
+  // search ----------------------------------------------------------------
+  renderSearch(pad);
 
   // mode ------------------------------------------------------------------
   const modeBlock = el('div', 'block', '<h2>View</h2>');
@@ -623,7 +767,31 @@ function renderSidebar() {
     chips.appendChild(b);
   }
   zBlock.appendChild(chips);
+  const share = el('button', null, 'Copy link to this view');
+  share.style.marginTop = '6px';
+  share.addEventListener('click', async () => {
+    const url = location.href || (location.origin + location.pathname + location.search + location.hash);
+    try { await navigator.clipboard.writeText(url); toast('Link copied'); }
+    catch (e) { toast('Copy failed — the link is in the address bar'); }
+  });
+  zBlock.appendChild(share);
   pad.appendChild(zBlock);
+
+  // bridge ground reports + damage summary, both loaded on first open ------
+  const lazy = (title, note, fill) => {
+    const b = el('div', 'block');
+    const det = el('details');
+    det.appendChild(el('summary', null, title));
+    const body = el('div', 'lazy', '<p class="note">' + note + '</p>');
+    det.appendChild(body);
+    let done = false;
+    det.addEventListener('toggle', () => { if (done) return; done = true; fill(det, body); });
+    b.appendChild(det);
+    pad.appendChild(b);
+    return det;
+  };
+  lazy('Bridge ground reports', 'Loading…', renderBridges);
+  lazy('Damage by municipality', 'Loading…', renderDamage);
 
   // overlays --------------------------------------------------------------
   const oBlock = el('div', 'block', '<h2>Overlays</h2>');
@@ -697,6 +865,20 @@ function renderSidebar() {
   add('#7c3aed', 'River corridor AOI', true);
   add('#22d3ee', 'Imagery footprint', true);
   lBlock.appendChild(lg);
+
+  const roadLg = el('div', 'roadlg');
+  roadLg.innerHTML =
+    '<div class="hd">Roads and bridges (white, dark casing)</div>' +
+    '<div class="r"><i class="rl w4"></i>Trunk and primary</div>' +
+    '<div class="r"><i class="rl w3"></i>Secondary and tertiary</div>' +
+    '<div class="r"><i class="rl w2"></i>Residential, service</div>' +
+    '<div class="r"><i class="rl w2 dash"></i>Track</div>' +
+    '<div class="r"><i class="rl w1 dot"></i>Path, steps, footbridge</div>' +
+    '<div class="r"><i class="rl w4 heavy"></i>Road bridge span</div>' +
+    '<div class="hd">Contours (GLO-30)</div>' +
+    '<div class="r"><i class="rl ct idx"></i>Index line, multiple of 100 m</div>' +
+    '<div class="r"><i class="rl ct"></i>Intermediate line</div>';
+  lBlock.appendChild(roadLg);
   lBlock.appendChild(el('p', 'note',
     'The PMTiles build of the HOT catalogue carries only <code>category</code>, <code>source</code> and <code>name</code>, ' +
     'so in status colouring its buildings and roads fall back to grey and the “destroyed and damaged features” category to red. ' +
@@ -721,18 +903,254 @@ function renderSidebar() {
   }
 }
 
+// ------------------------------------------------------- local dataset help
+const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const gjCache = {};
+async function gj(file) {
+  if (gjCache[file] !== undefined) return gjCache[file];
+  try { gjCache[file] = await getJSON(HDX + file); } catch (e) { gjCache[file] = null; }
+  return gjCache[file];
+}
+/* Mean of a feature's coordinates — good enough to fly to and to bbox-test. */
+function centroid(g) {
+  if (!g || !g.coordinates) return null;
+  const pts = [];
+  (function walk(c) {
+    if (typeof c[0] === 'number') { pts.push(c); return; }
+    for (const x of c) { if (pts.length > 400) return; walk(x); }
+  })(g.coordinates);
+  if (!pts.length) return null;
+  let x = 0, y = 0;
+  for (const p of pts) { x += p[0]; y += p[1]; }
+  return [x / pts.length, y / pts.length];
+}
+const STATUS_COLOUR = {
+  standing: CFG.STATUS.standing, intact: '#2ca25f',   // matches the bridge ground-report circles
+  damaged: CFG.STATUS.damaged, 'major damage': CFG.STATUS.damaged,
+  destroyed: CFG.STATUS.destroyed, 'washed out': CFG.STATUS.destroyed,
+};
+const statusColour = v => STATUS_COLOUR[String(v || '').toLowerCase()] || '#64748b';
+
+function dropPin(lngLat, zoom) {
+  const fc = { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {},
+    geometry: { type: 'Point', coordinates: lngLat } }] };
+  eachMap(m => { const src = m.getSource('search_pin'); if (src) src.setData(fc); });
+  if (maps.post) maps.post.flyTo({ center: lngLat, zoom: zoom || Math.max(maps.post.getZoom(), 15), duration: 900 });
+}
+function toast(msg) {
+  let t = $('#toast');
+  if (!t) { t = el('div'); t.id = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.className = 'show';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { t.className = ''; }, 2200);
+}
+
+// ------------------------------------------------------------ place search
+const SEARCH_FILES = [
+  ['hot_flood_npl_corridor/populated_places_osm.geojson', 'Settlement'],
+  ['hot_flood_npl_corridor/points_of_interest_osm.geojson', 'Point of interest'],
+  ['hot_flood_npl_corridor/education_facilities_osm.geojson', 'Education'],
+  ['hot_flood_npl_corridor/health_facilities_osm.geojson', 'Health'],
+  ['hot_flood_npl_corridor/police_stations_osm.geojson', 'Police'],
+  ['hot_flood_npl_corridor/bridges_osm.geojson', 'Bridge'],
+  ['hot_flood_npl/hot_flood_npl_bridge_damage.geojson', 'Bridge report'],
+];
+let searchIndex = null, searchLoading = null;
+function buildSearchIndex() {
+  if (searchIndex) return Promise.resolve(searchIndex);
+  if (searchLoading) return searchLoading;
+  searchLoading = (async () => {
+    const out = [], seen = new Set();
+    for (const [file, kind] of SEARCH_FILES) {
+      const d = await gj(file);
+      if (!d || !d.features) continue;
+      for (const f of d.features) {
+        const p = f.properties || {};
+        const name = p.name || p.name_en || p.name_latin || p.name_ne;
+        if (!name) continue;
+        const c = centroid(f.geometry);
+        if (!c) continue;
+        const k = name + '@' + c[0].toFixed(3) + ',' + c[1].toFixed(3);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        const type = [p.amenity, p.place, p.man_made, p.shop, p.tourism, p.bridge_structure, p.feature_type]
+          .find(v => v && v !== 'yes');
+        out.push({ name: String(name), ne: p.name_ne && p.name_ne !== name ? String(p.name_ne) : '',
+          kind, type: type ? String(type).replace(/_/g, ' ') : kind.toLowerCase(),
+          adm3: p.adm3_name || '', status: p.status || '', c, props: p, label: kind });
+      }
+    }
+    for (const r of out) r.hay = (r.name + ' ' + r.ne + ' ' + r.adm3).toLowerCase();
+    searchIndex = out;
+    return out;
+  })();
+  return searchLoading;
+}
+function searchQuery(q) {
+  const t = q.trim().toLowerCase();
+  if (!t || !searchIndex) return [];
+  const hits = [];
+  for (const r of searchIndex) {
+    const i = r.hay.indexOf(t);
+    if (i < 0) continue;
+    const score = r.name.toLowerCase().startsWith(t) ? 0 : (i === 0 || r.hay[i - 1] === ' ') ? 1 : 2;
+    hits.push([score, r]);
+  }
+  hits.sort((a, b) => a[0] - b[0] || a[1].name.localeCompare(b[1].name));
+  return hits.slice(0, 12).map(h => h[1]);
+}
+
+function renderSearch(parent) {
+  const box = el('div', 'search');
+  const input = el('input');
+  input.type = 'search'; input.id = 'searchInput'; input.placeholder = 'Search places, schools, bridges…';
+  input.setAttribute('autocomplete', 'off'); input.setAttribute('aria-label', 'Search places');
+  const list = el('div', 'results'); list.id = 'searchResults';
+  box.append(input, list);
+  parent.appendChild(box);
+
+  let rows = [], sel = -1;
+  const draw = () => {
+    list.innerHTML = '';
+    sel = rows.length ? 0 : -1;
+    rows.forEach((r, i) => {
+      const row = el('div', 'res' + (i === 0 ? ' on' : ''));
+      row.innerHTML = '<b>' + esc(r.name) + '</b>' + (r.ne ? ' <span class="ne">' + esc(r.ne) + '</span>' : '') +
+        '<span class="sub">' + esc(r.type) + (r.adm3 ? ' · ' + esc(r.adm3) : '') + '</span>';
+      row.addEventListener('click', () => go(r));
+      list.appendChild(row);
+    });
+  };
+  const mark = () => [...list.children].forEach((c, i) => { c.className = 'res' + (i === sel ? ' on' : ''); });
+  const go = r => {
+    dropPin(r.c);
+    if (maps.post) new maplibregl.Popup({ maxWidth: '340px' })
+      .setLngLat(r.c).setHTML(popupHTML(r.label, r.props)).addTo(maps.post);
+    list.innerHTML = ''; rows = [];
+  };
+  input.addEventListener('focus', () => buildSearchIndex().then(() => { if (input.value) { rows = searchQuery(input.value); draw(); } }));
+  input.addEventListener('input', () => {
+    if (!searchIndex) { buildSearchIndex().then(() => { rows = searchQuery(input.value); draw(); }); return; }
+    rows = searchQuery(input.value); draw();
+  });
+  input.addEventListener('keydown', ev => {
+    if (ev.key === 'ArrowDown') { sel = Math.min(sel + 1, rows.length - 1); mark(); ev.preventDefault(); }
+    else if (ev.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); mark(); ev.preventDefault(); }
+    else if (ev.key === 'Enter') { if (rows[sel]) go(rows[sel]); ev.preventDefault(); }
+    else if (ev.key === 'Escape') { list.innerHTML = ''; rows = []; input.value = ''; }
+    ev.stopPropagation();
+  });
+}
+
+// ----------------------------------------------------------- bridges panel
+const BRIDGE_ORDER = ['Washed out', 'Damaged', 'Intact'];
+async function renderBridges(det, body) {
+  const d = await gj('hot_flood_npl/hot_flood_npl_bridge_damage.geojson');
+  if (!d || !d.features) { body.innerHTML = '<p class="note">Bridge ground reports not available.</p>'; return; }
+  const rows = d.features.map(f => ({ p: f.properties || {}, c: centroid(f.geometry) })).filter(r => r.c);
+  const counts = {};
+  for (const r of rows) counts[r.p.status || 'Unknown'] = (counts[r.p.status || 'Unknown'] || 0) + 1;
+  const rank = st => { const i = BRIDGE_ORDER.indexOf(st); return i < 0 ? 99 : i; };
+  rows.sort((a, b) => rank(a.p.status) - rank(b.p.status) || String(a.p.name).localeCompare(String(b.p.name)));
+  const head = det.querySelector('summary');
+  if (head) head.innerHTML = 'Bridge ground reports <span class="n">' +
+    Object.keys(counts).sort((a, b) => rank(a) - rank(b))
+      .map(k => '<i class="chip" style="background:' + statusColour(k) + '"></i>' + counts[k]).join(' ') + '</span>';
+  body.innerHTML = '';
+  for (const r of rows) {
+    const row = el('div', 'brow');
+    row.innerHTML = '<i class="chip" style="background:' + statusColour(r.p.status) + '"></i>' +
+      '<span class="t"><b>' + esc(r.p.name || 'Unnamed bridge') + '</b>' +
+      '<span class="sub">' + esc(r.p.status || '') + (r.p.location ? ' · ' + esc(r.p.location) : '') +
+      (r.p.adm3_name ? ' · ' + esc(r.p.adm3_name) : '') +
+      (r.p.length_m ? ' · ' + esc(r.p.length_m) + ' m' : '') + '</span></span>';
+    row.addEventListener('click', () => {
+      dropPin(r.c, 15);
+      if (maps.post) new maplibregl.Popup({ maxWidth: '340px' })
+        .setLngLat(r.c).setHTML(popupHTML('Bridge ground report', r.p)).addTo(maps.post);
+    });
+    body.appendChild(row);
+  }
+}
+
+// ---------------------------------------------------------- damage summary
+const DAMAGE_CLASS = { building: 'buildings', 'building part': 'buildings', road: 'roads',
+  tunnel: 'roads', bridge: 'bridges' };
+let damageRows = null;
+async function renderDamage(det, body) {
+  const d = await gj('hot_flood_npl/destroyed_features_osm.geojson');
+  if (!d || !d.features) { body.innerHTML = '<p class="note">Destroyed-feature data not available.</p>'; return; }
+  damageRows = d.features.map(f => {
+    const p = f.properties || {};
+    return { adm3: p.adm3_name || 'Unknown', cls: DAMAGE_CLASS[p.feature_type] || 'other',
+             status: p.status || '', c: centroid(f.geometry) };
+  }).filter(r => r.c);
+  const by = {};
+  for (const r of damageRows) {
+    const m = (by[r.adm3] ||= { buildings: 0, roads: 0, bridges: 0, other: 0, total: 0 });
+    m[r.cls]++; m.total++;
+  }
+  const names = Object.keys(by).sort((a, b) => by[b].total - by[a].total);
+  let html = '<table class="dmg"><thead><tr><th>Municipality</th><th>Bldg</th><th>Road</th><th>Brdg</th><th>Other</th></tr></thead><tbody>';
+  for (const n of names) {
+    const m = by[n];
+    html += '<tr><td>' + esc(n) + '</td><td>' + m.buildings + '</td><td>' + m.roads +
+            '</td><td>' + m.bridges + '</td><td>' + m.other + '</td></tr>';
+  }
+  html += '</tbody></table><p class="inview" id="dmgInView"></p>' +
+    '<p class="note">Volunteer-recorded in OpenStreetMap; not field-verified.</p>';
+  body.innerHTML = html;
+  updateDamageInView();
+}
+function updateDamageInView() {
+  const out = document.querySelector('#dmgInView');
+  if (!out || !damageRows || !maps.post) return;
+  const b = maps.post.getBounds();
+  if (!b) return;
+  const w = b.getWest ? b.getWest() : b[0][0], e = b.getEast ? b.getEast() : b[1][0];
+  const s2 = b.getSouth ? b.getSouth() : b[0][1], n = b.getNorth ? b.getNorth() : b[1][1];
+  const m = { buildings: 0, roads: 0, bridges: 0, other: 0, total: 0 };
+  for (const r of damageRows) {
+    if (r.c[0] < w || r.c[0] > e || r.c[1] < s2 || r.c[1] > n) continue;
+    m[r.cls]++; m.total++;
+  }
+  out.innerHTML = '<b>In current view:</b> ' + m.total + ' recorded — ' + m.buildings +
+    ' buildings, ' + m.roads + ' roads, ' + m.bridges + ' bridges, ' + m.other + ' other.';
+}
+
+// -------------------------------------------------------------- popup body
+function popupHTML(label, props) {
+  const p = props || {};
+  const name = p.name || p.name_en || p.name_latin || '';
+  const ne = p.name_ne && p.name_ne !== name ? p.name_ne : '';
+  const type = [p.feature_type, p.amenity, p.highway, p.man_made, p.place, p.bridge_structure,
+                p.building, p.shop, p.tourism].find(v => v && v !== 'yes');
+  let h = '<div class="pop-h">' + esc(name || label) + (ne ? ' <span class="ne">' + esc(ne) + '</span>' : '') + '</div>';
+  const meta = [];
+  if (name) meta.push(esc(label));
+  if (type) meta.push(esc(String(type).replace(/_/g, ' ')));
+  if (p.adm3_name) meta.push(esc(p.adm3_name));
+  if (p.damage_type) meta.push(esc(p.damage_type));
+  if (meta.length) h += '<div class="pop-m">' + meta.join(' · ') + '</div>';
+  if (p.status) h += '<div><span class="chip lg" style="background:' + statusColour(p.status) + '">' + esc(p.status) + '</span></div>';
+  const rows = Object.entries(p)
+    .filter(([, v]) => v !== null && v !== '' && v !== 'null' && v !== undefined)
+    .map(([k, v]) => '<tr><th>' + esc(k) + '</th><td>' +
+      (/^https?:\/\//.test(String(v)) ? '<a href="' + esc(v) + '" target="_blank" rel="noopener">' + esc(v) + '</a>' : esc(v)) +
+      '</td></tr>').join('');
+  h += '<details class="pop-all"><summary>All attributes</summary><table class="popup">' + rows + '</table></details>';
+  return h;
+}
+
 // --------------------------------------------------------------- behaviour
 function wirePopups(m) {
   const live = () => QUERY_IDS.filter(id => m.getLayer(id) && m.getLayoutProperty(id, 'visibility') !== 'none');
   m.on('click', ev => {
     const hits = m.queryRenderedFeatures(ev.point, { layers: live() });
     if (!hits.length) return;
-    const html = hits.slice(0, 4).map(h => {
-      const rows = Object.entries(h.properties || {})
-        .filter(([, v]) => v !== null && v !== '' && v !== 'null' && v !== undefined)
-        .map(([k, v]) => `<tr><th>${k}</th><td>${/^https?:\/\//.test(String(v)) ? `<a href="${v}" target="_blank" rel="noopener">${v}</a>` : String(v)}</td></tr>`).join('');
-      return `<b>${LABEL_OF[h.layer.id] || h.layer.id}</b><table class="popup">${rows}</table>`;
-    }).join('<hr>');
+    const html = hits.slice(0, 4)
+      .map(h => popupHTML(LABEL_OF[h.layer.id] || h.layer.id, h.properties)).join('<hr>');
     new maplibregl.Popup({ maxWidth: '340px' }).setLngLat(ev.lngLat).setHTML(html).addTo(m);
   });
   let hoverTimer = 0;
@@ -786,11 +1204,15 @@ async function main() {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
 
-  [catalog, terrain] = await Promise.all([loadCatalog(), loadTerrain()]);
+  [catalog, terrain, hotTiles] = await Promise.all([loadCatalog(), loadTerrain(), loadHotTiles()]);
   const ovParam = readHash();
 
-  if (!state.pre) state.pre = catalog.default_pre || (layersFor('pre')[0] || {}).id || null;
-  if (!state.post) state.post = catalog.default_post || (layersFor('post')[0] || {}).id || null;
+  // A scene id from the hash that is not in the catalogue (stale link, renamed
+  // layer) falls back to the default instead of leaving the side empty.
+  for (const side of ['pre', 'post']) {
+    if (state[side] && state[side] !== NO_IMAGERY && !byId(state[side])) state[side] = null;
+    if (!state[side]) state[side] = catalog['default_' + side] || (layersFor(side)[0] || {}).id || null;
+  }
 
   const defs = buildDefs();
   applyOverlayDiff(ovParam);
@@ -800,6 +1222,8 @@ async function main() {
   maps.pre = makeMap('mapPre', defs, 'pre');
   maps.post = makeMap('mapPost', defs, 'post');
   maps.post.addControl(new maplibregl.NavigationControl({ visualizePitch: false }), 'top-right');
+  if (maplibregl.GeolocateControl) maps.post.addControl(new maplibregl.GeolocateControl({
+    positionOptions: { enableHighAccuracy: true }, trackUserLocation: true, showAccuracyCircle: true }), 'top-right');
   maps.post.addControl(new maplibregl.ScaleControl({ unit: 'metric', maxWidth: 120 }), 'bottom-left');
   maps.post.addControl(new maplibregl.FullscreenControl({ container: $('#stage') }), 'top-right');
 
@@ -817,6 +1241,7 @@ async function main() {
 
   if (!state.center) maps.post.fitBounds(CFG.HOME, { padding: 24, duration: 0 });
   maps.post.on('moveend', writeHash);
+  maps.post.on('moveend', updateDamageInView);
   writeHash();
 
   const tog = $('#sidebarToggle');
