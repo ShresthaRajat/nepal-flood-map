@@ -291,10 +291,10 @@ function buildDefs() {
       const filter = andF(gt('LineString'), r.filter, extra);
       const casing = { id: id + '-' + suffix + '-casing', type: 'line', source: r.source, 'source-layer': r.sl,
         filter, layout: { visibility: 'none', 'line-join': 'round', 'line-cap': cap },
-        paint: { 'line-color': '#000000', 'line-opacity': 0.35, 'line-width': hwWidth(casingAdd) } };
+        paint: { 'line-color': '#000000', 'line-opacity': 0.2, 'line-width': hwWidth(casingAdd) } };
       const line = { id: id + '-' + suffix, type: 'line', source: r.source, 'source-layer': r.sl,
         filter, layout: { visibility: 'none', 'line-join': 'round', 'line-cap': cap },
-        paint: { 'line-color': isBridge ? ROAD_STATUS : ROAD_WHITE, 'line-width': hwWidth(0) } };
+        paint: { 'line-color': isBridge ? ROAD_STATUS : ROAD_WHITE, 'line-opacity': 0.7, 'line-width': hwWidth(0) } };
       if (dash) { casing.paint['line-dasharray'] = dash; line.paint['line-dasharray'] = dash; }
       out.push(casing, line);
       PAINT_TARGETS.push({ id: line.id, prop: 'line-color',
@@ -317,7 +317,7 @@ function buildDefs() {
       const ids = [];
       fills.push({ id: id + '-fill', type: 'fill', source: r.source, 'source-layer': r.sl,
         layout: { visibility: 'none' }, filter: andF(gt('Polygon'), r.filter),
-        paint: { 'fill-color': roadish ? ROAD_WHITE : color, 'fill-opacity': roadish ? 0.55 : 0.5,
+        paint: { 'fill-color': roadish ? ROAD_WHITE : color, 'fill-opacity': roadish ? 0.25 : 0.12,
                  'fill-outline-color': roadish ? '#000000' : color } });
       ids.push(id + '-fill');
       if (roadish) {
@@ -325,7 +325,7 @@ function buildDefs() {
       } else {
         lines.push({ id: id + '-line', type: 'line', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none', 'line-join': 'round' }, filter: andF(gt('LineString'), r.filter),
-          paint: { 'line-color': color, 'line-width': 1.3 } });
+          paint: { 'line-color': color, 'line-opacity': 0.8, 'line-width': 1.3 } });
         ids.push(id + '-line');
         PAINT_TARGETS.push({ id: id + '-line', prop: 'line-color', def: color, status: statusExprFor(cat) });
       }
@@ -358,18 +358,18 @@ function buildDefs() {
 
   push(
     { id: 'flood_extent-fill', type: 'fill', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'fill-color': '#1d4ed8', 'fill-opacity': 0.3 } },
+      paint: { 'fill-color': '#1d4ed8', 'fill-opacity': 0.15 } },
     { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
       paint: { 'line-color': '#3b82f6', 'line-width': 1.2 } },
     { id: 'waterways_np-fill', type: 'fill', source: 'waterways_np', layout: { visibility: 'none' },
-      filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': '#0ea5e9', 'fill-opacity': 0.4 } },
+      filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': '#0ea5e9', 'fill-opacity': 0.2 } },
     { id: 'waterways_np-line', type: 'line', source: 'waterways_np', layout: { visibility: 'none' },
       filter: ['==', ['geometry-type'], 'LineString'], paint: { 'line-color': '#0ea5e9', 'line-width': 0.8 } },
     { id: 'tm-fill', type: 'fill', source: 'tm', layout: { visibility: 'none' }, paint: { 'fill-color': '#f59e0b', 'fill-opacity': 0.08 } },
     { id: 'tm-line', type: 'line', source: 'tm', layout: { visibility: 'none' }, paint: { 'line-color': '#f59e0b', 'line-width': 1.2 } },
     { id: 'fair_aoi-line', type: 'line', source: 'fair_aoi', layout: { visibility: 'none' },
       paint: { 'line-color': '#f8fafc', 'line-width': 1.5, 'line-dasharray': [2, 2] } },
-    { id: 'fair-fill', type: 'fill', source: 'fair', layout: { visibility: 'none' }, paint: { 'fill-color': fairColor, 'fill-opacity': 0.8 } },
+    { id: 'fair-fill', type: 'fill', source: 'fair', layout: { visibility: 'none' }, paint: { 'fill-color': fairColor, 'fill-opacity': 0.35 } },
     { id: 'fair-line', type: 'line', source: 'fair', layout: { visibility: 'none' }, paint: { 'line-color': '#333', 'line-width': 0.4 } },
     { id: 'hydro-point', type: 'circle', source: 'hydro', layout: { visibility: 'none' },
       paint: { 'circle-color': '#facc15', 'circle-radius': 6, 'circle-stroke-width': 1.5, 'circle-stroke-color': '#000' } },
@@ -467,6 +467,8 @@ function applyImagery(side) {
   if (fp) fp.setData(state.footprintOutline ? boundsFeature(l) : { type: 'FeatureCollection', features: [] });
   refreshTags();
   updateMeta(side);
+  setTimeout(() => debugReport('applyImagery:' + side), 1500);
+  setTimeout(() => debugReport('applyImagery+6s:' + side), 6000);
 }
 
 function setVis(ids, on) {
@@ -1256,3 +1258,35 @@ main().catch(e => {
     '<pre style="position:absolute;z-index:99;background:#300;color:#fdd;padding:12px;max-width:90%">' + e + '</pre>');
 });
 })();
+
+// ------------------------------------------------------------------ debug
+/* ?debug=1 : report each map's imagery state on screen and to the dev server. */
+function debugReport(tag) {
+  if (!QS.has('debug')) return;
+  const rep = { tag, t: Date.now(), state: { mode: state.mode, pre: state.pre, post: state.post, base: state.base }, maps: {} };
+  eachMap((m, side) => {
+    let gl = null; try { gl = m.getCanvas().getContext('webgl2') || m.getCanvas().getContext('webgl'); } catch (e) {}
+    const cc = m.getContainer().querySelector('.maplibregl-canvas-container');
+    const src = m.getSource('imagery');
+    const ids = m.getStyle().layers.map(l => l.id);
+    rep.maps[side] = {
+      styleLoaded: m.isStyleLoaded(), loaded: m.loaded(), zoom: +m.getZoom().toFixed(2),
+      canvas: [m.getCanvas().width, m.getCanvas().height], container: [m.getContainer().clientWidth, m.getContainer().clientHeight],
+      clip: cc ? getComputedStyle(cc).clipPath : null, webgl: !!gl, lostContext: gl ? gl.isContextLost() : null,
+      imagerySource: src ? (src.tiles || src.url) : null, imageryBounds: src ? src.bounds : null,
+      imageryLayerIdx: ids.indexOf('imagery'), baseOsmIdx: ids.indexOf('base-osm'), nLayers: ids.length, first6: ids.slice(0, 6),
+      imageryVis: m.getLayer('imagery') ? m.getLayoutProperty('imagery', 'visibility') : 'absent',
+      imageryOpacity: m.getLayer('imagery') ? m.getPaintProperty('imagery', 'raster-opacity') : null,
+      imageryTiles: (() => { try { const sc = m.style.sourceCaches['imagery'] || (m.style._otherSourceCaches || {})['imagery']; if (!sc) return null;
+        const ts = Object.values(sc._tiles || {}); return { n: ts.length, states: ts.reduce((a, t) => (a[t.state] = (a[t.state] || 0) + 1, a), {}) }; } catch (e) { return String(e); } })(),
+    };
+  });
+  const txt = JSON.stringify(rep);
+  try { navigator.sendBeacon('log', txt); } catch (e) {}
+  let box = document.getElementById('dbg');
+  if (!box) { box = document.createElement('pre'); box.id = 'dbg';
+    box.style.cssText = 'position:absolute;left:8px;bottom:8px;z-index:99;max-width:60%;max-height:45%;overflow:auto;background:rgba(0,0,0,.85);color:#9f9;font:11px/1.3 monospace;padding:8px;white-space:pre-wrap';
+    document.body.appendChild(box); }
+  box.textContent = JSON.stringify(rep, null, 1);
+}
+window.addEventListener('error', e => { if (QS.has('debug')) try { navigator.sendBeacon('log', JSON.stringify({ tag: 'window.error', msg: String(e.message), src: e.filename, line: e.lineno })); } catch (_) {} });

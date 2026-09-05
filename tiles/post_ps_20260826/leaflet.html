@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-    <title>post_ps_20260826.vrt</title>
+    <title>frame_comp.tif</title>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.5/dist/leaflet.css" />
@@ -54,7 +54,7 @@ var lyr = L.tileLayer('./{z}/{x}/{y}.webp', {tms: 0, opacity: 0.7, attribution: 
 
 // Map
 var map = L.map('map', {
-    center: [27.889981892616305, 85.149944887790454],
+    center: [27.889998294501197, 85.149931775502381],
     zoom: 16,
     minZoom: 8,
     maxZoom: 16,
@@ -72,7 +72,7 @@ title.onAdd = function(map) {
     return this._div;
 };
 title.update = function(props) {
-    this._div.innerHTML = "post_ps_20260826.vrt";
+    this._div.innerHTML = "frame_comp.tif";
 };
 title.addTo(map);
 
@@ -94,7 +94,7 @@ title.addTo(map);
 L.control.layers(basemaps, overlaymaps, {collapsed: false}).addTo(map);
 
 // Fit to overlay bounds (SW and NE points with (lat, lon))
-map.fitBounds([[27.828553528940457, 85.201985714091805], [27.951410256292156, 85.097904061489103]]);
+map.fitBounds([[27.828586332710238, 85.201959489515644], [27.951410256292156, 85.097904061489103]]);
 
 </script>
 

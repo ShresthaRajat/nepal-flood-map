@@ -1,6 +1,6 @@
 <mapml- xmlns="http://www.w3.org/1999/xhtml">
     <map-head>
-        <map-title>post_ps28_mosaic.vrt</map-title>
+        <map-title>box_comp.tif</map-title>
         <map-meta charset="utf-8" ></map-meta>
         <!--
         <map-link href="http://localhost:8080/myservice/mapml/WGS84?style=" rel="alternate" projection="WGS84" ></map-link>
@@ -11,9 +11,9 @@
     </map-head>
     <map-body>
         <map-extent units="OSMTILE" checked="checked">
-            <map-input name="z" type="zoom" value="13" min="8" max="13" ></map-input>
-            <map-input name="x" type="location" axis="column" units="tilematrix" min="6019" max="6043" ></map-input>
-            <map-input name="y" type="location" axis="row" units="tilematrix" min="3420" max="3439" ></map-input>
+            <map-input name="z" type="zoom" value="16" min="14" max="16" ></map-input>
+            <map-input name="x" type="location" axis="column" units="tilematrix" min="48265" max="48273" ></map-input>
+            <map-input name="y" type="location" axis="row" units="tilematrix" min="27465" max="27475" ></map-input>
             <map-link tref="./{z}/{x}/{y}.webp" rel="tile" ></map-link>
             <!--<map-link tref="http://localhost:8080/myservice/wmts?layer=MYLAYER&amp;style=&amp;tilematrixset=OSMTILE&amp;service=WMTS&amp;request=GetTile&amp;version=1.0.0&amp;tilematrix={z}&amp;TileCol={x}&amp;TileRow={y}&amp;format=image/png" rel="tile" ></map-link>-->
             <!--
