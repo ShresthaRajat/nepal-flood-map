@@ -1,6 +1,6 @@
 <mapml- xmlns="http://www.w3.org/1999/xhtml">
     <map-head>
-        <map-title>post_wv02_20260828_vantor_post_F2.vrt</map-title>
+        <map-title>post_wv02_20260828_vantor_post_F6.vrt</map-title>
         <map-meta charset="utf-8" ></map-meta>
         <!--
         <map-link href="http://localhost:8080/myservice/mapml/WGS84?style=" rel="alternate" projection="WGS84" ></map-link>
@@ -11,9 +11,9 @@
     </map-head>
     <map-body>
         <map-extent units="OSMTILE" checked="checked">
-            <map-input name="z" type="zoom" value="17" min="17" max="17" ></map-input>
-            <map-input name="x" type="location" axis="column" units="tilematrix" min="96525" max="96548" ></map-input>
-            <map-input name="y" type="location" axis="row" units="tilematrix" min="54927" max="54955" ></map-input>
+            <map-input name="z" type="zoom" value="19" min="18" max="19" ></map-input>
+            <map-input name="x" type="location" axis="column" units="tilematrix" min="386120" max="386192" ></map-input>
+            <map-input name="y" type="location" axis="row" units="tilematrix" min="219716" max="219806" ></map-input>
             <map-link tref="./{z}/{x}/{y}.webp" rel="tile" ></map-link>
             <!--<map-link tref="http://localhost:8080/myservice/wmts?layer=MYLAYER&amp;style=&amp;tilematrixset=OSMTILE&amp;service=WMTS&amp;request=GetTile&amp;version=1.0.0&amp;tilematrix={z}&amp;TileCol={x}&amp;TileRow={y}&amp;format=image/png" rel="tile" ></map-link>-->
             <!--

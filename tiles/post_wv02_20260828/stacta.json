@@ -5,43 +5,43 @@
     "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
     "https://stac-extensions.github.io/eo/v2.0.0/schema.json"
   ],
-  "id":"post_wv02_20260828_vantor_post_F2.vrt",
+  "id":"post_wv02_20260828_vantor_post_F6.vrt",
   "type":"Feature",
   "bbox":[
-    85.116240979844619,
-    27.887938456077709,
-    85.177391421419784,
-    27.956479597301044
+    85.12770715253393,
+    27.898215448774724,
+    85.177393407180588,
+    27.953052372282308
   ],
   "geometry":{
     "type":"Polygon",
     "coordinates":[
       [
         [
-          85.116240979844619,
-          27.887938456077709
+          85.12770715253393,
+          27.898215448774724
         ],
         [
-          85.116240979844619,
-          27.956479597301044
+          85.12770715253393,
+          27.953052372282308
         ],
         [
-          85.177391421419784,
-          27.956479597301044
+          85.177393407180588,
+          27.953052372282308
         ],
         [
-          85.177391421419784,
-          27.887938456077709
+          85.177393407180588,
+          27.898215448774724
         ],
         [
-          85.116240979844619,
-          27.887938456077709
+          85.12770715253393,
+          27.898215448774724
         ]
       ]
     ]
   },
   "properties":{
-    "datetime":"2026-09-05T18:48:22Z",
+    "datetime":"2026-09-05T18:48:46Z",
     "start_datetime":"0001-01-01T00:00:00.000Z",
     "end_datetime":"9999-12-31T23:59:59.999Z",
     "tiles:tile_matrix_sets":{
@@ -66,16 +66,29 @@
         "tileMatrix":[
           {
             "type":"TileMatrixType",
-            "identifier":"17",
-            "scaleDenominator":4265.4591676995678,
+            "identifier":"18",
+            "scaleDenominator":2132.7295838497839,
             "topLeftCorner":[
               -20037508.342789244,
               20037508.342789244
             ],
             "tileWidth":256,
             "tileHeight":256,
-            "matrixWidth":131072,
-            "matrixHeight":131072
+            "matrixWidth":262144,
+            "matrixHeight":262144
+          },
+          {
+            "type":"TileMatrixType",
+            "identifier":"19",
+            "scaleDenominator":1066.364791924892,
+            "topLeftCorner":[
+              -20037508.342789244,
+              20037508.342789244
+            ],
+            "tileWidth":256,
+            "tileHeight":256,
+            "matrixWidth":524288,
+            "matrixHeight":524288
           }
         ]
       }
@@ -84,27 +97,33 @@
       "GoogleMapsCompatible":{
         "url":"#GoogleMapsCompatible",
         "limits":{
-          "17":{
-            "min_tile_col":96525,
-            "max_tile_col":96548,
-            "min_tile_row":54927,
-            "max_tile_row":54955
+          "18":{
+            "min_tile_col":193060,
+            "max_tile_col":193096,
+            "min_tile_row":109858,
+            "max_tile_row":109903
+          },
+          "19":{
+            "min_tile_col":386120,
+            "max_tile_col":386192,
+            "min_tile_row":219716,
+            "max_tile_row":219806
           }
         }
       }
     },
     "proj:code":"EPSG:3857",
     "proj:shape":[
-      7424,
-      6144
+      23296,
+      18688
     ],
     "proj:transform":[
-      1.194328566955879,
+      0.29858214173896974,
       0.0,
-      9474828.2781173084,
+      9476357.0186830107,
       0.0,
-      -1.194328566955879,
-      36831334.953268752,
+      -0.29858214173896974,
+      36831946.449495032,
       0.0,
       0.0,
       0.0
