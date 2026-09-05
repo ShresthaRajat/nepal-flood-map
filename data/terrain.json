@@ -31,12 +31,13 @@
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
       },
       "c10": {
-        "minzoom": 14,
+        "minzoom": 15,
         "maxzoom": 15,
-        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000",
+        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Restricted to z15 only (rather than z14-15) to keep the tileset near the ~120 MB budget.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
       }
     },
+    "size_note": "~134 MB total, slightly over the ~120 MB target. c10 confined to z15 only and geometry simplification increased (SIMPLIFICATION=2.2, SIMPLIFICATION_MAX_ZOOM=2.0) to get this close; further reduction (e.g. dropping c10 entirely, or a coarser base interval) would be needed to get under 120 MB exactly.",
     "elevation_range_m": [183.06, 7857.32],
     "attribution": "Copernicus GLO-30 DEM © ESA / Airbus"
   },

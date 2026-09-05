@@ -97,13 +97,21 @@ mk_class c10   "CAST(ROUND(ele) AS INTEGER) % 10 = 0  AND CAST(ROUND(ele) AS INT
 # of the JSON (not nested under a "layers" key) - both are easy to get wrong
 # and the driver silently falls back to the dataset-wide MINZOOM/MAXZOOM if
 # the keys don't match, which produced an oversized (350+ MB) first attempt.
+#
+# c10 is deliberately restricted to z15 ONLY (not z14-15 as the spec's default
+# progressive scheme would suggest): at z14-15 the full tileset came out to
+# ~226 MB, well over the ~120 MB budget. Confining c10 to z15 got it to
+# ~140 MB; combined with extra simplification below, ~134 MB - still a bit
+# over budget, but further cuts (dropping c10 entirely, or a coarser base
+# interval) would start compromising the data rather than just its zoom
+# footprint, so this was left as the final tradeoff.
 cat > "$WORK/mvt_conf.json" <<'EOF'
 {
   "c1000": { "target_name": "c1000", "minzoom": 8,  "maxzoom": 15 },
   "c500":  { "target_name": "c500",  "minzoom": 9,  "maxzoom": 15 },
   "c100":  { "target_name": "c100",  "minzoom": 11, "maxzoom": 15 },
   "c50":   { "target_name": "c50",   "minzoom": 13, "maxzoom": 15 },
-  "c10":   { "target_name": "c10",   "minzoom": 14, "maxzoom": 15 }
+  "c10":   { "target_name": "c10",   "minzoom": 15, "maxzoom": 15 }
 }
 EOF
 
@@ -116,7 +124,8 @@ EOF
   -dsco NAME=trisuli-contours \
   -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30" \
   -dsco BOUNDS="$MINLON,$MINLAT,$MAXLON,$MAXLAT" \
-  -dsco CONF="$WORK/mvt_conf.json"
+  -dsco CONF="$WORK/mvt_conf.json" \
+  -dsco SIMPLIFICATION=2.2 -dsco SIMPLIFICATION_MAX_ZOOM=2.0
 
 # Sanity check: tile z14 containing lon 85.152 lat 27.925 should exist and
 # decode with the MVT driver, e.g.:
