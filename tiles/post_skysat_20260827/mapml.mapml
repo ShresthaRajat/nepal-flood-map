@@ -1,6 +1,6 @@
 <mapml- xmlns="http://www.w3.org/1999/xhtml">
     <map-head>
-        <map-title>post_skysat_20260827.vrt</map-title>
+        <map-title>post_skysat_20260827_skysat0827_F4.vrt</map-title>
         <map-meta charset="utf-8" ></map-meta>
         <!--
         <map-link href="http://localhost:8080/myservice/mapml/WGS84?style=" rel="alternate" projection="WGS84" ></map-link>
@@ -11,9 +11,9 @@
     </map-head>
     <map-body>
         <map-extent units="OSMTILE" checked="checked">
-            <map-input name="z" type="zoom" value="18" min="8" max="18" ></map-input>
-            <map-input name="x" type="location" axis="column" units="tilematrix" min="193163" max="193296" ></map-input>
-            <map-input name="y" type="location" axis="row" units="tilematrix" min="109515" max="109753" ></map-input>
+            <map-input name="z" type="zoom" value="18" min="18" max="18" ></map-input>
+            <map-input name="x" type="location" axis="column" units="tilematrix" min="193168" max="193291" ></map-input>
+            <map-input name="y" type="location" axis="row" units="tilematrix" min="109526" max="109742" ></map-input>
             <map-link tref="./{z}/{x}/{y}.webp" rel="tile" ></map-link>
             <!--<map-link tref="http://localhost:8080/myservice/wmts?layer=MYLAYER&amp;style=&amp;tilematrixset=OSMTILE&amp;service=WMTS&amp;request=GetTile&amp;version=1.0.0&amp;tilematrix={z}&amp;TileCol={x}&amp;TileRow={y}&amp;format=image/png" rel="tile" ></map-link>-->
             <!--

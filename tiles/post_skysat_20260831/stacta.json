@@ -5,43 +5,43 @@
     "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
     "https://stac-extensions.github.io/eo/v2.0.0/schema.json"
   ],
-  "id":"000522.vrt",
+  "id":"post_skysat_20260831_skysat_F4.vrt",
   "type":"Feature",
   "bbox":[
-    85.070376289087321,
-    27.791953226305615,
-    85.253845760803983,
-    28.038732997750877
+    85.123885094970831,
+    27.894789217375596,
+    85.177393845500731,
+    27.956479597301044
   ],
   "geometry":{
     "type":"Polygon",
     "coordinates":[
       [
         [
-          85.070376289087321,
-          27.791953226305615
+          85.123885094970831,
+          27.894789217375596
         ],
         [
-          85.070376289087321,
-          28.038732997750877
+          85.123885094970831,
+          27.956479597301044
         ],
         [
-          85.253845760803983,
-          28.038732997750877
+          85.177393845500731,
+          27.956479597301044
         ],
         [
-          85.253845760803983,
-          27.791953226305615
+          85.177393845500731,
+          27.894789217375596
         ],
         [
-          85.070376289087321,
-          27.791953226305615
+          85.123885094970831,
+          27.894789217375596
         ]
       ]
     ]
   },
   "properties":{
-    "datetime":"2026-09-05T18:49:33Z",
+    "datetime":"2026-09-05T18:52:19Z",
     "start_datetime":"0001-01-01T00:00:00.000Z",
     "end_datetime":"9999-12-31T23:59:59.999Z",
     "tiles:tile_matrix_sets":{
@@ -66,120 +66,16 @@
         "tileMatrix":[
           {
             "type":"TileMatrixType",
-            "identifier":"8",
-            "scaleDenominator":2183915.0938621787,
+            "identifier":"18",
+            "scaleDenominator":2132.7295838497839,
             "topLeftCorner":[
               -20037508.342789244,
               20037508.342789244
             ],
             "tileWidth":256,
             "tileHeight":256,
-            "matrixWidth":256,
-            "matrixHeight":256
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"9",
-            "scaleDenominator":1091957.5469310894,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":512,
-            "matrixHeight":512
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"10",
-            "scaleDenominator":545978.77346554468,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":1024,
-            "matrixHeight":1024
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"11",
-            "scaleDenominator":272989.38673277234,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":2048,
-            "matrixHeight":2048
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"12",
-            "scaleDenominator":136494.69336638617,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":4096,
-            "matrixHeight":4096
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"13",
-            "scaleDenominator":68247.346683193085,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":8192,
-            "matrixHeight":8192
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"14",
-            "scaleDenominator":34123.673341596543,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":16384,
-            "matrixHeight":16384
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"15",
-            "scaleDenominator":17061.836670798271,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":32768,
-            "matrixHeight":32768
-          },
-          {
-            "type":"TileMatrixType",
-            "identifier":"16",
-            "scaleDenominator":8530.9183353991357,
-            "topLeftCorner":[
-              -20037508.342789244,
-              20037508.342789244
-            ],
-            "tileWidth":256,
-            "tileHeight":256,
-            "matrixWidth":65536,
-            "matrixHeight":65536
+            "matrixWidth":262144,
+            "matrixHeight":262144
           }
         ]
       }
@@ -188,59 +84,11 @@
       "GoogleMapsCompatible":{
         "url":"#GoogleMapsCompatible",
         "limits":{
-          "8":{
-            "min_tile_col":188,
-            "max_tile_col":188,
-            "min_tile_row":107,
-            "max_tile_row":107
-          },
-          "9":{
-            "min_tile_col":376,
-            "max_tile_col":377,
-            "min_tile_row":214,
-            "max_tile_row":214
-          },
-          "10":{
-            "min_tile_col":753,
-            "max_tile_col":754,
-            "min_tile_row":428,
-            "max_tile_row":429
-          },
-          "11":{
-            "min_tile_col":1507,
-            "max_tile_col":1509,
-            "min_tile_row":857,
-            "max_tile_row":859
-          },
-          "12":{
-            "min_tile_col":3015,
-            "max_tile_col":3018,
-            "min_tile_row":1715,
-            "max_tile_row":1718
-          },
-          "13":{
-            "min_tile_col":6031,
-            "max_tile_col":6035,
-            "min_tile_row":3430,
-            "max_tile_row":3437
-          },
-          "14":{
-            "min_tile_col":12063,
-            "max_tile_col":12071,
-            "min_tile_row":6861,
-            "max_tile_row":6874
-          },
-          "15":{
-            "min_tile_col":24127,
-            "max_tile_col":24143,
-            "min_tile_row":13723,
-            "max_tile_row":13748
-          },
-          "16":{
-            "min_tile_col":48254,
-            "max_tile_col":48287,
-            "min_tile_row":27446,
-            "max_tile_row":27497
+          "18":{
+            "min_tile_col":193057,
+            "max_tile_col":193096,
+            "min_tile_row":109855,
+            "max_tile_row":109906
           }
         }
       }
@@ -248,15 +96,15 @@
     "proj:code":"EPSG:3857",
     "proj:shape":[
       13312,
-      8704
+      10240
     ],
     "proj:transform":[
-      2.3886571339117579,
+      0.59716428347793948,
       0.0,
-      9469630.5601939149,
+      9475898.3965133,
       0.0,
-      -2.3886571339117579,
-      36820633.76930882,
+      -0.59716428347793948,
+      36831487.827325322,
       0.0,
       0.0,
       0.0
