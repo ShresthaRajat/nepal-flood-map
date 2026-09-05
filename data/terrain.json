@@ -1,0 +1,50 @@
+{
+  "contours": {
+    "tiles": "tiles/contours/{z}/{x}/{y}.pbf",
+    "minzoom": 8,
+    "maxzoom": 15,
+    "bounds": [84.45, 27.65, 85.65, 28.5],
+    "compressed": false,
+    "layers": {
+      "c1000": {
+        "minzoom": 8,
+        "maxzoom": 15,
+        "description": "Contours at multiples of 1000 m",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+      },
+      "c500": {
+        "minzoom": 9,
+        "maxzoom": 15,
+        "description": "Contours at multiples of 500 m, excluding those already in c1000",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+      },
+      "c100": {
+        "minzoom": 11,
+        "maxzoom": 15,
+        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+      },
+      "c50": {
+        "minzoom": 13,
+        "maxzoom": 15,
+        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+      },
+      "c10": {
+        "minzoom": 14,
+        "maxzoom": 15,
+        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+      }
+    },
+    "elevation_range_m": [183.06, 7857.32],
+    "attribution": "Copernicus GLO-30 DEM © ESA / Airbus"
+  },
+  "hillshade": {
+    "tiles": "tiles/hillshade/{z}/{x}/{y}.webp",
+    "minzoom": 8,
+    "maxzoom": 14,
+    "scheme": "xyz",
+    "attribution": "Copernicus GLO-30 DEM © ESA / Airbus"
+  }
+}

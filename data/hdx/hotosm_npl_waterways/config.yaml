@@ -1,0 +1,79 @@
+iso3: NPL
+category:
+  name: waterways
+  formats:
+  - gpkg
+  - shp
+  - geojson
+  - kml
+  skip_pcodes: false
+  boundary_resolution: h3_neighbor
+  hdx:
+    title: Waterways
+    notes: 'Water features across the region: rivers, streams, canals, lakes, ponds,
+      and water bodies tagged with `waterway`, `water`, or `natural=water`. Useful
+      for flood-risk modelling, watershed analysis, and environmental basemap context.
+
+
+      Coverage reflects where volunteer mappers have been active. Urban areas are
+      usually well represented, remote areas may be sparse. Cross-check critical decisions
+      with local field knowledge.
+
+
+      - Source: [OpenStreetMap](https://www.openstreetmap.org), a free, collaborative
+      world map
+
+      - Tags: [waterway](https://wiki.openstreetmap.org/wiki/Key:waterway), [water](https://wiki.openstreetmap.org/wiki/Key:water),
+      [natural](https://wiki.openstreetmap.org/wiki/Key:natural)
+
+      - Part of the [exports grid on HDX](https://data.humdata.org/organization/hot/)
+      by [HOT](https://www.hotosm.org/)
+
+      '
+    tags:
+    - geodata
+    - hydrology
+    - rivers
+    license: hdx-odc-odbl
+    license_url: https://opendatacommons.org/licenses/odbl/1-0/
+    caveats: OpenStreetMap data is crowd sourced and cannot be considered to be exhaustive
+    dataset_source: OpenStreetMap contributors
+  overture:
+    enabled: false
+    theme: ''
+    feature_type: ''
+    select: []
+    where: []
+    tiles: true
+  osm:
+    enabled: true
+    select:
+    - feature_id AS id
+    - tags['name'] AS name
+    - tags['name:en'] AS name_en
+    - tags['waterway'] AS waterway
+    - tags['covered'] AS covered
+    - tags['width'] AS width
+    - tags['depth'] AS depth
+    - tags['layer'] AS layer
+    - tags['blockage'] AS blockage
+    - tags['tunnel'] AS tunnel
+    - tags['natural'] AS natural_class
+    - tags['water'] AS water
+    - tags['source'] AS source
+    where: []
+    filter:
+      waterway: true
+      water: true
+      natural:
+      - water
+      - wetland
+      - bay
+    tiles: true
+  transliterate:
+  - target: name_latin
+    source: name
+    prefer: name_en
+  temporal:
+    column: update_time
+source: osm

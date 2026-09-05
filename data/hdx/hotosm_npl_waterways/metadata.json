@@ -1,0 +1,537 @@
+{
+  "feature_count": 128260,
+  "geometry_types": {
+    "LINESTRING": 84266,
+    "POLYGON": 42687,
+    "POINT": 1291,
+    "MULTIPOLYGON": 16
+  },
+  "bbox": [
+    80.0468762,
+    25.8608768,
+    88.1948391,
+    30.4476193
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 128260,
+      "top_values": []
+    },
+    {
+      "name": "name",
+      "type": "VARCHAR",
+      "null_count": 122388,
+      "null_percent": 95.42,
+      "distinct_count": 3373,
+      "top_values": []
+    },
+    {
+      "name": "name_en",
+      "type": "VARCHAR",
+      "null_count": 127870,
+      "null_percent": 99.7,
+      "distinct_count": 226,
+      "top_values": [
+        {
+          "value": "Karnali",
+          "count": 31
+        },
+        {
+          "value": "Mahakali River",
+          "count": 21
+        },
+        {
+          "value": "Bagmati",
+          "count": 18
+        },
+        {
+          "value": "Doun canal",
+          "count": 9
+        },
+        {
+          "value": "Madi River",
+          "count": 7
+        }
+      ]
+    },
+    {
+      "name": "name_ne",
+      "type": "VARCHAR",
+      "null_count": 127852,
+      "null_percent": 99.68,
+      "distinct_count": 227,
+      "top_values": [
+        {
+          "value": "\u0915\u0930\u094d\u0923\u093e\u0932\u0940",
+          "count": 34
+        },
+        {
+          "value": "\u092e\u0939\u093e\u0915\u093e\u0932\u0940 \u0928\u0926\u0940",
+          "count": 24
+        },
+        {
+          "value": "\u092c\u093e\u0917\u092e\u0924\u0940 \u0928\u0926\u0940",
+          "count": 21
+        },
+        {
+          "value": "\u092b\u093f\u0930\u094d\u0915\u0940 \u0916\u094b\u0932\u093e",
+          "count": 16
+        },
+        {
+          "value": "\u0915\u0941\u0932\u094b",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "name": "waterway",
+      "type": "VARCHAR",
+      "null_count": 43673,
+      "null_percent": 34.05,
+      "distinct_count": 27,
+      "top_values": [
+        {
+          "value": "stream",
+          "count": 49261
+        },
+        {
+          "value": "ditch",
+          "count": 19049
+        },
+        {
+          "value": "canal",
+          "count": 5648
+        },
+        {
+          "value": "river",
+          "count": 5289
+        },
+        {
+          "value": "drain",
+          "count": 4384
+        }
+      ]
+    },
+    {
+      "name": "covered",
+      "type": "VARCHAR",
+      "null_count": 128253,
+      "null_percent": 99.99,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "yes",
+          "count": 5
+        },
+        {
+          "value": "no",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "name": "width",
+      "type": "VARCHAR",
+      "null_count": 127987,
+      "null_percent": 99.79,
+      "distinct_count": 33,
+      "top_values": [
+        {
+          "value": "1",
+          "count": 93
+        },
+        {
+          "value": "5",
+          "count": 45
+        },
+        {
+          "value": "0.5",
+          "count": 18
+        },
+        {
+          "value": "4",
+          "count": 14
+        },
+        {
+          "value": "2",
+          "count": 13
+        }
+      ]
+    },
+    {
+      "name": "depth",
+      "type": "VARCHAR",
+      "null_count": 128259,
+      "null_percent": 100.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "145",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "layer",
+      "type": "VARCHAR",
+      "null_count": 117713,
+      "null_percent": 91.78,
+      "distinct_count": 5,
+      "top_values": [
+        {
+          "value": "-1",
+          "count": 10398
+        },
+        {
+          "value": "1",
+          "count": 136
+        },
+        {
+          "value": "-2",
+          "count": 11
+        },
+        {
+          "value": "2",
+          "count": 1
+        },
+        {
+          "value": "-8",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "blockage",
+      "type": "VARCHAR",
+      "null_count": 128260,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "tunnel",
+      "type": "VARCHAR",
+      "null_count": 117494,
+      "null_percent": 91.61,
+      "distinct_count": 8,
+      "top_values": [
+        {
+          "value": "culvert",
+          "count": 9808
+        },
+        {
+          "value": "yes",
+          "count": 879
+        },
+        {
+          "value": "no",
+          "count": 36
+        },
+        {
+          "value": "flooded",
+          "count": 20
+        },
+        {
+          "value": "covered",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "name": "natural_class",
+      "type": "VARCHAR",
+      "null_count": 85446,
+      "null_percent": 66.62,
+      "distinct_count": 7,
+      "top_values": [
+        {
+          "value": "water",
+          "count": 41534
+        },
+        {
+          "value": "wetland",
+          "count": 1257
+        },
+        {
+          "value": "shingle",
+          "count": 17
+        },
+        {
+          "value": "ridge",
+          "count": 2
+        },
+        {
+          "value": "bay",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "name": "water",
+      "type": "VARCHAR",
+      "null_count": 104058,
+      "null_percent": 81.13,
+      "distinct_count": 39,
+      "top_values": [
+        {
+          "value": "pond",
+          "count": 15212
+        },
+        {
+          "value": "reservoir",
+          "count": 2862
+        },
+        {
+          "value": "river",
+          "count": 2539
+        },
+        {
+          "value": "basin",
+          "count": 1695
+        },
+        {
+          "value": "lake",
+          "count": 1413
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "type": "VARCHAR",
+      "null_count": 128260,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "adm0_pcode",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "NPL",
+          "count": 128260
+        }
+      ]
+    },
+    {
+      "name": "adm0_name",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "Nepal",
+          "count": 128260
+        }
+      ]
+    },
+    {
+      "name": "adm1_pcode",
+      "type": "VARCHAR",
+      "null_count": 87,
+      "null_percent": 0.07,
+      "distinct_count": 7,
+      "top_values": [
+        {
+          "value": "NP01",
+          "count": 39320
+        },
+        {
+          "value": "NP02",
+          "count": 29964
+        },
+        {
+          "value": "NP03",
+          "count": 17858
+        },
+        {
+          "value": "NP05",
+          "count": 14585
+        },
+        {
+          "value": "NP06",
+          "count": 9475
+        }
+      ]
+    },
+    {
+      "name": "adm1_name",
+      "type": "VARCHAR",
+      "null_count": 87,
+      "null_percent": 0.07,
+      "distinct_count": 7,
+      "top_values": [
+        {
+          "value": "Koshi",
+          "count": 39320
+        },
+        {
+          "value": "Madhesh",
+          "count": 29964
+        },
+        {
+          "value": "Bagmati",
+          "count": 17858
+        },
+        {
+          "value": "Lumbini",
+          "count": 14585
+        },
+        {
+          "value": "Karnali",
+          "count": 9475
+        }
+      ]
+    },
+    {
+      "name": "adm2_pcode",
+      "type": "VARCHAR",
+      "null_count": 87,
+      "null_percent": 0.07,
+      "distinct_count": 77,
+      "top_values": [
+        {
+          "value": "NP0105",
+          "count": 17303
+        },
+        {
+          "value": "NP0106",
+          "count": 7525
+        },
+        {
+          "value": "NP0233",
+          "count": 6752
+        },
+        {
+          "value": "NP0104",
+          "count": 6463
+        },
+        {
+          "value": "NP0219",
+          "count": 5884
+        }
+      ]
+    },
+    {
+      "name": "adm2_name",
+      "type": "VARCHAR",
+      "null_count": 87,
+      "null_percent": 0.07,
+      "distinct_count": 77,
+      "top_values": [
+        {
+          "value": "Morang",
+          "count": 17303
+        },
+        {
+          "value": "Sunsari",
+          "count": 7525
+        },
+        {
+          "value": "Bara",
+          "count": 6752
+        },
+        {
+          "value": "Jhapa",
+          "count": 6463
+        },
+        {
+          "value": "Sarlahi",
+          "count": 5884
+        }
+      ]
+    },
+    {
+      "name": "adm3_pcode",
+      "type": "VARCHAR",
+      "null_count": 87,
+      "null_percent": 0.07,
+      "distinct_count": 773,
+      "top_values": [
+        {
+          "value": "NP0335101",
+          "count": 1949
+        },
+        {
+          "value": "NP0105302",
+          "count": 1845
+        },
+        {
+          "value": "NP0105303",
+          "count": 1723
+        },
+        {
+          "value": "NP0662401",
+          "count": 1565
+        },
+        {
+          "value": "NP0335305",
+          "count": 1491
+        }
+      ]
+    },
+    {
+      "name": "adm3_name",
+      "type": "VARCHAR",
+      "null_count": 87,
+      "null_percent": 0.07,
+      "distinct_count": 728,
+      "top_values": [
+        {
+          "value": "Bharatpur",
+          "count": 1949
+        },
+        {
+          "value": "Sundarharaicha",
+          "count": 1845
+        },
+        {
+          "value": "Belbari",
+          "count": 1723
+        },
+        {
+          "value": "Madi",
+          "count": 1601
+        },
+        {
+          "value": "Shey Phoksundo",
+          "count": 1565
+        }
+      ]
+    },
+    {
+      "name": "adm4_pcode",
+      "type": "VARCHAR",
+      "null_count": 128260,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "adm4_name",
+      "type": "VARCHAR",
+      "null_count": 128260,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "name_latin",
+      "type": "VARCHAR",
+      "null_count": 122332,
+      "null_percent": 95.38,
+      "distinct_count": 3397,
+      "top_values": []
+    }
+  ],
+  "summary": "128,260 features. geometry types: 84,266 LINESTRING, 42,687 POLYGON, 1,291 POINT, 16 MULTIPOLYGON. 15 of 25 columns are >=50% null (name, name_en, name_ne, covered, width, depth, layer, blockage, tunnel, natural_class, water, source, adm4_pcode, adm4_name, name_latin).",
+  "temporal": null
+}

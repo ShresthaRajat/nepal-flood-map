@@ -1,0 +1,542 @@
+{
+  "feature_count": 566,
+  "geometry_types": {
+    "LINESTRING": 448,
+    "POLYGON": 110,
+    "POINT": 8
+  },
+  "bbox": [
+    84.273839,
+    27.6559453,
+    85.4306907,
+    28.3305113
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 566,
+      "top_values": [
+        {
+          "value": "way/915399519",
+          "count": 1
+        },
+        {
+          "value": "way/1552967733",
+          "count": 1
+        },
+        {
+          "value": "way/1553840464",
+          "count": 1
+        },
+        {
+          "value": "way/340911760",
+          "count": 1
+        },
+        {
+          "value": "way/341554283",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "type": "VARCHAR",
+      "null_count": 474,
+      "null_percent": 83.75,
+      "distinct_count": 44,
+      "top_values": [
+        {
+          "value": "Upper Trishuli-3 Hydropower Project",
+          "count": 15
+        },
+        {
+          "value": "Trishuli Ganga River",
+          "count": 13
+        },
+        {
+          "value": "Upper Trishuli Hydropower Project",
+          "count": 8
+        },
+        {
+          "value": "\u0924\u094d\u0930\u093f\u0936\u0941\u0932\u0940 \u0928\u0926\u0940",
+          "count": 6
+        },
+        {
+          "value": "Briddhim Khola",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "name": "name_en",
+      "type": "VARCHAR",
+      "null_count": 545,
+      "null_percent": 96.29,
+      "distinct_count": 10,
+      "top_values": [
+        {
+          "value": "Trishuli Ganga River",
+          "count": 6
+        },
+        {
+          "value": "Trisuli",
+          "count": 5
+        },
+        {
+          "value": "Bhote Koshi",
+          "count": 3
+        },
+        {
+          "value": "Lamo jharna, Jalbire",
+          "count": 1
+        },
+        {
+          "value": "Lende Khola",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "name_ne",
+      "type": "VARCHAR",
+      "null_count": 552,
+      "null_percent": 97.53,
+      "distinct_count": 9,
+      "top_values": [
+        {
+          "value": "\u0924\u094d\u0930\u093f\u0936\u0941\u0932\u0940 \u0928\u0926\u0940",
+          "count": 5
+        },
+        {
+          "value": "\u092d\u094b\u091f\u0947 \u0915\u094b\u0936\u0940",
+          "count": 2
+        },
+        {
+          "value": "\u0932\u093e\u0919\u091f\u093e\u0919 \u0916\u094b\u0932\u093e",
+          "count": 1
+        },
+        {
+          "value": "\u0918\u091f\u094d\u091f\u0947 \u0916\u094b\u0932\u093e",
+          "count": 1
+        },
+        {
+          "value": "\u0924\u094d\u0930\u093f\u0936\u0942\u0932\u0940 \u0917\u0902\u0917\u093e \u0928\u0926\u0940",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "Standing",
+          "count": 520
+        },
+        {
+          "value": "Destroyed",
+          "count": 46
+        }
+      ]
+    },
+    {
+      "name": "waterway",
+      "type": "VARCHAR",
+      "null_count": 116,
+      "null_percent": 20.49,
+      "distinct_count": 12,
+      "top_values": [
+        {
+          "value": "stream",
+          "count": 308
+        },
+        {
+          "value": "river",
+          "count": 54
+        },
+        {
+          "value": "canal",
+          "count": 41
+        },
+        {
+          "value": "construction",
+          "count": 12
+        },
+        {
+          "value": "weir",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "name": "covered",
+      "type": "VARCHAR",
+      "null_count": 566,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "width",
+      "type": "VARCHAR",
+      "null_count": 566,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "depth",
+      "type": "VARCHAR",
+      "null_count": 566,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "layer",
+      "type": "VARCHAR",
+      "null_count": 505,
+      "null_percent": 89.22,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "-1",
+          "count": 56
+        },
+        {
+          "value": "1",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "name": "blockage",
+      "type": "VARCHAR",
+      "null_count": 566,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "tunnel",
+      "type": "VARCHAR",
+      "null_count": 516,
+      "null_percent": 91.17,
+      "distinct_count": 3,
+      "top_values": [
+        {
+          "value": "culvert",
+          "count": 21
+        },
+        {
+          "value": "flooded",
+          "count": 21
+        },
+        {
+          "value": "yes",
+          "count": 8
+        }
+      ]
+    },
+    {
+      "name": "natural_class",
+      "type": "VARCHAR",
+      "null_count": 443,
+      "null_percent": 78.27,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "water",
+          "count": 123
+        }
+      ]
+    },
+    {
+      "name": "water",
+      "type": "VARCHAR",
+      "null_count": 472,
+      "null_percent": 83.39,
+      "distinct_count": 5,
+      "top_values": [
+        {
+          "value": "river",
+          "count": 63
+        },
+        {
+          "value": "pond",
+          "count": 13
+        },
+        {
+          "value": "reservoir",
+          "count": 12
+        },
+        {
+          "value": "basin",
+          "count": 5
+        },
+        {
+          "value": "canal",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "type": "VARCHAR",
+      "null_count": 522,
+      "null_percent": 92.23,
+      "distinct_count": 11,
+      "top_values": [
+        {
+          "value": "Bing",
+          "count": 26
+        },
+        {
+          "value": "landsat",
+          "count": 6
+        },
+        {
+          "value": "Mapbox",
+          "count": 3
+        },
+        {
+          "value": "Nepa Maps",
+          "count": 2
+        },
+        {
+          "value": "extrapolation, Bing Sat",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "name": "adm0_pcode",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "NPL",
+          "count": 566
+        }
+      ]
+    },
+    {
+      "name": "adm0_name",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "Nepal",
+          "count": 566
+        }
+      ]
+    },
+    {
+      "name": "adm1_pcode",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "NP03",
+          "count": 515
+        },
+        {
+          "value": "NP04",
+          "count": 51
+        }
+      ]
+    },
+    {
+      "name": "adm1_name",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "Bagmati",
+          "count": 515
+        },
+        {
+          "value": "Gandaki",
+          "count": 51
+        }
+      ]
+    },
+    {
+      "name": "adm2_pcode",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 7,
+      "top_values": [
+        {
+          "value": "NP0329",
+          "count": 216
+        },
+        {
+          "value": "NP0328",
+          "count": 177
+        },
+        {
+          "value": "NP0330",
+          "count": 68
+        },
+        {
+          "value": "NP0335",
+          "count": 54
+        },
+        {
+          "value": "NP0436",
+          "count": 25
+        }
+      ]
+    },
+    {
+      "name": "adm2_name",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 7,
+      "top_values": [
+        {
+          "value": "Rasuwa",
+          "count": 216
+        },
+        {
+          "value": "Nuwakot",
+          "count": 177
+        },
+        {
+          "value": "Dhading",
+          "count": 68
+        },
+        {
+          "value": "Chitawan",
+          "count": 54
+        },
+        {
+          "value": "Tanahu",
+          "count": 25
+        }
+      ]
+    },
+    {
+      "name": "adm3_pcode",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 22,
+      "top_values": [
+        {
+          "value": "NP0328301",
+          "count": 141
+        },
+        {
+          "value": "NP0329402",
+          "count": 97
+        },
+        {
+          "value": "NP0329403",
+          "count": 68
+        },
+        {
+          "value": "NP0329401",
+          "count": 29
+        },
+        {
+          "value": "NP0335401",
+          "count": 29
+        }
+      ]
+    },
+    {
+      "name": "adm3_name",
+      "type": "VARCHAR",
+      "null_count": 0,
+      "null_percent": 0.0,
+      "distinct_count": 22,
+      "top_values": [
+        {
+          "value": "Bidur",
+          "count": 141
+        },
+        {
+          "value": "Gosaikunda",
+          "count": 97
+        },
+        {
+          "value": "Uttargaya",
+          "count": 68
+        },
+        {
+          "value": "Aamachhodingmo",
+          "count": 29
+        },
+        {
+          "value": "Ichchha Kamana",
+          "count": 29
+        }
+      ]
+    },
+    {
+      "name": "adm4_pcode",
+      "type": "VARCHAR",
+      "null_count": 566,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "adm4_name",
+      "type": "VARCHAR",
+      "null_count": 566,
+      "null_percent": 100.0,
+      "distinct_count": 0,
+      "top_values": []
+    },
+    {
+      "name": "name_latin",
+      "type": "VARCHAR",
+      "null_count": 473,
+      "null_percent": 83.57,
+      "distinct_count": 45,
+      "top_values": [
+        {
+          "value": "Upper Trishuli-3 Hydropower Project",
+          "count": 15
+        },
+        {
+          "value": "Trishuli Ganga River",
+          "count": 13
+        },
+        {
+          "value": "Upper Trishuli Hydropower Project",
+          "count": 8
+        },
+        {
+          "value": "Trisuli",
+          "count": 8
+        },
+        {
+          "value": "Bhote Koshi",
+          "count": 3
+        }
+      ]
+    }
+  ],
+  "summary": "566 features. geometry types: 448 LINESTRING, 110 POLYGON, 8 POINT. 15 of 26 columns are >=50% null (name, name_en, name_ne, covered, width, depth, layer, blockage, tunnel, natural_class, water, source, adm4_pcode, adm4_name, name_latin).",
+  "temporal": null
+}

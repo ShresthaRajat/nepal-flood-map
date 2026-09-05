@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>Nepal Flood 2026 — Bhote Koshi &amp; Trishuli</title>
+<meta name="description" content="Before/after satellite imagery and Humanitarian OpenStreetMap Team response data for the 26 August 2026 glacier-collapse flood along the Bhote Koshi and Trishuli rivers, Nepal."/>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+<link rel="stylesheet" href="app/style.css"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"></script>
+</head>
+<body data-mode="swipe">
+
+<button id="panelToggle" aria-controls="panel" aria-label="Toggle the layer panel">☰ Layers</button>
+
+<aside id="panel">
+  <div class="pad">
+    <h1>Nepal Flood 2026 — Bhote Koshi &amp; Trishuli</h1>
+    <p class="sub">Glacier-collapse flood of 26 August 2026. Before/after satellite imagery with
+      Humanitarian OpenStreetMap Team response data. Drag the divider, or press
+      <kbd>[</kbd>&nbsp;<kbd>]</kbd>.</p>
+  </div>
+</aside>
+
+<div id="stage" aria-label="Before and after satellite comparison">
+  <div id="mapPre"></div>
+  <div id="mapPost"></div>
+  <div id="divider" role="separator" aria-label="Comparison divider" aria-orientation="vertical" tabindex="0">
+    <div class="knob">↔</div>
+  </div>
+  <div class="sidelabel" id="labPre">Before</div>
+  <div class="sidelabel" id="labPost">After</div>
+  <div id="readout"></div>
+</div>
+
+<script src="app/config.js"></script>
+<script src="app/app.js"></script>
+</body>
+</html>
