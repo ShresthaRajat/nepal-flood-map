@@ -38,7 +38,7 @@ DEM_TILES=(
   "Copernicus_DSM_COG_10_N28_00_E085_00_DEM"
 )
 
-if [ ! -f "$WORK/glo30.tif" ]; then
+if [ ! -f "$WORK/glo30.tif" ] && [ ! -f "$WORK/contours_10m.gpkg" ]; then
   for t in "${DEM_TILES[@]}"; do
     if [ ! -f "$WORK/$t.tif" ]; then
       echo "Fetching $t ..."
@@ -68,49 +68,46 @@ fi
 #    geometry across layers at a given zoom). `idx`=1 flags contours that are
 #    also multiples of 100 m (useful for bolder-line styling).
 # ---------------------------------------------------------------------------
+[ -f "$WORK/contours_10m.gpkg" ] || \
 "$GDAL_BIN/gdal_contour" -a ele -i 10.0 -f GPKG -nln contours10 \
   "$WORK/glo30.tif" "$WORK/contours_10m.gpkg"
 
 SPLIT_GPKG="$WORK/contours_split.gpkg"
 rm -f "$SPLIT_GPKG"
 
+# Two clip masks (owner direction, 6 Sep 2026): the fine classes (c50, c10)
+# are limited to the HOT flood-affected AOI (observed 27 Aug flood extent +
+# 200 m, the "area of interest outline" in the app); the coarse classes
+# (c1000, c500, c100) extend 1 km beyond it so the valley sides still read
+# without drowning the map in lines. Earlier builds: full extent for the
+# coarse classes with c50/c10 on the 1 km river corridor (76 MB), then all
+# classes on the flood AOI (2.4 MB) — see work/contours_v*. Full-extent c10
+# alone was ~226 MB, so the clipping is also what keeps the tileset small.
+AOI_FINE="$ROOT/data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson"
+AOI_COARSE="$WORK/aoi_flood_1km.geojson"
+# 1 km buffer computed in UTM 45N so the distance is metric, then back to WGS84.
+rm -f "$AOI_COARSE" "$WORK/aoi_utm.gpkg"
+"$GDAL_BIN/ogr2ogr" -f GPKG -t_srs EPSG:32645 "$WORK/aoi_utm.gpkg" "$AOI_FINE" -nln aoi
+"$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_COARSE" "$WORK/aoi_utm.gpkg" \
+  -dialect sqlite -sql "SELECT ST_Buffer(geom, 1000) AS geom FROM aoi"
+
 mk_class () {
-  local name="$1" where="$2"
+  local name="$1" where="$2" clip="$3"
   local first_opt=()
   [ -f "$SPLIT_GPKG" ] && first_opt=(-update)
-  "$GDAL_BIN/ogr2ogr" -f GPKG "${first_opt[@]}" "$SPLIT_GPKG" \
+  "$GDAL_BIN/ogr2ogr" -f GPKG ${first_opt[@]+"${first_opt[@]}"} "$SPLIT_GPKG" \
     "$WORK/contours_10m.gpkg" -dialect sqlite -sql \
     "SELECT geom, CAST(ROUND(ele) AS INTEGER) AS ele, \
             CASE WHEN CAST(ROUND(ele) AS INTEGER) % 100 = 0 THEN 1 ELSE 0 END AS idx \
      FROM contours10 WHERE $where" \
-    -nln "$name" -nlt LINESTRING
+    -nln "$name" -nlt LINESTRING -clipsrc "$clip"
 }
 
-mk_class c1000 "CAST(ROUND(ele) AS INTEGER) % 1000 = 0"
-mk_class c500  "CAST(ROUND(ele) AS INTEGER) % 500 = 0 AND CAST(ROUND(ele) AS INTEGER) % 1000 != 0"
-mk_class c100  "CAST(ROUND(ele) AS INTEGER) % 100 = 0 AND CAST(ROUND(ele) AS INTEGER) % 500 != 0"
-
-# c50 and c10 are clipped to the 1 km flood-corridor AOI (Rasuwagadhi to
-# Devghat) rather than the full map extent. At full extent, z14-15 c10 alone
-# pushed the tileset to ~226 MB (well over the ~120 MB budget); even after
-# confining c10 to z15-only and increasing simplification it only got to
-# ~134 MB. Clipping to the corridor (per owner direction, to cut CPU time)
-# drops c50 from 4489 to 136 features and c10 from 37094 to 1211, bringing
-# the full tileset (with c10/c50 restored to their intended z14-15/z13-15
-# ranges) down to ~76 MB - comfortably under budget, and with no loss of
-# detail where it matters (the flood-affected river corridor).
-AOI="$ROOT/data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson"
-mk_class_clipped () {
-  local name="$1" where="$2"
-  "$GDAL_BIN/ogr2ogr" -f GPKG -overwrite -update "$SPLIT_GPKG" \
-    "$WORK/contours_10m.gpkg" -dialect sqlite -sql \
-    "SELECT geom, CAST(ROUND(ele) AS INTEGER) AS ele, \
-            CASE WHEN CAST(ROUND(ele) AS INTEGER) % 100 = 0 THEN 1 ELSE 0 END AS idx \
-     FROM contours10 WHERE $where" \
-    -nln "$name" -nlt LINESTRING -clipsrc "$AOI"
-}
-mk_class_clipped c50 "CAST(ROUND(ele) AS INTEGER) % 50 = 0  AND CAST(ROUND(ele) AS INTEGER) % 100 != 0"
-mk_class_clipped c10 "CAST(ROUND(ele) AS INTEGER) % 10 = 0  AND CAST(ROUND(ele) AS INTEGER) % 50 != 0"
+mk_class c1000 "CAST(ROUND(ele) AS INTEGER) % 1000 = 0" "$AOI_COARSE"
+mk_class c500  "CAST(ROUND(ele) AS INTEGER) % 500 = 0 AND CAST(ROUND(ele) AS INTEGER) % 1000 != 0" "$AOI_COARSE"
+mk_class c100  "CAST(ROUND(ele) AS INTEGER) % 100 = 0 AND CAST(ROUND(ele) AS INTEGER) % 500 != 0" "$AOI_COARSE"
+mk_class c50   "CAST(ROUND(ele) AS INTEGER) % 50 = 0  AND CAST(ROUND(ele) AS INTEGER) % 100 != 0" "$AOI_FINE"
+mk_class c10   "CAST(ROUND(ele) AS INTEGER) % 10 = 0  AND CAST(ROUND(ele) AS INTEGER) % 50 != 0" "$AOI_FINE"
 
 # Per-layer zoom ranges via the MVT driver's CONF option. NOTE: the JSON keys
 # are "minzoom"/"maxzoom" (no underscore) and the layer map is the TOP LEVEL
@@ -134,13 +131,15 @@ EOF
   c1000 c500 c100 c50 c10 \
   -dsco MINZOOM=8 -dsco MAXZOOM=15 -dsco COMPRESS=NO -dsco FORMAT=DIRECTORY \
   -dsco NAME=trisuli-contours \
-  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30 (c10/c50 clipped to 1km river corridor)" \
+  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30: 10/50 m within the HOT flood-affected AOI, 100/500/1000 m to 1 km beyond it" \
   -dsco BOUNDS="$MINLON,$MINLAT,$MAXLON,$MAXLAT" \
   -dsco CONF="$WORK/mvt_conf.json"
 
 # Sanity check: tile z14 containing lon 85.152 lat 27.925 should exist and
 # decode with the MVT driver, e.g.:
 #   ogrinfo -oo X=<x> -oo Y=<y> -oo Z=14 MVT:"$TILES/contours"
+
+if [ "${SKIP_HILLSHADE:-0}" = "1" ]; then echo "Contours done (hillshade skipped)."; exit 0; fi
 
 # ---------------------------------------------------------------------------
 # 3. Hillshade: multidirectional, degrees z-factor, tiled as XYZ WEBP.

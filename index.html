@@ -17,11 +17,16 @@
     <h1>Nepal Flood 2026 — Bhote Koshi &amp; Trishuli</h1>
     <p class="sub">Glacier-collapse flood of 26 August 2026. Before/after satellite imagery with
       Humanitarian OpenStreetMap Team response data. Drag the divider, or press
-      <kbd>[</kbd>&nbsp;<kbd>]</kbd>. <kbd>B</kbd> hides this panel.</p>
+      <kbd>[</kbd>&nbsp;<kbd>]</kbd>. <kbd>B</kbd> hides this panel, <kbd>C</kbd> the layer controls.</p>
   </div>
 </aside>
 
-<button id="sidebarToggle" aria-controls="panel" aria-expanded="true" title="Show or hide the layer panel (B)">◂</button>
+<aside id="controls" aria-label="Map layer controls">
+  <div class="pad"></div>
+</aside>
+
+<button id="sidebarToggle" aria-controls="panel" aria-expanded="true" title="Show or hide the info panel (B)">◂</button>
+<button id="controlsToggle" aria-controls="controls" aria-expanded="true" title="Show or hide the layer controls (C)">▸</button>
 
 <div id="stage" aria-label="Before and after satellite comparison">
   <div id="mapPre"></div>

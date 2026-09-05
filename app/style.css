@@ -11,6 +11,7 @@
   --pre: #9fd5a9;
   --post: #ffb64d;
   --panel-w: 356px;
+  --ctrl-w: 330px;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden;
@@ -29,8 +30,23 @@ body.sidebar-open #panel { transform: none; }
 #panel h1 { font-size: 15px; margin: 0 0 2px; letter-spacing: -.01em; }
 #panel .sub { color: var(--fg-dim); font-size: 11.5px; margin: 0 0 10px; }
 
-#stage { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transition: left .18s ease; }
+#stage { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transition: left .18s ease, right .18s ease; }
 body.sidebar-open #stage { left: var(--panel-w); }
+body.controls-open #stage { right: var(--ctrl-w); }
+
+/* Right rail: layer controls.  Same slide mechanism, mirrored. */
+#controls { position: absolute; top: 0; right: 0; bottom: 0; width: var(--ctrl-w); z-index: 10;
+  background: var(--bg); border-left: 1px solid var(--line); overflow-y: auto; overscroll-behavior: contain;
+  transform: translateX(100%); transition: transform .18s ease; }
+body.controls-open #controls { transform: none; }
+#controls > .pad { padding: 6px 14px 40px; }
+#controls .block:first-child { border-top: none; }
+#controlsToggle { position: absolute; top: 50%; right: 0; z-index: 20; width: 24px; height: 58px;
+  margin-top: -29px; padding: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px 0 0 6px; border-right: none; background: var(--bg2); color: var(--fg-dim);
+  font-size: 13px; transition: right .18s ease; }
+#controlsToggle:hover { color: var(--fg); background: var(--bg3); }
+body.controls-open #controlsToggle { right: var(--ctrl-w); }
 
 #sidebarToggle { position: absolute; top: 50%; left: 0; z-index: 20; width: 24px; height: 58px;
   margin-top: -29px; padding: 0; display: flex; align-items: center; justify-content: center;
@@ -43,7 +59,10 @@ body.sidebar-open #sidebarToggle { left: var(--panel-w); }
 /* The POST map sits on top.  Its canvas is clipped by the divider, so the div
    itself must not swallow clicks meant for the PRE map underneath. */
 #mapPost { pointer-events: none; }
-#mapPost .maplibregl-canvas-container { pointer-events: auto; clip-path: inset(0 0 0 50%); }
+/* The canvas container has no intrinsic size (its canvas is absolutely positioned), so a
+   clip-path on it would clip against a 0x0 box and hide the whole map. Size it first. */
+#mapPost .maplibregl-canvas-container { position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: auto; clip-path: inset(0 0 0 50%); }
 #mapPost .maplibregl-ctrl { pointer-events: auto; }
 /* One attribution line at a time: whichever side is actually on screen. */
 body:not([data-mode="pre"]) #mapPre .maplibregl-ctrl-attrib { display: none; }
@@ -150,7 +169,10 @@ input[type=checkbox], input[type=radio] { accent-color: var(--accent); margin: 0
 @media (max-width: 780px) {
   :root { --panel-w: min(88vw, 340px); }
   #panel { box-shadow: 0 0 24px rgba(0,0,0,.6); }
-  body.sidebar-open #stage { left: 0; }          /* the drawer floats over the map */
+  :root { --ctrl-w: min(88vw, 340px); }
+  #controls { box-shadow: 0 0 24px rgba(0,0,0,.6); }
+  body.sidebar-open #stage { left: 0; }          /* the drawers float over the map */
+  body.controls-open #stage { right: 0; }
   .tag { max-width: 60%; font-size: 11px; }
   #tagPost { top: 44px; right: auto; left: 12px; }   /* stack instead of overlapping */
   #readout { display: none; }
@@ -216,3 +238,8 @@ table.dmg td { text-align: right; padding: 2px 4px; border-bottom: 1px solid rgb
 .pop-all { margin-top: 6px; }
 .pop-all > summary { cursor: pointer; font-size: 11.5px; color: #555; font-weight: 500; }
 .pop-all table { margin-top: 4px; }
+
+/* HOT category list: extent / source switches sit inside the group */
+details .field.hotseg { margin: 3px 0 5px 16px; }
+details .field.hotseg .seg button { font-size: 11px; padding: 3px 6px; }
+label.row.off { opacity: .45; }

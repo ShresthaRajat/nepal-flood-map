@@ -9,34 +9,37 @@
       "c1000": {
         "minzoom": 8,
         "maxzoom": 15,
-        "description": "Contours at multiples of 1000 m",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+        "description": "Contours at multiples of 1000 m Limited to a 1 km buffer around the HOT flood-affected AOI (work/aoi_flood_1km.geojson) - not present outside it.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
+        "clip": "work/aoi_flood_1km.geojson (1 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
       },
       "c500": {
         "minzoom": 9,
         "maxzoom": 15,
-        "description": "Contours at multiples of 500 m, excluding those already in c1000",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+        "description": "Contours at multiples of 500 m, excluding those already in c1000 Limited to a 1 km buffer around the HOT flood-affected AOI (work/aoi_flood_1km.geojson) - not present outside it.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
+        "clip": "work/aoi_flood_1km.geojson (1 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
       },
       "c100": {
         "minzoom": 11,
         "maxzoom": 15,
-        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000 Limited to a 1 km buffer around the HOT flood-affected AOI (work/aoi_flood_1km.geojson) - not present outside it.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
+        "clip": "work/aoi_flood_1km.geojson (1 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
       },
       "c50": {
         "minzoom": 13,
         "maxzoom": 15,
-        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000. Limited to the 1 km river corridor (Rasuwagadhi to Devghat) - not present outside it.",
+        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000. Limited to the HOT flood-affected AOI (observed 27 Aug extent + 200 m) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
-        "clip": "data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson"
+        "clip": "data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson"
       },
       "c10": {
         "minzoom": 14,
         "maxzoom": 15,
-        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Limited to the 1 km river corridor (Rasuwagadhi to Devghat) - not present outside it.",
+        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Limited to the HOT flood-affected AOI (observed 27 Aug extent + 200 m) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
-        "clip": "data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson"
+        "clip": "data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson"
       }
     },
     "size_note": "~76 MB total, under the ~120 MB target. c10/c50 limited to the 1 km river corridor (data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson) rather than the full map extent, per owner direction to cut CPU time; c1000/c500/c100 remain full-extent since they are cheap.",

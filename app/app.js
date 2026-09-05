@@ -25,9 +25,12 @@ const abs = u => /^(https?:)?\/\//.test(u) ? u : BASE + String(u).replace(/^\.?\
 // --------------------------------------------------------------- app state
 const state = {
   mode: 'swipe', pre: null, post: null, swipe: 50,
-  base: 'osm', hillshade: false, colorBy: 'layer',
-  footprintOutline: true,
-  sidebar: null,            // resolved from hash, then localStorage, then viewport
+  base: 'osm', hillshade: false, contours: true, aoi: true, colorBy: 'layer',
+  footprintOutline: false,  // dashed outline of the selected scene; off, reachable only via #fo=1
+  hotExtent: 'flood',       // 'flood' | 'corridor' — which HOT dataset the category list shows
+  hotSource: 'osm',         // 'osm' | 'overture'
+  sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
+  controls: null,           // right rail (layer controls): same resolution
   overlays: null,           // Set of enabled entry keys
   center: null, zoom: null,
 };
@@ -35,10 +38,15 @@ const state = {
 let catalog = { layers: [], default_pre: null, default_post: null };
 let terrain = null;
 let hotTiles = null;        // {flood:Set<sourceLayer>, corridor:Set, minzoom, maxzoom} once built
+let aoiFlood = null;        // flood-affected AOI geometry, for colouring settlement names inside it
 let catalogNote = '';
 let GROUPS = [];            // sidebar model
 let ENTRY = {};             // key -> entry
 let LABEL_OF = {};          // style layer id -> human label
+let CONTOUR_IDS = [];       // contour line + label style layer ids (one basemap-style toggle)
+let HOT_LAYERS = [];        // {ds, s, cat, ids} — every HOT dataset × source × category layer set
+let HOT_CATS = [];          // [{cat, label, color}] one row per category, shared by both datasets and sources
+let hotRefresh = null;      // sidebar callback: re-read counts after an extent/source switch
 let QUERY_IDS = [];         // style layer ids that answer clicks
 let PAINT_TARGETS = [];     // {id, prop, def} for the colour-by-status switch
 let IMAGERY_BEFORE = null;  // style layer id the imagery layer is inserted before
@@ -77,6 +85,13 @@ function metaLayerNames(j) {
     .map(x => typeof x === 'string' ? x : (x && (x.id || x.name)))
     .filter(Boolean);
   return names.length ? new Set(names) : null;
+}
+async function loadAoi() {
+  try {
+    const g = await getJSON(HDX + 'hot_flood_npl/hot_flood_npl_aoi.geojson');
+    const f = g && g.features && g.features[0];
+    return f && f.geometry ? f.geometry : null;
+  } catch (e) { return null; }
 }
 async function loadHotTiles() {
   const out = { minzoom: 0, maxzoom: 15 };
@@ -145,15 +160,6 @@ const andF = (...fs) => ['all', ...fs.filter(Boolean)];
 const HDX = 'data/hdx/';
 const ATTR_HDX = CFG.HDX_CREDIT + ' via <a href="' + CFG.HDX_URL + '" target="_blank" rel="noopener">HDX</a>';
 
-function footprintCollection() {
-  return { type: 'FeatureCollection', features: catalog.layers.filter(l => l.bounds && l.bounds.length === 4).map(l => ({
-    type: 'Feature',
-    properties: { id: l.id, label: l.label, side: l.side, date: l.date, sensor: l.sensor,
-                  provider: l.provider, gsd_m: l.gsd_m, coverage: l.coverage, size_mb: l.size_mb },
-    geometry: { type: 'Polygon', coordinates: [[[l.bounds[0], l.bounds[1]], [l.bounds[2], l.bounds[1]],
-      [l.bounds[2], l.bounds[3]], [l.bounds[0], l.bounds[3]], [l.bounds[0], l.bounds[1]]]] },
-  })) };
-}
 function boundsFeature(l) {
   if (!l || !l.bounds) return { type: 'FeatureCollection', features: [] };
   return { type: 'FeatureCollection', features: [{ type: 'Feature', properties: { label: l.label },
@@ -184,11 +190,9 @@ function buildDefs() {
     flood_extent: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_flood_extent.geojson' },
     bridge_damage: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_bridge_damage.geojson' },
     hydro: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson' },
-    tm: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_tm_projects.geojson' },
     fair: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage.geojson' },
     fair_aoi: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage_analyzed_aoi.geojson' },
     waterways_np: { type: 'geojson', data: HDX + 'hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson' },
-    footprints: { type: 'geojson', data: footprintCollection() },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   };
@@ -226,12 +230,12 @@ function buildDefs() {
     layout: { visibility: 'none' }, paint: { 'raster-opacity': 0.35 } });
 
   // 4. contours ------------------------------------------------------------
-  const contourEntries = [];
+  CONTOUR_IDS = [];
   if (sources.contours) {
     const order = ['c1000', 'c500', 'c100', 'c50', 'c10'];
     const defs = terrain.contours.layers || {};
     const srcMax = terrain.contours.maxzoom != null ? terrain.contours.maxzoom : 14;
-    const labelIds = [];
+    const labelIds = [], lineIds = [];
     // A class maxzoom that reaches the tile source's own maxzoom means "all the
     // way up": the source overzooms past it, so capping the style layer there
     // would make the contours vanish at high zoom.  Only honour a real cap.
@@ -247,6 +251,9 @@ function buildDefs() {
                  'line-width': ['interpolate', ['linear'], ['zoom'], 10, ['case', ['==', ['get', 'idx'], 1], 0.9, 0.45],
                                                                     16, ['case', ['==', ['get', 'idx'], 1], 1.8, 0.9]],
                  'line-opacity': 0.8 } });
+      lineIds.push(lid);
+      // Labels only on 100 m multiples (c1000/c500/c100); labelling every 10 m line is too busy.
+      if (cls === 'c50' || cls === 'c10') continue;
       const tid = lid + '-label';
       push({ id: tid, type: 'symbol', source: 'contours', 'source-layer': cls,
         minzoom: Math.max(13, d.minzoom != null ? d.minzoom : 8), maxzoom: capOf(d),
@@ -254,17 +261,19 @@ function buildDefs() {
                   'text-font': FONT, 'text-size': 10, 'symbol-spacing': 320, 'text-max-angle': 25, 'text-padding': 4 },
         paint: { 'text-color': '#f0d5b0', 'text-halo-color': 'rgba(30,20,10,.85)', 'text-halo-width': 1.4 } });
       labelIds.push(tid);
-      contourEntries.push({ key: 'ct_' + cls, label: iv + ' m contours', color: '#c2884a',
-        ids: [lid], on: true, outline: false });
     }
-    contourEntries.push({ key: 'ct_labels', label: 'Elevation labels (zoom 13+)', color: '#f0d5b0', ids: labelIds, on: true });
+    // One switch for all contour classes and their labels (a checkbox in the
+    // Basemap block, like hillshade); the classes only decide which lines
+    // reveal at which zoom.
+    CONTOUR_IDS = [...lineIds, ...labelIds];
   }
 
   // 5. HOT / HDX -----------------------------------------------------------
+  const AOI_GREY = '#cbd5e1';
   push({ id: 'aoi_flood-line', type: 'line', source: 'aoi_flood', layout: { visibility: 'none' },
-         paint: { 'line-color': '#e11d48', 'line-width': 2 } },
+         paint: { 'line-color': AOI_GREY, 'line-opacity': 0.45, 'line-width': 1.5 } },
        { id: 'aoi_corridor-line', type: 'line', source: 'aoi_corridor', layout: { visibility: 'none' },
-         paint: { 'line-color': '#7c3aed', 'line-width': 1.5, 'line-dasharray': [3, 2] } });
+         paint: { 'line-color': AOI_GREY, 'line-opacity': 0.45, 'line-width': 1.5, 'line-dasharray': [3, 2] } });
 
   /* Where a category's features live.  The PMTiles build packs every category
    * into one source-layer keyed by category|source; the per-layer tile build
@@ -303,15 +312,30 @@ function buildDefs() {
     return out;
   }
 
-  function vectorGroup(ds, on) {
-    const entries = [];
+  /* One row per category in the sidebar; the extent (flood AOI / 1 km corridor)
+   * and source (OSM / Overture) switches pick which of the underlying layer
+   * sets is shown, so the same category is never listed four times. */
+  // Not shown: HOT's per-AOI waterways duplicate the national "Waterways of Nepal"
+  // layer below; financial services, health facilities, helipads and open spaces
+  // add little for this map (owner direction, 6 Sep 2026).
+  const HOT_SKIP = ['waterways', 'financial_services', 'health_facilities', 'helipads', 'open_spaces'];
+  const hotCats = CFG.CATS.filter(([cat]) => !HOT_SKIP.includes(cat));
+  HOT_CATS = [];
+  for (const [cat, , label, color] of hotCats) if (!HOT_CATS.some(c => c.cat === cat))
+    HOT_CATS.push({ cat, label: label.replace(/\s*\((OSM|Overture)\)$/, ''), color });
+  const HOT_DEFAULT_ON = ['destroyed_features', 'bridges'];
+  const SETTLEMENT_RED = '#f87171';
+
+  function vectorGroup(ds) {
     // Three passes so roads always sit above building fills and below points.
     const fills = [], lines = [], roads = [], points = [];
-    for (const [cat, s, label, color] of CFG.CATS) {
+    for (const [cat, s, , color] of hotCats) {
       const key = cat + '|' + s;
       const count = CFG.COUNTS[ds][key];
       if (count === undefined) continue;
       const id = ds + '-' + cat + '-' + s;
+      const label = HOT_CATS.find(c => c.cat === cat).label + ' (' + (s === 'osm' ? 'OSM' : 'Overture') + ', ' +
+        (ds === 'flood' ? 'flood area' : '1 km corridor') + ')';
       const r = resolve(ds, cat, s);
       const roadish = cat === 'roads' || cat === 'bridges';
       const ids = [];
@@ -329,26 +353,45 @@ function buildDefs() {
         ids.push(id + '-line');
         PAINT_TARGETS.push({ id: id + '-line', prop: 'line-color', def: color, status: statusExprFor(cat) });
       }
-      points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
-        layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),
-        paint: { 'circle-color': color, 'circle-radius': 3, 'circle-stroke-width': 0.5, 'circle-stroke-color': '#fff' } });
-      ids.push(id + '-point');
-      PAINT_TARGETS.push({ id: id + '-point', prop: 'circle-color', def: color, status: statusExprFor(cat) });
+      if (cat === 'populated_places') {
+        // Settlement names as translucent text, not dots.  Red when the place
+        // lies inside the flood-affected AOI: every feature of the flood
+        // dataset does; in the corridor dataset a point-in-polygon test decides.
+        const inAoi = ds === 'flood' ? true
+          : (aoiFlood ? ['all', ['==', ['geometry-type'], 'Point'], ['within', aoiFlood]] : false);
+        points.push({ id: id + '-name', type: 'symbol', source: r.source, 'source-layer': r.sl,
+          minzoom: 10, layout: { visibility: 'none',
+            'text-field': ['coalesce', ['get', 'name_latin'], ['get', 'name_en'], ['get', 'name']],
+            'text-font': FONT, 'text-size': ['interpolate', ['linear'], ['zoom'], 10, 10, 15, 13],
+            'text-max-width': 8, 'text-padding': 3, 'text-letter-spacing': 0.02 },
+          paint: { 'text-color': ['case', inAoi, SETTLEMENT_RED, '#f1f5f9'], 'text-opacity': 0.85,
+                   'text-halo-color': 'rgba(8,12,18,.6)', 'text-halo-width': 1.6, 'text-halo-blur': 0.4 } });
+        ids.push(id + '-name');
+      } else {
+        points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
+          layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),
+          paint: { 'circle-color': color, 'circle-radius': 3, 'circle-stroke-width': 0.5, 'circle-stroke-color': '#fff' } });
+        ids.push(id + '-point');
+        PAINT_TARGETS.push({ id: id + '-point', prop: 'circle-color', def: color, status: statusExprFor(cat) });
+      }
       if (!roadish) PAINT_TARGETS.push(
         { id: id + '-fill', prop: 'fill-color', def: color, status: statusExprFor(cat) },
         { id: id + '-fill', prop: 'fill-outline-color', def: color, status: statusExprFor(cat) });
-      entries.push({ key: id, label, color: roadish ? ROAD_WHITE : color, ids, on, count });
+      for (const i of ids) LABEL_OF[i] = label;
+      HOT_LAYERS.push({ ds, s, cat, ids });
     }
     push(...fills, ...lines, ...roads, ...points);
-    return entries;
   }
+  HOT_LAYERS = [];
+  vectorGroup('flood');
+  vectorGroup('corridor');
 
-  groups.push({ title: 'Flood-affected area (extent + 200 m)', entries: [
-    { key: 'aoi_flood', label: 'Area of interest outline', color: '#e11d48', ids: ['aoi_flood-line'], on: true, outline: true },
-    ...vectorGroup('flood', true) ] });
-  groups.push({ title: 'River corridor (1 km buffer)', entries: [
-    { key: 'aoi_corridor', label: 'Area of interest outline', color: '#7c3aed', ids: ['aoi_corridor-line'], on: false, outline: true },
-    ...vectorGroup('corridor', false) ] });
+  // hot: entries have no fixed ids — applyHot() resolves them from the switches
+  groups.push({ title: 'Mapped features (HOT, OSM / Overture)', hot: true, open: true, entries: [
+    ...HOT_CATS.map(c => ({ key: 'hot_' + c.cat, cat: c.cat, label: c.label, hot: true, ids: [],
+      color: (c.cat === 'roads' || c.cat === 'bridges') ? ROAD_WHITE : c.cat === 'populated_places' ? '#f1f5f9' : c.color,
+      on: HOT_DEFAULT_ON.includes(c.cat) })),
+  ] });
 
   const fairColor = ['match', ['get', 'damage'],
     'destroyed', CFG.FAIR['destroyed'], 'major-damage', CFG.FAIR['major-damage'],
@@ -358,15 +401,13 @@ function buildDefs() {
 
   push(
     { id: 'flood_extent-fill', type: 'fill', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'fill-color': '#1d4ed8', 'fill-opacity': 0.15 } },
+      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.3 } },
     { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'line-color': '#3b82f6', 'line-width': 1.2 } },
+      paint: { 'line-color': '#991b1b', 'line-width': 1.2 } },
     { id: 'waterways_np-fill', type: 'fill', source: 'waterways_np', layout: { visibility: 'none' },
       filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': '#0ea5e9', 'fill-opacity': 0.2 } },
     { id: 'waterways_np-line', type: 'line', source: 'waterways_np', layout: { visibility: 'none' },
       filter: ['==', ['geometry-type'], 'LineString'], paint: { 'line-color': '#0ea5e9', 'line-width': 0.8 } },
-    { id: 'tm-fill', type: 'fill', source: 'tm', layout: { visibility: 'none' }, paint: { 'fill-color': '#f59e0b', 'fill-opacity': 0.08 } },
-    { id: 'tm-line', type: 'line', source: 'tm', layout: { visibility: 'none' }, paint: { 'line-color': '#f59e0b', 'line-width': 1.2 } },
     { id: 'fair_aoi-line', type: 'line', source: 'fair_aoi', layout: { visibility: 'none' },
       paint: { 'line-color': '#f8fafc', 'line-width': 1.5, 'line-dasharray': [2, 2] } },
     { id: 'fair-fill', type: 'fill', source: 'fair', layout: { visibility: 'none' }, paint: { 'fill-color': fairColor, 'fill-opacity': 0.35 } },
@@ -379,24 +420,16 @@ function buildDefs() {
   PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'circle-color', def: bridgeColor });
 
   groups.push({ title: 'Flood extent, damage & ground reports', entries: [
-    { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#1d4ed8', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
+    { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
     { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58 },
     { key: 'hydro', label: 'Exposed hydropowers', color: '#facc15', ids: ['hydro-point'], on: true, count: 10 },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
     { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
-    { key: 'tm', label: 'Tasking Manager projects', color: '#f59e0b', ids: ['tm-fill', 'tm-line'], on: false, count: 9 },
-    { key: 'waterways_np', label: 'Waterways of Nepal (local copy only)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
+    { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
   ] });
 
-  // 6. footprints ----------------------------------------------------------
+  // 6. search pin + selected-scene outline -----------------------------------
   push(
-    { id: 'footprints-fill', type: 'fill', source: 'footprints', layout: { visibility: 'none' },
-      paint: { 'fill-color': '#22d3ee', 'fill-opacity': 0.05 } },
-    { id: 'footprints-line', type: 'line', source: 'footprints', layout: { visibility: 'none' },
-      paint: { 'line-color': '#22d3ee', 'line-width': 1, 'line-dasharray': [4, 3] } },
-    { id: 'footprints-label', type: 'symbol', source: 'footprints', layout: { visibility: 'none',
-      'text-field': ['get', 'label'], 'text-font': FONT, 'text-size': 10, 'text-anchor': 'top-left', 'text-offset': [0.4, 0.4] },
-      paint: { 'text-color': '#a5f3fc', 'text-halo-color': 'rgba(0,20,25,.85)', 'text-halo-width': 1.4 } },
     { id: 'search_pin-halo', type: 'circle', source: 'search_pin',
       paint: { 'circle-radius': 13, 'circle-color': '#5eb0ff', 'circle-opacity': 0.28,
                'circle-stroke-width': 1.5, 'circle-stroke-color': '#5eb0ff' } },
@@ -406,12 +439,6 @@ function buildDefs() {
       paint: { 'line-color': '#ffffff', 'line-width': 1.6, 'line-dasharray': [6, 3], 'line-opacity': 0.9 } },
   );
 
-  const footEntries = [
-    { key: 'footprints', label: 'All imagery footprints', color: '#22d3ee',
-      ids: ['footprints-fill', 'footprints-line', 'footprints-label'], on: false, outline: true, count: catalog.layers.length },
-  ];
-  if (contourEntries.length) groups.unshift({ title: 'Terrain contours (GLO-30)', entries: contourEntries });
-  groups.push({ title: 'Imagery footprints', entries: footEntries });
 
   // registry ---------------------------------------------------------------
   for (const g of groups) for (const e of g.entries) {
@@ -422,7 +449,7 @@ function buildDefs() {
     !id.startsWith('aoi_') && !id.startsWith('contour-') && !id.endsWith('-label') && !id.endsWith('-casing'));
 
   IMAGERY_BEFORE = (sources.hillshade ? 'hillshade' : null)
-    || (contourEntries.length ? contourEntries[0].ids[0] : null)
+    || (CONTOUR_IDS.length ? CONTOUR_IDS[0] : null)
     || 'aoi_flood-line';
 
   GROUPS = groups;
@@ -434,8 +461,13 @@ function makeMap(container, defs, side) {
   const style = { version: 8, glyphs: GLYPHS,
     sources: JSON.parse(JSON.stringify(defs.sources)),
     layers: JSON.parse(JSON.stringify(defs.layers)) };
+  // Pin the view to the corridor frame (whole-corridor bounds plus a small
+  // margin): you cannot zoom out past it or pan away onto bare basemap.
+  const [w, s0, e, n] = [CFG.HOME[0][0], CFG.HOME[0][1], CFG.HOME[1][0], CFG.HOME[1][1]];
+  const mx = (e - w) * 0.12, my = (n - s0) * 0.12;
   const m = new maplibregl.Map({
     container, style, maxZoom: 20, minZoom: 5, keyboard: false,
+    maxBounds: [[w - mx, s0 - my], [e + mx, n + my]],
     attributionControl: { compact: true },
     center: state.center || [85.15, 27.99], zoom: state.zoom != null ? state.zoom : 9,
   });
@@ -480,12 +512,24 @@ function setVis(ids, on) {
 function eachMap(fn) { for (const side of ['pre', 'post']) if (maps[side]) fn(maps[side], side); }
 
 function applyOverlays() {
-  for (const g of GROUPS) for (const e of g.entries) setVis(e.ids, state.overlays.has(e.key));
+  for (const g of GROUPS) for (const e of g.entries) if (!e.hot) setVis(e.ids, state.overlays.has(e.key));
+  applyHot();
 }
+/* HOT layers: visible when their dataset and source match the switches and the
+ * category is ticked.  The AOI outline follows the extent switch. */
+function applyHot() {
+  for (const h of HOT_LAYERS)
+    setVis(h.ids, h.ds === state.hotExtent && h.s === state.hotSource && state.overlays.has('hot_' + h.cat));
+  setVis(['aoi_flood-line'], state.aoi && state.hotExtent === 'flood');
+  setVis(['aoi_corridor-line'], state.aoi && state.hotExtent === 'corridor');
+  if (hotRefresh) hotRefresh();
+}
+const hotCount = cat => CFG.COUNTS[state.hotExtent][cat + '|' + state.hotSource];
 function applyBase() {
   setVis(['base-osm'], state.base === 'osm');
   setVis(['base-esri'], state.base === 'esri');
   setVis(['hillshade'], state.hillshade);
+  setVis(CONTOUR_IDS, state.contours);
   applyBaseOpacity();
 }
 /* The OSM basemap is dimmed under imagery, full strength when a side is showing
@@ -548,23 +592,37 @@ function wireDivider() {
 }
 
 // ------------------------------------------------------------ sidebar rail
-function storedSidebar() {
-  try { const v = localStorage.getItem('nf26.sidebar'); if (v !== null) return v === '1'; } catch (e) { /* private mode */ }
+/* Two rails: #panel on the left (info, search, reports, legend) and #controls
+ * on the right (view, imagery, basemap, overlays).  Each remembers its own
+ * open state; on a phone both default closed and float over the map. */
+function storedRail(key) {
+  try { const v = localStorage.getItem('nf26.' + key); if (v !== null) return v === '1'; } catch (e) { /* private mode */ }
   try { if (window.matchMedia) return !window.matchMedia('(max-width: 780px)').matches; } catch (e) { /* no matchMedia */ }
   return true;
 }
 function applySidebar(persist) {
   document.body.classList.toggle('sidebar-open', state.sidebar);
+  document.body.classList.toggle('controls-open', state.controls);
   const b = $('#sidebarToggle');
   if (b) {
     b.textContent = state.sidebar ? '\u25c2' : '\u25b8';
     b.setAttribute('aria-expanded', String(state.sidebar));
-    b.setAttribute('title', (state.sidebar ? 'Hide' : 'Show') + ' the layer panel (B)');
+    b.setAttribute('title', (state.sidebar ? 'Hide' : 'Show') + ' the info panel (B)');
   }
-  if (persist !== false) { try { localStorage.setItem('nf26.sidebar', state.sidebar ? '1' : '0'); } catch (e) { /* private mode */ } }
+  const cb = $('#controlsToggle');
+  if (cb) {
+    cb.textContent = state.controls ? '\u25b8' : '\u25c2';
+    cb.setAttribute('aria-expanded', String(state.controls));
+    cb.setAttribute('title', (state.controls ? 'Hide' : 'Show') + ' the layer controls (C)');
+  }
+  if (persist !== false) {
+    try { localStorage.setItem('nf26.sidebar', state.sidebar ? '1' : '0'); localStorage.setItem('nf26.controls', state.controls ? '1' : '0'); }
+    catch (e) { /* private mode */ }
+  }
   setTimeout(() => eachMap(m => m.resize()), 220);   // after the CSS transition
 }
 function toggleSidebar() { state.sidebar = !state.sidebar; applySidebar(); writeHash(); }
+function toggleControls() { state.controls = !state.controls; applySidebar(); writeHash(); }
 
 // -------------------------------------------------------------- hash state
 let hashWriting = false;
@@ -588,9 +646,14 @@ function writeHash() {
   p.set('s', state.swipe.toFixed(1));
   p.set('b', state.base);
   if (state.hillshade) p.set('hs', '1');
+  if (!state.contours) p.set('ct', '0');
+  if (!state.aoi) p.set('ao', '0');
   if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
-  if (!state.footprintOutline) p.set('fo', '0');
+  if (state.footprintOutline) p.set('fo', '1');
+  if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
+  if (state.hotSource !== 'osm') p.set('ho', state.hotSource);
   if (!state.sidebar) p.set('sb', '0');
+  if (!state.controls) p.set('sc', '0');
   const ov = serialiseOverlays();
   if (ov) p.set('ov', ov);
   hashWriting = true;
@@ -605,9 +668,14 @@ function readHash() {
   if (p.get('s')) state.swipe = parseFloat(p.get('s'));
   if (p.get('b')) state.base = p.get('b');
   if (p.get('hs')) state.hillshade = p.get('hs') === '1';
+  if (p.get('ct')) state.contours = p.get('ct') !== '0';
+  if (p.get('ao')) state.aoi = p.get('ao') !== '0';
   if (p.get('cb')) state.colorBy = p.get('cb');
-  if (p.get('fo')) state.footprintOutline = p.get('fo') !== '0';
-  state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedSidebar();
+  if (p.get('fo')) state.footprintOutline = p.get('fo') === '1';
+  if (['flood', 'corridor'].includes(p.get('hx'))) state.hotExtent = p.get('hx');
+  if (['osm', 'overture'].includes(p.get('ho'))) state.hotSource = p.get('ho');
+  state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedRail('sidebar');
+  state.controls = p.get('sc') ? p.get('sc') !== '0' : storedRail('controls');
   const c = p.get('c');
   if (c && /^-?[\d.]+,-?[\d.]+$/.test(c)) state.center = c.split(',').map(Number);
   if (p.get('z')) state.zoom = parseFloat(p.get('z'));
@@ -618,7 +686,12 @@ function applyOverlayDiff(ov) {
   for (const g of GROUPS) for (const e of g.entries) if (e.on) state.overlays.add(e.key);
   if (!ov) return;
   for (const tok of ov.split(',')) {
-    const k = tok.slice(1);
+    let k = tok.slice(1);
+    // Links from before the HOT groups were merged: flood-<cat>-osm → hot_<cat>
+    const old = /^(flood|corridor)-(.+)-(osm|overture)$/.exec(k);
+    if (old) { k = 'hot_' + old[2]; if (tok[0] === '+') { state.hotExtent = old[1]; state.hotSource = old[3]; } }
+    if (k === 'aoi_flood' || k === 'aoi_corridor' || k === 'hot_aoi') { if (tok[0] === '-') state.aoi = false; continue; }
+    if (k.startsWith('ct_') || k === 'contours') { if (tok[0] === '-') state.contours = false; continue; }
     if (!ENTRY[k]) continue;
     if (tok[0] === '+') state.overlays.add(k); else state.overlays.delete(k);
   }
@@ -705,7 +778,8 @@ function describe(id) {
 }
 
 function renderSidebar() {
-  const pad = $('#panel .pad');
+  const pad = $('#panel .pad');            // left: info, search, reports, legend, notes
+  const cpad = $('#controls .pad');        // right: view, imagery, basemap, overlays
 
   // search ----------------------------------------------------------------
   renderSearch(pad);
@@ -719,7 +793,7 @@ function renderSidebar() {
     seg.appendChild(b);
   }
   modeBlock.appendChild(seg);
-  pad.appendChild(modeBlock);
+  cpad.appendChild(modeBlock);
 
   // imagery selectors -----------------------------------------------------
   const imgBlock = el('div', 'block', '<h2>Imagery</h2>');
@@ -733,15 +807,8 @@ function renderSidebar() {
     f.appendChild(meta);
     imgBlock.appendChild(f);
   }
-  const fo = el('label', 'row');
-  const foCb = el('input'); foCb.type = 'checkbox'; foCb.checked = state.footprintOutline;
-  foCb.addEventListener('change', () => {
-    state.footprintOutline = foCb.checked; applyImagery('pre'); applyImagery('post'); writeHash();
-  });
-  fo.append(foCb, el('span', 't', 'Outline the selected scene footprint'));
-  imgBlock.appendChild(fo);
   if (catalogNote) imgBlock.appendChild(el('p', 'warn', catalogNote));
-  pad.appendChild(imgBlock);
+  cpad.appendChild(imgBlock);
 
   // basemap ---------------------------------------------------------------
   const bmBlock = el('div', 'block', '<h2>Basemap</h2>');
@@ -758,7 +825,19 @@ function renderSidebar() {
   hsCb.addEventListener('change', () => { state.hillshade = hsCb.checked; applyBase(); writeHash(); });
   hs.append(hsCb, el('span', 't', 'Hillshade' + (hsCb.disabled ? ' (not built)' : '')));
   bmBlock.appendChild(hs);
-  pad.appendChild(bmBlock);
+  const ct = el('label', 'row');
+  const ctCb = el('input'); ctCb.type = 'checkbox'; ctCb.checked = state.contours;
+  ctCb.disabled = !CONTOUR_IDS.length;
+  ctCb.addEventListener('change', () => { state.contours = ctCb.checked; applyBase(); writeHash(); });
+  ct.append(ctCb, el('span', 't', ctCb.disabled ? 'Contours (not built)' : 'Contours, GLO-30 (10–50 m in the flood area, 100 m+ to 1 km beyond)'));
+  bmBlock.appendChild(ct);
+  const ao = el('label', 'row');
+  const aoCb = el('input'); aoCb.type = 'checkbox'; aoCb.checked = state.aoi;
+  aoCb.addEventListener('change', () => { state.aoi = aoCb.checked; applyHot(); writeHash(); });
+  const aoSw = el('span', 'sw outline'); aoSw.style.borderColor = 'rgba(203,213,225,.6)';
+  ao.append(aoCb, aoSw, el('span', 't', 'HOT area of interest outline (follows the extent switch)'));
+  bmBlock.appendChild(ao);
+  cpad.appendChild(bmBlock);
 
   // zoom to ---------------------------------------------------------------
   const zBlock = el('div', 'block', '<h2>Zoom to</h2>');
@@ -812,36 +891,79 @@ function renderSidebar() {
   cbRow.appendChild(cbSeg);
   oBlock.appendChild(cbRow);
 
+  const segField = (label, key, opts, onPick) => {
+    const f = el('div', 'field hotseg');
+    f.appendChild(el('label', null, label));
+    const seg = el('div', 'seg');
+    for (const [v, t] of opts) {
+      const b = el('button', null, t); b.dataset.v = v;
+      b.setAttribute('aria-pressed', String(state[key] === v));
+      b.addEventListener('click', () => {
+        state[key] = v; onPick();
+        for (const x of seg.children) x.setAttribute('aria-pressed', String(x.dataset.v === v));
+      });
+      seg.appendChild(b);
+    }
+    f.appendChild(seg);
+    return f;
+  };
+
   for (const g of GROUPS) {
     const det = el('details');
-    det.open = g.entries.some(e => state.overlays.has(e.key)) && g.entries.length < 12;
-    const sum = el('summary', null, g.title + ' <span class="n">' + g.entries.length + '</span>');
+    det.open = g.open !== undefined ? g.open : (g.entries.some(e => state.overlays.has(e.key)) && g.entries.length < 12);
+    const sum = el('summary', null, g.title + (g.entries.length > 1 ? ' <span class="n">' + g.entries.length + '</span>' : ''));
     det.appendChild(sum);
+    if (g.hot) {
+      det.appendChild(segField('Extent', 'hotExtent',
+        [['flood', 'Flood area (+200 m)'], ['corridor', 'River corridor (1 km)']], () => { applyHot(); writeHash(); }));
+      det.appendChild(segField('Source', 'hotSource',
+        [['osm', 'OpenStreetMap'], ['overture', 'Overture Maps']], () => { applyHot(); writeHash(); }));
+    }
     const ctl = el('div', 'grp', '<button data-all="1">all on</button><button data-all="0">all off</button>');
-    det.appendChild(ctl);
-    const boxes = [];
+    if (g.entries.length > 1) det.appendChild(ctl);
+    const boxes = [], rows = [];
     for (const e of g.entries) {
       const row = el('label', 'row');
       const cb = el('input'); cb.type = 'checkbox'; cb.checked = state.overlays.has(e.key);
       const sw = el('span', 'sw' + (e.outline ? ' outline' : ''));
       sw.style.background = e.color; sw.style.borderColor = e.color;
       row.append(cb, sw, el('span', 't', e.label));
-      if (e.count !== undefined) row.appendChild(el('span', 'cnt', fmtCount(e.count)));
+      const cnt = el('span', 'cnt', e.count !== undefined ? fmtCount(e.count) : '');
+      row.appendChild(cnt);
       cb.addEventListener('change', () => {
         if (cb.checked) state.overlays.add(e.key); else state.overlays.delete(e.key);
-        setVis(e.ids, cb.checked); writeHash();
+        if (e.hot) applyHot(); else setVis(e.ids, cb.checked);
+        writeHash();
       });
-      boxes.push([cb, e]);
+      boxes.push([cb, e]); rows.push({ e, row, cb, sw, cnt });
       det.appendChild(row);
     }
     ctl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
       const on = b.dataset.all === '1';
-      for (const [cb, e] of boxes) { cb.checked = on; if (on) state.overlays.add(e.key); else state.overlays.delete(e.key); setVis(e.ids, on); }
+      for (const [cb, e] of boxes) {
+        if (cb.disabled) continue;
+        cb.checked = on; if (on) state.overlays.add(e.key); else state.overlays.delete(e.key);
+        if (!e.hot) setVis(e.ids, on);
+      }
+      if (g.hot) applyHot();
       writeHash();
     }));
+    if (g.hot) {
+      // Counts follow the switches; a category the current source does not carry is greyed out.
+      hotRefresh = () => {
+        for (const r of rows) {
+          if (r.e.cat) {
+            const n = hotCount(r.e.cat);
+            r.cnt.textContent = n === undefined ? 'n/a' : fmtCount(n);
+            r.cb.disabled = n === undefined; r.row.classList.toggle('off', n === undefined);
+          }
+        }
+      };
+      hotRefresh();
+    }
     oBlock.appendChild(det);
   }
-  pad.appendChild(oBlock);
+  cpad.appendChild(oBlock);
 
   // legend ----------------------------------------------------------------
   const lBlock = el('div', 'block', '<h2>Legend</h2>');
@@ -862,10 +984,9 @@ function renderSidebar() {
   add(CFG.FAIR['no-damage'], 'No damage');
   add(CFG.FAIR['no-data'], 'No data');
   lg.appendChild(el('div', 'hd', 'Areas'));
-  add('#1d4ed8', 'Flood extent, 27 Aug 2026');
-  add('#e11d48', 'Flood-affected AOI', true);
-  add('#7c3aed', 'River corridor AOI', true);
-  add('#22d3ee', 'Imagery footprint', true);
+  add('#7f1d1d', 'Flood extent, 27 Aug 2026');
+  add('rgba(203,213,225,.6)', 'HOT area of interest (flood area solid, corridor dashed)', true);
+  add('#f87171', 'Settlement name inside the flood-affected area (others white)');
   lBlock.appendChild(lg);
 
   const roadLg = el('div', 'roadlg');
@@ -1193,6 +1314,7 @@ function wireKeyboard() {
       case '+': case '=': m.zoomIn(); break;
       case '-': case '_': m.zoomOut(); break;
       case 'b': case 'B': toggleSidebar(); break;
+      case 'c': case 'C': toggleControls(); break;
       case '[': setSwipe(state.swipe - (ev.shiftKey ? 10 : 2)); break;
       case ']': setSwipe(state.swipe + (ev.shiftKey ? 10 : 2)); break;
       default: return;
@@ -1206,7 +1328,7 @@ async function main() {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
 
-  [catalog, terrain, hotTiles] = await Promise.all([loadCatalog(), loadTerrain(), loadHotTiles()]);
+  [catalog, terrain, hotTiles, aoiFlood] = await Promise.all([loadCatalog(), loadTerrain(), loadHotTiles(), loadAoi()]);
   const ovParam = readHash();
 
   // A scene id from the hash that is not in the catalogue (stale link, renamed
@@ -1248,6 +1370,8 @@ async function main() {
 
   const tog = $('#sidebarToggle');
   if (tog) tog.addEventListener('click', toggleSidebar);
+  const ctog = $('#controlsToggle');
+  if (ctog) ctog.addEventListener('click', toggleControls);
   window.addEventListener('resize', () => eachMap(m => m.resize()));
   window.addEventListener('hashchange', () => { if (!hashWriting) location.reload(); });
 }
