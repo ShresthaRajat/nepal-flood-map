@@ -1,0 +1,323 @@
+{
+ "generated": "2026-09-05",
+ "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
+ "layers": [
+  {
+   "id": "pre_s2_20260603",
+   "label": "3 Jun 2026 · Sentinel-2 10 m",
+   "side": "pre",
+   "date": "2026-06-03",
+   "sensor": "Sentinel-2",
+   "provider": "ESA Copernicus",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 13,
+   "tiles": "tiles/pre_s2_20260603/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "corridor",
+   "size_mb": 5.0
+  },
+  {
+   "id": "pre_ps_20260527",
+   "label": "27 May 2026 · PlanetScope 3 m",
+   "side": "pre",
+   "date": "2026-05-27",
+   "sensor": "PlanetScope",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 3,
+   "bounds": [
+    85.078125,
+    27.683528,
+    85.429688,
+    27.994401
+   ],
+   "minzoom": 8,
+   "maxzoom": 16,
+   "tiles": "tiles/pre_ps_20260527/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "corridor",
+   "size_mb": 5.6
+  },
+  {
+   "id": "pre_legion_20260205",
+   "label": "5 Feb 2026 · Vantor Legion 0.39 m",
+   "side": "pre",
+   "date": "2026-02-05",
+   "sensor": "Legion",
+   "provider": "Vantor",
+   "gsd_m": 0.39,
+   "bounds": [
+    85.12207,
+    27.877928,
+    85.209961,
+    27.955591
+   ],
+   "minzoom": 11,
+   "maxzoom": 19,
+   "tiles": "tiles/pre_legion_20260205/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor via OpenAerialMap, CC-BY 4.0",
+   "coverage": "trisuli_bazar",
+   "size_mb": 38.6
+  },
+  {
+   "id": "pre_s1_20260816",
+   "label": "16 Aug 2026 · Sentinel-1 radar 10 m",
+   "side": "pre",
+   "date": "2026-08-16",
+   "sensor": "Sentinel-1 RTC",
+   "provider": "ESA Copernicus / Microsoft Planetary Computer",
+   "gsd_m": 10,
+   "bounds": [
+    85.12207,
+    27.877928,
+    85.209961,
+    27.955591
+   ],
+   "minzoom": 11,
+   "maxzoom": 14,
+   "tiles": "tiles/pre_s1_20260816/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "trisuli_bazar",
+   "size_mb": 0.1
+  },
+  {
+   "id": "post_s2_20260827",
+   "label": "27 Aug 2026 · Sentinel-2 10 m",
+   "side": "post",
+   "date": "2026-08-27",
+   "sensor": "Sentinel-2",
+   "provider": "ESA Copernicus",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 13,
+   "tiles": "tiles/post_s2_20260827/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "corridor",
+   "size_mb": 3.3
+  },
+  {
+   "id": "post_ps_20260826",
+   "label": "26 Aug 2026 flood morning · PlanetScope 3 m",
+   "side": "post",
+   "date": "2026-08-26",
+   "sensor": "PlanetScope",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 3,
+   "bounds": [
+    85.078125,
+    27.683528,
+    85.429688,
+    27.994401
+   ],
+   "minzoom": 8,
+   "maxzoom": 16,
+   "tiles": "tiles/post_ps_20260826/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "corridor",
+   "size_mb": 2.3
+  },
+  {
+   "id": "post_ps26_mosaic",
+   "label": "26 Aug 2026 · PlanetScope 9-scene mosaic ~20 m",
+   "side": "post",
+   "date": "2026-08-26",
+   "sensor": "PlanetScope",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 20,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 16,
+   "tiles": "tiles/post_ps26_mosaic/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "corridor",
+   "size_mb": 1.4
+  },
+  {
+   "id": "post_ps28_mosaic",
+   "label": "28 Aug 2026 · PlanetScope 5-scene mosaic ~20 m",
+   "side": "post",
+   "date": "2026-08-28",
+   "sensor": "PlanetScope",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 20,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 16,
+   "tiles": "tiles/post_ps28_mosaic/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "corridor",
+   "size_mb": 1.4
+  },
+  {
+   "id": "post_s1_20260828",
+   "label": "28 Aug 2026 · Sentinel-1 radar 10 m",
+   "side": "post",
+   "date": "2026-08-28",
+   "sensor": "Sentinel-1 RTC",
+   "provider": "ESA Copernicus / Microsoft Planetary Computer",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 16,
+   "tiles": "tiles/post_s1_20260828/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "corridor",
+   "size_mb": 23.0
+  },
+  {
+   "id": "post_wv02_20260828",
+   "label": "28 Aug 2026 · Vantor WorldView-2 0.54 m",
+   "side": "post",
+   "date": "2026-08-28",
+   "sensor": "WorldView-2",
+   "provider": "Vantor",
+   "gsd_m": 0.54,
+   "bounds": [
+    85.12207,
+    27.877928,
+    85.209961,
+    27.955591
+   ],
+   "minzoom": 11,
+   "maxzoom": 19,
+   "tiles": "tiles/post_wv02_20260828/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor via OpenAerialMap, CC-BY 4.0",
+   "coverage": "trisuli_bazar",
+   "size_mb": 6.7
+  },
+  {
+   "id": "post_skysat_20260831",
+   "label": "31 Aug 2026 · SkySat 0.65 m",
+   "side": "post",
+   "date": "2026-08-31",
+   "sensor": "SkySat",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 0.65,
+   "bounds": [
+    84.726562,
+    27.683528,
+    85.429688,
+    28.304381
+   ],
+   "minzoom": 8,
+   "maxzoom": 18,
+   "tiles": "tiles/post_skysat_20260831/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "trisuli_bazar",
+   "size_mb": 9.4
+  },
+  {
+   "id": "post_skysat_20260827",
+   "label": "27 Aug 2026 · SkySat 0.8 m",
+   "side": "post",
+   "date": "2026-08-27",
+   "sensor": "SkySat",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 0.8,
+   "bounds": [
+    85.078125,
+    27.994401,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 18,
+   "tiles": "tiles/post_skysat_20260827/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 9.1
+  },
+  {
+   "id": "post_wv3_20260827",
+   "label": "27 Aug 2026 · Vantor WorldView-3 0.35 m",
+   "side": "post",
+   "date": "2026-08-27",
+   "sensor": "WorldView-3",
+   "provider": "Vantor",
+   "gsd_m": 0.35,
+   "bounds": [
+    85.078125,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 19,
+   "tiles": "tiles/post_wv3_20260827/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 110.2
+  },
+  {
+   "id": "post_legion_20260901",
+   "label": "1 Sep 2026 · Vantor Legion 0.4–0.5 m",
+   "side": "post",
+   "date": "2026-09-01",
+   "sensor": "Legion",
+   "provider": "Vantor",
+   "gsd_m": 0.45,
+   "bounds": [
+    85.078125,
+    27.994401,
+    85.429688,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 19,
+   "tiles": "tiles/post_legion_20260901/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 43.8
+  },
+  {
+   "id": "post_pelican_20260901",
+   "label": "1 Sep 2026 · Planet Pelican 0.56 m",
+   "side": "post",
+   "date": "2026-09-01",
+   "sensor": "Pelican",
+   "provider": "Planet Labs PBC",
+   "gsd_m": 0.56,
+   "bounds": [
+    85.078125,
+    27.994401,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 18,
+   "tiles": "tiles/post_pelican_20260901/{z}/{x}/{y}.webp",
+   "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 23.9
+  }
+ ],
+ "default_pre": "pre_legion_20260205",
+ "default_post": "post_wv02_20260828"
+}

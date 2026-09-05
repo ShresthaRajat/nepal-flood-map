@@ -1,6 +1,6 @@
 <mapml- xmlns="http://www.w3.org/1999/xhtml">
     <map-head>
-        <map-title>pre_ps_20260527.vrt</map-title>
+        <map-title>frame_comp.tif</map-title>
         <map-meta charset="utf-8" ></map-meta>
         <!--
         <map-link href="http://localhost:8080/myservice/mapml/WGS84?style=" rel="alternate" projection="WGS84" ></map-link>

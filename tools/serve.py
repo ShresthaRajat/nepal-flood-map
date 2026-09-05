@@ -52,11 +52,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if not chunk: break
             outputfile.write(chunk); n -= len(chunk)
 
+    def do_POST(self):
+        n = int(self.headers.get("Content-Length", 0)); body = self.rfile.read(n)
+        if self.path.startswith("/log"):
+            with open(os.path.join(ROOT, "work", "client.log"), "ab") as fh: fh.write(body + b"\n")
+            self.send_response(204); self.end_headers(); return
+        self.send_error(404)
+
     def log_message(self, fmt, *args):
         # Keep the log quiet for tile traffic.  Imagery pyramids are sparse, so
         # 404s are normal; inspect self.requestline rather than args, which on
         # the error path holds an HTTPStatus, not the request line.
-        if "/tiles/" in getattr(self, "requestline", ""): return
         super().log_message(fmt, *args)
 
 if __name__ == "__main__":
