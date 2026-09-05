@@ -67,12 +67,66 @@ Both files are optional. Without `data/imagery.json` the app falls back to
 overlays. Without `data/terrain.json` the contour group and the hillshade
 toggle disappear.
 
-`data/hdx/` is consumed exactly as the reference `hdx-explorer.html` did: two
-PMTiles archives whose single source-layer (`hot_flood_npl`,
-`hot_flood_npl_corridor`) holds every category, filtered by
-`concat(category, "|", source)`, plus the loose GeoJSON files for flood extent,
-bridge ground reports, exposed hydropowers, Tasking Manager boundaries and fAIr
-damage.
+`data/hdx/` has two interchangeable vector back ends, chosen per category by
+`resolve()` in `app/app.js`:
+
+- **PMTiles (fallback).** `pmtiles/hot_flood_npl.pmtiles` and
+  `pmtiles/hot_flood_npl_corridor.pmtiles`, each one source-layer named after the
+  archive, every category filtered by `concat(category, "|", source)`. Carries
+  only `category`, `source` and `name`.
+- **Per-layer tiles (preferred).** `tiles/hot_flood_npl/{z}/{x}/{y}.pbf` and
+  `tiles/hot_flood_npl_corridor/{z}/{x}/{y}.pbf`, one source-layer per HOT layer
+  and no filter needed. Used automatically when the matching
+  `tiles/<dataset>/metadata.json` is present.
+
+The switch is per category, not global, so a partial tile build still works: any
+category whose source-layer is missing falls back to the PMTiles archive.
+Source-layer names are matched against `<category>_<source>` first, then bare
+`<category>` for OSM layers, so both `roads_osm` and `roads` resolve.
+`metadata.json` is read loosely — a list under `vector_layers`, `layers` or
+`sourceLayers`, or a bare array, of strings or objects with `id`/`name`, plus
+optional `minzoom`/`maxzoom`.
+
+The loose GeoJSON files supply flood extent, bridge ground reports, exposed
+hydropowers, Tasking Manager boundaries and fAIr damage, and are also read
+directly by the search, bridges and damage panels.
+
+### Properties the styling reads
+
+`highway` (OSM classes, for road and bridge width and dash class),
+`bridge_structure` (`simple-suspension`, `suspension`, for footbridges),
+`status` (`Standing`, `Damaged`, `Destroyed`; also `Intact` and `Washed out` in
+the bridge reports), `category` and `source` (PMTiles back end only),
+`name`, `name_ne`, `name_en`, `name_latin`, `adm3_name`, `feature_type`,
+`damage_type`, `length_m`, `location`, `amenity`, `place`, `man_made`. Every one
+has a fallback: a missing `highway` styles as the unknown width, solid white; a
+missing `status` leaves the default palette in place.
+
+## Roads and bridges
+
+White with a black casing at 0.35 opacity, casing width = line width + 1.5 (road
+bridge spans + 2.5). Width interpolates over zoom, weighted by `highway`: trunk
+and primary 3.2 to 6 px, secondary and tertiary 2.2 to 4.5, residential and
+service 1.4 to 3, track 1.2 to 2.2, path 1.0 to 2.0, unknown 1.2 to 2.4, all
+measured between zoom 14 and 18.
+
+`line-dasharray` is **not** data-driven in MapLibre, so each dash class is its
+own filtered layer: solid roads, dashed tracks `[4,2]`, dotted paths `[1,2]` with
+round caps, and for bridges a solid span plus a dotted footbridge layer. Roads
+stay white under colour-by-status unless the feature is Damaged or Destroyed;
+bridges carry the status tint at all times, so a destroyed span always reads red.
+
+Layers are emitted in three passes — all fills, then lines, then roads, then all
+points — so roads always sit above building fills and below every point layer.
+
+## Panels
+
+Search, bridge reports and the damage summary read the GeoJSON in `data/hdx/`
+directly, cached in `gjCache`, loaded lazily: search on first focus of the box,
+the other two on first open of their `<details>`. All three fail soft — a missing
+file leaves a short note in place of the panel. The damage summary keeps feature
+centroids in memory and recounts what is in the viewport on `moveend` with a bbox
+test.
 
 ## How the two maps work
 
@@ -100,8 +154,12 @@ removes the old layer and source and adds the new one. Overlays that are off are
 
 Scenes are chosen from two `<select>` tags in the top corners of the stage,
 green on the left for the before side and amber on the right for the after side.
-Each lists that side's scenes grouped by coverage, then a "View" group holding
-"<side> only" and "Compare (swipe)". Picking a view option changes the mode
+Each opens with "None, basemap only", then that side's scenes grouped by
+coverage, then a "View" group holding "<side> only" and "Compare (swipe)".
+Choosing None adds no imagery source for that side and takes the OSM basemap on
+that map to full opacity; it is carried in the hash as `pre=none` / `post=none`.
+The two sides are independent, so one can show imagery while the other shows the
+basemap. Picking a view option changes the mode
 rather than the scene and the select snaps back to the current scene;
 `refreshTags()` is the single place that re-reads state into both tags, ticks the
 active view option and puts the white outline on whichever side is shown alone.
@@ -133,7 +191,8 @@ keeps the URL short. `+key` turns one on, `-key` turns one off.
 ## Keyboard
 
 Arrows pan (hold shift for a larger step), `+`/`-` zoom, `[` and `]` move the
-divider, `B` hides and shows the sidebar. MapLibre's own keyboard handler is
+divider, `B` hides and shows the sidebar. In the search box, up and down move
+through results, Enter flies to one and Escape clears. MapLibre's own keyboard handler is
 disabled on both maps so the two never disagree.
 
 ## Adding an imagery layer
@@ -174,12 +233,13 @@ root and all paths are relative, so no configuration is needed. Two caveats:
 ## Known limitations
 
 - The PMTiles build of the HOT catalogue carries only `category`, `source` and
-  `name`. `status` was dropped, so "colour by status" cannot read a real status
-  for buildings and roads: it greys them and paints the `destroyed_features`
-  category red. The bridge ground-report layer, which is GeoJSON, does carry
-  true per-feature status. Re-tiling the HDX data with `status` retained would
-  make the switch fully accurate with no app change — the expression already
-  reads `status` first and only falls back to `category`.
+  `name`, so while it is the active back end neither `status` nor `highway` is
+  readable: colour-by-status greys buildings and paints the
+  `destroyed_features` category red, and every road draws at the unknown width,
+  solid white. The per-layer tile build fixes both with no app change — the
+  expressions already read `status`, `highway` and `bridge_structure` first and
+  only fall back. The bridge ground-report layer, which is GeoJSON, carries true
+  per-feature status today.
 - Two WebGL contexts is heavier than one. It is the price of overlays that stay
   aligned across the divider without redrawing them per frame.
 - Glyphs for the contour and footprint labels come from
