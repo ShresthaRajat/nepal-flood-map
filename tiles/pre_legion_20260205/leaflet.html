@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-    <title>pre_legion_20260205.vrt</title>
+    <title>pre_legion_20260205_vantor_pre_F8.vrt</title>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.5/dist/leaflet.css" />
@@ -41,22 +41,22 @@
 
 // Base layers
 //  .. OpenStreetMap
-var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', minZoom: 11, maxZoom: 19});
+var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', minZoom: 19, maxZoom: 19});
 
 //  .. CartoDB Positron
-var cartodb = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CartoDB</a>', minZoom: 11, maxZoom: 19});
+var cartodb = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CartoDB</a>', minZoom: 19, maxZoom: 19});
 
 //  .. White background
-var white = L.tileLayer("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAAA1BMVEX///+nxBvIAAAAH0lEQVQYGe3BAQ0AAADCIPunfg43YAAAAAAAAAAA5wIhAAAB9aK9BAAAAABJRU5ErkJggg==", {minZoom: 11, maxZoom: 19});
+var white = L.tileLayer("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAAA1BMVEX///+nxBvIAAAAH0lEQVQYGe3BAQ0AAADCIPunfg43YAAAAAAAAAAA5wIhAAAB9aK9BAAAAABJRU5ErkJggg==", {minZoom: 19, maxZoom: 19});
 
 // Overlay layers (TMS)
-var lyr = L.tileLayer('./{z}/{x}/{y}.webp', {tms: 0, opacity: 0.7, attribution: "", minZoom: 11, maxZoom: 19});
+var lyr = L.tileLayer('./{z}/{x}/{y}.webp', {tms: 0, opacity: 0.7, attribution: "", minZoom: 19, maxZoom: 19});
 
 // Map
 var map = L.map('map', {
-    center: [27.922207362219012, 85.146818083806693],
+    center: [27.925633910528518, 85.152549652188554],
     zoom: 19,
-    minZoom: 11,
+    minZoom: 19,
     maxZoom: 19,
     layers: [osm, lyr]
 });
@@ -72,7 +72,7 @@ title.onAdd = function(map) {
     return this._div;
 };
 title.update = function(props) {
-    this._div.innerHTML = "pre_legion_20260205.vrt";
+    this._div.innerHTML = "pre_legion_20260205_vantor_pre_F8.vrt";
 };
 title.addTo(map);
 
@@ -94,7 +94,7 @@ title.addTo(map);
 L.control.layers(basemaps, overlaymaps, {collapsed: false}).addTo(map);
 
 // Fit to overlay bounds (SW and NE points with (lat, lon))
-map.fitBounds([[27.887935127136984, 85.177395187768752], [27.956479597301044, 85.116240979844619]]);
+map.fitBounds([[27.898215448774724, 85.177392151843179], [27.953052372282308, 85.12770715253393]]);
 
 </script>
 

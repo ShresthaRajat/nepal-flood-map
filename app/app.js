@@ -27,6 +27,7 @@ const state = {
   mode: 'swipe', pre: null, post: null, swipe: 50,
   base: 'osm', hillshade: false, colorBy: 'layer',
   footprintOutline: true,
+  sidebar: null,            // resolved from hash, then localStorage, then viewport
   overlays: null,           // Set of enabled entry keys
   center: null, zoom: null,
 };
@@ -41,6 +42,7 @@ let QUERY_IDS = [];         // style layer ids that answer clicks
 let PAINT_TARGETS = [];     // {id, prop, def} for the colour-by-status switch
 let IMAGERY_BEFORE = null;  // style layer id the imagery layer is inserted before
 const maps = {};            // {pre, post}
+const tagEl = {};           // {pre, post} corner <select> tags over the map
 
 // ------------------------------------------------------------- catalogue IO
 async function getJSON(url) {
@@ -333,8 +335,8 @@ function applyImagery(side) {
   }
   const fp = m.getSource('sel_footprint');
   if (fp) fp.setData(state.footprintOutline ? boundsFeature(l) : { type: 'FeatureCollection', features: [] });
-  $('#lab' + (side === 'pre' ? 'Pre' : 'Post')).textContent =
-    (side === 'pre' ? 'Before · ' : 'After · ') + (l ? fmtDate(l.date) : 'no layer');
+  refreshTags();
+  updateMeta(side);
 }
 
 function setVis(ids, on) {
@@ -370,6 +372,7 @@ function setSwipe(p, write) {
   applyMode();
   if (write !== false) writeHash();
 }
+function setMode(m) { state.mode = m; applyMode(); refreshTags(); writeHash(); }
 function applyMode() {
   document.body.dataset.mode = state.mode;
   const clip = state.mode === 'pre' ? 'inset(0 0 0 100%)'
@@ -403,6 +406,25 @@ function wireDivider() {
   window.addEventListener('pointercancel', up);
 }
 
+// ------------------------------------------------------------ sidebar rail
+function storedSidebar() {
+  try { const v = localStorage.getItem('nf26.sidebar'); if (v !== null) return v === '1'; } catch (e) { /* private mode */ }
+  try { if (window.matchMedia) return !window.matchMedia('(max-width: 780px)').matches; } catch (e) { /* no matchMedia */ }
+  return true;
+}
+function applySidebar(persist) {
+  document.body.classList.toggle('sidebar-open', state.sidebar);
+  const b = $('#sidebarToggle');
+  if (b) {
+    b.textContent = state.sidebar ? '\u25c2' : '\u25b8';
+    b.setAttribute('aria-expanded', String(state.sidebar));
+    b.setAttribute('title', (state.sidebar ? 'Hide' : 'Show') + ' the layer panel (B)');
+  }
+  if (persist !== false) { try { localStorage.setItem('nf26.sidebar', state.sidebar ? '1' : '0'); } catch (e) { /* private mode */ } }
+  setTimeout(() => eachMap(m => m.resize()), 220);   // after the CSS transition
+}
+function toggleSidebar() { state.sidebar = !state.sidebar; applySidebar(); writeHash(); }
+
 // -------------------------------------------------------------- hash state
 let hashWriting = false;
 function serialiseOverlays() {
@@ -427,6 +449,7 @@ function writeHash() {
   if (state.hillshade) p.set('hs', '1');
   if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
   if (!state.footprintOutline) p.set('fo', '0');
+  if (!state.sidebar) p.set('sb', '0');
   const ov = serialiseOverlays();
   if (ov) p.set('ov', ov);
   hashWriting = true;
@@ -443,6 +466,7 @@ function readHash() {
   if (p.get('hs')) state.hillshade = p.get('hs') === '1';
   if (p.get('cb')) state.colorBy = p.get('cb');
   if (p.get('fo')) state.footprintOutline = p.get('fo') !== '0';
+  state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedSidebar();
   const c = p.get('c');
   if (c && /^-?[\d.]+,-?[\d.]+$/.test(c)) state.center = c.split(',').map(Number);
   if (p.get('z')) state.zoom = parseFloat(p.get('z'));
@@ -460,15 +484,14 @@ function applyOverlayDiff(ov) {
 }
 
 // ----------------------------------------------------------------- sidebar
-function sourceSelect(side) {
-  const sel = document.createElement('select');
-  sel.id = 'sel' + side;
+const optionText = (side, l) =>
+  (side === 'pre' ? 'Pre' : 'Post') + ' \u00b7 ' + fmtDate(l.date) + ' \u00b7 ' + l.sensor +
+  (l.gsd_m ? ' ' + l.gsd_m + ' m' : '');
+
+/* Appends this side's scenes to a <select>, grouped by coverage. */
+function fillScenes(sel, side) {
   const list = layersFor(side);
-  if (!list.length) {
-    sel.appendChild(new Option('(no ' + side + ' imagery in catalogue)', ''));
-    sel.disabled = true;
-    return sel;
-  }
+  if (!list.length) { sel.appendChild(new Option('(no ' + side + ' imagery in catalogue)', '')); return 0; }
   const order = ['trisuli_bazar', 'upper_valley', 'corridor'];
   const byCov = {};
   for (const l of list) (byCov[l.coverage || 'corridor'] ||= []).push(l);
@@ -477,13 +500,54 @@ function sourceSelect(side) {
     const og = document.createElement('optgroup');
     og.label = CFG.COVERAGE_LABEL[cov] || cov;
     for (const l of byCov[cov]) {
-      const o = new Option(`${fmtDate(l.date)} · ${l.sensor}${l.gsd_m ? ' · ' + l.gsd_m + ' m' : ''}`, l.id);
+      const o = new Option(optionText(side, l), l.id);
       o.title = CFG.SCENES[l.id] || l.label || '';
       og.appendChild(o);
     }
     sel.appendChild(og);
   }
-  return sel;
+  return list.length;
+}
+
+/* The two corner tags: scene picker plus the "<side> only" view option. */
+function buildTags() {
+  for (const side of ['pre', 'post']) {
+    const t = $('#tag' + (side === 'pre' ? 'Pre' : 'Post'));
+    if (!t) continue;
+    tagEl[side] = t;
+    fillScenes(t, side);
+    const og = document.createElement('optgroup');
+    og.label = 'View';
+    const only = new Option(side === 'pre' ? 'Pre only' : 'Post only', '__only');
+    og.appendChild(only);
+    og.appendChild(new Option('Compare (swipe)', '__swipe'));
+    t.appendChild(og);
+    t.__only = only;
+    t.addEventListener('change', () => {
+      const v = t.value;
+      if (v === '__only') setMode(state.mode === side ? 'swipe' : side);
+      else if (v === '__swipe') setMode('swipe');
+      else if (v) { state[side] = v; applyImagery(side); writeHash(); }
+      refreshTags();
+    });
+  }
+  refreshTags();
+}
+
+/* Keeps both tags showing their current scene, ticks the active view option
+ * and outlines the side that is being shown alone. */
+function refreshTags() {
+  for (const side of ['pre', 'post']) {
+    const t = tagEl[side];
+    if (!t) continue;
+    if (t.__only) t.__only.textContent = (state.mode === side ? '\u2713 ' : '') + (side === 'pre' ? 'Pre only' : 'Post only');
+    if (state[side]) t.value = state[side];
+    if (t.classList) t.classList.toggle('only', state.mode === side);
+  }
+}
+function updateMeta(side) {
+  const n = document.querySelector('#meta' + side);
+  if (n) n.innerHTML = describe(state[side]);
 }
 function describe(id) {
   const l = byId(id);
@@ -505,7 +569,7 @@ function renderSidebar() {
   const seg = el('div', 'seg'); seg.id = 'modeSeg';
   for (const [m, t] of [['pre', 'Before'], ['swipe', 'Swipe'], ['post', 'After']]) {
     const b = el('button', null, t); b.dataset.mode = m;
-    b.addEventListener('click', () => { state.mode = m; applyMode(); writeHash(); });
+    b.addEventListener('click', () => setMode(m));
     seg.appendChild(b);
   }
   modeBlock.appendChild(seg);
@@ -513,18 +577,14 @@ function renderSidebar() {
 
   // imagery selectors -----------------------------------------------------
   const imgBlock = el('div', 'block', '<h2>Imagery</h2>');
+  imgBlock.appendChild(el('p', 'note', 'Choose scenes with the tags at the top of the map.'));
   for (const side of ['pre', 'post']) {
     const f = el('div', 'field');
     f.appendChild(el('label', null, side === 'pre' ? 'Before (left)' : 'After (right)'));
-    const sel = sourceSelect(side);
-    if (state[side]) sel.value = state[side];
-    if (!sel.value && sel.options.length) { sel.selectedIndex = 0; state[side] = sel.value; }
-    const meta = el('p', 'meta'); meta.id = 'meta' + side;
-    sel.addEventListener('change', () => {
-      state[side] = sel.value; applyImagery(side); meta.innerHTML = describe(sel.value); writeHash();
-    });
+    const meta = el('p', 'meta side-' + side);
+    meta.id = 'meta' + side;
     meta.innerHTML = describe(state[side]);
-    f.append(sel, meta);
+    f.appendChild(meta);
     imgBlock.appendChild(f);
   }
   const fo = el('label', 'row');
@@ -712,6 +772,7 @@ function wireKeyboard() {
       case 'ArrowDown':  m.panBy([0, step]); break;
       case '+': case '=': m.zoomIn(); break;
       case '-': case '_': m.zoomOut(); break;
+      case 'b': case 'B': toggleSidebar(); break;
       case '[': setSwipe(state.swipe - (ev.shiftKey ? 10 : 2)); break;
       case ']': setSwipe(state.swipe + (ev.shiftKey ? 10 : 2)); break;
       default: return;
@@ -733,6 +794,8 @@ async function main() {
 
   const defs = buildDefs();
   applyOverlayDiff(ovParam);
+  buildTags();
+  applySidebar(false);
 
   maps.pre = makeMap('mapPre', defs, 'pre');
   maps.post = makeMap('mapPost', defs, 'post');
@@ -756,10 +819,8 @@ async function main() {
   maps.post.on('moveend', writeHash);
   writeHash();
 
-  $('#panelToggle').addEventListener('click', () => {
-    document.body.classList.toggle('panel-open');
-    setTimeout(() => eachMap(m => m.resize()), 200);
-  });
+  const tog = $('#sidebarToggle');
+  if (tog) tog.addEventListener('click', toggleSidebar);
   window.addEventListener('resize', () => eachMap(m => m.resize()));
   window.addEventListener('hashchange', () => { if (!hashWriting) location.reload(); });
 }

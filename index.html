@@ -12,16 +12,16 @@
 </head>
 <body data-mode="swipe">
 
-<button id="panelToggle" aria-controls="panel" aria-label="Toggle the layer panel">☰ Layers</button>
-
 <aside id="panel">
   <div class="pad">
     <h1>Nepal Flood 2026 — Bhote Koshi &amp; Trishuli</h1>
     <p class="sub">Glacier-collapse flood of 26 August 2026. Before/after satellite imagery with
       Humanitarian OpenStreetMap Team response data. Drag the divider, or press
-      <kbd>[</kbd>&nbsp;<kbd>]</kbd>.</p>
+      <kbd>[</kbd>&nbsp;<kbd>]</kbd>. <kbd>B</kbd> hides this panel.</p>
   </div>
 </aside>
+
+<button id="sidebarToggle" aria-controls="panel" aria-expanded="true" title="Show or hide the layer panel (B)">◂</button>
 
 <div id="stage" aria-label="Before and after satellite comparison">
   <div id="mapPre"></div>
@@ -29,8 +29,8 @@
   <div id="divider" role="separator" aria-label="Comparison divider" aria-orientation="vertical" tabindex="0">
     <div class="knob">↔</div>
   </div>
-  <div class="sidelabel" id="labPre">Before</div>
-  <div class="sidelabel" id="labPost">After</div>
+  <select class="tag" id="tagPre" aria-label="Before imagery and view"></select>
+  <select class="tag" id="tagPost" aria-label="After imagery and view"></select>
   <div id="readout"></div>
 </div>
 

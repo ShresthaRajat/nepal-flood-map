@@ -8,7 +8,7 @@ from unpkg.
 
 | Path | Owner | What it is |
 | --- | --- | --- |
-| `index.html` | app | Page shell: sidebar container, two map divs, divider, readout. |
+| `index.html` | app | Page shell: sidebar container, two map divs, divider, the two corner tags, readout. |
 | `app/style.css` | app | All styling. Dark sidebar, swipe divider, mobile drawer. |
 | `app/config.js` | app | Static catalogue: HOT category list, feature counts, palettes, zoom targets, per-scene imagery notes, the "Sources & notes" text. Defines `window.CFG`. |
 | `app/app.js` | app | Everything else: style construction, the two synchronised maps, sidebar rendering, URL state, keyboard. |
@@ -96,12 +96,35 @@ Only the two selected scenes exist as sources at any time. Switching a source
 removes the old layer and source and adds the new one. Overlays that are off are
 `visibility: none`, never removed, so toggling them costs nothing.
 
+## Controls
+
+Scenes are chosen from two `<select>` tags in the top corners of the stage,
+green on the left for the before side and amber on the right for the after side.
+Each lists that side's scenes grouped by coverage, then a "View" group holding
+"<side> only" and "Compare (swipe)". Picking a view option changes the mode
+rather than the scene and the select snaps back to the current scene;
+`refreshTags()` is the single place that re-reads state into both tags, ticks the
+active view option and puts the white outline on whichever side is shown alone.
+The mode buttons in the sidebar and the tags both route through `setMode()`, so
+they can never disagree.
+
+The sidebar has no scene selectors — that would be two controls for one piece of
+state. It shows the selected scene's provider, resolution, coverage and licence
+instead, refreshed by `updateMeta()`.
+
+The sidebar collapses on desktop as well as mobile, by the same mechanism: the
+panel slides out on `transform` and `#stage` reflows its `left`. The difference
+is only that on mobile the open panel floats over the stage instead of pushing
+it. State lives in `localStorage` under `nf26.sidebar`, with the hash taking
+precedence when it carries `sb`. Maps are resized after the CSS transition
+finishes.
+
 ## URL state
 
 Everything lives in the hash, written with `replaceState` on every change:
 
 ```
-#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&cb=status&ov=+key,-key
+#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&cb=status&sb=0&ov=+key,-key
 ```
 
 `ov` is a **diff against the default overlay set**, not the full list, which
@@ -110,22 +133,22 @@ keeps the URL short. `+key` turns one on, `-key` turns one off.
 ## Keyboard
 
 Arrows pan (hold shift for a larger step), `+`/`-` zoom, `[` and `]` move the
-divider. MapLibre's own keyboard handler is disabled on both maps so the two
-never disagree.
+divider, `B` hides and shows the sidebar. MapLibre's own keyboard handler is
+disabled on both maps so the two never disagree.
 
 ## Adding an imagery layer
 
 1. Produce `tiles/<id>/{z}/{x}/{y}.webp`.
 2. Append an entry to `data/imagery.json` following the contract above. The
-   `coverage` value groups it in the dropdown; add a new one and it will appear
+   `coverage` value groups it in the corner tag; add a new one and it will appear
    as its own optgroup, labelled by `CFG.COVERAGE_LABEL` (add a label there for a
    readable name).
 3. Add a paragraph to `SCENES` in `app/config.js` keyed by the same id. It shows
-   as the dropdown tooltip and in the "Sources & notes" drawer. Without it the
+   as the option tooltip and in the "Sources & notes" drawer. Without it the
    drawer falls back to the entry's `attribution`.
 
-No other change is needed — the dropdowns, footprint outlines, footprint overlay
-and notes list are all generated from the catalogue.
+No other change is needed — the corner tags, sidebar metadata, footprint
+outlines, footprint overlay and notes list are all generated from the catalogue.
 
 ## Refreshing the HDX data
 

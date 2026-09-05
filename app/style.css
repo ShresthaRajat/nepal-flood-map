@@ -8,7 +8,9 @@
   --line: #313b48;
   --accent: #5eb0ff;
   --accent2: #ffb64d;
-  --sidebar-w: 356px;
+  --pre: #9fd5a9;
+  --post: #ffb64d;
+  --panel-w: 356px;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden;
@@ -16,7 +18,27 @@ html, body { margin: 0; height: 100%; overflow: hidden;
   background: #000; -webkit-text-size-adjust: 100%; }
 
 /* ---------------------------------------------------------------- layout */
-#stage { position: absolute; inset: 0 0 0 var(--sidebar-w); }
+/* The sidebar slides out of the way; the stage reflows to full width.  Same
+   mechanism on desktop and mobile, differing only in whether the stage is
+   pushed across (desktop) or the panel floats over it (mobile). */
+#panel { position: absolute; top: 0; left: 0; bottom: 0; width: var(--panel-w); z-index: 10;
+  background: var(--bg); border-right: 1px solid var(--line); overflow-y: auto; overscroll-behavior: contain;
+  transform: translateX(-100%); transition: transform .18s ease; }
+body.sidebar-open #panel { transform: none; }
+#panel > .pad { padding: 12px 14px 40px; }
+#panel h1 { font-size: 15px; margin: 0 0 2px; letter-spacing: -.01em; }
+#panel .sub { color: var(--fg-dim); font-size: 11.5px; margin: 0 0 10px; }
+
+#stage { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transition: left .18s ease; }
+body.sidebar-open #stage { left: var(--panel-w); }
+
+#sidebarToggle { position: absolute; top: 50%; left: 0; z-index: 20; width: 24px; height: 58px;
+  margin-top: -29px; padding: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 0 6px 6px 0; border-left: none; background: var(--bg2); color: var(--fg-dim);
+  font-size: 13px; transition: left .18s ease; }
+#sidebarToggle:hover { color: var(--fg); background: var(--bg3); }
+body.sidebar-open #sidebarToggle { left: var(--panel-w); }
+
 #mapPre, #mapPost { position: absolute; inset: 0; }
 /* The POST map sits on top.  Its canvas is clipped by the divider, so the div
    itself must not swallow clicks meant for the PRE map underneath. */
@@ -26,6 +48,7 @@ html, body { margin: 0; height: 100%; overflow: hidden;
 /* One attribution line at a time: whichever side is actually on screen. */
 body:not([data-mode="pre"]) #mapPre .maplibregl-ctrl-attrib { display: none; }
 body[data-mode="pre"] #mapPost .maplibregl-ctrl-attrib { display: none; }
+
 #divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px;
   background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.55); cursor: ew-resize; z-index: 4; touch-action: none; }
 #divider::before { content: ""; position: absolute; top: 0; bottom: 0; left: -14px; right: -14px; }
@@ -34,23 +57,32 @@ body[data-mode="pre"] #mapPost .maplibregl-ctrl-attrib { display: none; }
   display: flex; align-items: center; justify-content: center; color: #12161c; font-size: 14px; }
 body[data-mode="pre"] #divider, body[data-mode="post"] #divider { display: none; }
 
-.sidelabel { position: absolute; top: 10px; z-index: 3; padding: 3px 9px; border-radius: 999px;
-  background: rgba(18,22,28,.82); color: #fff; font-size: 11.5px; letter-spacing: .04em;
-  text-transform: uppercase; pointer-events: none; }
-#labPre { left: 12px; }
-#labPost { right: 12px; }
-body[data-mode="pre"] #labPost, body[data-mode="post"] #labPre { display: none; }
+/* ------------------------------------------------------------ corner tags */
+/* The two corner tags are <select>s: they pick the imagery for that side and
+   carry the "Pre only" / "Post only" view options.  A white outline marks the
+   side shown alone; in swipe mode both are plain. */
+.tag {
+  position: absolute; top: 10px; z-index: 6; max-width: 44%;
+  padding: 3px 24px 3px 10px; border-radius: 4px; border: 1px solid transparent;
+  font: inherit; font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  background: rgba(12,17,22,.82) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238FA0AB' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 8px center;
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
+}
+.tag:hover { border-color: var(--accent); }
+.tag:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tag.only { border-color: #e6ecf0; box-shadow: 0 0 0 1px rgba(230,236,240,.35); }
+.tag option, .tag optgroup { text-transform: none; letter-spacing: 0; font-weight: 400;
+  color: var(--fg); background: var(--bg2); }
+#tagPre { left: 12px; color: var(--pre); }
+#tagPost { right: 12px; color: var(--post); }
+body[data-mode="pre"] #tagPost, body[data-mode="post"] #tagPre { opacity: .45; }
 
 #readout { position: absolute; bottom: 8px; right: 10px; z-index: 3; font-size: 11.5px;
   background: rgba(18,22,28,.8); color: #cfd8e3; padding: 3px 8px; border-radius: 5px;
   font-variant-numeric: tabular-nums; pointer-events: none; }
 
-/* --------------------------------------------------------------- sidebar */
-#panel { position: absolute; top: 0; left: 0; bottom: 0; width: var(--sidebar-w); z-index: 10;
-  background: var(--bg); border-right: 1px solid var(--line); overflow-y: auto; overscroll-behavior: contain; }
-#panel > .pad { padding: 12px 14px 40px; }
-#panel h1 { font-size: 15px; margin: 0 0 2px; letter-spacing: -.01em; }
-#panel .sub { color: var(--fg-dim); font-size: 11.5px; margin: 0 0 10px; }
+/* --------------------------------------------------------------- controls */
 .block { border-top: 1px solid var(--line); padding: 10px 0 4px; }
 .block > h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-dim);
   margin: 0 0 7px; font-weight: 600; }
@@ -60,6 +92,8 @@ button, select { font: inherit; color: var(--fg); background: var(--bg3); border
 button:hover, select:hover { border-color: #48566a; }
 select { width: 100%; padding: 5px 7px; }
 button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--bg3);
+  border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
 
 .seg { display: flex; gap: 0; }
 .seg button { flex: 1; border-radius: 0; border-right-width: 0; }
@@ -71,6 +105,8 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .field label { display: block; font-size: 11px; color: var(--fg-dim); margin-bottom: 3px; }
 .meta { font-size: 11px; color: var(--fg-dim); margin: 3px 0 0; }
 .meta b { color: #cfd8e3; font-weight: 600; }
+.side-pre b { color: var(--pre); }
+.side-post b { color: var(--post); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 5px; }
 .chips button { font-size: 11.5px; padding: 3px 8px; }
@@ -93,7 +129,6 @@ label.row > span.t { overflow: hidden; text-overflow: ellipsis; }
 .sw.outline { background: transparent !important; border: 2px solid; }
 .cnt { color: var(--fg-dim); font-size: 10.5px; margin-left: auto; padding-left: 6px; font-variant-numeric: tabular-nums; }
 input[type=checkbox], input[type=radio] { accent-color: var(--accent); margin: 0; flex: none; }
-input[type=range] { width: 84px; accent-color: var(--accent); }
 
 .legend { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; align-items: center; font-size: 11.5px; }
 .legend .sw { width: 13px; height: 13px; }
@@ -112,16 +147,13 @@ input[type=range] { width: 84px; accent-color: var(--accent); }
 #notes dd { font-size: 11px; color: #a9b5c4; margin: 1px 0 0 0; }
 
 /* ---------------------------------------------------------------- mobile */
-#panelToggle { position: absolute; top: 10px; left: 10px; z-index: 20; display: none;
-  background: rgba(18,22,28,.92); padding: 7px 11px; font-size: 13px; }
 @media (max-width: 780px) {
-  :root { --sidebar-w: 0px; }
-  #panel { width: min(88vw, 340px); transform: translateX(-100%); transition: transform .18s ease;
-    box-shadow: 0 0 24px rgba(0,0,0,.6); }
-  body.panel-open #panel { transform: none; }
-  #panelToggle { display: block; }
-  body.panel-open #panelToggle { left: min(88vw, 340px); margin-left: 8px; }
-  #labPre, #labPost { top: 52px; }
+  :root { --panel-w: min(88vw, 340px); }
+  #panel { box-shadow: 0 0 24px rgba(0,0,0,.6); }
+  body.sidebar-open #stage { left: 0; }          /* the drawer floats over the map */
+  .tag { max-width: 60%; font-size: 11px; }
+  #tagPost { top: 44px; right: auto; left: 12px; }   /* stack instead of overlapping */
+  #readout { display: none; }
 }
 
 /* ---------------------------------------------------------------- popups */
