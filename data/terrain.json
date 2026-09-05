@@ -27,17 +27,19 @@
       "c50": {
         "minzoom": 13,
         "maxzoom": 15,
-        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000. Limited to the 1 km river corridor (Rasuwagadhi to Devghat) - not present outside it.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
+        "clip": "data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson"
       },
       "c10": {
-        "minzoom": 15,
+        "minzoom": 14,
         "maxzoom": 15,
-        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Restricted to z15 only (rather than z14-15) to keep the tileset near the ~120 MB budget.",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" }
+        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Limited to the 1 km river corridor (Rasuwagadhi to Devghat) - not present outside it.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
+        "clip": "data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson"
       }
     },
-    "size_note": "~134 MB total, slightly over the ~120 MB target. c10 confined to z15 only and geometry simplification increased (SIMPLIFICATION=2.2, SIMPLIFICATION_MAX_ZOOM=2.0) to get this close; further reduction (e.g. dropping c10 entirely, or a coarser base interval) would be needed to get under 120 MB exactly.",
+    "size_note": "~76 MB total, under the ~120 MB target. c10/c50 limited to the 1 km river corridor (data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson) rather than the full map extent, per owner direction to cut CPU time; c1000/c500/c100 remain full-extent since they are cheap.",
     "elevation_range_m": [183.06, 7857.32],
     "attribution": "Copernicus GLO-30 DEM © ESA / Airbus"
   },

@@ -89,29 +89,41 @@ mk_class () {
 mk_class c1000 "CAST(ROUND(ele) AS INTEGER) % 1000 = 0"
 mk_class c500  "CAST(ROUND(ele) AS INTEGER) % 500 = 0 AND CAST(ROUND(ele) AS INTEGER) % 1000 != 0"
 mk_class c100  "CAST(ROUND(ele) AS INTEGER) % 100 = 0 AND CAST(ROUND(ele) AS INTEGER) % 500 != 0"
-mk_class c50   "CAST(ROUND(ele) AS INTEGER) % 50 = 0  AND CAST(ROUND(ele) AS INTEGER) % 100 != 0"
-mk_class c10   "CAST(ROUND(ele) AS INTEGER) % 10 = 0  AND CAST(ROUND(ele) AS INTEGER) % 50 != 0"
+
+# c50 and c10 are clipped to the 1 km flood-corridor AOI (Rasuwagadhi to
+# Devghat) rather than the full map extent. At full extent, z14-15 c10 alone
+# pushed the tileset to ~226 MB (well over the ~120 MB budget); even after
+# confining c10 to z15-only and increasing simplification it only got to
+# ~134 MB. Clipping to the corridor (per owner direction, to cut CPU time)
+# drops c50 from 4489 to 136 features and c10 from 37094 to 1211, bringing
+# the full tileset (with c10/c50 restored to their intended z14-15/z13-15
+# ranges) down to ~76 MB - comfortably under budget, and with no loss of
+# detail where it matters (the flood-affected river corridor).
+AOI="$ROOT/data/hdx/hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson"
+mk_class_clipped () {
+  local name="$1" where="$2"
+  "$GDAL_BIN/ogr2ogr" -f GPKG -overwrite -update "$SPLIT_GPKG" \
+    "$WORK/contours_10m.gpkg" -dialect sqlite -sql \
+    "SELECT geom, CAST(ROUND(ele) AS INTEGER) AS ele, \
+            CASE WHEN CAST(ROUND(ele) AS INTEGER) % 100 = 0 THEN 1 ELSE 0 END AS idx \
+     FROM contours10 WHERE $where" \
+    -nln "$name" -nlt LINESTRING -clipsrc "$AOI"
+}
+mk_class_clipped c50 "CAST(ROUND(ele) AS INTEGER) % 50 = 0  AND CAST(ROUND(ele) AS INTEGER) % 100 != 0"
+mk_class_clipped c10 "CAST(ROUND(ele) AS INTEGER) % 10 = 0  AND CAST(ROUND(ele) AS INTEGER) % 50 != 0"
 
 # Per-layer zoom ranges via the MVT driver's CONF option. NOTE: the JSON keys
 # are "minzoom"/"maxzoom" (no underscore) and the layer map is the TOP LEVEL
 # of the JSON (not nested under a "layers" key) - both are easy to get wrong
 # and the driver silently falls back to the dataset-wide MINZOOM/MAXZOOM if
 # the keys don't match, which produced an oversized (350+ MB) first attempt.
-#
-# c10 is deliberately restricted to z15 ONLY (not z14-15 as the spec's default
-# progressive scheme would suggest): at z14-15 the full tileset came out to
-# ~226 MB, well over the ~120 MB budget. Confining c10 to z15 got it to
-# ~140 MB; combined with extra simplification below, ~134 MB - still a bit
-# over budget, but further cuts (dropping c10 entirely, or a coarser base
-# interval) would start compromising the data rather than just its zoom
-# footprint, so this was left as the final tradeoff.
 cat > "$WORK/mvt_conf.json" <<'EOF'
 {
   "c1000": { "target_name": "c1000", "minzoom": 8,  "maxzoom": 15 },
   "c500":  { "target_name": "c500",  "minzoom": 9,  "maxzoom": 15 },
   "c100":  { "target_name": "c100",  "minzoom": 11, "maxzoom": 15 },
   "c50":   { "target_name": "c50",   "minzoom": 13, "maxzoom": 15 },
-  "c10":   { "target_name": "c10",   "minzoom": 15, "maxzoom": 15 }
+  "c10":   { "target_name": "c10",   "minzoom": 14, "maxzoom": 15 }
 }
 EOF
 
@@ -122,10 +134,9 @@ EOF
   c1000 c500 c100 c50 c10 \
   -dsco MINZOOM=8 -dsco MAXZOOM=15 -dsco COMPRESS=NO -dsco FORMAT=DIRECTORY \
   -dsco NAME=trisuli-contours \
-  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30" \
+  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30 (c10/c50 clipped to 1km river corridor)" \
   -dsco BOUNDS="$MINLON,$MINLAT,$MAXLON,$MAXLAT" \
-  -dsco CONF="$WORK/mvt_conf.json" \
-  -dsco SIMPLIFICATION=2.2 -dsco SIMPLIFICATION_MAX_ZOOM=2.0
+  -dsco CONF="$WORK/mvt_conf.json"
 
 # Sanity check: tile z14 containing lon 85.152 lat 27.925 should exist and
 # decode with the MVT driver, e.g.:
