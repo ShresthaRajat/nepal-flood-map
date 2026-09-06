@@ -92,7 +92,7 @@
    "side": "post",
    "date": "2026-08-27",
    "sensor": "Sentinel-2",
-   "provider": "ESA Copernicus",
+   "provider": "ESA Copernicus / AWS open data",
    "gsd_m": 10,
    "bounds": [
     84.375,
@@ -101,11 +101,12 @@
     28.613459
    ],
    "minzoom": 8,
-   "maxzoom": 13,
+   "maxzoom": 14,
    "tiles": "tiles/post_s2_20260827/{z}/{x}/{y}.webp",
-   "attribution": "© ESA Copernicus",
+   "attribution": "© ESA Copernicus Sentinel data 2026",
    "coverage": "corridor",
-   "size_mb": 3.3
+   "size_mb": 18.0,
+   "notes_build": "tools/build_s2_tiles.sh from S2B_45RUL/45RUM_20260827 TCI COGs, native 10 m"
   },
   {
    "id": "post_ps_20260826",

@@ -13,6 +13,9 @@ from unpkg.
 | `app/config.js` | app | Static catalogue: HOT category list, feature counts, palettes, zoom targets, per-scene imagery notes, the "Sources & notes" text. Defines `window.CFG`. |
 | `app/app.js` | app | Everything else: style construction, the two synchronised maps, sidebar rendering, URL state, keyboard. |
 | `tools/serve.py` | app | Dev server on port 1111 with HTTP Range support (PMTiles is read by byte range). |
+| `tools/build_s2_tiles.sh` | imagery | Sentinel-2 true-colour pyramids at native 10 m (z8–14) straight from the AWS COG archive; used for `post_s2_20260827`. |
+| `tools/build_roads_tiles.sh`, `build_waterways_tiles.sh` | vector | National OSM roads / waterways from HDX, clipped and tiled (MVT). |
+| `tools/build_ems_roads.py`, `build_flooded_roads.py` | derived | Copernicus EMS road grades; roads inside the flood extent with bridge rules. |
 | `docs/ARCHITECTURE.md` | app | This file. |
 | `data/imagery.json` | retile agent | Imagery catalogue. |
 | `data/terrain.json` | contours agent | Contour and hillshade tile descriptions. |
