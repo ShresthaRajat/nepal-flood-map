@@ -226,6 +226,9 @@ table.dmg td { text-align: right; padding: 2px 4px; border-bottom: 1px solid rgb
 .roadlg .heavy { box-shadow: 0 0 0 2px rgba(0,0,0,.8); }
 .roadlg .dash { background: repeating-linear-gradient(90deg, #fff 0 6px, transparent 6px 9px); }
 .roadlg .dot { background: repeating-linear-gradient(90deg, #fff 0 1.5px, transparent 1.5px 4.5px); }
+.roadlg .hw { background: #fbbf24; }
+.roadlg .red { background: #ef4444; }
+.roadlg .r .note { font-size: 10.5px; color: var(--fg-dim); }
 .roadlg .ct { background: #c2884a; height: 1px; box-shadow: none; }
 .roadlg .ct.idx { background: #e8a95c; height: 2px; }
 

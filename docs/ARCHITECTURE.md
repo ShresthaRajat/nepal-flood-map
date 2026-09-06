@@ -82,7 +82,23 @@ toggle disappear.
   one source-layer `waterways` with `name`, `waterway`, `natural_class`, `water`
   and `width`. Built from the national HDX `hotosm_npl_waterways` export by
   `tools/build_waterways_tiles.sh`; not part of the two HOT flood datasets, so
-  it ignores the Extent and Source switches.
+  it ignores the Extent switch.
+- **Highways and main roads.** `tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf`, z7–13,
+  source-layer `roads` (`highway`, `name`, `name_en`, `name_latin`, `surface`,
+  `bridge`; the export has no `ref`), motorway/trunk/primary/secondary/tertiary
+  plus unclassified ways named Highway/Rajmarg/Lokmarg/Rajpath. Built from the
+  national HDX `hotosm_npl_roads` export by `tools/build_roads_tiles.sh`, which
+  downloads the 220 MB GeoPackage into `work/`. Shows the approach roads beyond
+  the 1 km corridor, drawn *under* the HOT roads with the same casing and
+  widths (tapered below z14), trunk/primary yellow and the rest white; highways
+  and anything named "Highway" are labelled by name from a symbol layer placed
+  above the HOT layers. HOT roads themselves are white, yellow for trunk/primary
+  and red where `status` is damaged or destroyed, and are on by default.
+- **Roads inside the flood extent.** `data/hdx/derived/roads_in_flood_extent.geojson`,
+  the HOT flood-area `roads_osm` clipped to the flood extent polygon by
+  `tools/build_flooded_roads.py` (needs the GeoPackages from
+  `build_hdx_tiles.sh`). 976 segments, 185 km, fields `highway`, `name`,
+  `status`, `length_m`. Rebuild after refreshing the HDX snapshot.
 
 The switch is per category, not global, so a partial tile build still works: any
 category whose source-layer is missing falls back to the PMTiles archive.
@@ -193,13 +209,15 @@ transition finishes.
 Everything lives in the hash, written with `replaceState` on every change:
 
 ```
-#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&ao=0&cb=status&sb=0&sc=0&hx=corridor&ho=overture&ov=+key,-key
+#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&cb=status&sb=0&sc=0&hx=corridor&ov=+key,-key
 ```
 
 `ov` is a **diff against the default overlay set**, not the full list, which
-keeps the URL short. `+key` turns one on, `-key` turns one off. `hx` and `ho`
-are the HOT category list's extent (`flood` | `corridor`) and source
-(`osm` | `overture`) switches; omitted when at their defaults.
+keeps the URL short. `+key` turns one on, `-key` turns one off. `hx` is the
+HOT category list's extent switch (`flood` | `corridor`), omitted at its default.
+OSM categories are keyed `hot_<cat>` and Overture ones `ovt_<cat>`; the two are
+separate overlay groups. Older links carrying `ho=overture` (from when source
+was a switch) are read and their `hot_` keys remapped to `ovt_`.
 
 ## Keyboard
 

@@ -130,11 +130,24 @@ lines reveal progressively with zoom — 1000, 500, 100, 50 then 10 m intervals 
 dataset on HDX, snapshot of 5 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
-      OSM and Overture buildings, roads, bridges, waterways, facilities and settlement names.</li>
+      OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>
+  <li><b>Overture Maps</b> — a separate section. Overture's last release before the flood: OSM plus
+      Microsoft and Google building footprints and Meta places. About a quarter of its buildings have no
+      OSM counterpart (densest around Betrawati and Trisuli Bazar). It carries no damage status, so under
+      the Status palette it draws grey.</li>
   <li><b>River corridor</b> — the same catalogue over a wider 1 km buffer along the river. Off by
       default because it is large.</li>
   <li><b>Flood extent</b>, <b>destroyed and damaged features</b> (volunteer-recorded in OSM, drawn
-      in dark red), <b>bridge ground reports</b> and <b>exposed hydropowers</b>.</li>
+      in dark red; road stretches with a damaged or destroyed status draw bright red in the roads layer),
+      <b>bridge ground reports</b> and <b>exposed hydropowers</b>.</li>
+  <li><b>Roads inside the flood extent</b> — computed here by clipping the HOT flood-area roads to the
+      27 Aug 2026 flood extent polygon: 976 stretches, 185 km. Of those, 263 already carry a Destroyed
+      status and 713 are still recorded as Standing, so this overlay shows exposure, not confirmed damage.</li>
+  <li><b>Highways and main roads</b> — the national OSM roads export on HDX (9 Aug 2026), clipped to the
+      corridor and its approaches and drawn underneath the HOT roads with the same styling: national
+      highways (trunk and primary) yellow, everything else white. Nepal's highways are under-tagged in
+      OSM, so stretches of the Pasang Lhamu and Mid-Hill highways appear as ordinary roads. Labels use
+      the English or transliterated name.</li>
   <li><b>fAIr building damage</b> — 1,053 buildings AI-scored as destroyed (677), major damage (105),
       minor damage (155), no damage (113) or no data (3).</li>
 </ul>

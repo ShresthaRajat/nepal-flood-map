@@ -25,10 +25,9 @@ const abs = u => /^(https?:)?\/\//.test(u) ? u : BASE + String(u).replace(/^\.?\
 // --------------------------------------------------------------- app state
 const state = {
   mode: 'swipe', pre: null, post: null, swipe: 50,
-  base: 'osm', hillshade: false, contours: true, aoi: true, colorBy: 'layer',
+  base: 'osm', hillshade: false, contours: true, colorBy: 'layer',
   footprintOutline: false,  // dashed outline of the selected scene; off, reachable only via #fo=1
   hotExtent: 'flood',       // 'flood' | 'corridor' — which HOT dataset the category list shows
-  hotSource: 'osm',         // 'osm' | 'overture'
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
   controls: null,           // right rail (layer controls): same resolution
   overlays: null,           // Set of enabled entry keys
@@ -128,6 +127,10 @@ const STATUS_EXPR = statusExprFor('');
  * class.  line-dasharray is not data-driven in MapLibre, so the dashed and
  * dotted classes have to be separate layers with their own filters. */
 const ROAD_WHITE = '#ffffff';
+const DAMAGE_ROAD_RED = '#ef4444';
+const HW_YELLOW = '#fbbf24';       // national highways (motorway/trunk/primary)
+const IS_DAMAGED = ['match', ['to-string', ['get', 'status']],
+  ['Damaged', 'damaged', 'Destroyed', 'destroyed', 'Washed out', 'washed out', 'Major Damage', 'major-damage'], true, false];
 const HW = {
   trunk: ['motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link'],
   sec: ['secondary', 'secondary_link', 'tertiary', 'tertiary_link'],
@@ -137,13 +140,20 @@ const HW = {
 };
 const HW_ROADLIKE = [...HW.trunk, ...HW.sec, ...HW.minor, ...HW.track];
 const inHw = list => ['in', ['to-string', ['get', 'highway']], ['literal', list]];
-/* Width by class, interpolated over zoom.  `add` widens every stop, for casings. */
-function hwWidth(add) {
-  const at = (t, sc, m, tr, pa, unk) => ['match', ['to-string', ['get', 'highway']],
-    HW.trunk, t + add, HW.sec, sc + add, HW.minor, m + add, HW.track, tr + add, HW.path, pa + add, unk + add];
+/* Width by class, interpolated over zoom.  `add` widens every stop, for casings.
+ * `taper` adds thinner stops at z7 and z11 for layers shown at corridor scale
+ * (the national roads).  Zoom stops must stay at the top level of the expression:
+ * MapLibre rejects a ["zoom"] nested inside arithmetic, and one bad expression
+ * fails the whole style. */
+function hwWidth(add, taper) {
+  const at = (t, sc, m, tr, pa, unk, k = 1) => ['match', ['to-string', ['get', 'highway']],
+    HW.trunk, (t + add) * k, HW.sec, (sc + add) * k, HW.minor, (m + add) * k,
+    HW.track, (tr + add) * k, HW.path, (pa + add) * k, (unk + add) * k];
+  const z14 = [3.2, 2.2, 1.4, 1.2, 1.0, 1.2], z18 = [6, 4.5, 3, 2.2, 2.0, 2.4];
   return ['interpolate', ['linear'], ['zoom'],
-    14, at(3.2, 2.2, 1.4, 1.2, 1.0, 1.2),
-    18, at(6, 4.5, 3, 2.2, 2.0, 2.4)];
+    ...(taper ? [7, at(...z14, 0.35), 11, at(...z14, 0.6)] : []),
+    14, at(...z14),
+    18, at(...z18)];
 }
 /* White unless the feature is recorded as damaged or destroyed. */
 const ROAD_STATUS = ['match', ['to-string', ['get', 'status']],
@@ -197,6 +207,12 @@ function buildDefs() {
     waterways_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf')],
       minzoom: 8, maxzoom: 13, bounds: [84.2738, 27.434, 86.0755, 28.5237],
       attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
+    // HOT flood-area roads clipped to the observed flood extent (tools/build_flooded_roads.py).
+    flooded_roads: { type: 'geojson', data: HDX + 'derived/roads_in_flood_extent.geojson', attribution: ATTR_HDX },
+    // National OSM highways, pre-tiled by tools/build_roads_tiles.sh: context beyond the 1 km corridor.
+    roads_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf')],
+      minzoom: 7, maxzoom: 13, bounds: [84.27, 27.43, 86.08, 28.52],
+      attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   };
@@ -225,7 +241,7 @@ function buildDefs() {
   const push = (...ls) => layers.push(...ls);
 
   // 1. basemaps ------------------------------------------------------------
-  push({ id: 'base-osm', type: 'raster', source: 'osm', paint: { 'raster-opacity': 0.6 } },
+  push({ id: 'base-osm', type: 'raster', source: 'osm' },
        { id: 'base-esri', type: 'raster', source: 'esri', layout: { visibility: 'none' } });
 
   // 2. imagery placeholder — real layer is inserted at runtime -------------
@@ -305,13 +321,14 @@ function buildDefs() {
       const casing = { id: id + '-' + suffix + '-casing', type: 'line', source: r.source, 'source-layer': r.sl,
         filter, layout: { visibility: 'none', 'line-join': 'round', 'line-cap': cap },
         paint: { 'line-color': '#000000', 'line-opacity': 0.2, 'line-width': hwWidth(casingAdd) } };
+      // Roads: white, national highways yellow, flood-damaged stretches (HOT status) always red.
+      const roadColor = isBridge ? ROAD_STATUS : ['case', IS_DAMAGED, DAMAGE_ROAD_RED, inHw(HW.trunk), HW_YELLOW, ROAD_WHITE];
       const line = { id: id + '-' + suffix, type: 'line', source: r.source, 'source-layer': r.sl,
         filter, layout: { visibility: 'none', 'line-join': 'round', 'line-cap': cap },
-        paint: { 'line-color': isBridge ? ROAD_STATUS : ROAD_WHITE, 'line-opacity': 0.7, 'line-width': hwWidth(0) } };
+        paint: { 'line-color': roadColor, 'line-opacity': ['case', IS_DAMAGED, 0.95, 0.7], 'line-width': hwWidth(0) } };
       if (dash) { casing.paint['line-dasharray'] = dash; line.paint['line-dasharray'] = dash; }
       out.push(casing, line);
-      PAINT_TARGETS.push({ id: line.id, prop: 'line-color',
-        def: isBridge ? ROAD_STATUS : ROAD_WHITE, status: ROAD_STATUS });
+      PAINT_TARGETS.push({ id: line.id, prop: 'line-color', def: roadColor, status: ROAD_STATUS });
     }
     return out;
   }
@@ -327,7 +344,7 @@ function buildDefs() {
   HOT_CATS = [];
   for (const [cat, , label, color] of hotCats) if (!HOT_CATS.some(c => c.cat === cat))
     HOT_CATS.push({ cat, label: label.replace(/\s*\((OSM|Overture)\)$/, ''), color });
-  const HOT_DEFAULT_ON = ['bridges'];
+  const HOT_DEFAULT_ON = ['bridges', 'roads'];
   const SETTLEMENT_RED = '#f87171';
   // Volunteer-recorded destroyed/damaged features read as damage, not as a
   // mapped-feature class: dark red outline over a translucent dark red fill,
@@ -399,16 +416,45 @@ function buildDefs() {
     { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
       paint: { 'line-color': '#991b1b', 'line-width': 1.2 } },
   );
+  // National roads (HDX hotosm_npl_roads, trunk to tertiary plus named highways) beyond the
+  // 1 km corridor.  Same casing and widths as the HOT roads and drawn underneath them, so
+  // inside the corridor HOT's roads (white, yellow for trunk/primary, red where damaged) win
+  // and outside it this layer continues the network.  Widths taper below z14 so the valley
+  // does not clog at corridor scale.
+  const HW_MAIN = ['match', ['to-string', ['get', 'highway']], HW.trunk, true, false];
+  const HW_NAME = ['coalesce', ['get', 'name_en'], ['get', 'name_latin'], ['get', 'name'], ''];
+  const HW_NAMED = ['any', HW_MAIN, ...['ighway', 'Rajmarg', 'Lokmarg', 'Rajpath'].map(k => ['in', k, HW_NAME])];
+  const npLine = (suffix, filter, color, opacity) => [
+    { id: 'roads_np-' + suffix + '-casing', type: 'line', source: 'roads_np', 'source-layer': 'roads', filter,
+      layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'butt' },
+      paint: { 'line-color': '#000000', 'line-opacity': 0.2, 'line-width': hwWidth(1.5, true) } },
+    { id: 'roads_np-' + suffix, type: 'line', source: 'roads_np', 'source-layer': 'roads', filter,
+      layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'butt' },
+      paint: { 'line-color': color, 'line-opacity': opacity, 'line-width': hwWidth(0, true) } },
+  ];
+  push(...npLine('other', ['!', HW_MAIN], ROAD_WHITE, 0.7),
+       ...npLine('hw', HW_MAIN, HW_YELLOW, 0.9));
+
   HOT_LAYERS = [];
   vectorGroup('flood');
   vectorGroup('corridor');
 
-  // hot: entries have no fixed ids — applyHot() resolves them from the switches
-  groups.push({ title: 'Mapped features (HOT, OSM / Overture)', hot: true, open: true, entries: [
-    ...HOT_CATS.filter(c => !damageCat(c.cat)).map(c => ({ key: 'hot_' + c.cat, cat: c.cat, label: c.label, hot: true, ids: [],
-      color: (c.cat === 'roads' || c.cat === 'bridges') ? ROAD_WHITE : c.cat === 'populated_places' ? '#f1f5f9' : c.color,
-      on: HOT_DEFAULT_ON.includes(c.cat) })),
+  // hot: entries have no fixed ids — applyHot() resolves them from the Extent switch
+  // and the entry's source.  OSM and Overture are separate sections (owner direction,
+  // 6 Sep 2026): Overture predates the flood and carries no damage status.
+  const swatch = (cat, color) => (cat === 'roads' || cat === 'bridges') ? ROAD_WHITE : cat === 'populated_places' ? '#f1f5f9' : color;
+  groups.push({ title: 'Mapped features (HOT / OpenStreetMap)', hot: true, extent: true, open: true, entries: [
+    ...HOT_CATS.filter(c => !damageCat(c.cat)).map(c => ({ key: 'hot_' + c.cat, cat: c.cat, src: 'osm', label: c.label, hot: true, ids: [],
+      color: swatch(c.cat, c.color), on: HOT_DEFAULT_ON.includes(c.cat) })),
   ] });
+  // What Overture is and why it has no damage status is explained in the Sources & notes drawer.
+  groups.push({ title: 'Overture Maps (pre-flood)', hot: true, open: false,
+    noAll: true,
+    // Only categories with data in the flood area; police, roads and settlement names are corridor-only (owner direction).
+    entries: hotCats.filter(([cat, s]) => s === 'overture' && ['buildings', 'education_facilities', 'points_of_interest'].includes(cat)).map(([cat, , , color]) => ({
+      key: 'ovt_' + cat, cat, src: 'overture', label: HOT_CATS.find(c => c.cat === cat).label, hot: true, ids: [],
+      color: swatch(cat, color), on: false })),
+  });
 
   const fairColor = ['match', ['get', 'damage'],
     'destroyed', CFG.FAIR['destroyed'], 'major-damage', CFG.FAIR['major-damage'],
@@ -432,16 +478,43 @@ function buildDefs() {
   );
   PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'circle-color', def: bridgeColor });
 
+  // Roads that lie inside the mapped water, computed by clipping the HOT roads to the flood
+  // extent polygon: red with the road casing, on top of the roads so the affected stretches
+  // read even where HOT has not recorded a status yet (713 of 976 segments are still "Standing").
+  push(
+    { id: 'flooded_roads-casing', type: 'line', source: 'flooded_roads', layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': '#000000', 'line-opacity': 0.25, 'line-width': hwWidth(1.5) } },
+    { id: 'flooded_roads-line', type: 'line', source: 'flooded_roads', layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': DAMAGE_ROAD_RED, 'line-opacity': 0.95, 'line-width': hwWidth(0) } },
+  );
+
+  // Highway name labels sit above every HOT layer so roads do not overdraw them.  Labelled by
+  // name (the HDX export has no ref): highways, and any road whose name says Highway / Rajmarg /
+  // Lokmarg / Rajpath, e.g. the tertiary-tagged stretches of the Pasang Lhamu Highway.  Bend limit
+  // is loose because these roads switchback; a tight limit suppressed every label in the hills.
+  push({ id: 'roads_np-label', type: 'symbol', source: 'roads_np', 'source-layer': 'roads', filter: HW_NAMED, minzoom: 9,
+    layout: { visibility: 'none', 'symbol-placement': 'line', 'symbol-spacing': 260,
+      'text-field': HW_NAME, 'text-font': FONT,
+      'text-size': ['interpolate', ['linear'], ['zoom'], 9, 10, 14, 12.5],
+      'text-letter-spacing': 0.04, 'text-padding': 2, 'text-max-angle': 60, 'text-keep-upright': true },
+    paint: { 'text-color': '#fde68a', 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.6, 'text-halo-blur': 0.3 } });
+
   groups.push({ title: 'Flood extent, damage & ground reports', entries: [
     { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
     // hot: ids resolved by applyHot(); follows the Extent switch, always the OSM source.
-    { key: 'hot_destroyed_features', cat: 'destroyed_features', label: 'Destroyed and damaged features (volunteer-recorded)',
+    { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
     { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58 },
     { key: 'hydro', label: 'Exposed hydropowers', color: '#facc15', ids: ['hydro-point'], on: true, count: 10 },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
     { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
     { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
+    { key: 'roads_np', label: 'Highways and main roads (OSM, national)', color: HW_YELLOW,
+      ids: ['roads_np-other-casing', 'roads_np-other', 'roads_np-hw-casing', 'roads_np-hw', 'roads_np-label'], on: true },
+    { key: 'flooded_roads', label: 'Roads inside the flood extent (computed)', color: DAMAGE_ROAD_RED,
+      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: true, count: 976 },
+    // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
+    { key: 'hot_aoi', label: 'HOT area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
   ] });
 
   // 6. search pin + selected-scene outline -----------------------------------
@@ -492,6 +565,9 @@ function makeMap(container, defs, side) {
     const msg = (ev && ev.error && ev.error.message) || '';
     if (/40[34]|Failed to fetch|NetworkError|AbortError/i.test(msg)) return;   // sparse tiles / missing optional data
     console.warn('[map:' + side + ']', msg || ev);
+    // Anything else (a style that failed validation, a bad expression, a missing source-layer)
+    // otherwise shows as a silently black map.  Surface it once so it can be reported.
+    if (!m._shownError) { m._shownError = true; toast('Map error (' + side + '): ' + (msg || 'see console').slice(0, 160)); }
   });
   return m;
 }
@@ -510,7 +586,6 @@ function applyImagery(side) {
     const before = m.getLayer(IMAGERY_BEFORE) ? IMAGERY_BEFORE : undefined;
     m.addLayer({ id: 'imagery', type: 'raster', source: 'imagery', paint: { 'raster-fade-duration': 120 } }, before);
   }
-  applyBaseOpacity();
   const fp = m.getSource('sel_footprint');
   if (fp) fp.setData(state.footprintOutline ? boundsFeature(l) : { type: 'FeatureCollection', features: [] });
   refreshTags();
@@ -535,28 +610,18 @@ function applyOverlays() {
  * category is ticked.  The AOI outline follows the extent switch. */
 function applyHot() {
   for (const h of HOT_LAYERS)
-    setVis(h.ids, h.ds === state.hotExtent && h.s === hotSourceFor(h.cat) && state.overlays.has('hot_' + h.cat));
-  setVis(['aoi_flood-line'], state.aoi && state.hotExtent === 'flood');
-  setVis(['aoi_corridor-line'], state.aoi && state.hotExtent === 'corridor');
+    setVis(h.ids, h.ds === state.hotExtent && state.overlays.has((h.s === 'overture' ? 'ovt_' : 'hot_') + h.cat));
+  const aoiOn = state.overlays.has('hot_aoi');
+  setVis(['aoi_flood-line'], aoiOn && state.hotExtent === 'flood');
+  setVis(['aoi_corridor-line'], aoiOn && state.hotExtent === 'corridor');
   if (hotRefresh) hotRefresh();
 }
-// Destroyed/damaged features exist only in the OSM source, so they ignore the Source switch.
-const hotSourceFor = cat => cat === 'destroyed_features' ? 'osm' : state.hotSource;
-const hotCount = cat => CFG.COUNTS[state.hotExtent][cat + '|' + hotSourceFor(cat)];
+const hotCount = e => CFG.COUNTS[state.hotExtent][e.cat + '|' + e.src];
 function applyBase() {
   setVis(['base-osm'], state.base === 'osm');
   setVis(['base-esri'], state.base === 'esri');
   setVis(['hillshade'], state.hillshade);
   setVis(CONTOUR_IDS, state.contours);
-  applyBaseOpacity();
-}
-/* The OSM basemap is dimmed under imagery, full strength when a side is showing
- * the basemap alone.  Per map, since the two sides can differ. */
-function applyBaseOpacity() {
-  eachMap((m, side) => {
-    if (!m.getLayer('base-osm')) return;
-    try { m.setPaintProperty('base-osm', 'raster-opacity', hasImagery(side) ? 0.6 : 1); } catch (e) { /* ignore */ }
-  });
 }
 function applyColorBy() {
   const useStatus = state.colorBy === 'status';
@@ -665,11 +730,9 @@ function writeHash() {
   p.set('b', state.base);
   if (state.hillshade) p.set('hs', '1');
   if (!state.contours) p.set('ct', '0');
-  if (!state.aoi) p.set('ao', '0');
   if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
   if (state.footprintOutline) p.set('fo', '1');
   if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
-  if (state.hotSource !== 'osm') p.set('ho', state.hotSource);
   if (!state.sidebar) p.set('sb', '0');
   if (!state.controls) p.set('sc', '0');
   const ov = serialiseOverlays();
@@ -687,11 +750,11 @@ function readHash() {
   if (p.get('b')) state.base = p.get('b');
   if (p.get('hs')) state.hillshade = p.get('hs') === '1';
   if (p.get('ct')) state.contours = p.get('ct') !== '0';
-  if (p.get('ao')) state.aoi = p.get('ao') !== '0';
+  legacyAoiOff = p.get('ao') === '0';   // pre-Sep-2026 links; the outline is an overlay entry now
   if (p.get('cb')) state.colorBy = p.get('cb');
   if (p.get('fo')) state.footprintOutline = p.get('fo') === '1';
   if (['flood', 'corridor'].includes(p.get('hx'))) state.hotExtent = p.get('hx');
-  if (['osm', 'overture'].includes(p.get('ho'))) state.hotSource = p.get('ho');
+  legacyOverture = p.get('ho') === 'overture';   // links from when OSM/Overture was a switch
   state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedRail('sidebar');
   state.controls = p.get('sc') ? p.get('sc') !== '0' : storedRail('controls');
   const c = p.get('c');
@@ -699,16 +762,22 @@ function readHash() {
   if (p.get('z')) state.zoom = parseFloat(p.get('z'));
   return p.get('ov');
 }
+let legacyAoiOff = false, legacyOverture = false;
 function applyOverlayDiff(ov) {
   state.overlays = new Set();
   for (const g of GROUPS) for (const e of g.entries) if (e.on) state.overlays.add(e.key);
+  if (legacyAoiOff) state.overlays.delete('hot_aoi');
+  if (legacyOverture) for (const k of [...state.overlays]) {
+    const o = k.replace(/^hot_/, 'ovt_');
+    if (o !== k && ENTRY[o]) { state.overlays.delete(k); state.overlays.add(o); }
+  }
   if (!ov) return;
   for (const tok of ov.split(',')) {
     let k = tok.slice(1);
     // Links from before the HOT groups were merged: flood-<cat>-osm → hot_<cat>
     const old = /^(flood|corridor)-(.+)-(osm|overture)$/.exec(k);
-    if (old) { k = 'hot_' + old[2]; if (tok[0] === '+') { state.hotExtent = old[1]; state.hotSource = old[3]; } }
-    if (k === 'aoi_flood' || k === 'aoi_corridor' || k === 'hot_aoi') { if (tok[0] === '-') state.aoi = false; continue; }
+    if (old) { k = (old[3] === 'overture' ? 'ovt_' : 'hot_') + old[2]; if (tok[0] === '+') state.hotExtent = old[1]; }
+    if (k === 'aoi_flood' || k === 'aoi_corridor') k = 'hot_aoi';   // older per-extent keys
     if (k.startsWith('ct_') || k === 'contours') { if (tok[0] === '-') state.contours = false; continue; }
     if (!ENTRY[k]) continue;
     if (tok[0] === '+') state.overlays.add(k); else state.overlays.delete(k);
@@ -830,7 +899,7 @@ function renderSidebar() {
 
   // basemap ---------------------------------------------------------------
   const bmBlock = el('div', 'block', '<h2>Basemap</h2>');
-  for (const [v, t] of [['osm', 'OpenStreetMap (dimmed)'], ['esri', 'Esri World Imagery'], ['none', 'None (black)']]) {
+  for (const [v, t] of [['osm', 'OpenStreetMap'], ['esri', 'Esri World Imagery'], ['none', 'None (black)']]) {
     const r = el('label', 'row');
     const i = el('input'); i.type = 'radio'; i.name = 'bm'; i.value = v; i.checked = state.base === v;
     i.addEventListener('change', () => { state.base = v; applyBase(); writeHash(); });
@@ -847,14 +916,9 @@ function renderSidebar() {
   const ctCb = el('input'); ctCb.type = 'checkbox'; ctCb.checked = state.contours;
   ctCb.disabled = !CONTOUR_IDS.length;
   ctCb.addEventListener('change', () => { state.contours = ctCb.checked; applyBase(); writeHash(); });
-  ct.append(ctCb, el('span', 't', ctCb.disabled ? 'Contours (not built)' : 'Contours, GLO-30 (10–50 m in the flood area, 100 m+ to 1 km beyond)'));
+  ct.append(ctCb, el('span', 't', ctCb.disabled ? 'Contours (not built)' : 'Contours'));
+  ct.title = 'Copernicus GLO-30: 10–50 m intervals in the flood area, 100 m and up to 1 km beyond';
   bmBlock.appendChild(ct);
-  const ao = el('label', 'row');
-  const aoCb = el('input'); aoCb.type = 'checkbox'; aoCb.checked = state.aoi;
-  aoCb.addEventListener('change', () => { state.aoi = aoCb.checked; applyHot(); writeHash(); });
-  const aoSw = el('span', 'sw outline'); aoSw.style.borderColor = 'rgba(203,213,225,.6)';
-  ao.append(aoCb, aoSw, el('span', 't', 'HOT area of interest outline (follows the extent switch)'));
-  bmBlock.appendChild(ao);
   cpad.appendChild(bmBlock);
 
   // zoom to ---------------------------------------------------------------
@@ -932,14 +996,12 @@ function renderSidebar() {
     det.open = g.open !== undefined ? g.open : (g.entries.some(e => state.overlays.has(e.key)) && g.entries.length < 12);
     const sum = el('summary', null, g.title + (g.entries.length > 1 ? ' <span class="n">' + g.entries.length + '</span>' : ''));
     det.appendChild(sum);
-    if (g.hot) {
+    if (g.extent) {
       det.appendChild(segField('Extent', 'hotExtent',
         [['flood', 'Flood area (+200 m)'], ['corridor', 'River corridor (1 km)']], () => { applyHot(); writeHash(); }));
-      det.appendChild(segField('Source', 'hotSource',
-        [['osm', 'OpenStreetMap'], ['overture', 'Overture Maps']], () => { applyHot(); writeHash(); }));
     }
     const ctl = el('div', 'grp', '<button data-all="1">all on</button><button data-all="0">all off</button>');
-    if (g.entries.length > 1) det.appendChild(ctl);
+    if (g.entries.length > 1 && !g.noAll) det.appendChild(ctl);
     const boxes = [], rows = [];
     for (const e of g.entries) {
       const row = el('label', 'row');
@@ -970,13 +1032,14 @@ function renderSidebar() {
     }));
     oBlock.appendChild(det);
   }
-  // Counts follow the switches; a category the current source does not carry is greyed out.
+  // Counts follow the Extent switch; a category the current extent does not carry is hidden.
   hotRefresh = () => {
     for (const r of hotRows) {
       if (!r.e.cat) continue;
-      const n = hotCount(r.e.cat);
-      r.cnt.textContent = n === undefined ? 'n/a' : fmtCount(n);
-      r.cb.disabled = n === undefined; r.row.classList.toggle('off', n === undefined);
+      const n = hotCount(r.e);
+      r.cnt.textContent = n === undefined ? '' : fmtCount(n);
+      r.cb.disabled = n === undefined;
+      r.row.hidden = n === undefined;      // e.g. Overture roads exist only in the corridor dataset
     }
   };
   hotRefresh();
@@ -1010,12 +1073,14 @@ function renderSidebar() {
   const roadLg = el('div', 'roadlg');
   roadLg.innerHTML =
     '<div class="hd">Roads and bridges (white, dark casing)</div>' +
-    '<div class="r"><i class="rl w4"></i>Trunk and primary</div>' +
+    '<div class="r"><i class="rl w4 hw"></i>Trunk and primary (national highway, labelled by name)</div>' +
     '<div class="r"><i class="rl w3"></i>Secondary and tertiary</div>' +
     '<div class="r"><i class="rl w2"></i>Residential, service</div>' +
     '<div class="r"><i class="rl w2 dash"></i>Track</div>' +
     '<div class="r"><i class="rl w1 dot"></i>Path, steps, footbridge</div>' +
     '<div class="r"><i class="rl w4 heavy"></i>Road bridge span</div>' +
+    '<div class="r"><i class="rl w3 red"></i>Flood-damaged road (HOT status) or inside the observed flood extent</div>' +
+    '<div class="r"><span class="note">Beyond the 1 km corridor, roads come from the national OSM export (trunk to tertiary only).</span></div>' +
     '<div class="hd">Contours (GLO-30)</div>' +
     '<div class="r"><i class="rl ct idx"></i>Index line, multiple of 100 m</div>' +
     '<div class="r"><i class="rl ct"></i>Intermediate line</div>';
