@@ -1,8 +1,8 @@
 oex export
 ==========
 
-Generated:        2026-09-05 03:02:14 UTC
-oex version:      0.4.11
+Generated:        2026-09-06 03:02:11 UTC
+oex version:      0.4.13
 Project:          https://github.com/osgeonepal/oex
 
 Country (ISO3):   NPL
@@ -15,7 +15,7 @@ Features:         566
 
 Source:           OpenStreetMap contributors
 Source URL:       https://www.openstreetmap.org/
-Snapshot:         2026-09-05T02:58:51Z
+Snapshot:         2026-09-06T02:56:35Z
 License:          hdx-odc-odbl
 License URL:      https://opendatacommons.org/licenses/odbl/1-0/
 

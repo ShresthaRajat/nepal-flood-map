@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (5 Sep 2026).
+// overview page (6 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -34,15 +34,17 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':171,'buildings|osm':20038,'buildings|overture':19913,'destroyed_features|osm':2093,'education_facilities|osm':60,
-    'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,'health_facilities|overture':3,'helipads|osm':15,
-    'open_spaces|osm':65,'points_of_interest|osm':401,'points_of_interest|overture':170,'police_stations|osm':9,'residential_areas|osm':538,
-    'roads|osm':2274,'populated_places|osm':57,'waterways|osm':397 },
-  corridor: { 'bridges|osm':223,'buildings|osm':51976,'buildings|overture':52646,'destroyed_features|osm':2115,'education_facilities|osm':146,
-    'education_facilities|overture':20,'financial_services|osm':97,'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':23,
-    'open_spaces|osm':93,'open_spaces|overture':18,'points_of_interest|osm':570,'points_of_interest|overture':248,'police_stations|osm':11,
-    'police_stations|overture':2,'residential_areas|osm':1484,'roads|osm':5317,'roads|overture':3451,'populated_places|osm':154,
-    'populated_places|overture':43,'waterways|osm':566,'waterways|overture':465 },
+  flood: { 'bridges|osm':171,'buildings|osm':19976,'buildings|overture':19913,'destroyed_features|osm':2121,
+    'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
+    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':401,
+    'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':55,'residential_areas|osm':535,
+    'roads|osm':2277,'waterways|osm':397 },
+  corridor: { 'bridges|osm':223,'buildings|osm':51799,'buildings|overture':52646,'destroyed_features|osm':2131,
+    'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':97,
+    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':23,'open_spaces|osm':93,
+    'open_spaces|overture':18,'points_of_interest|osm':572,'points_of_interest|overture':248,'police_stations|osm':11,
+    'police_stations|overture':2,'populated_places|osm':152,'populated_places|overture':43,'residential_areas|osm':1476,
+    'roads|osm':5318,'roads|overture':3451,'waterways|osm':566,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.
@@ -122,14 +124,22 @@ and Legion frames over the upper valley (78–81 % cloud) and the 31 Aug and 5 S
 (94 % cloud).</p>
 
 <h3>Terrain</h3>
+<p>Place names come from OpenStreetMap (Overpass API, © OpenStreetMap contributors, ODbL): every
+city, town, village and hamlet node in the map window, plus a featured list for the corridor so that
+Rasuwagadhi, Timure, Syabrubesi, Kalikasthan, Betrawati, Trisuli Bazar, Battar, Devighat, Galchhi,
+Salyantar, Malekhu, Benighat and Mugling, and the district headquarters Dhunche, Bidur, Dhading Besi,
+Gorkha and Kathmandu, always appear whatever OSM's place tag says. Salyantar, Battar and Khanikhola have
+no OSM place node and are positioned from Nominatim results.</p>
 <p>Contours and hillshade are derived from the Copernicus GLO-30 DEM (© ESA / Airbus, 30 m). Contour
 lines reveal progressively with zoom — 1000, 500, 100, 50 then 10 m intervals — with index lines
-(multiples of 100 m) drawn heavier and elevation labels placed along the lines from zoom 13.</p>
+(multiples of 100 m) drawn heavier and elevation labels placed along the lines from zoom 13. The 50
+and 10 m contours are clipped by height above river rather than a fixed boundary, so they fade out
+with distance from the valley floor instead of stopping abruptly.</p>
 
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 5 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 6 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>

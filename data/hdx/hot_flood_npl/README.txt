@@ -1,7 +1,7 @@
 oex export
 ==========
 
-Generated:        2026-09-05 16:02:06 UTC
+Generated:        2026-09-06 10:01:56 UTC
 oex version:      0.4.13
 Project:          https://github.com/osgeonepal/oex
 
@@ -15,14 +15,15 @@ Features:         397
 
 Source:           OpenStreetMap contributors
 Source URL:       https://www.openstreetmap.org/
-Snapshot:         2026-09-05T15:59:51Z
+Snapshot:         2026-09-06T09:55:20Z
 License:          hdx-odc-odbl
 License URL:      https://opendatacommons.org/licenses/odbl/1-0/
 
 About the source
-  OpenStreetMap is a community-edited geographic dataset of the world.
-  Features are queried from Geofabrik's Postpass database, which tracks
-  OpenStreetMap continuously, one SQL query per category.
+  OpenStreetMap is a community-edited geographic dataset of the world. Country
+  features are extracted from the source PBF via quackosm with the union of
+  all category tag filters; per-category exports apply tag predicates at query
+  time.
 
 Notes
   - GeoJSON is a single-file text format. Consider gpkg for very large layers.

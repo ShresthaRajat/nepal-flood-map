@@ -16,6 +16,9 @@ from unpkg.
 | `tools/build_s2_tiles.sh` | imagery | Sentinel-2 true-colour pyramids at native 10 m (z8–14) straight from the AWS COG archive; used for `post_s2_20260827`. |
 | `tools/build_roads_tiles.sh`, `build_waterways_tiles.sh` | vector | National OSM roads / waterways from HDX, clipped and tiled (MVT). |
 | `tools/build_ems_roads.py`, `build_flooded_roads.py` | derived | Copernicus EMS road grades; roads inside the flood extent with bridge rules. |
+| `tools/build_places.py`, `build_collapse_origin.py` | derived | Settlement labels (OSM/Overpass); UNOSAT detachment zone, barrier lakes, upstream AOI. |
+| `tools/refresh_hdx.sh`, `update_hdx_counts.py` | data | Pull the latest HOT/HDX exports, retile, rebuild overlays, recompute counts and snapshot dates. |
+| `tools/imagery_watch.py`, `build_cog_tiles.sh` | imagery | 6-hourly scan for new scenes (launchd); generic COG-to-tiles builder. |
 | `docs/ARCHITECTURE.md` | app | This file. |
 | `data/imagery.json` | retile agent | Imagery catalogue. |
 | `data/terrain.json` | contours agent | Contour and hillshade tile descriptions. |
@@ -62,8 +65,12 @@ console stays readable.
 ```
 
 MVT source-layer names are `c1000`, `c500`, `c100`, `c50`, `c10`, with attributes
-`ele` (metres) and `idx` (1 for multiples of 100 m, drawn heavier). Elevation
-labels are symbol layers along the lines from zoom 13.
+`ele` (metres), `idx` (1 for multiples of 100 m, drawn heavier), and `fade`
+(0/1/2). `c50`/`c10` are clipped by height above river rather than the flood
+AOI polygon, split into three bands so `fade` fades the line-opacity out with
+distance from the valley floor instead of stopping at a hard boundary
+(`tools/build_terrain.sh`); `c1000`/`c500`/`c100` always carry `fade`=0.
+Elevation labels are symbol layers along the lines from zoom 13.
 
 Both files are optional. Without `data/imagery.json` the app falls back to
 `work/imagery.dev.json`, and without either it still renders basemaps and
@@ -97,6 +104,12 @@ toggle disappear.
   and anything named "Highway" are labelled by name from a symbol layer placed
   above the HOT layers. HOT roads themselves are white, yellow for trunk/primary
   and red where `status` is damaged or destroyed, and are on by default.
+- **Place names.** `data/hdx/derived/places.geojson`, settlement points from
+  OpenStreetMap via the Overpass API (city/town/village/hamlet/suburb nodes in
+  the map window) with a featured list that fixes tier and spelling for the
+  corridor towns and district HQs; built by `tools/build_places.py`. Fields
+  `name`, `name_ne`, `tier`, `rank`, `featured`, `source`. Rendered as a
+  basemap toggle (`pn=0` in the hash hides it), four symbol layers by rank.
 - **Glacier collapse origin and upstream AOI.** `data/hdx/derived/collapse_origin.geojson`
   (detachment zone polygon, its centroid as the origin point, two barrier lakes)
   and `data/hdx/derived/aoi_upstream_extension.geojson` (UNOSAT flood extent
@@ -235,7 +248,7 @@ transition finishes.
 Everything lives in the hash, written with `replaceState` on every change:
 
 ```
-#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&cb=status&sb=0&sc=0&hx=corridor&ov=+key,-key
+#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&pn=0&cb=status&sb=0&sc=0&hx=corridor&ov=+key,-key
 ```
 
 `ov` is a **diff against the default overlay set**, not the full list, which

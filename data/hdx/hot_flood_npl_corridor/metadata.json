@@ -20,23 +20,23 @@
       "distinct_count": 566,
       "top_values": [
         {
-          "value": "way/915399519",
+          "value": "way/1126421509",
           "count": 1
         },
         {
-          "value": "way/1552967733",
+          "value": "way/1134722793",
           "count": 1
         },
         {
-          "value": "way/1553840464",
+          "value": "way/1554631865",
           "count": 1
         },
         {
-          "value": "way/340911760",
+          "value": "way/24624604",
           "count": 1
         },
         {
-          "value": "way/341554283",
+          "value": "way/246173488",
           "count": 1
         }
       ]
@@ -90,11 +90,11 @@
           "count": 3
         },
         {
-          "value": "Lamo jharna, Jalbire",
+          "value": "Gyirong Zangbo",
           "count": 1
         },
         {
-          "value": "Lende Khola",
+          "value": "Kyirong Tsangpo",
           "count": 1
         }
       ]
@@ -115,11 +115,11 @@
           "count": 2
         },
         {
-          "value": "\u0932\u093e\u0919\u091f\u093e\u0919 \u0916\u094b\u0932\u093e",
+          "value": "\u0932\u0947\u0928\u094d\u0921\u0947 \u0916\u094b\u0932\u093e",
           "count": 1
         },
         {
-          "value": "\u0918\u091f\u094d\u091f\u0947 \u0916\u094b\u0932\u093e",
+          "value": "\u0938\u0932\u093e\u0928\u094d\u0916\u0941 \u0916\u094b\u0932\u093e",
           "count": 1
         },
         {
@@ -310,7 +310,7 @@
           "count": 2
         },
         {
-          "value": "extrapolation, Bing Sat",
+          "value": "Bing 2014",
           "count": 1
         }
       ]
@@ -453,11 +453,11 @@
           "count": 68
         },
         {
-          "value": "NP0329401",
+          "value": "NP0335401",
           "count": 29
         },
         {
-          "value": "NP0335401",
+          "value": "NP0329401",
           "count": 29
         }
       ]
@@ -482,11 +482,11 @@
           "count": 68
         },
         {
-          "value": "Aamachhodingmo",
+          "value": "Ichchha Kamana",
           "count": 29
         },
         {
-          "value": "Ichchha Kamana",
+          "value": "Aamachhodingmo",
           "count": 29
         }
       ]

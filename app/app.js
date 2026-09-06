@@ -25,7 +25,7 @@ const abs = u => /^(https?:)?\/\//.test(u) ? u : BASE + String(u).replace(/^\.?\
 // --------------------------------------------------------------- app state
 const state = {
   mode: 'swipe', pre: null, post: null, swipe: 50,
-  base: 'osm', hillshade: false, contours: true, colorBy: 'layer',
+  base: 'osm', hillshade: false, contours: true, placeNames: true, colorBy: 'layer',
   footprintOutline: false,  // dashed outline of the selected scene; off, reachable only via #fo=1
   hotExtent: 'flood',       // 'flood' | 'corridor' — which HOT dataset the category list shows
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
@@ -43,6 +43,7 @@ let GROUPS = [];            // sidebar model
 let ENTRY = {};             // key -> entry
 let LABEL_OF = {};          // style layer id -> human label
 let CONTOUR_IDS = [];       // contour line + label style layer ids (one basemap-style toggle)
+let PLACE_IDS = [];         // settlement label layers (basemap-style toggle)
 let HOT_LAYERS = [];        // {ds, s, cat, ids} — every HOT dataset × source × category layer set
 let HOT_CATS = [];          // [{cat, label, color}] one row per category, shared by both datasets and sources
 let hotRefresh = null;      // sidebar callback: re-read counts after an extent/source switch
@@ -200,6 +201,7 @@ function buildDefs() {
     aoi_upstream: { type: 'geojson', data: HDX + 'derived/aoi_upstream_extension.geojson',
       attribution: 'UNOSAT (CC BY-SA)' },
     collapse: { type: 'geojson', data: HDX + 'derived/collapse_origin.geojson', attribution: 'UNOSAT (CC BY-SA)' },
+    places: { type: 'geojson', data: HDX + 'derived/places.geojson', attribution: '© OpenStreetMap contributors' },
     flood_extent: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_flood_extent.geojson' },
     bridge_damage: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_bridge_damage.geojson' },
     hydro: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson' },
@@ -266,10 +268,16 @@ function buildDefs() {
     // way up": the source overzooms past it, so capping the style layer there
     // would make the contours vanish at high zoom.  Only honour a real cap.
     const capOf = d => (d.maxzoom != null && d.maxzoom < srcMax) ? d.maxzoom : 22;
+    // Per-class base opacity (owner direction, 6 Sep 2026: c10 reads slightly
+    // fainter than the other classes); fade 1/2 scale down from that base
+    // rather than stopping abruptly at the old polygon-clip edge.
+    const DEFAULT_OPACITY = { base: 0.55, fade1: 0.35, fade2: 0.18 };
+    const CONTOUR_OPACITY = { c10: { base: 0.4, fade1: 0.25, fade2: 0.12 } };
     for (const cls of order) {
       const d = defs[cls]; if (!d) continue;
       const iv = cls.slice(1);
       const lid = 'contour-' + cls;
+      const op = CONTOUR_OPACITY[cls] || DEFAULT_OPACITY;
       push({ id: lid, type: 'line', source: 'contours', 'source-layer': cls,
         minzoom: d.minzoom != null ? d.minzoom : 8, maxzoom: capOf(d),
         layout: { 'line-join': 'round', visibility: 'none' },
@@ -277,8 +285,10 @@ function buildDefs() {
         // damage reds (owner direction, 6 Sep 2026); index lines lighter, all slightly translucent.
         paint: { 'line-color': ['case', ['==', ['get', 'idx'], 1], '#d3d47a', '#a9b45c'],
                  'line-width': ['interpolate', ['linear'], ['zoom'], 10, ['case', ['==', ['get', 'idx'], 1], 0.9, 0.45],
-                                                                    16, ['case', ['==', ['get', 'idx'], 1], 1.8, 0.9]],
-                 'line-opacity': 0.55 } });
+                                                                    16, ['case', ['==', ['get', 'idx'], 1], 1.8, ['==', ['get', 'fade'], 2], 0.7, 0.9]],
+                 // c10/c50 fade out past the HAND-clipped near-river band (fade 0) rather
+                 // than stopping abruptly at a polygon edge (owner direction, 6 Sep 2026).
+                 'line-opacity': ['match', ['get', 'fade'], 1, op.fade1, 2, op.fade2, op.base] } });
       lineIds.push(lid);
       // Labels only on 100 m multiples (c1000/c500/c100); labelling every 10 m line is too busy.
       if (cls === 'c50' || cls === 'c10') continue;
@@ -541,6 +551,28 @@ function buildDefs() {
       paint: { 'line-color': EMS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W, 'line-dasharray': [2, 1.5] } },
   );
 
+  // Settlement labels (tools/build_places.py): district HQs and cities from z7, towns and the
+  // featured corridor places from z8, villages from z11, hamlets from z13.  A basemap toggle.
+  const PLACE_NAME = ['get', 'name'];
+  const PLACE_HALO = { 'text-halo-color': 'rgba(8,12,18,.9)', 'text-halo-width': 1.6, 'text-halo-blur': 0.4 };
+  const placeLayer = (id, filter, minzoom, size, font, color, dot) => {
+    const layers = [{ id, type: 'symbol', source: 'places', filter, minzoom,
+      layout: { visibility: 'none', 'text-field': PLACE_NAME, 'text-font': font, 'text-size': size,
+                'text-anchor': dot ? 'top' : 'center', 'text-offset': dot ? [0, 0.5] : [0, 0], 'text-max-width': 8,
+                'text-padding': 3, 'symbol-sort-key': ['get', 'rank'], 'text-letter-spacing': 0.02 },
+      paint: { 'text-color': color, ...PLACE_HALO } }];
+    if (dot) layers.unshift({ id: id + '-dot', type: 'circle', source: 'places', filter, minzoom,
+      layout: { visibility: 'none' }, paint: { 'circle-radius': 3, 'circle-color': color, 'circle-stroke-width': 1.2, 'circle-stroke-color': 'rgba(8,12,18,.9)' } });
+    return layers;
+  };
+  const placeLayers = [
+    ...placeLayer('places-hq', ['==', ['get', 'rank'], 0], 7, ['interpolate', ['linear'], ['zoom'], 7, 12, 12, 15], ['Noto Sans Bold'], '#ffffff', true),
+    ...placeLayer('places-town', ['==', ['get', 'rank'], 1], 8, ['interpolate', ['linear'], ['zoom'], 8, 11, 13, 13.5], ['Noto Sans Bold'], '#f8fafc', true),
+    ...placeLayer('places-village', ['==', ['get', 'rank'], 2], 11, ['interpolate', ['linear'], ['zoom'], 11, 10.5, 15, 12], FONT, '#e2e8f0', false),
+    ...placeLayer('places-hamlet', ['==', ['get', 'rank'], 3], 13, 10.5, FONT, '#cbd5e1', false),
+  ];
+  PLACE_IDS = placeLayers.map(l => l.id);
+
   // Highway name labels sit above every HOT layer so roads do not overdraw them.  Labelled by
   // name (the HDX export has no ref): highways, and any road whose name says Highway / Rajmarg /
   // Lokmarg / Rajpath, e.g. the tertiary-tagged stretches of the Pasang Lhamu Highway.  Bend limit
@@ -551,6 +583,7 @@ function buildDefs() {
       'text-size': ['interpolate', ['linear'], ['zoom'], 9, 10, 14, 12.5],
       'text-letter-spacing': 0.04, 'text-padding': 2, 'text-max-angle': 60, 'text-keep-upright': true },
     paint: { 'text-color': '#fde68a', 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.6, 'text-halo-blur': 0.3 } });
+  push(...placeLayers);
 
   groups.push({ title: 'Flood extent, damage & ground reports', entries: [
     { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
@@ -683,6 +716,7 @@ function applyBase() {
   setVis(['base-esri'], state.base === 'esri');
   setVis(['hillshade'], state.hillshade);
   setVis(CONTOUR_IDS, state.contours);
+  setVis(PLACE_IDS, state.placeNames);
 }
 function applyColorBy() {
   const useStatus = state.colorBy === 'status';
@@ -791,6 +825,7 @@ function writeHash() {
   p.set('b', state.base);
   if (state.hillshade) p.set('hs', '1');
   if (!state.contours) p.set('ct', '0');
+  if (!state.placeNames) p.set('pn', '0');
   if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
   if (state.footprintOutline) p.set('fo', '1');
   if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
@@ -811,6 +846,7 @@ function readHash() {
   if (p.get('b')) state.base = p.get('b');
   if (p.get('hs')) state.hillshade = p.get('hs') === '1';
   if (p.get('ct')) state.contours = p.get('ct') !== '0';
+  if (p.get('pn')) state.placeNames = p.get('pn') !== '0';
   legacyAoiOff = p.get('ao') === '0';   // pre-Sep-2026 links; the outline is an overlay entry now
   if (p.get('cb')) state.colorBy = p.get('cb');
   if (p.get('fo')) state.footprintOutline = p.get('fo') === '1';
@@ -980,6 +1016,12 @@ function renderSidebar() {
   ct.append(ctCb, el('span', 't', ctCb.disabled ? 'Contours (not built)' : 'Contours'));
   ct.title = 'Copernicus GLO-30: 10–50 m intervals in the flood area, 100 m to 2 km beyond it, 500 m and 1000 m to 10 km';
   bmBlock.appendChild(ct);
+  const pn = el('label', 'row');
+  const pnCb = el('input'); pnCb.type = 'checkbox'; pnCb.checked = state.placeNames;
+  pnCb.addEventListener('change', () => { state.placeNames = pnCb.checked; applyBase(); writeHash(); });
+  pn.append(pnCb, el('span', 't', 'Place names'));
+  pn.title = 'Settlements from OpenStreetMap: district headquarters and towns from zoom 8, villages from 11, hamlets from 13';
+  bmBlock.appendChild(pn);
   cpad.appendChild(bmBlock);
 
   // zoom to ---------------------------------------------------------------
