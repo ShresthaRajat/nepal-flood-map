@@ -228,7 +228,10 @@ table.dmg td { text-align: right; padding: 2px 4px; border-bottom: 1px solid rgb
 .roadlg .dot { background: repeating-linear-gradient(90deg, #fff 0 1.5px, transparent 1.5px 4.5px); }
 .roadlg .hw { background: #fbbf24; }
 .roadlg .red { background: #ef4444; }
-.roadlg .r .note { font-size: 10.5px; color: var(--fg-dim); }
+.roadlg .ems-destroyed { background: #ef4444; } .roadlg .ems-damaged { background: #f97316; }
+.roadlg .ems-possible.dash { background: repeating-linear-gradient(90deg, #f59e0b 0 6px, transparent 6px 9px); }
+
+.roadlg .r .note { font-size: 10.5px; color: var(--fg-dim); margin-left: 42px; }   /* align with text after the 34px swatch */
 .roadlg .ct { background: #c2884a; height: 1px; box-shadow: none; }
 .roadlg .ct.idx { background: #e8a95c; height: 2px; }
 
@@ -246,4 +249,4 @@ table.dmg td { text-align: right; padding: 2px 4px; border-bottom: 1px solid rgb
 /* HOT category list: extent / source switches sit inside the group */
 details .field.hotseg { margin: 3px 0 5px 16px; }
 details .field.hotseg .seg button { font-size: 11px; padding: 3px 6px; }
-label.row.off { opacity: .45; }
+label.row[hidden] { display: none !important; }

@@ -140,9 +140,24 @@ dataset on HDX, snapshot of 5 September 2026. ${HDX_CREDIT}.</p>
   <li><b>Flood extent</b>, <b>destroyed and damaged features</b> (volunteer-recorded in OSM, drawn
       in dark red; road stretches with a damaged or destroyed status draw bright red in the roads layer),
       <b>bridge ground reports</b> and <b>exposed hydropowers</b>.</li>
+  <li><b>Road damage grading</b> — the Copernicus Emergency Management Service rapid-mapping activation
+      EMSR927 graded every road and bridge segment in four areas from 0.3–0.7 m post-event imagery: Timure
+      and Syapru Besi (27 Aug), Bidur / Trisuli Bazar to Betrawati (27–28 Aug, monitoring update) and
+      Phosretar / Galchhi to Benighat (31 Aug). Grades are Destroyed, Damaged, Possibly damaged, No visible
+      damage and Not analysed; only Destroyed, Damaged and Possibly damaged are drawn. The 557 segments graded No visible damage
+      are used to clear the computed overlay below, and the 116 Not analysed ones are omitted. The Mailung gorge between Betrawati and Syapru Besi was not covered. Where a
+      grade exists it overrides the computed overlay below. CC BY 4.0, © 2026 European Union.</li>
   <li><b>Roads inside the flood extent</b> — computed here by clipping the HOT flood-area roads to the
-      27 Aug 2026 flood extent polygon: 976 stretches, 185 km. Of those, 263 already carry a Destroyed
-      status and 713 are still recorded as Standing, so this overlay shows exposure, not confirmed damage.</li>
+      27 Aug 2026 flood extent polygon: 879 stretches, 175 km. Of those, 263 already carry a Destroyed
+      status and 616 are still recorded as Standing, so this overlay shows exposure, not confirmed damage,
+      except where a Copernicus grade settles it: 537 stretches were graded, 419 confirmed Destroyed or Damaged
+      and 56 removed as No visible damage.
+      Bridges are the exception, because a deck over the river always intersects the flood polygon. They
+      follow river position and the bridge ground reports: upstream of the BhimDhunga bridge every bridge
+      was destroyed unless a ground report says Intact (44 segments red, 27 of them confirmed by Copernicus or
+      a report, 2 tributary bridges spared); between BhimDhunga and Benighat Copernicus or the nearest report
+      within 120 m decides (10 red, 14 left out); from Benighat downstream bridges are left out unless
+      Copernicus or a report says otherwise (1 footbridge red, 26 left out).</li>
   <li><b>Highways and main roads</b> — the national OSM roads export on HDX (9 Aug 2026), clipped to the
       corridor and its approaches and drawn underneath the HOT roads with the same styling: national
       highways (trunk and primary) yellow, everything else white. Nepal's highways are under-tagged in

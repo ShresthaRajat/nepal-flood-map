@@ -62,6 +62,10 @@ re-projection do not change the underlying license.
     river-corridor buffer, snapshot generated 2026-09-05 03:02 UTC
   - `data/hdx/hotosm_npl_waterways/` — country-wide OSM waterways, snapshot
     2026-08-09
+  - `data/hdx/derived/ems_road_grading.geojson` — Copernicus Emergency Management
+    Service Rapid Mapping, activation EMSR927 (HDX `npl-flood-emsr927`). **CC BY
+    4.0**. Required citation: "Copernicus Emergency Management Service (© 2026
+    European Union), EMSR927". Not ODbL.
   - `data/hdx/derived/roads_in_flood_extent.geojson` — derived here from the HOT
     flood-area roads and flood extent (both ODbL); as a derivative database it is
     ODbL too.

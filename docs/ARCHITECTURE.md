@@ -94,11 +94,27 @@ toggle disappear.
   and anything named "Highway" are labelled by name from a symbol layer placed
   above the HOT layers. HOT roads themselves are white, yellow for trunk/primary
   and red where `status` is damaged or destroyed, and are on by default.
+- **Copernicus EMS road grading.** `data/hdx/derived/ems_road_grading.geojson`,
+  1,221 road and bridge line segments from the EMSR927 grading GeoPackages
+  (AOI01 Syapru Besi, AOI02 Timure, AOI03 Bidur monitoring 1, AOI05 Phosretar),
+  merged by `tools/build_ems_roads.py`, which downloads the products into
+  `work/ems/`. Fields `grade`, `kind` (road | bridge), `name`, `aoi`,
+  `locality`, `product`, `post_event_date`, `method`. Rerun when Copernicus
+  publishes a new version or an AOI04 product.
 - **Roads inside the flood extent.** `data/hdx/derived/roads_in_flood_extent.geojson`,
   the HOT flood-area `roads_osm` clipped to the flood extent polygon by
   `tools/build_flooded_roads.py` (needs the GeoPackages from
-  `build_hdx_tiles.sh`). 976 segments, 185 km, fields `highway`, `name`,
-  `status`, `length_m`. Rebuild after refreshing the HDX snapshot.
+  `build_hdx_tiles.sh` and the gitignored waterways GeoJSON for the river
+  centreline). 879 segments, 175 km, fields `highway`, `name`, `status`,
+  `length_m`, plus `river_zone`, `report_status`, `report_name` and
+  `report_dist_m` on bridge segments. Bridges follow position along the
+  stitched Trishuli / Bhote Koshi centreline: upstream of the BhimDhunga bridge
+  every bridge is kept as destroyed unless a report says Intact; between BhimDhunga and Benighat the nearest
+  `bridge_damage` report within 120 m decides; from Benighat downstream bridges
+  are dropped unless a report says otherwise. Where a Copernicus grade matches
+  the segment (sampled every 15 m, 12 m tolerance) it overrides all of that:
+  Destroyed/Damaged keeps, No visible damage drops, recorded as `ems_grade`.
+  Rebuild after refreshing the HDX snapshot or the EMS grading.
 
 The switch is per category, not global, so a partial tile build still works: any
 category whose source-layer is missing falls back to the PMTiles archive.

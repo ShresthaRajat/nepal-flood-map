@@ -207,6 +207,9 @@ function buildDefs() {
     waterways_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf')],
       minzoom: 8, maxzoom: 13, bounds: [84.2738, 27.434, 86.0755, 28.5237],
       attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
+    // Copernicus EMS EMSR927 road/bridge damage grades (tools/build_ems_roads.py).
+    ems_roads: { type: 'geojson', data: HDX + 'derived/ems_road_grading.geojson',
+      attribution: 'Copernicus Emergency Management Service (© 2026 European Union), EMSR927, CC BY 4.0' },
     // HOT flood-area roads clipped to the observed flood extent (tools/build_flooded_roads.py).
     flooded_roads: { type: 'geojson', data: HDX + 'derived/roads_in_flood_extent.geojson', attribution: ATTR_HDX },
     // National OSM highways, pre-tiled by tools/build_roads_tiles.sh: context beyond the 1 km corridor.
@@ -386,6 +389,7 @@ function buildDefs() {
         const inAoi = ds === 'flood' ? true
           : (aoiFlood ? ['all', ['==', ['geometry-type'], 'Point'], ['within', aoiFlood]] : false);
         points.push({ id: id + '-name', type: 'symbol', source: r.source, 'source-layer': r.sl,
+          filter: andF(gt('Point'), r.filter),
           minzoom: 10, layout: { visibility: 'none',
             'text-field': ['coalesce', ['get', 'name_latin'], ['get', 'name_en'], ['get', 'name']],
             'text-font': FONT, 'text-size': ['interpolate', ['linear'], ['zoom'], 10, 10, 15, 13],
@@ -480,12 +484,35 @@ function buildDefs() {
 
   // Roads that lie inside the mapped water, computed by clipping the HOT roads to the flood
   // extent polygon: red with the road casing, on top of the roads so the affected stretches
-  // read even where HOT has not recorded a status yet (713 of 976 segments are still "Standing").
+  // read even where HOT has not recorded a status yet (616 of 879 segments are still "Standing").
+  // Where Copernicus EMS graded a segment its grade wins: Destroyed/Damaged kept, No visible damage dropped.
+  // Bridges are decided by river position and the ground reports in tools/build_flooded_roads.py, not by
+  // the polygon (a deck always intersects it): upstream of BhimDhunga every bridge is red unless a report says Intact;
+  // BhimDhunga to Benighat the nearest report decides; Benighat and downstream is unaffected.
   push(
     { id: 'flooded_roads-casing', type: 'line', source: 'flooded_roads', layout: { visibility: 'none', 'line-join': 'round' },
       paint: { 'line-color': '#000000', 'line-opacity': 0.25, 'line-width': hwWidth(1.5) } },
     { id: 'flooded_roads-line', type: 'line', source: 'flooded_roads', layout: { visibility: 'none', 'line-join': 'round' },
       paint: { 'line-color': DAMAGE_ROAD_RED, 'line-opacity': 0.95, 'line-width': hwWidth(0) } },
+  );
+
+  // Copernicus EMS grading, segment by segment from 0.3–0.7 m post-event imagery: the closest thing
+  // to an authoritative road condition.  Only damage is drawn: solid for Destroyed / Damaged, dashed
+  // for "Possibly damaged" (line-dasharray is not data-driven, hence two layers).  "No visible damage"
+  // and "Not Analysed" segments stay in the file (build_flooded_roads.py uses the former to clear the
+  // computed overlay) but are not drawn (owner direction, 6 Sep 2026).
+  const EMS_COLOR = ['match', ['get', 'grade'],
+    'Destroyed', DAMAGE_ROAD_RED, 'Damaged', '#f97316', '#f59e0b'];
+  const EMS_W = ['interpolate', ['linear'], ['zoom'], 10, 1.4, 14, 2.8, 17, 4.6];
+  const EMS_SHOWN = ['match', ['get', 'grade'], ['Destroyed', 'Damaged', 'Possibly damaged'], true, false];
+  const EMS_FIRM = ['match', ['get', 'grade'], ['Destroyed', 'Damaged'], true, false];
+  push(
+    { id: 'ems_roads-casing', type: 'line', source: 'ems_roads', filter: EMS_SHOWN, layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': '#000000', 'line-opacity': 0.3, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.6, 14, 4.4, 17, 6.8] } },
+    { id: 'ems_roads-solid', type: 'line', source: 'ems_roads', filter: EMS_FIRM, layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': EMS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W } },
+    { id: 'ems_roads-dashed', type: 'line', source: 'ems_roads', filter: ['all', EMS_SHOWN, ['!', EMS_FIRM]], layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': EMS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W, 'line-dasharray': [2, 1.5] } },
   );
 
   // Highway name labels sit above every HOT layer so roads do not overdraw them.  Labelled by
@@ -511,8 +538,10 @@ function buildDefs() {
     { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
     { key: 'roads_np', label: 'Highways and main roads (OSM, national)', color: HW_YELLOW,
       ids: ['roads_np-other-casing', 'roads_np-other', 'roads_np-hw-casing', 'roads_np-hw', 'roads_np-label'], on: true },
+    { key: 'ems_roads', label: 'Road damage grading (Copernicus EMS, 27–31 Aug)', color: DAMAGE_ROAD_RED,
+      ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548 },
     { key: 'flooded_roads', label: 'Roads inside the flood extent (computed)', color: DAMAGE_ROAD_RED,
-      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: true, count: 976 },
+      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: true, count: 879 },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
     { key: 'hot_aoi', label: 'HOT area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
   ] });
@@ -1083,6 +1112,10 @@ function renderSidebar() {
     '<div class="r"><i class="rl w4 heavy"></i>Road bridge span</div>' +
     '<div class="r"><i class="rl w3 red"></i>Flood-damaged road (HOT status) or inside the observed flood extent</div>' +
     '<div class="r"><span class="note">Beyond the 1 km corridor, roads come from the national OSM export (trunk to tertiary only).</span></div>' +
+    '<div class="hd">Copernicus EMS road grading (EMSR927)</div>' +
+    '<div class="r"><i class="rl w3 ems-destroyed"></i>Destroyed</div>' +
+    '<div class="r"><i class="rl w3 ems-damaged"></i>Damaged</div>' +
+    '<div class="r"><i class="rl w2 ems-possible dash"></i>Possibly damaged</div>' +
     '<div class="hd">Contours (GLO-30)</div>' +
     '<div class="r"><i class="rl ct idx"></i>Index line, multiple of 100 m</div>' +
     '<div class="r"><i class="rl ct"></i>Intermediate line</div>';

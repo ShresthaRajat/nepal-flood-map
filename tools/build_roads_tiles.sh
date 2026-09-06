@@ -38,11 +38,12 @@ if [ ! -s "$ZIP" ]; then
   echo "==> downloading $(basename "$URL")"
   curl -sS -f -L --retry 3 -o "$ZIP" "$URL"
 fi
-if ! ls "$WORK"/*.gpkg >/dev/null 2>&1 || [ ! -s "$(ls "$WORK"/*.gpkg | grep -v roads_corridor | head -1)" ]; then
+find_src() { find "$WORK" -name '*.gpkg' ! -name 'roads_corridor.gpkg' | head -1; }
+if [ -z "$(find_src)" ]; then
   echo "==> unzipping"
   unzip -oq "$ZIP" -d "$WORK"
 fi
-SRC="$(ls "$WORK"/*.gpkg | grep -v roads_corridor | head -1)"
+SRC="$(find_src)"
 
 echo "==> clipping and filtering $SRC"
 rm -f "$CLIP"
