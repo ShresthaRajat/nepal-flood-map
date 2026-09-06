@@ -592,8 +592,8 @@ function wireDivider() {
 }
 
 // ------------------------------------------------------------ sidebar rail
-/* Two rails: #panel on the left (info, search, reports, legend) and #controls
- * on the right (view, imagery, basemap, overlays).  Each remembers its own
+/* Two rails: #panel on the left (info, search, imagery, reports, legend) and #controls
+ * on the right (view, basemap, overlays).  Each remembers its own
  * open state; on a phone both default closed and float over the map. */
 function storedRail(key) {
   try { const v = localStorage.getItem('nf26.' + key); if (v !== null) return v === '1'; } catch (e) { /* private mode */ }
@@ -778,8 +778,8 @@ function describe(id) {
 }
 
 function renderSidebar() {
-  const pad = $('#panel .pad');            // left: info, search, reports, legend, notes
-  const cpad = $('#controls .pad');        // right: view, imagery, basemap, overlays
+  const pad = $('#panel .pad');            // left: info, search, imagery, reports, legend, notes
+  const cpad = $('#controls .pad');        // right: view, basemap, overlays
 
   // search ----------------------------------------------------------------
   renderSearch(pad);
@@ -808,7 +808,7 @@ function renderSidebar() {
     imgBlock.appendChild(f);
   }
   if (catalogNote) imgBlock.appendChild(el('p', 'warn', catalogNote));
-  cpad.appendChild(imgBlock);
+  pad.appendChild(imgBlock);
 
   // basemap ---------------------------------------------------------------
   const bmBlock = el('div', 'block', '<h2>Basemap</h2>');
@@ -1381,7 +1381,6 @@ main().catch(e => {
   document.body.insertAdjacentHTML('afterbegin',
     '<pre style="position:absolute;z-index:99;background:#300;color:#fdd;padding:12px;max-width:90%">' + e + '</pre>');
 });
-})();
 
 // ------------------------------------------------------------------ debug
 /* ?debug=1 : report each map's imagery state on screen and to the dev server. */
@@ -1414,3 +1413,4 @@ function debugReport(tag) {
   box.textContent = JSON.stringify(rep, null, 1);
 }
 window.addEventListener('error', e => { if (QS.has('debug')) try { navigator.sendBeacon('log', JSON.stringify({ tag: 'window.error', msg: String(e.message), src: e.filename, line: e.lineno })); } catch (_) {} });
+})();

@@ -61,7 +61,7 @@
    "minzoom": 11,
    "maxzoom": 19,
    "tiles": "tiles/pre_legion_20260205/{z}/{x}/{y}.webp",
-   "attribution": "© 2026 Vantor via OpenAerialMap, CC-BY 4.0",
+   "attribution": "© 2026 Vantor via OpenAerialMap, CC-BY-NC 4.0",
    "coverage": "trisuli_bazar",
    "size_mb": 38.6
   },
@@ -208,7 +208,7 @@
    "minzoom": 11,
    "maxzoom": 19,
    "tiles": "tiles/post_wv02_20260828/{z}/{x}/{y}.webp",
-   "attribution": "© 2026 Vantor via OpenAerialMap, CC-BY 4.0",
+   "attribution": "© 2026 Vantor via OpenAerialMap, CC-BY-NC 4.0",
    "coverage": "trisuli_bazar",
    "size_mb": 6.7
   },

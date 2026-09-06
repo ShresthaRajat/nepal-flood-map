@@ -170,10 +170,12 @@ The sidebar has no scene selectors — that would be two controls for one piece 
 state. It shows the selected scene's provider, resolution, coverage and licence
 instead, refreshed by `updateMeta()`.
 
-There are two rails. `#panel` on the left holds the title, search, zoom-to
-chips, bridge ground reports, damage table, legend and notes; `#controls` on the
-right holds everything that changes what the map shows: view mode, imagery
-metadata, basemap (with hillshade and contours) and the overlay groups. Both
+There are two rails. `#panel` on the left holds information: the title, search,
+imagery metadata for the two selected scenes, zoom-to chips, bridge ground
+reports, damage table, legend and notes. `#controls` on the right holds
+everything that changes what the map shows: view mode, basemap (with hillshade
+and contours) and the overlay groups. Scenes are still chosen with the tags at
+the top of the map, so the left rail describes them without controlling them. Both
 collapse on desktop as well as mobile, by the same mechanism: the rail slides
 out on `transform` and `#stage` reflows its `left` or `right`. On mobile an
 open rail floats over the stage instead of pushing it. State lives in
