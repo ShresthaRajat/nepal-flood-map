@@ -11,7 +11,7 @@ const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
   ['buildings','overture','Buildings (Overture)','#f58231'],
-  ['destroyed_features','osm','Destroyed and damaged features (OSM)','#4363d8'],
+  ['destroyed_features','osm','Destroyed and damaged features (OSM)','#b91c1c'],
   ['education_facilities','osm','Education facilities (OSM)','#911eb4'],
   ['education_facilities','overture','Education facilities (Overture)','#008080'],
   ['financial_services','osm','Financial services (OSM)','#f032e6'],
@@ -130,12 +130,11 @@ lines reveal progressively with zoom — 1000, 500, 100, 50 then 10 m intervals 
 dataset on HDX, snapshot of 5 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
-      OSM and Overture buildings, roads, bridges, waterways, facilities and settlement names, plus
-      volunteer-recorded destroyed and damaged features.</li>
+      OSM and Overture buildings, roads, bridges, waterways, facilities and settlement names.</li>
   <li><b>River corridor</b> — the same catalogue over a wider 1 km buffer along the river. Off by
       default because it is large.</li>
-  <li><b>Flood extent</b>, <b>bridge ground reports</b>, <b>exposed hydropowers</b> and
-      <b>Tasking Manager project boundaries</b> ship as GeoJSON.</li>
+  <li><b>Flood extent</b>, <b>destroyed and damaged features</b> (volunteer-recorded in OSM, drawn
+      in dark red), <b>bridge ground reports</b> and <b>exposed hydropowers</b>.</li>
   <li><b>fAIr building damage</b> — 1,053 buildings AI-scored as destroyed (677), major damage (105),
       minor damage (155), no damage (113) or no data (3).</li>
 </ul>

@@ -78,6 +78,11 @@ toggle disappear.
   `tiles/hot_flood_npl_corridor/{z}/{x}/{y}.pbf`, one source-layer per HOT layer
   and no filter needed. Used automatically when the matching
   `tiles/<dataset>/metadata.json` is present.
+- **Waterways of Nepal.** `tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf`, z8–13,
+  one source-layer `waterways` with `name`, `waterway`, `natural_class`, `water`
+  and `width`. Built from the national HDX `hotosm_npl_waterways` export by
+  `tools/build_waterways_tiles.sh`; not part of the two HOT flood datasets, so
+  it ignores the Extent and Source switches.
 
 The switch is per category, not global, so a partial tile build still works: any
 category whose source-layer is missing falls back to the PMTiles archive.
@@ -171,8 +176,8 @@ state. It shows the selected scene's provider, resolution, coverage and licence
 instead, refreshed by `updateMeta()`.
 
 There are two rails. `#panel` on the left holds information: the title, search,
-imagery metadata for the two selected scenes, zoom-to chips, bridge ground
-reports, damage table, legend and notes. `#controls` on the right holds
+zoom-to chips, bridge ground reports, damage table, legend, notes and, at the
+bottom, imagery metadata for the two selected scenes. `#controls` on the right holds
 everything that changes what the map shows: view mode, basemap (with hillshade
 and contours) and the overlay groups. Scenes are still chosen with the tags at
 the top of the map, so the left rail describes them without controlling them. Both
@@ -235,8 +240,11 @@ root and all paths are relative, so no configuration is needed. Two caveats:
 - `work/` is gitignored, so the development catalogue never ships. If
   `data/imagery.json` is missing from a published build the page will show its
   "no imagery catalogue" warning.
-- `data/hdx/hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson` is also
-  gitignored. Its overlay is off by default and will simply stay empty on Pages.
+- `data/hdx/hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson` (8 MB) is
+  also gitignored, but the "Waterways of Nepal" overlay does not read it: it
+  draws from the tracked vector tiles in `data/hdx/tiles/hotosm_npl_waterways/`
+  (z8–13, source-layer `waterways`), rebuilt from that GeoJSON by
+  `tools/build_waterways_tiles.sh`.
 
 ## Known limitations
 

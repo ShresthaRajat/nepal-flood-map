@@ -10,6 +10,12 @@ Trishuli rivers, Nepal. Merges two sources:
   OSM/Overture features with Standing/Damaged/Destroyed status, fAIr AI damage, ground-reported
   bridge conditions.
 
+[![Trisuli Bazar: Esri basemap on the left, Vantor WorldView-2 of 28 Aug 2026 on the right, with the observed flood extent and volunteer-recorded destroyed and damaged features in dark red](docs/img/trisuli-bazar-swipe.jpg)](https://shrestharajat.github.io/nepal-flood-map/#m=swipe&pre=none&post=post_wv02_20260828&c=85.15298%2C27.92922&z=15.68&s=73.3&b=esri&ov=-hot_bridges%2C-bridge_damage%2C-hydro%2C-fair%2C-fair_aoi)
+
+*Trisuli Bazar reach, swipe view. Left: pre-flood Esri World Imagery. Right: Vantor WorldView-2,
+28 Aug 2026. Dark red: observed flood extent and volunteer-recorded destroyed or damaged features
+from OpenStreetMap; orange: GLO-30 contours. [Open this view](https://shrestharajat.github.io/nepal-flood-map/#m=swipe&pre=none&post=post_wv02_20260828&c=85.15298%2C27.92922&z=15.68&s=73.3&b=esri&ov=-hot_bridges%2C-bridge_damage%2C-hydro%2C-fair%2C-fair_aoi).*
+
 Layout:
 
 - `index.html` — the map (MapLibre GL, swipe compare)

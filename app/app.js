@@ -192,7 +192,11 @@ function buildDefs() {
     hydro: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson' },
     fair: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage.geojson' },
     fair_aoi: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage_analyzed_aoi.geojson' },
-    waterways_np: { type: 'geojson', data: HDX + 'hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson' },
+    // National OSM waterways, pre-tiled by tools/build_waterways_tiles.sh (the 8 MB
+    // source GeoJSON is gitignored; only the tiles ship).  Overzoomed above z13.
+    waterways_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf')],
+      minzoom: 8, maxzoom: 13, bounds: [84.2738, 27.434, 86.0755, 28.5237],
+      attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   };
@@ -323,8 +327,13 @@ function buildDefs() {
   HOT_CATS = [];
   for (const [cat, , label, color] of hotCats) if (!HOT_CATS.some(c => c.cat === cat))
     HOT_CATS.push({ cat, label: label.replace(/\s*\((OSM|Overture)\)$/, ''), color });
-  const HOT_DEFAULT_ON = ['destroyed_features', 'bridges'];
+  const HOT_DEFAULT_ON = ['bridges'];
   const SETTLEMENT_RED = '#f87171';
+  // Volunteer-recorded destroyed/damaged features read as damage, not as a
+  // mapped-feature class: dark red outline over a translucent dark red fill,
+  // listed with the flood extent rather than with the OSM/Overture catalogue.
+  const DAMAGE_RED = CFG.CATS.find(([cat]) => cat === 'destroyed_features')[3];
+  const damageCat = cat => cat === 'destroyed_features';
 
   function vectorGroup(ds) {
     // Three passes so roads always sit above building fills and below points.
@@ -341,7 +350,7 @@ function buildDefs() {
       const ids = [];
       fills.push({ id: id + '-fill', type: 'fill', source: r.source, 'source-layer': r.sl,
         layout: { visibility: 'none' }, filter: andF(gt('Polygon'), r.filter),
-        paint: { 'fill-color': roadish ? ROAD_WHITE : color, 'fill-opacity': roadish ? 0.25 : 0.12,
+        paint: { 'fill-color': roadish ? ROAD_WHITE : color, 'fill-opacity': roadish ? 0.25 : damageCat(cat) ? 0.3 : 0.12,
                  'fill-outline-color': roadish ? '#000000' : color } });
       ids.push(id + '-fill');
       if (roadish) {
@@ -349,7 +358,7 @@ function buildDefs() {
       } else {
         lines.push({ id: id + '-line', type: 'line', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none', 'line-join': 'round' }, filter: andF(gt('LineString'), r.filter),
-          paint: { 'line-color': color, 'line-opacity': 0.8, 'line-width': 1.3 } });
+          paint: { 'line-color': color, 'line-opacity': damageCat(cat) ? 0.95 : 0.8, 'line-width': damageCat(cat) ? 1.6 : 1.3 } });
         ids.push(id + '-line');
         PAINT_TARGETS.push({ id: id + '-line', prop: 'line-color', def: color, status: statusExprFor(cat) });
       }
@@ -370,7 +379,8 @@ function buildDefs() {
       } else {
         points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),
-          paint: { 'circle-color': color, 'circle-radius': 3, 'circle-stroke-width': 0.5, 'circle-stroke-color': '#fff' } });
+          paint: { 'circle-color': color, 'circle-radius': damageCat(cat) ? 4 : 3, 'circle-stroke-width': damageCat(cat) ? 1 : 0.5,
+                   'circle-stroke-color': damageCat(cat) ? '#fecaca' : '#fff' } });
         ids.push(id + '-point');
         PAINT_TARGETS.push({ id: id + '-point', prop: 'circle-color', def: color, status: statusExprFor(cat) });
       }
@@ -382,13 +392,20 @@ function buildDefs() {
     }
     push(...fills, ...lines, ...roads, ...points);
   }
+  // Flood extent goes under the HOT features so the dark red damage outlines stay crisp on top.
+  push(
+    { id: 'flood_extent-fill', type: 'fill', source: 'flood_extent', layout: { visibility: 'none' },
+      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.3 } },
+    { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
+      paint: { 'line-color': '#991b1b', 'line-width': 1.2 } },
+  );
   HOT_LAYERS = [];
   vectorGroup('flood');
   vectorGroup('corridor');
 
   // hot: entries have no fixed ids — applyHot() resolves them from the switches
   groups.push({ title: 'Mapped features (HOT, OSM / Overture)', hot: true, open: true, entries: [
-    ...HOT_CATS.map(c => ({ key: 'hot_' + c.cat, cat: c.cat, label: c.label, hot: true, ids: [],
+    ...HOT_CATS.filter(c => !damageCat(c.cat)).map(c => ({ key: 'hot_' + c.cat, cat: c.cat, label: c.label, hot: true, ids: [],
       color: (c.cat === 'roads' || c.cat === 'bridges') ? ROAD_WHITE : c.cat === 'populated_places' ? '#f1f5f9' : c.color,
       on: HOT_DEFAULT_ON.includes(c.cat) })),
   ] });
@@ -400,13 +417,9 @@ function buildDefs() {
     ['Destroyed', 'Washed out'], CFG.STATUS.destroyed, 'Damaged', CFG.STATUS.damaged, '#2ca25f'];
 
   push(
-    { id: 'flood_extent-fill', type: 'fill', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.3 } },
-    { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'line-color': '#991b1b', 'line-width': 1.2 } },
-    { id: 'waterways_np-fill', type: 'fill', source: 'waterways_np', layout: { visibility: 'none' },
+    { id: 'waterways_np-fill', type: 'fill', source: 'waterways_np', 'source-layer': 'waterways', layout: { visibility: 'none' },
       filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': '#0ea5e9', 'fill-opacity': 0.2 } },
-    { id: 'waterways_np-line', type: 'line', source: 'waterways_np', layout: { visibility: 'none' },
+    { id: 'waterways_np-line', type: 'line', source: 'waterways_np', 'source-layer': 'waterways', layout: { visibility: 'none' },
       filter: ['==', ['geometry-type'], 'LineString'], paint: { 'line-color': '#0ea5e9', 'line-width': 0.8 } },
     { id: 'fair_aoi-line', type: 'line', source: 'fair_aoi', layout: { visibility: 'none' },
       paint: { 'line-color': '#f8fafc', 'line-width': 1.5, 'line-dasharray': [2, 2] } },
@@ -421,6 +434,9 @@ function buildDefs() {
 
   groups.push({ title: 'Flood extent, damage & ground reports', entries: [
     { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
+    // hot: ids resolved by applyHot(); follows the Extent switch, always the OSM source.
+    { key: 'hot_destroyed_features', cat: 'destroyed_features', label: 'Destroyed and damaged features (volunteer-recorded)',
+      color: DAMAGE_RED, hot: true, ids: [], on: true },
     { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58 },
     { key: 'hydro', label: 'Exposed hydropowers', color: '#facc15', ids: ['hydro-point'], on: true, count: 10 },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
@@ -519,12 +535,14 @@ function applyOverlays() {
  * category is ticked.  The AOI outline follows the extent switch. */
 function applyHot() {
   for (const h of HOT_LAYERS)
-    setVis(h.ids, h.ds === state.hotExtent && h.s === state.hotSource && state.overlays.has('hot_' + h.cat));
+    setVis(h.ids, h.ds === state.hotExtent && h.s === hotSourceFor(h.cat) && state.overlays.has('hot_' + h.cat));
   setVis(['aoi_flood-line'], state.aoi && state.hotExtent === 'flood');
   setVis(['aoi_corridor-line'], state.aoi && state.hotExtent === 'corridor');
   if (hotRefresh) hotRefresh();
 }
-const hotCount = cat => CFG.COUNTS[state.hotExtent][cat + '|' + state.hotSource];
+// Destroyed/damaged features exist only in the OSM source, so they ignore the Source switch.
+const hotSourceFor = cat => cat === 'destroyed_features' ? 'osm' : state.hotSource;
+const hotCount = cat => CFG.COUNTS[state.hotExtent][cat + '|' + hotSourceFor(cat)];
 function applyBase() {
   setVis(['base-osm'], state.base === 'osm');
   setVis(['base-esri'], state.base === 'esri');
@@ -592,7 +610,7 @@ function wireDivider() {
 }
 
 // ------------------------------------------------------------ sidebar rail
-/* Two rails: #panel on the left (info, search, imagery, reports, legend) and #controls
+/* Two rails: #panel on the left (info, search, reports, legend, notes, imagery) and #controls
  * on the right (view, basemap, overlays).  Each remembers its own
  * open state; on a phone both default closed and float over the map. */
 function storedRail(key) {
@@ -778,7 +796,7 @@ function describe(id) {
 }
 
 function renderSidebar() {
-  const pad = $('#panel .pad');            // left: info, search, imagery, reports, legend, notes
+  const pad = $('#panel .pad');            // left: info, search, reports, legend, notes, imagery
   const cpad = $('#controls .pad');        // right: view, basemap, overlays
 
   // search ----------------------------------------------------------------
@@ -808,7 +826,7 @@ function renderSidebar() {
     imgBlock.appendChild(f);
   }
   if (catalogNote) imgBlock.appendChild(el('p', 'warn', catalogNote));
-  pad.appendChild(imgBlock);
+  // appended to the left rail last, after the notes (see below)
 
   // basemap ---------------------------------------------------------------
   const bmBlock = el('div', 'block', '<h2>Basemap</h2>');
@@ -908,6 +926,7 @@ function renderSidebar() {
     return f;
   };
 
+  const hotRows = [];
   for (const g of GROUPS) {
     const det = el('details');
     det.open = g.open !== undefined ? g.open : (g.entries.some(e => state.overlays.has(e.key)) && g.entries.length < 12);
@@ -936,6 +955,7 @@ function renderSidebar() {
         writeHash();
       });
       boxes.push([cb, e]); rows.push({ e, row, cb, sw, cnt });
+      if (e.hot) hotRows.push({ e, row, cb, cnt });
       det.appendChild(row);
     }
     ctl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
@@ -945,24 +965,21 @@ function renderSidebar() {
         cb.checked = on; if (on) state.overlays.add(e.key); else state.overlays.delete(e.key);
         if (!e.hot) setVis(e.ids, on);
       }
-      if (g.hot) applyHot();
+      if (boxes.some(([, e]) => e.hot)) applyHot();
       writeHash();
     }));
-    if (g.hot) {
-      // Counts follow the switches; a category the current source does not carry is greyed out.
-      hotRefresh = () => {
-        for (const r of rows) {
-          if (r.e.cat) {
-            const n = hotCount(r.e.cat);
-            r.cnt.textContent = n === undefined ? 'n/a' : fmtCount(n);
-            r.cb.disabled = n === undefined; r.row.classList.toggle('off', n === undefined);
-          }
-        }
-      };
-      hotRefresh();
-    }
     oBlock.appendChild(det);
   }
+  // Counts follow the switches; a category the current source does not carry is greyed out.
+  hotRefresh = () => {
+    for (const r of hotRows) {
+      if (!r.e.cat) continue;
+      const n = hotCount(r.e.cat);
+      r.cnt.textContent = n === undefined ? 'n/a' : fmtCount(n);
+      r.cb.disabled = n === undefined; r.row.classList.toggle('off', n === undefined);
+    }
+  };
+  hotRefresh();
   cpad.appendChild(oBlock);
 
   // legend ----------------------------------------------------------------
@@ -985,6 +1002,7 @@ function renderSidebar() {
   add(CFG.FAIR['no-data'], 'No data');
   lg.appendChild(el('div', 'hd', 'Areas'));
   add('#7f1d1d', 'Flood extent, 27 Aug 2026');
+  add(CFG.CATS.find(([cat]) => cat === 'destroyed_features')[3], 'Destroyed and damaged features (volunteer-recorded, OSM)');
   add('rgba(203,213,225,.6)', 'HOT area of interest (flood area solid, corridor dashed)', true);
   add('#f87171', 'Settlement name inside the flood-affected area (others white)');
   lBlock.appendChild(lg);
@@ -1016,6 +1034,7 @@ function renderSidebar() {
   det.appendChild(body);
   nBlock.appendChild(det);
   pad.appendChild(nBlock);
+  pad.appendChild(imgBlock);               // imagery metadata sits at the bottom of the info rail
   const dl = body.querySelector('#sceneList');
   const ids = catalog.layers.length ? catalog.layers.map(l => l.id) : Object.keys(CFG.SCENES);
   for (const id of ids) {
