@@ -555,7 +555,9 @@ function makeMap(container, defs, side) {
   const [w, s0, e, n] = [CFG.HOME[0][0], CFG.HOME[0][1], CFG.HOME[1][0], CFG.HOME[1][1]];
   const mx = (e - w) * 0.12, my = (n - s0) * 0.12;
   const m = new maplibregl.Map({
-    container, style, maxZoom: 20, minZoom: 5, keyboard: false,
+    // Zoom stops at 17.49: past that Esri serves "Map data not yet available" tiles here and
+    // the page looks broken (owner direction, 6 Sep 2026).
+    container, style, maxZoom: 17.49, minZoom: 5, keyboard: false,
     maxBounds: [[w - mx, s0 - my], [e + mx, n + my]],
     attributionControl: { compact: true },
     center: state.center || [85.15, 27.99], zoom: state.zoom != null ? state.zoom : 9,
