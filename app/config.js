@@ -93,6 +93,10 @@ const SCENES = {
   post_pelican_20260901:'Planet Pelican, three scenes, 1 Sep 2026 ~10:51 NPT, 0.56 m, 47–84 % cloud, Syabrubesi to Rasuwagadhi, re-imaging the 27 Aug Pelican footprint. Rendered ~0.73 m. Planet open disaster data, CC-BY-NC-4.0.',
 };
 
+// Damage editor: the committed baseline the editor loads at start-up, on top of
+// which the analyst's localStorage working copy is layered.  A 404 is ignored.
+const DAMAGE_EDITS_URL = 'data/edits/damage_edits.geojson';
+
 const COVERAGE_LABEL = {
   corridor: 'Whole corridor',
   trisuli_bazar: 'Trisuli Bazar reach',
@@ -196,5 +200,6 @@ layer come from volunteer field reports of varying age. Coordinates shown are ap
 partners. Map glyphs from the MapLibre demo font stack.</p>
 `;
 
-return { CATS, COUNTS, STATUS, FAIR, PLACES, HOME, SCENES, COVERAGE_LABEL, HDX_CREDIT, HDX_URL, NOTES_HTML };
+return { CATS, COUNTS, STATUS, FAIR, PLACES, HOME, SCENES, COVERAGE_LABEL, HDX_CREDIT, HDX_URL, NOTES_HTML,
+         DAMAGE_EDITS_URL };
 })();

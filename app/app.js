@@ -46,6 +46,7 @@ let CONTOUR_IDS = [];       // contour line + label style layer ids (one basemap
 let PLACE_IDS = [];         // settlement label layers (basemap-style toggle)
 let HOT_LAYERS = [];        // {ds, s, cat, ids} — every HOT dataset × source × category layer set
 let HOT_CATS = [];          // [{cat, label, color}] one row per category, shared by both datasets and sources
+let HOT_MINZ = {};          // 'cat|src' -> zoom the per-layer tile build starts at, for the sidebar hint
 let hotRefresh = null;      // sidebar callback: re-read counts after an extent/source switch
 let QUERY_IDS = [];         // style layer ids that answer clicks
 let PAINT_TARGETS = [];     // {id, prop, def} for the colour-by-status switch
@@ -79,12 +80,20 @@ async function loadTerrain() {
 /* Attribute-complete per-layer vector tiles, if the data agent has built them.
  * metadata.json shape is not pinned down, so accept the usual spellings. */
 function metaLayerNames(j) {
+  // tippecanoe/mbutil nest vector_layers inside a stringified `json` field.
+  if (j && typeof j.json === 'string' && !j.vector_layers) {
+    try { j = { ...j, ...JSON.parse(j.json) }; } catch (e) { /* fall through */ }
+  }
   const raw = j && (j.vector_layers || j.layers || j.sourceLayers || (Array.isArray(j) ? j : null));
   if (!raw) return null;
-  const names = (Array.isArray(raw) ? raw : Object.keys(raw))
-    .map(x => typeof x === 'string' ? x : (x && (x.id || x.name)))
-    .filter(Boolean);
-  return names.length ? new Set(names) : null;
+  // A Map, not a Set: it still answers .has() for resolve(), and carries each
+  // layer's own minzoom so the sidebar can say where a category starts.
+  const names = new Map();
+  for (const x of (Array.isArray(raw) ? raw : Object.keys(raw))) {
+    const id = typeof x === 'string' ? x : (x && (x.id || x.name));
+    if (id) names.set(id, x && x.minzoom != null ? +x.minzoom : null);
+  }
+  return names.size ? names : null;
 }
 async function loadAoi() {
   try {
@@ -223,6 +232,11 @@ function buildDefs() {
       attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    // Damage editor: the analyst's own collection, the highlighted selection and
+    // the in-progress ring.  All three start empty and are fed from localStorage.
+    edits: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    edit_sel: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    edit_draw: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   };
   if (hotTiles) {
     for (const [ds, dir] of [['flood', 'hot_flood_npl'], ['corridor', 'hot_flood_npl_corridor']]) {
@@ -325,7 +339,7 @@ function buildDefs() {
     const names = hotTiles && hotTiles[ds];
     if (!names) return pm;
     const hit = [cat + '_' + src, src === 'osm' ? cat : null].filter(Boolean).find(n => names.has(n));
-    return hit ? { source: ds + '_mvt', sl: hit, filter: null } : pm;
+    return hit ? { source: ds + '_mvt', sl: hit, filter: null, minz: names.get(hit) } : pm;
   }
 
   /* Roads and bridges get a casing + white line per dash class. */
@@ -384,6 +398,10 @@ function buildDefs() {
       const label = HOT_CATS.find(c => c.cat === cat).label + ' (' + (s === 'osm' ? 'OSM' : 'Overture') + ', ' +
         (ds === 'flood' ? 'flood area' : '1 km corridor') + ')';
       const r = resolve(ds, cat, s);
+      // The per-layer tile build starts buildings and residential areas at z12
+      // and most point categories at z10, where the PMTiles archive carried
+      // every zoom.  Remember the floor so the sidebar can say so.
+      if (r.minz != null) HOT_MINZ[key] = Math.max(HOT_MINZ[key] || 0, r.minz);
       const roadish = cat === 'roads' || cat === 'bridges';
       const ids = [];
       fills.push({ id: id + '-fill', type: 'fill', source: r.source, 'source-layer': r.sl,
@@ -394,6 +412,15 @@ function buildDefs() {
       if (roadish) {
         for (const l of roadLayers(id, r, cat === 'bridges')) { roads.push(l); ids.push(l.id); }
       } else {
+        if (cat === 'buildings') {
+          // fill-outline-color inherits the faint fill opacity, so buildings get a
+          // dedicated outline pass that reads against imagery.
+          lines.push({ id: id + '-outline', type: 'line', source: r.source, 'source-layer': r.sl,
+            layout: { visibility: 'none', 'line-join': 'round' }, filter: andF(gt('Polygon'), r.filter),
+            paint: { 'line-color': color, 'line-opacity': 0.55, 'line-width': 0.9 } });
+          ids.push(id + '-outline');
+          PAINT_TARGETS.push({ id: id + '-outline', prop: 'line-color', def: color, status: statusExprFor(cat) });
+        }
         lines.push({ id: id + '-line', type: 'line', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none', 'line-join': 'round' }, filter: andF(gt('LineString'), r.filter),
           paint: { 'line-color': color, 'line-opacity': damageCat(cat) ? 0.95 : 0.8, 'line-width': damageCat(cat) ? 1.6 : 1.3 } });
@@ -458,6 +485,7 @@ function buildDefs() {
        ...npLine('hw', HW_MAIN, HW_YELLOW, 0.9));
 
   HOT_LAYERS = [];
+  HOT_MINZ = {};
   vectorGroup('flood');
   vectorGroup('corridor');
 
@@ -617,6 +645,29 @@ function buildDefs() {
       paint: { 'circle-radius': 4.5, 'circle-color': '#5eb0ff', 'circle-stroke-width': 2, 'circle-stroke-color': '#fff' } },
     { id: 'sel_footprint-line', type: 'line', source: 'sel_footprint',
       paint: { 'line-color': '#ffffff', 'line-width': 1.6, 'line-dasharray': [6, 3], 'line-opacity': 0.9 } },
+  );
+
+  // 7. damage editor --------------------------------------------------------
+  // Last in the array, so the analyst's own polygons sit above every HOT and
+  // Overture layer and stay legible over the imagery.
+  push(
+    { id: 'edits-fill', type: 'fill', source: 'edits',
+      paint: { 'fill-color': EDIT_COLOR, 'fill-opacity': 0.35 } },
+    { id: 'edits-line', type: 'line', source: 'edits',
+      paint: { 'line-color': EDIT_COLOR, 'line-width': 1.8, 'line-opacity': 0.95 } },
+    { id: 'edit_sel-fill', type: 'fill', source: 'edit_sel',
+      paint: { 'fill-color': '#5eb0ff', 'fill-opacity': 0.25 } },
+    { id: 'edit_sel-line', type: 'line', source: 'edit_sel',
+      paint: { 'line-color': '#ffffff', 'line-width': 2.4, 'line-opacity': 0.95 } },
+    { id: 'edit_draw-fill', type: 'fill', source: 'edit_draw',
+      filter: ['==', ['geometry-type'], 'Polygon'],
+      paint: { 'fill-color': '#5eb0ff', 'fill-opacity': 0.2 } },
+    { id: 'edit_draw-line', type: 'line', source: 'edit_draw',
+      filter: ['!=', ['geometry-type'], 'Point'],
+      paint: { 'line-color': '#5eb0ff', 'line-width': 2, 'line-dasharray': [3, 2] } },
+    { id: 'edit_draw-point', type: 'circle', source: 'edit_draw',
+      filter: ['==', ['geometry-type'], 'Point'],
+      paint: { 'circle-radius': 4, 'circle-color': '#5eb0ff', 'circle-stroke-width': 1.5, 'circle-stroke-color': '#fff' } },
   );
 
 
@@ -1119,8 +1170,12 @@ function renderSidebar() {
         if (e.hot) applyHot(); else setVis(e.ids, cb.checked);
         writeHash();
       });
+      // A category whose tiles start above the corridor view draws nothing until
+      // you zoom in; say so rather than leave a ticked box with an empty map.
+      const minz = e.hot && e.cat ? HOT_MINZ[e.cat + '|' + e.src] : null;
+      if (minz != null && minz > 9) row.title = e.label + ' — in the tiles from zoom ' + minz + ' down; the count column reads z' + minz + '+ while the view is above it';
       boxes.push([cb, e]); rows.push({ e, row, cb, sw, cnt });
-      if (e.hot) hotRows.push({ e, row, cb, cnt });
+      if (e.hot) hotRows.push({ e, row, cb, cnt, minz });
       det.appendChild(row);
     }
     ctl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
@@ -1137,16 +1192,21 @@ function renderSidebar() {
   }
   // Counts follow the Extent switch; a category the current extent does not carry is hidden.
   hotRefresh = () => {
+    const z = maps.post ? maps.post.getZoom() : 99;
     for (const r of hotRows) {
       if (!r.e.cat) continue;
       const n = hotCount(r.e);
-      r.cnt.textContent = n === undefined ? '' : fmtCount(n);
+      const gated = r.minz != null && z < r.minz;
+      r.cnt.textContent = n === undefined ? '' : gated ? 'z' + r.minz + '+' : fmtCount(n);
       r.cb.disabled = n === undefined;
       r.row.hidden = n === undefined;      // e.g. Overture roads exist only in the corridor dataset
     }
   };
   hotRefresh();
   cpad.appendChild(oBlock);
+
+  // damage editor ---------------------------------------------------------
+  cpad.appendChild(buildDamageEditor());
 
   // legend ----------------------------------------------------------------
   const lBlock = el('div', 'block', '<h2>Legend</h2>');
@@ -1463,6 +1523,7 @@ function popupHTML(label, props) {
 function wirePopups(m) {
   const live = () => QUERY_IDS.filter(id => m.getLayer(id) && m.getLayoutProperty(id, 'visibility') !== 'none');
   m.on('click', ev => {
+    if (editorActive()) return;          // the damage editor owns clicks while a mode is on
     const hits = m.queryRenderedFeatures(ev.point, { layers: live() });
     if (!hits.length) return;
     const html = hits.slice(0, 4)
@@ -1472,6 +1533,7 @@ function wirePopups(m) {
   let hoverTimer = 0;
   m.on('mousemove', ev => {
     $('#readout').textContent = ev.lngLat.lat.toFixed(5) + '°N, ' + ev.lngLat.lng.toFixed(5) + '°E · z' + m.getZoom().toFixed(1);
+    if (editorActive()) { m.getCanvas().style.cursor = 'crosshair'; return; }
     if (hoverTimer) return;
     hoverTimer = setTimeout(() => {
       hoverTimer = 0;
@@ -1516,6 +1578,605 @@ function wireKeyboard() {
   });
 }
 
+// ======================================================================== //
+// Damage editor                                                            //
+// ------------------------------------------------------------------------ //
+// The HOT / NAXA damage record is incomplete, so an analyst can build their
+// own layer here: pick an OSM or Overture building footprint off the map, or
+// draw a polygon freehand, grade it Destroyed / Damaged / Possibly damaged
+// and export the lot as GeoJSON.  The working copy lives in localStorage and
+// is layered over the committed file at CFG.DAMAGE_EDITS_URL; nothing here
+// talks to a server.  Both maps carry the same `edits` source, so an edit
+// stays put across the swipe divider.
+// ======================================================================== //
+
+const EDIT_KEY = 'nf26.damage_edits';
+const EDIT_FILE = 'data/edits/damage_edits.geojson';
+// Same palette as the Copernicus road grading legend (.roadlg .ems-*).
+const EDIT_STATUS = [
+  { key: 'destroyed', label: 'Destroyed',        color: DAMAGE_ROAD_RED },
+  { key: 'damaged',   label: 'Damaged',          color: '#f97316' },
+  { key: 'possible',  label: 'Possibly damaged', color: '#f59e0b' },
+];
+const EDIT_COLOR = ['match', ['to-string', ['get', 'status']],
+  'destroyed', EDIT_STATUS[0].color, 'damaged', EDIT_STATUS[1].color,
+  'possible', EDIT_STATUS[2].color, '#94a3b8'];
+// Ctrl-click is a secondary click on macOS and never reaches the map, so name
+// the modifier the reader's platform actually honours.  Both are accepted.
+const EDIT_MOD = /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent) ? 'Cmd' : 'Ctrl';
+const editLabel = k => (EDIT_STATUS.find(s => s.key === k) || {}).label || k || 'ungraded';
+const editColor = k => (EDIT_STATUS.find(s => s.key === k) || {}).color || '#94a3b8';
+
+const editor = {
+  mode: 'off',           // 'off' | 'pick' | 'draw'
+  visible: true,         // the edits layer switch
+  features: [],          // working collection
+  baseIds: new Set(),    // ids that came from the committed file
+  deleted: new Set(),    // base ids the analyst removed (so a reload does not resurrect them)
+  sel: [],               // selected candidates: {id, geometry, source, src_id, name, status, note, existing}
+  ring: [],              // in-progress polygon vertices
+  ui: {},                // sidebar nodes, filled by buildDamageEditor()
+  lastClick: null,       // for swallowing the second click of a double-click
+};
+const editorActive = () => editor.mode !== 'off';
+
+// ------------------------------------------------------------ collection IO
+function editId(f) {
+  if (!f.properties) f.properties = {};
+  const p = f.properties;
+  if (!p.id) p.id = f.id != null ? String(f.id)
+    : 'manual:' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  f.id = p.id;
+  return p.id;
+}
+const editFC = () => ({ type: 'FeatureCollection', features: editor.features });
+const editById = id => editor.features.find(f => f.properties && f.properties.id === id) || null;
+
+function saveEdits() {
+  try {
+    localStorage.setItem(EDIT_KEY, JSON.stringify({
+      v: 1, saved_at: new Date().toISOString(),
+      deleted: [...editor.deleted], features: editor.features,
+    }));
+  } catch (e) { toast('Could not save edits locally (storage full or blocked)'); }
+}
+function readStoredEdits() {
+  try {
+    const raw = localStorage.getItem(EDIT_KEY);
+    if (!raw) return null;
+    const j = JSON.parse(raw);
+    return j && Array.isArray(j.features) ? j : null;
+  } catch (e) { return null; }
+}
+
+/* Committed file first, then the local working copy on top of it by id.
+ * A 404 (nothing published yet) is not an error. */
+async function initDamageEdits() {
+  let base = [];
+  try {
+    const r = await fetch((CFG.DAMAGE_EDITS_URL || EDIT_FILE), { cache: 'no-cache' });
+    if (r.ok) {
+      const j = await r.json();
+      if (j && Array.isArray(j.features)) base = j.features.filter(f => f && f.geometry);
+    }
+  } catch (e) { /* not published yet */ }
+  base.forEach(editId);
+  editor.baseIds = new Set(base.map(f => f.properties.id));
+  const local = readStoredEdits();
+  let out = base;
+  if (local) {
+    editor.deleted = new Set(local.deleted || []);
+    out = out.filter(f => !editor.deleted.has(f.properties.id));
+    for (const f of local.features) {
+      if (!f || !f.geometry) continue;
+      editId(f);
+      const i = out.findIndex(x => x.properties.id === f.properties.id);
+      if (i >= 0) out[i] = f; else out.push(f);
+    }
+  }
+  editor.features = out;
+  refreshEdits(false);
+}
+
+/* Push the collection to both maps and redraw the sidebar. */
+function refreshEdits(persist) {
+  eachMap(m => { const s = m.getSource('edits'); if (s) s.setData(editFC()); });
+  renderEditList();
+  if (persist !== false) saveEdits();
+}
+
+// --------------------------------------------------------------- selection
+/* The selection is always a list.  One click replaces it, Shift- or Ctrl-click
+ * adds to it (and clicking a selected footprint again drops it), so a whole
+ * row of gutted houses can be graded in one go. */
+function setSelGeom(list) {
+  const fc = { type: 'FeatureCollection',
+    features: (list || []).filter(s => s.geometry)
+      .map(s => ({ type: 'Feature', properties: {}, geometry: s.geometry })) };
+  eachMap(m => { const s = m.getSource('edit_sel'); if (s) s.setData(fc); });
+}
+function syncSel() { setSelGeom(editor.sel); renderEditForm(); markSelRows(); }
+function clearSel() { editor.sel = []; syncSel(); }
+const selHas = id => editor.sel.some(s => s.id === id);
+
+/* Put a candidate in the selection.  `additive` toggles rather than replaces. */
+function addSel(cand, additive) {
+  if (!additive) { editor.sel = [cand]; syncSel(); return; }
+  const i = editor.sel.findIndex(s => s.id === cand.id);
+  if (i >= 0) { editor.sel.splice(i, 1); syncSel(); return; }
+  // Inherit the grade and note the group already agrees on, so adding one more
+  // footprint does not silently drop the whole selection back to ungraded.
+  const shared = k => editor.sel.length && editor.sel.every(x => x[k] && x[k] === editor.sel[0][k]);
+  if (!cand.status && shared('status')) cand.status = editor.sel[0].status;
+  if (!cand.note && shared('note')) cand.note = editor.sel[0].note;
+  editor.sel.push(cand);
+  syncSel();
+}
+
+function editToSel(f) {
+  const p = f.properties;
+  return { id: p.id, geometry: f.geometry, source: p.source, src_id: p.src_id,
+           name: p.name || '', status: p.status || '', note: p.note || '', existing: true };
+}
+function selectEdit(id, additive) {
+  const f = editById(id);
+  if (f) addSel(editToSel(f), additive);
+}
+
+/* A rendered building footprint becomes a candidate edit.  The id is
+ * source + ':' + src_id, so re-picking the same building edits its record. */
+function selectFootprint(hit, additive) {
+  const p = hit.properties || {};
+  const src = /-overture-/.test(hit.layer.id) ? 'overture' : 'osm';
+  // A footprint from the PMTiles fallback carries no OSM or Overture id.  Fall
+  // back to the centre of its bounding box at ~1 m: steadier under tile
+  // simplification than a vertex mean, though still only approximate.
+  // Re-picking is caught either way, because a click tests the edits layer first.
+  const bb = editBBox(hit.geometry);
+  const srcId = String(p.id || p['@id'] || p.osm_id || hit.id ||
+    'xy:' + ((bb[0][0] + bb[1][0]) / 2).toFixed(5) + ',' + ((bb[0][1] + bb[1][1]) / 2).toFixed(5));
+  const id = src + ':' + srcId;
+  const existing = editById(id);
+  if (existing) {
+    const had = selHas(id);
+    selectEdit(id, additive);
+    if (!had && selHas(id)) toast('Already recorded — editing it');
+    return;
+  }
+  addSel({ id, geometry: hit.geometry, source: src, src_id: srcId,
+    name: p.name || p.name_en || p.name_latin || '', status: '', note: '', existing: false }, additive);
+}
+
+/* Write every selected candidate into the collection under one timestamp. */
+function commitSel() {
+  const sels = editor.sel;
+  if (!sels.length) return;
+  const status = sels[0].status;
+  if (!status || sels.some(s => s.status !== status)) { toast('Choose a status first'); return; }
+  const now = new Date().toISOString();
+  for (const s of sels) {
+    let f = editById(s.id);
+    if (!f) {
+      f = { type: 'Feature', id: s.id, geometry: s.geometry,
+        properties: { id: s.id, status: s.status, source: s.source, src_id: s.src_id || '',
+                      name: s.name || '', note: s.note || '', created_at: now } };
+      editor.features.push(f);
+    } else {
+      f.properties.status = s.status;
+      f.properties.note = s.note || '';
+      f.properties.updated_at = now;
+      if (s.geometry) f.geometry = s.geometry;
+    }
+    editor.deleted.delete(s.id);
+  }
+  const n = sels.length;
+  clearSel();
+  refreshEdits();
+  toast(n + ' marked ' + editLabel(status).toLowerCase() + ' — ' + editor.features.length + ' edit' +
+    (editor.features.length === 1 ? '' : 's'));
+}
+
+function deleteEdit(id) {
+  const i = editor.features.findIndex(f => f.properties && f.properties.id === id);
+  if (i < 0) return;
+  editor.features.splice(i, 1);
+  if (editor.baseIds.has(id)) editor.deleted.add(id);
+  const j = editor.sel.findIndex(s => s.id === id);
+  if (j >= 0) { editor.sel.splice(j, 1); syncSel(); }
+  refreshEdits();
+}
+
+/* Delete every selected record that has already been saved. */
+function deleteSel() {
+  const ids = editor.sel.filter(s => s.existing).map(s => s.id);
+  if (!ids.length) return;
+  if (ids.length > 1 && !confirm('Delete ' + ids.length + ' saved edits?')) return;
+  for (const id of ids) deleteEdit(id);
+  clearSel();
+}
+
+// ------------------------------------------------------------ polygon draw
+function pushDraw() {
+  const feats = [];
+  const r = editor.ring;
+  for (const c of r) feats.push({ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: c } });
+  if (r.length >= 2) feats.push({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: r } });
+  if (r.length >= 3) feats.push({ type: 'Feature', properties: {},
+    geometry: { type: 'Polygon', coordinates: [[...r, r[0]]] } });
+  const fc = { type: 'FeatureCollection', features: feats };
+  eachMap(m => { const s = m.getSource('edit_draw'); if (s) s.setData(fc); });
+  const bar = $('#drawBar');
+  if (bar) {
+    bar.hidden = editor.mode !== 'draw';
+    const n = bar.querySelector('.dn');
+    if (n) n.textContent = r.length + (r.length === 1 ? ' point' : ' points');
+    const fin = bar.querySelector('[data-draw="finish"]');
+    if (fin) fin.disabled = r.length < 3;
+  }
+}
+function drawUndo() { editor.ring.pop(); pushDraw(); }
+function drawCancel() { editor.ring = []; pushDraw(); }
+function drawFinish() {
+  const r = editor.ring;
+  if (r.length < 3) { toast('A polygon needs at least three points'); return; }
+  const id = 'manual:' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  editor.sel = [{ id, geometry: { type: 'Polygon', coordinates: [[...r, r[0]]] },
+    source: 'manual', src_id: '', name: '', status: '', note: '', existing: false }];
+  editor.ring = [];
+  pushDraw();
+  syncSel();
+}
+
+// -------------------------------------------------------------- map wiring
+/* Every OSM/Overture buildings fill layer, both datasets, derived from the
+ * layer sets vectorGroup() registered rather than hardcoded. */
+const buildingFillIds = () => HOT_LAYERS
+  .filter(h => h.cat === 'buildings')
+  .flatMap(h => h.ids.filter(id => /-fill$/.test(id)));
+const layerLive = (m, id) => m.getLayer(id) && m.getLayoutProperty(id, 'visibility') !== 'none';
+
+function editorClick(m, ev) {
+  if (editor.mode === 'draw') {
+    // The second click of a double-click would otherwise land as a duplicate vertex.
+    const now = Date.now(), lc = editor.lastClick;
+    if (lc && now - lc.t < 350 && Math.abs(lc.x - ev.point.x) < 6 && Math.abs(lc.y - ev.point.y) < 6) return;
+    editor.lastClick = { t: now, x: ev.point.x, y: ev.point.y };
+    editor.ring.push([ev.lngLat.lng, ev.lngLat.lat]);
+    pushDraw();
+    return;
+  }
+  if (editor.mode !== 'pick') return;
+  const oe = ev.originalEvent || {};
+  const additive = !!(oe.shiftKey || oe.ctrlKey || oe.metaKey);
+  if (editor.visible && layerLive(m, 'edits-fill')) {
+    const own = m.queryRenderedFeatures(ev.point, { layers: ['edits-fill'] })[0];
+    if (own && own.properties && own.properties.id) { selectEdit(own.properties.id, additive); return; }
+  }
+  const ids = buildingFillIds().filter(id => layerLive(m, id));
+  if (!ids.length) { toast('Turn on Buildings under Mapped features or Overture Maps first'); return; }
+  const hit = m.queryRenderedFeatures(ev.point, { layers: ids })[0];
+  if (!hit) {
+    if (!additive) clearSel();          // a plain click on bare ground drops the selection
+    else toast('No building footprint here — zoom in or try again');
+    return;
+  }
+  selectFootprint(hit, additive);
+}
+
+function setEditorMode(mode) {
+  editor.mode = mode;
+  if (mode !== 'draw') editor.ring = [];
+  if (mode === 'off') clearSel();
+  pushDraw();
+  eachMap(m => {
+    m.getCanvas().style.cursor = editorActive() ? 'crosshair' : '';
+    // Double-click closes the ring, so its zoom has to stand down while drawing.
+    if (m.doubleClickZoom) { if (mode === 'draw') m.doubleClickZoom.disable(); else m.doubleClickZoom.enable(); }
+    // Shift-click extends the selection, so shift-drag box zoom stands down while picking.
+    if (m.boxZoom) { if (mode === 'pick') m.boxZoom.disable(); else m.boxZoom.enable(); }
+  });
+  for (const b of document.querySelectorAll('#dmgEd .seg button[data-em]'))
+    b.setAttribute('aria-pressed', String(b.dataset.em === mode));
+  if (editor.ui.hint) editor.ui.hint.textContent =
+    mode === 'pick' ? 'Click a building footprint on either side of the divider. Shift- or ' + EDIT_MOD +
+      '-click to add more and grade them in one go. Click one of your own edits to change it.'
+    : mode === 'draw' ? 'Click to add points, double-click or Finish to close the ring. Esc cancels.'
+    : 'Pick a mode to start recording damage. Off restores the normal feature popups.';
+  if (mode !== 'off' && editor.ui.det) editor.ui.det.open = true;
+  renderEditForm();
+}
+
+function wireDamageEditor() {
+  const bar = el('div');
+  bar.id = 'drawBar';
+  bar.hidden = true;
+  bar.innerHTML = '<span class="dn">0 points</span>' +
+    '<button data-draw="finish">Finish</button>' +
+    '<button data-draw="undo">Undo point</button>' +
+    '<button data-draw="cancel">Cancel</button>';
+  bar.querySelector('[data-draw="finish"]').addEventListener('click', drawFinish);
+  bar.querySelector('[data-draw="undo"]').addEventListener('click', drawUndo);
+  bar.querySelector('[data-draw="cancel"]').addEventListener('click', drawCancel);
+  const stage = $('#stage');
+  if (stage) stage.appendChild(bar);
+
+  eachMap(m => {
+    m.on('click', ev => editorClick(m, ev));
+    m.on('dblclick', ev => {
+      if (editor.mode !== 'draw') return;
+      if (ev.preventDefault) ev.preventDefault();
+      drawFinish();
+    });
+  });
+  // Esc: drop the ring first, then the selection, then leave the mode alone.
+  window.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape') return;
+    if (editor.ring.length) { drawCancel(); ev.preventDefault(); return; }
+    if (editor.sel.length) { clearSel(); ev.preventDefault(); return; }
+    if (editorActive()) { setEditorMode('off'); ev.preventDefault(); }
+  });
+}
+
+// ------------------------------------------------------------- export / IO
+function editsBlob() {
+  return JSON.stringify({ type: 'FeatureCollection',
+    name: 'nepal_flood_2026_damage_edits', features: editor.features }, null, 1);
+}
+function exportEdits() {
+  if (!editor.features.length) { toast('Nothing to export yet'); return; }
+  const url = URL.createObjectURL(new Blob([editsBlob()], { type: 'application/geo+json' }));
+  const a = el('a');
+  a.href = url; a.download = 'damage_edits.geojson';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast('Exported ' + editor.features.length + ' feature' + (editor.features.length === 1 ? '' : 's'));
+}
+async function copyEdits() {
+  try { await navigator.clipboard.writeText(editsBlob()); toast('GeoJSON copied'); }
+  catch (e) { toast('Copy failed — use Export instead'); }
+}
+function importEdits(file) {
+  const fr = new FileReader();
+  fr.onload = () => {
+    let j = null;
+    try { j = JSON.parse(String(fr.result)); } catch (e) { toast('Not valid JSON'); return; }
+    const feats = j && Array.isArray(j.features) ? j.features
+      : (j && j.type === 'Feature' ? [j] : null);
+    if (!feats) { toast('Not a GeoJSON FeatureCollection'); return; }
+    let added = 0, updated = 0;
+    for (const f of feats) {
+      if (!f || !f.geometry) continue;
+      editId(f);
+      const i = editor.features.findIndex(x => x.properties.id === f.properties.id);
+      if (i >= 0) { editor.features[i] = f; updated++; } else { editor.features.push(f); added++; }
+      editor.deleted.delete(f.properties.id);
+    }
+    refreshEdits();
+    toast('Imported ' + added + ' new, ' + updated + ' updated');
+  };
+  fr.readAsText(file);
+}
+function clearEdits() {
+  if (!editor.features.length) return;
+  if (!confirm('Delete all ' + editor.features.length + ' damage edits? This cannot be undone.')) return;
+  for (const f of editor.features) if (editor.baseIds.has(f.properties.id)) editor.deleted.add(f.properties.id);
+  editor.features = [];
+  clearSel();
+  refreshEdits();
+}
+
+// ------------------------------------------------------------- sidebar: UI
+function editBBox(g) {
+  let w = 180, s = 90, e = -180, n = -90;
+  (function walk(c) {
+    if (typeof c[0] === 'number') {
+      w = Math.min(w, c[0]); e = Math.max(e, c[0]);
+      s = Math.min(s, c[1]); n = Math.max(n, c[1]);
+      return;
+    }
+    for (const x of c) walk(x);
+  })(g.coordinates);
+  if (e - w < 1e-4) { w -= 5e-5; e += 5e-5; }
+  if (n - s < 1e-4) { s -= 5e-5; n += 5e-5; }
+  return [[w, s], [e, n]];
+}
+function zoomToEdit(f) {
+  if (!maps.post || !f.geometry) return;
+  maps.post.fitBounds(editBBox(f.geometry), { padding: 120, duration: 700 });
+}
+
+/* The selection form: status buttons, a note, save / delete.  One selection
+ * names the feature; several report the tally, and every control acts on all
+ * of them at once. */
+function renderEditForm() {
+  const box = editor.ui.form;
+  if (!box) return;
+  const sels = editor.sel;
+  box.innerHTML = '';
+  box.hidden = !sels.length;
+  if (!sels.length) return;
+  const one = sels.length === 1 ? sels[0] : null;
+  const srcName = v => v === 'manual' ? 'manual' : v === 'osm' ? 'OSM' : 'Overture';
+
+  if (one) {
+    box.appendChild(el('div', 'dmg-h', esc(one.source === 'manual' ? 'Drawn polygon' : (one.name || 'Unnamed building'))));
+    box.appendChild(el('p', 'meta', srcName(one.source) + (one.src_id ? ' · <b>' + esc(one.src_id) + '</b>' : '') +
+      (one.existing ? ' · already recorded' : '')));
+  } else {
+    box.appendChild(el('div', 'dmg-h', sels.length + ' features selected'));
+    const bySrc = {};
+    for (const s of sels) bySrc[s.source] = (bySrc[s.source] || 0) + 1;
+    const already = sels.filter(s => s.existing).length;
+    box.appendChild(el('p', 'meta',
+      Object.entries(bySrc).map(([k, v]) => '<b>' + v + '</b> ' + srcName(k)).join(' · ') +
+      (already ? ' · ' + already + ' already recorded' : '')));
+  }
+
+  // The status is shared: it reads back only when every selection agrees.
+  const common = sels.every(s => s.status === sels[0].status) ? sels[0].status : '';
+  const seg = el('div', 'seg');
+  for (const st of EDIT_STATUS) {
+    const b = el('button', null, st.label);
+    b.dataset.st = st.key;
+    b.setAttribute('aria-pressed', String(common === st.key));
+    b.addEventListener('click', () => {
+      for (const s of sels) s.status = st.key;
+      for (const x of seg.children) x.setAttribute('aria-pressed', String(x.dataset.st === st.key));
+    });
+    seg.appendChild(b);
+  }
+  box.appendChild(seg);
+
+  const ta = el('textarea');
+  ta.placeholder = one ? 'Note (optional)' : 'Note (optional) — applied to all ' + sels.length;
+  ta.rows = 2;
+  ta.value = sels.every(s => s.note === sels[0].note) ? (sels[0].note || '') : '';
+  ta.addEventListener('input', () => { for (const s of sels) s.note = ta.value; });
+  box.appendChild(ta);
+
+  const acts = el('div', 'chips');
+  const nExisting = sels.filter(s => s.existing).length;
+  const save = el('button', null,
+    one ? (one.existing ? 'Update' : 'Save') : (nExisting === sels.length ? 'Update ' : 'Save ') + sels.length);
+  save.addEventListener('click', commitSel);
+  acts.appendChild(save);
+  if (nExisting) {
+    const del = el('button', null, one ? 'Delete' : 'Delete ' + nExisting);
+    del.addEventListener('click', deleteSel);
+    acts.appendChild(del);
+  }
+  const cancel = el('button', null, 'Cancel');
+  cancel.addEventListener('click', clearSel);
+  acts.appendChild(cancel);
+  box.appendChild(acts);
+  if (!one) box.appendChild(el('p', 'note', 'Shift- or ' + EDIT_MOD +
+    '-click a selected footprint to drop it. Esc clears the selection.'));
+}
+
+/* Counts per status plus the scrollable item list. */
+function renderEditList() {
+  const u = editor.ui;
+  if (!u.counts || !u.list) return;
+  const n = editor.features.length;
+  if (u.n) u.n.textContent = String(n);
+  if (u.cnt) u.cnt.textContent = n ? fmtCount(n) : '';
+
+  u.counts.innerHTML = '';
+  for (const st of EDIT_STATUS) {
+    const c = editor.features.filter(f => f.properties.status === st.key).length;
+    const chip = el('span', 'chip lg', st.label + ' ' + c);
+    chip.style.background = st.color;
+    u.counts.appendChild(chip);
+  }
+
+  u.list.innerHTML = '';
+  u.rows = new Map();
+  if (!n) { u.list.appendChild(el('p', 'note', 'No edits yet.')); return; }
+  for (const f of editor.features.slice().reverse()) {
+    const p = f.properties;
+    const row = el('div', 'brow');
+    const chip = el('span', 'chip');
+    chip.style.background = editColor(p.status);
+    const t = el('div', 't');
+    const label = p.name || (p.source === 'manual' ? 'manual polygon' : 'unnamed building');
+    t.innerHTML = '<span>' + esc(label) + '</span><span class="sub">' + esc(editLabel(p.status)) +
+      ' · ' + esc(p.source || '?') + (p.note ? ' · ' + esc(String(p.note).slice(0, 40)) : '') + '</span>';
+    const acts = el('div', 'acts');
+    const z = el('button', 'mini', 'zoom');
+    z.title = 'Zoom to this feature';
+    z.addEventListener('click', ev => { ev.stopPropagation(); zoomToEdit(f); });
+    const d = el('button', 'mini', '×');
+    d.title = 'Delete this edit';
+    d.addEventListener('click', ev => { ev.stopPropagation(); deleteEdit(p.id); });
+    acts.append(z, d);
+    row.append(chip, t, acts);
+    // Shift- or Ctrl-click builds a selection from the list without moving the map.
+    row.addEventListener('click', ev => {
+      if (ev.shiftKey || ev.ctrlKey || ev.metaKey) { selectEdit(p.id, true); return; }
+      zoomToEdit(f);
+      if (editor.mode === 'pick') selectEdit(p.id, false);
+    });
+    u.rows.set(p.id, row);
+    u.list.appendChild(row);
+  }
+  markSelRows();
+}
+
+/* Tick the list rows that are in the current selection. */
+function markSelRows() {
+  const rows = editor.ui.rows;
+  if (!rows) return;
+  for (const [id, row] of rows) row.classList.toggle('on', selHas(id));
+}
+
+function buildDamageEditor() {
+  const block = el('div', 'block');
+  const det = el('details'); det.id = 'dmgEd';
+  editor.ui.det = det;
+  const sum = el('summary', null, 'Damage editor <span class="n">0</span>');
+  det.appendChild(sum);
+  editor.ui.n = sum.querySelector('.n');
+
+  det.appendChild(el('p', 'note', 'Build your own layer of flood-damaged buildings. ' +
+    'The HOT and NAXA damage record is incomplete; this stays on your machine until you export it.'));
+
+  const modeF = el('div', 'field');
+  modeF.appendChild(el('label', null, 'Mode'));
+  const seg = el('div', 'seg');
+  for (const [v, t] of [['off', 'Off'], ['pick', 'Pick building'], ['draw', 'Draw polygon']]) {
+    const b = el('button', null, t);
+    b.dataset.em = v;
+    b.setAttribute('aria-pressed', String(editor.mode === v));
+    b.addEventListener('click', () => setEditorMode(v));
+    seg.appendChild(b);
+  }
+  modeF.appendChild(seg);
+  det.appendChild(modeF);
+  editor.ui.hint = el('p', 'note', 'Pick a mode to start recording damage. Off restores the normal feature popups.');
+  det.appendChild(editor.ui.hint);
+
+  const vis = el('label', 'row');
+  const visCb = el('input'); visCb.type = 'checkbox'; visCb.checked = editor.visible;
+  const sw = el('span', 'sw');
+  sw.style.background = DAMAGE_ROAD_RED;
+  visCb.addEventListener('change', () => {
+    editor.visible = visCb.checked;
+    setVis(['edits-fill', 'edits-line'], editor.visible);
+  });
+  editor.ui.cnt = el('span', 'cnt', '');
+  vis.append(visCb, sw, el('span', 't', 'Show my damage edits'), editor.ui.cnt);
+  det.appendChild(vis);
+
+  editor.ui.form = el('div', 'dmgform');
+  editor.ui.form.hidden = true;
+  det.appendChild(editor.ui.form);
+
+  editor.ui.counts = el('div', 'dmg-counts');
+  det.appendChild(editor.ui.counts);
+  editor.ui.list = el('div', 'lazy dmg-list');
+  det.appendChild(editor.ui.list);
+
+  const acts = el('div', 'chips');
+  acts.style.marginTop = '7px';
+  const exp = el('button', null, 'Export'); exp.addEventListener('click', exportEdits);
+  const cp = el('button', null, 'Copy'); cp.addEventListener('click', copyEdits);
+  const imp = el('button', null, 'Import');
+  const file = el('input'); file.type = 'file'; file.accept = '.geojson,.json,application/geo+json,application/json';
+  file.style.display = 'none';
+  file.addEventListener('change', () => { if (file.files && file.files[0]) importEdits(file.files[0]); file.value = ''; });
+  imp.addEventListener('click', () => file.click());
+  const clr = el('button', null, 'Clear all'); clr.addEventListener('click', clearEdits);
+  acts.append(exp, cp, imp, clr, file);
+  det.appendChild(acts);
+  det.appendChild(el('p', 'note',
+    'Export, then save to <code>' + esc(CFG.DAMAGE_EDITS_URL || EDIT_FILE) + '</code> and commit it to publish. ' +
+    'Footprint geometry is read from the rendered vector tile, so zoom in before picking.'));
+
+  block.appendChild(det);
+  renderEditList();
+  return block;
+}
+
 // -------------------------------------------------------------------- boot
 async function main() {
   const protocol = new pmtiles.Protocol();
@@ -1555,10 +2216,14 @@ async function main() {
   applyMode();
   setSwipe(state.swipe, false);
   wireDivider(); wireKeyboard();
+  wireDamageEditor();
+  initDamageEdits();
 
   if (!state.center) maps.post.fitBounds(CFG.HOME, { padding: 24, duration: 0 });
   maps.post.on('moveend', writeHash);
   maps.post.on('moveend', updateDamageInView);
+  // the count column shows "z12+" for a category the current zoom is below
+  maps.post.on('zoomend', () => { if (hotRefresh) hotRefresh(); });
   writeHash();
 
   const tog = $('#sidebarToggle');

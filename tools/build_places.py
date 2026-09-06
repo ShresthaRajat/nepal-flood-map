@@ -33,7 +33,7 @@ FEATURED = {
     'Kathmandu':    ('hq', r'^Kathmandu$|^काठमाडौँ$', None),
     'Dhunche':      ('hq', r'Dhunche|Dunche|धुन्चे', None),
     'Bidur':        ('hq', r'^Bidur$|^बिदुर$', None),
-    'Dhading Besi': ('hq', r'Dhading ?Besi|धादिंग बेंसी|Nilakantha|नीलकण्ठ', None),
+    'Dhading Besi': ('hq', r'Dhading ?Besi|धादिंग बेंसी|^Nilakantha$|^नीलकण्ठ$', (84.8931, 27.9116)),   # anchored: "Nilakantha" also matches Budhanilkantha in Kathmandu
     'Gorkha':       ('hq', r'^Gorkha$|^गोरखा$', None),
     # the Trishuli / Bhote Koshi corridor, north to south
     'Rasuwagadhi':  ('town', r'Rasuwa ?Ga(dh|d)i|रसुवागढी', (85.3778, 28.2778)),
