@@ -97,6 +97,13 @@ toggle disappear.
   and anything named "Highway" are labelled by name from a symbol layer placed
   above the HOT layers. HOT roads themselves are white, yellow for trunk/primary
   and red where `status` is damaged or destroyed, and are on by default.
+- **Glacier collapse origin and upstream AOI.** `data/hdx/derived/collapse_origin.geojson`
+  (detachment zone polygon, its centroid as the origin point, two barrier lakes)
+  and `data/hdx/derived/aoi_upstream_extension.geojson` (UNOSAT flood extent
+  buffered 200 m for the Lende Khola beyond HOT's AOI), both from the UNOSAT
+  FL20260826NPL geodatabase via `tools/build_collapse_origin.py`. The upstream
+  outline is drawn dotted with the HOT AOI outline. `CFG.HOME` was widened to
+  85.62 E / 28.40 N so the pan limit reaches the glacier.
 - **Copernicus EMS road grading.** `data/hdx/derived/ems_road_grading.geojson`,
   1,221 road and bridge line segments from the EMSR927 grading GeoPackages
   (AOI01 Syapru Besi, AOI02 Timure, AOI03 Bidur monitoring 1, AOI05 Phosretar),

@@ -9,23 +9,23 @@
       "c1000": {
         "minzoom": 8,
         "maxzoom": 15,
-        "description": "Contours at multiples of 1000 m Limited to a 1 km buffer around the HOT flood-affected AOI (work/aoi_flood_1km.geojson) - not present outside it.",
+        "description": "Contours at multiples of 1000 m Limited to a 10 km buffer around the HOT flood-affected AOI (work/aoi_flood_10km.geojson) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
-        "clip": "work/aoi_flood_1km.geojson (1 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
+        "clip": "work/aoi_flood_10km.geojson (10 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
       },
       "c500": {
         "minzoom": 9,
         "maxzoom": 15,
-        "description": "Contours at multiples of 500 m, excluding those already in c1000 Limited to a 1 km buffer around the HOT flood-affected AOI (work/aoi_flood_1km.geojson) - not present outside it.",
+        "description": "Contours at multiples of 500 m, excluding those already in c1000 Limited to a 10 km buffer around the HOT flood-affected AOI (work/aoi_flood_10km.geojson) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
-        "clip": "work/aoi_flood_1km.geojson (1 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
+        "clip": "work/aoi_flood_10km.geojson (10 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
       },
       "c100": {
         "minzoom": 11,
         "maxzoom": 15,
-        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000 Limited to a 1 km buffer around the HOT flood-affected AOI (work/aoi_flood_1km.geojson) - not present outside it.",
+        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000 Limited to a 2 km buffer around the HOT flood-affected AOI (work/aoi_flood_2km.geojson) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m" },
-        "clip": "work/aoi_flood_1km.geojson (1 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
+        "clip": "work/aoi_flood_2km.geojson (2 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
       },
       "c50": {
         "minzoom": 13,

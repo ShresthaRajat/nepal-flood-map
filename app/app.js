@@ -197,6 +197,9 @@ function buildDefs() {
     corridor: { type: 'vector', url: 'pmtiles://' + BASE + HDX + 'pmtiles/hot_flood_npl_corridor.pmtiles', attribution: ATTR_HDX },
     aoi_flood: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_aoi.geojson' },
     aoi_corridor: { type: 'geojson', data: HDX + 'hot_flood_npl_corridor/hot_flood_npl_corridor_aoi.geojson' },
+    aoi_upstream: { type: 'geojson', data: HDX + 'derived/aoi_upstream_extension.geojson',
+      attribution: 'UNOSAT (CC BY-SA)' },
+    collapse: { type: 'geojson', data: HDX + 'derived/collapse_origin.geojson', attribution: 'UNOSAT (CC BY-SA)' },
     flood_extent: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_flood_extent.geojson' },
     bridge_damage: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_bridge_damage.geojson' },
     hydro: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson' },
@@ -270,10 +273,12 @@ function buildDefs() {
       push({ id: lid, type: 'line', source: 'contours', 'source-layer': cls,
         minzoom: d.minzoom != null ? d.minzoom : 8, maxzoom: capOf(d),
         layout: { 'line-join': 'round', visibility: 'none' },
-        paint: { 'line-color': ['case', ['==', ['get', 'idx'], 1], '#e8a95c', '#c2884a'],
+        // Olive, green-leaning gold so the lines sit apart from the amber highways and the
+        // damage reds (owner direction, 6 Sep 2026); index lines lighter, all slightly translucent.
+        paint: { 'line-color': ['case', ['==', ['get', 'idx'], 1], '#d3d47a', '#a9b45c'],
                  'line-width': ['interpolate', ['linear'], ['zoom'], 10, ['case', ['==', ['get', 'idx'], 1], 0.9, 0.45],
                                                                     16, ['case', ['==', ['get', 'idx'], 1], 1.8, 0.9]],
-                 'line-opacity': 0.8 } });
+                 'line-opacity': 0.55 } });
       lineIds.push(lid);
       // Labels only on 100 m multiples (c1000/c500/c100); labelling every 10 m line is too busy.
       if (cls === 'c50' || cls === 'c10') continue;
@@ -282,7 +287,7 @@ function buildDefs() {
         minzoom: Math.max(13, d.minzoom != null ? d.minzoom : 8), maxzoom: capOf(d),
         layout: { visibility: 'none', 'symbol-placement': 'line', 'text-field': ['concat', ['to-string', ['get', 'ele']], ' m'],
                   'text-font': FONT, 'text-size': 10, 'symbol-spacing': 320, 'text-max-angle': 25, 'text-padding': 4 },
-        paint: { 'text-color': '#f0d5b0', 'text-halo-color': 'rgba(30,20,10,.85)', 'text-halo-width': 1.4 } });
+        paint: { 'text-color': '#e9e8b0', 'text-opacity': 0.85, 'text-halo-color': 'rgba(20,24,12,.85)', 'text-halo-width': 1.4 } });
       labelIds.push(tid);
     }
     // One switch for all contour classes and their labels (a checkbox in the
@@ -296,7 +301,10 @@ function buildDefs() {
   push({ id: 'aoi_flood-line', type: 'line', source: 'aoi_flood', layout: { visibility: 'none' },
          paint: { 'line-color': AOI_GREY, 'line-opacity': 0.45, 'line-width': 1.5 } },
        { id: 'aoi_corridor-line', type: 'line', source: 'aoi_corridor', layout: { visibility: 'none' },
-         paint: { 'line-color': AOI_GREY, 'line-opacity': 0.45, 'line-width': 1.5, 'line-dasharray': [3, 2] } });
+         paint: { 'line-color': AOI_GREY, 'line-opacity': 0.45, 'line-width': 1.5, 'line-dasharray': [3, 2] } },
+       // Beyond HOT's AOI: the Lende Khola from Rasuwagadhi to the glacier, from the UNOSAT extent.
+       { id: 'aoi_upstream-line', type: 'line', source: 'aoi_upstream', layout: { visibility: 'none' },
+         paint: { 'line-color': AOI_GREY, 'line-opacity': 0.45, 'line-width': 1.5, 'line-dasharray': [1, 1.5] } });
 
   /* Where a category's features live.  The PMTiles build packs every category
    * into one source-layer keyed by category|source; the per-layer tile build
@@ -475,6 +483,24 @@ function buildDefs() {
       paint: { 'line-color': '#f8fafc', 'line-width': 1.5, 'line-dasharray': [2, 2] } },
     { id: 'fair-fill', type: 'fill', source: 'fair', layout: { visibility: 'none' }, paint: { 'fill-color': fairColor, 'fill-opacity': 0.35 } },
     { id: 'fair-line', type: 'line', source: 'fair', layout: { visibility: 'none' }, paint: { 'line-color': '#333', 'line-width': 0.4 } },
+    // Glacier collapse: detachment zone (violet), barrier lakes (ice blue), origin point with a label.
+    { id: 'collapse-zone-fill', type: 'fill', source: 'collapse', layout: { visibility: 'none' },
+      filter: ['==', ['get', 'kind'], 'detachment_zone'], paint: { 'fill-color': '#c084fc', 'fill-opacity': 0.3 } },
+    { id: 'collapse-zone-line', type: 'line', source: 'collapse', layout: { visibility: 'none' },
+      filter: ['==', ['get', 'kind'], 'detachment_zone'], paint: { 'line-color': '#c084fc', 'line-width': 1.6 } },
+    { id: 'collapse-lake-fill', type: 'fill', source: 'collapse', layout: { visibility: 'none' },
+      filter: ['==', ['get', 'kind'], 'barrier_lake'], paint: { 'fill-color': '#7dd3fc', 'fill-opacity': 0.55 } },
+    { id: 'collapse-lake-line', type: 'line', source: 'collapse', layout: { visibility: 'none' },
+      filter: ['==', ['get', 'kind'], 'barrier_lake'], paint: { 'line-color': '#e0f2fe', 'line-width': 1 } },
+    { id: 'collapse-origin-point', type: 'circle', source: 'collapse', layout: { visibility: 'none' },
+      filter: ['==', ['get', 'kind'], 'origin'],
+      paint: { 'circle-color': '#c084fc', 'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 14, 9],
+               'circle-stroke-width': 2, 'circle-stroke-color': '#1e1b4b' } },
+    { id: 'collapse-origin-label', type: 'symbol', source: 'collapse', layout: { visibility: 'none',
+        'text-field': ['get', 'label'], 'text-font': FONT, 'text-size': 12, 'text-offset': [0, 1.4], 'text-anchor': 'top',
+        'text-allow-overlap': true },
+      filter: ['==', ['get', 'kind'], 'origin'],
+      paint: { 'text-color': '#f5f3ff', 'text-halo-color': 'rgba(30,27,75,.9)', 'text-halo-width': 1.6 } },
     { id: 'hydro-point', type: 'circle', source: 'hydro', layout: { visibility: 'none' },
       paint: { 'circle-color': '#facc15', 'circle-radius': 6, 'circle-stroke-width': 1.5, 'circle-stroke-color': '#000' } },
     { id: 'bridge_damage-point', type: 'circle', source: 'bridge_damage', layout: { visibility: 'none' },
@@ -528,6 +554,9 @@ function buildDefs() {
 
   groups.push({ title: 'Flood extent, damage & ground reports', entries: [
     { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
+    { key: 'collapse', label: 'Glacier collapse origin & barrier lakes (UNOSAT)', color: '#c084fc',
+      ids: ['collapse-zone-fill', 'collapse-zone-line', 'collapse-lake-fill', 'collapse-lake-line', 'collapse-origin-point', 'collapse-origin-label'],
+      on: true, count: 3 },
     // hot: ids resolved by applyHot(); follows the Extent switch, always the OSM source.
     { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
@@ -543,7 +572,7 @@ function buildDefs() {
     { key: 'flooded_roads', label: 'Roads inside the flood extent (computed)', color: DAMAGE_ROAD_RED,
       ids: ['flooded_roads-casing', 'flooded_roads-line'], on: true, count: 879 },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
-    { key: 'hot_aoi', label: 'HOT area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
+    { key: 'hot_aoi', label: 'Area of interest outline (HOT + upstream to the glacier)', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
   ] });
 
   // 6. search pin + selected-scene outline -----------------------------------
@@ -645,6 +674,7 @@ function applyHot() {
   const aoiOn = state.overlays.has('hot_aoi');
   setVis(['aoi_flood-line'], aoiOn && state.hotExtent === 'flood');
   setVis(['aoi_corridor-line'], aoiOn && state.hotExtent === 'corridor');
+  setVis(['aoi_upstream-line'], aoiOn);
   if (hotRefresh) hotRefresh();
 }
 const hotCount = e => CFG.COUNTS[state.hotExtent][e.cat + '|' + e.src];
@@ -948,7 +978,7 @@ function renderSidebar() {
   ctCb.disabled = !CONTOUR_IDS.length;
   ctCb.addEventListener('change', () => { state.contours = ctCb.checked; applyBase(); writeHash(); });
   ct.append(ctCb, el('span', 't', ctCb.disabled ? 'Contours (not built)' : 'Contours'));
-  ct.title = 'Copernicus GLO-30: 10–50 m intervals in the flood area, 100 m and up to 1 km beyond';
+  ct.title = 'Copernicus GLO-30: 10–50 m intervals in the flood area, 100 m to 2 km beyond it, 500 m and 1000 m to 10 km';
   bmBlock.appendChild(ct);
   cpad.appendChild(bmBlock);
 
@@ -1097,7 +1127,9 @@ function renderSidebar() {
   lg.appendChild(el('div', 'hd', 'Areas'));
   add('#7f1d1d', 'Flood extent, 27 Aug 2026');
   add(CFG.CATS.find(([cat]) => cat === 'destroyed_features')[3], 'Destroyed and damaged features (volunteer-recorded, OSM)');
-  add('rgba(203,213,225,.6)', 'HOT area of interest (flood area solid, corridor dashed)', true);
+  add('rgba(203,213,225,.6)', 'Area of interest (HOT flood area solid, corridor dashed, upstream Lende Khola dotted)', true);
+  add('#c084fc', 'Glacier / rock detachment zone and collapse origin (UNOSAT, Landsat-9 26 Aug)');
+  add('#7dd3fc', 'Barrier lakes formed by the collapse (UNOSAT, Cartosat-3 28 Aug)');
   add('#f87171', 'Settlement name inside the flood-affected area (others white)');
   lBlock.appendChild(lg);
 

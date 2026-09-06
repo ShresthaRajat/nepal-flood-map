@@ -75,21 +75,25 @@ fi
 SPLIT_GPKG="$WORK/contours_split.gpkg"
 rm -f "$SPLIT_GPKG"
 
-# Two clip masks (owner direction, 6 Sep 2026): the fine classes (c50, c10)
+# Three clip masks (owner direction, 6 Sep 2026): the fine classes (c50, c10)
 # are limited to the HOT flood-affected AOI (observed 27 Aug flood extent +
-# 200 m, the "area of interest outline" in the app); the coarse classes
-# (c1000, c500, c100) extend 1 km beyond it so the valley sides still read
-# without drowning the map in lines. Earlier builds: full extent for the
-# coarse classes with c50/c10 on the 1 km river corridor (76 MB), then all
-# classes on the flood AOI (2.4 MB) — see work/contours_v*. Full-extent c10
-# alone was ~226 MB, so the clipping is also what keeps the tileset small.
+# 200 m, the "area of interest outline" in the app); c100 extends 2 km beyond
+# it so the valley sides read; c500 and c1000 extend 10 km so the surrounding
+# ridges are placed without drowning the map in lines. Earlier builds: full
+# extent for the coarse classes with c50/c10 on the 1 km river corridor
+# (76 MB), then all classes on the flood AOI (2.4 MB), then coarse classes to
+# 1 km (4.2 MB) — see work/contours_v*. Full-extent c10 alone was ~226 MB, so
+# the clipping is also what keeps the tileset small.
 AOI_FINE="$ROOT/data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson"
-AOI_COARSE="$WORK/aoi_flood_1km.geojson"
-# 1 km buffer computed in UTM 45N so the distance is metric, then back to WGS84.
-rm -f "$AOI_COARSE" "$WORK/aoi_utm.gpkg"
+AOI_MID="$WORK/aoi_flood_2km.geojson"
+AOI_WIDE="$WORK/aoi_flood_10km.geojson"
+# Buffers computed in UTM 45N so the distances are metric, then back to WGS84.
+rm -f "$AOI_MID" "$AOI_WIDE" "$WORK/aoi_utm.gpkg"
 "$GDAL_BIN/ogr2ogr" -f GPKG -t_srs EPSG:32645 "$WORK/aoi_utm.gpkg" "$AOI_FINE" -nln aoi
-"$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_COARSE" "$WORK/aoi_utm.gpkg" \
-  -dialect sqlite -sql "SELECT ST_Buffer(geom, 1000) AS geom FROM aoi"
+"$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_MID" "$WORK/aoi_utm.gpkg" \
+  -dialect sqlite -sql "SELECT ST_Buffer(geom, 2000) AS geom FROM aoi"
+"$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_WIDE" "$WORK/aoi_utm.gpkg" \
+  -dialect sqlite -sql "SELECT ST_Buffer(geom, 10000) AS geom FROM aoi"
 
 mk_class () {
   local name="$1" where="$2" clip="$3"
@@ -103,9 +107,9 @@ mk_class () {
     -nln "$name" -nlt LINESTRING -clipsrc "$clip"
 }
 
-mk_class c1000 "CAST(ROUND(ele) AS INTEGER) % 1000 = 0" "$AOI_COARSE"
-mk_class c500  "CAST(ROUND(ele) AS INTEGER) % 500 = 0 AND CAST(ROUND(ele) AS INTEGER) % 1000 != 0" "$AOI_COARSE"
-mk_class c100  "CAST(ROUND(ele) AS INTEGER) % 100 = 0 AND CAST(ROUND(ele) AS INTEGER) % 500 != 0" "$AOI_COARSE"
+mk_class c1000 "CAST(ROUND(ele) AS INTEGER) % 1000 = 0" "$AOI_WIDE"
+mk_class c500  "CAST(ROUND(ele) AS INTEGER) % 500 = 0 AND CAST(ROUND(ele) AS INTEGER) % 1000 != 0" "$AOI_WIDE"
+mk_class c100  "CAST(ROUND(ele) AS INTEGER) % 100 = 0 AND CAST(ROUND(ele) AS INTEGER) % 500 != 0" "$AOI_MID"
 mk_class c50   "CAST(ROUND(ele) AS INTEGER) % 50 = 0  AND CAST(ROUND(ele) AS INTEGER) % 100 != 0" "$AOI_FINE"
 mk_class c10   "CAST(ROUND(ele) AS INTEGER) % 10 = 0  AND CAST(ROUND(ele) AS INTEGER) % 50 != 0" "$AOI_FINE"
 
@@ -125,13 +129,13 @@ cat > "$WORK/mvt_conf.json" <<'EOF'
 EOF
 
 # The MVT driver refuses to Create() into a directory that already exists.
-[ -d "$TILES/contours" ] && rmdir "$TILES/contours" 2>/dev/null || true
+rm -rf "$TILES/contours"
 
 "$GDAL_BIN/ogr2ogr" -f MVT "$TILES/contours" "$SPLIT_GPKG" \
   c1000 c500 c100 c50 c10 \
   -dsco MINZOOM=8 -dsco MAXZOOM=15 -dsco COMPRESS=NO -dsco FORMAT=DIRECTORY \
   -dsco NAME=trisuli-contours \
-  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30: 10/50 m within the HOT flood-affected AOI, 100/500/1000 m to 1 km beyond it" \
+  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30: 10/50 m within the HOT flood-affected AOI, 100 m to 2 km beyond it, 500/1000 m to 10 km" \
   -dsco BOUNDS="$MINLON,$MINLAT,$MAXLON,$MAXLAT" \
   -dsco CONF="$WORK/mvt_conf.json"
 

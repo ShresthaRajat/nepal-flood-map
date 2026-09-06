@@ -232,8 +232,8 @@ table.dmg td { text-align: right; padding: 2px 4px; border-bottom: 1px solid rgb
 .roadlg .ems-possible.dash { background: repeating-linear-gradient(90deg, #f59e0b 0 6px, transparent 6px 9px); }
 
 .roadlg .r .note { font-size: 10.5px; color: var(--fg-dim); margin-left: 42px; }   /* align with text after the 34px swatch */
-.roadlg .ct { background: #c2884a; height: 1px; box-shadow: none; }
-.roadlg .ct.idx { background: #e8a95c; height: 2px; }
+.roadlg .ct { background: #a9b45c; opacity: .75; height: 1px; box-shadow: none; }
+.roadlg .ct.idx { background: #d3d47a; height: 2px; }
 
 #toast { position: absolute; left: 50%; bottom: 24px; transform: translate(-50%, 8px); z-index: 40;
   background: rgba(18,22,28,.95); color: var(--fg); border: 1px solid var(--line); border-radius: 6px;

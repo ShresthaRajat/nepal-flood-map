@@ -65,7 +65,9 @@ const PLACES = [
   { key:'betrawati', label:'Betrawati / Battar',   bounds:[[85.1350,27.9300],[85.2350,28.0200]] },
   { key:'upper',     label:'Syabrubesi–Rasuwagadhi', bounds:[[85.2900,28.1100],[85.4400,28.3700]] },
   { key:'fair',      label:'fAIr damage tile',     bounds:[[85.289155,28.11104],[85.437807,28.369382]] },
-  { key:'corridor',  label:'Whole corridor',       bounds:[[84.5544,27.7933],[85.4400,28.3800]] },
+  { key:'origin',    label:'Collapse origin',      bounds:[[85.4300,28.2400],[85.5800,28.3600]] },
+  // Also the home view and the pan limit (+12 % margin); reaches east to the glacier (owner direction, 6 Sep 2026).
+  { key:'corridor',  label:'Whole corridor',       bounds:[[84.5544,27.7933],[85.6200,28.4000]] },
 ];
 const HOME = PLACES[PLACES.length - 1].bounds;
 
@@ -137,6 +139,11 @@ dataset on HDX, snapshot of 5 September 2026. ${HDX_CREDIT}.</p>
       the Status palette it draws grey.</li>
   <li><b>River corridor</b> — the same catalogue over a wider 1 km buffer along the river. Off by
       default because it is large.</li>
+  <li><b>Glacier collapse origin</b> — from the UN Satellite Centre (UNOSAT) assessment: the ice-rock
+      detachment zone mapped on Landsat-9 of 26 Aug 2026 (about 2 km², above the Lende Khola in Tibet), its
+      centroid as the approximate origin, and the two barrier lakes seen on Cartosat-3 on 28 Aug. The area of
+      interest outline is extended from Rasuwagadhi up the Lende Khola to the detachment zone using UNOSAT's
+      multi-sensor flood extent buffered by 200 m, matching how HOT built its own AOI. CC BY-SA.</li>
   <li><b>Flood extent</b>, <b>destroyed and damaged features</b> (volunteer-recorded in OSM, drawn
       in dark red; road stretches with a damaged or destroyed status draw bright red in the roads layer),
       <b>bridge ground reports</b> and <b>exposed hydropowers</b>.</li>
