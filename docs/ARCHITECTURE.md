@@ -283,6 +283,25 @@ root and all paths are relative, so no configuration is needed. Two caveats:
   (z8–13, source-layer `waterways`), rebuilt from that GeoJSON by
   `tools/build_waterways_tiles.sh`.
 
+## Imagery watch
+
+`tools/imagery_watch.py` runs every 6 hours from a launchd agent
+(`~/Library/LaunchAgents/com.rajat.nepal-flood-imagery-watch.plist`, owner's
+Mac only). It scans the Vantor open-data event collection, Earth Search
+(Sentinel-2 L2A), the Planetary Computer (Sentinel-1 RTC) and OpenAerialMap for
+scenes over the corridor, posts a macOS notification for anything new, and
+auto-builds the ones that pass the quality gates: Sentinel-2 with a corridor
+tile at ≤ 40 % cloud (`build_s2_tiles.sh`, z8–14) and Vantor scenes at ≤ 50 %
+cloud and ≤ 35° off-nadir over a focus box (`build_cog_tiles.sh`, z10–17, the
+map being locked at z17.5). Sentinel-1 and OpenAerialMap are notify-only. A
+successful build appends a layer to `data/imagery.json` (marked
+`added_by: imagery_watch`), commits only that layer's tiles plus the catalogue,
+and pushes to `main` if local main is a fast-forward of origin; otherwise it
+notifies and leaves the commit local. The first run only records what already
+exists. State and logs: `work/imagery_watch/`. Stop it with
+`launchctl bootout gui/$(id -u)/com.rajat.nepal-flood-imagery-watch`; dry run
+with `python3 tools/imagery_watch.py --dry-run`.
+
 ## Known limitations
 
 - The PMTiles build of the HOT catalogue carries only `category`, `source` and

@@ -24,7 +24,8 @@ Layout:
 - `tiles/<layer>/{z}/{x}/{y}.webp` — Web Mercator imagery pyramids; `tiles/contours/` vector tiles
 - `data/imagery.json` — imagery catalogue read by the app
 - `data/hdx/` — HDX downloads (GeoJSON + PMTiles), 5 Sep 2026 snapshot
-- `tools/` — reproducible build scripts
+- `tools/` — reproducible build scripts, including `imagery_watch.py` (6-hourly scan for new scenes; see
+  docs/ARCHITECTURE.md)
 
 ## Licensing
 
