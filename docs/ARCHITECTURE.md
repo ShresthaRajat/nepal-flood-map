@@ -195,7 +195,7 @@ test.
 
 `#mapPre` and `#mapPost` are two full-size MapLibre instances stacked in
 `#stage`. Every layer definition is built once and handed to both, so overlays
-stay pixel-aligned across the divider; only the `imagery` layer differs.
+stay pixel-aligned across the divider; only the imagery stack differs.
 
 Movement is kept in step by a two-way `move` handler with a re-entrancy guard,
 which `jumpTo`s the other map. The divider is a `clip-path: inset(0 0 0 N%)` on
@@ -206,36 +206,53 @@ which is what routes clicks on the left half through to the pre map;
 them.
 
 Layer order, bottom to top: basemap, imagery, hillshade, contours, HOT
-overlays, search pin and selected-scene outline. New imagery is inserted with `addLayer(def,
-IMAGERY_BEFORE)` where `IMAGERY_BEFORE` is the first hillshade/contour/HOT layer.
+overlays, search pin and selected-scene outline. Every selected scene gets its
+own raster source and layer, both named `imagery:<layer id>`, inserted with
+`addLayer(def, IMAGERY_BEFORE)` where `IMAGERY_BEFORE` is the first
+hillshade/contour/HOT layer.
 
-Only the two selected scenes exist as sources at any time. Switching a source
-removes the old layer and source and adds the new one. Overlays that are off are
-`visibility: none`, never removed, so toggling them costs nothing.
+Each side can carry any number of scenes at once. Within the imagery stack the
+order is by ground sample distance, **coarsest at the bottom and finest on top**
+(`selectedLayers()` sorts by `gsd_m` descending, ties in catalogue order, a
+missing `gsd_m` counted as finest), so a 0.4 m frame reads over the 10 m scene it
+sits inside. `applyImagery(side)` reconciles rather than rebuilds: it removes
+only the layers and sources of scenes that were unticked, adds the new ones at
+the right insertion point and calls `moveLayer` only when the survivors are
+genuinely out of order, so ticking a second scene never reloads the first one's
+tiles. Only the selected scenes exist as sources at any time. Overlays that are
+off are `visibility: none`, never removed, so toggling them costs nothing.
 
 ## Controls
 
-Scenes are chosen from two `<select>` tags in the top corners of the stage,
-green on the left for the before side and amber on the right for the after side.
-Each opens with "None, basemap only", then that side's scenes grouped by
-coverage, then a "View" group holding "<side> only" and "Compare (swipe)".
-Choosing None adds no imagery source for that side and takes the basemap
-(Esri World Imagery by default, `b=` in the hash) on that map to full opacity; it is carried in the hash as `pre=none` / `post=none`.
-The two sides are independent, so one can show imagery while the other shows the
-basemap. Picking a view option changes the mode
-rather than the scene and the select snaps back to the current scene;
-`refreshTags()` is the single place that re-reads state into both tags, ticks the
-active view option and puts the white outline on whichever side is shown alone.
-The mode buttons in the sidebar and the tags both route through `setMode()`, so
-they can never disagree.
+Scenes are chosen from two tags in the top corners of the stage, green on the
+left for the before side and amber on the right for the after side. Each is a
+button plus a pop-up menu: a "None, basemap only" item, then that side's scenes
+as **checkbox rows** grouped by coverage, then a "View" group holding
+"<side> only" and "Compare (swipe)". Any number of rows can be ticked, so a side
+holds an ordered set of scene ids rather than one; the menu stays open while
+rows are ticked and closes on Escape, an outside click or a view choice. The
+button reads the single scene's `label` when one is on, "N scenes" when several
+and "None, basemap only" when none. Row text is the catalogue `label` field,
+falling back to date/sensor/GSD for an entry without one.
+
+Choosing None empties that side's set, adds no imagery source for it and takes
+the basemap (Esri World Imagery by default, `b=` in the hash) on that map to
+full opacity; it is carried in the hash as `pre=none` / `post=none`. The two
+sides are independent, so one can show three scenes while the other shows the
+basemap. Picking a view option changes the mode rather than the selection;
+`refreshTags()` is the single place that re-reads state into both tags, re-ticks
+the boxes, ticks the active view option and puts the white outline on whichever
+side is shown alone. The mode buttons in the sidebar and the tags both route
+through `setMode()`, so they can never disagree.
 
 The sidebar has no scene selectors — that would be two controls for one piece of
-state. It shows the selected scene's provider, resolution, coverage and licence
-instead, refreshed by `updateMeta()`.
+state. It shows one metadata block per selected scene instead (label, date,
+sensor, provider, GSD, coverage, size, licence and that scene's `CFG.SCENES`
+note), in stacking order, refreshed by `updateMeta()`.
 
 There are two rails. `#panel` on the left holds information: the title, search,
 zoom-to chips, bridge ground reports, damage table, legend, notes and, at the
-bottom, imagery metadata for the two selected scenes. `#controls` on the right holds
+bottom, imagery metadata for the selected scenes. `#controls` on the right holds
 everything that changes what the map shows: view mode, basemap (with hillshade
 and contours) and the overlay groups. Scenes are still chosen with the tags at
 the top of the map, so the left rail describes them without controlling them. Both
@@ -274,6 +291,31 @@ file at `CFG.DAMAGE_EDITS_URL` by feature id; a 404 there just means nothing has
 been published yet. While a mode is on, `editorActive()` gates the normal
 feature popups so a click records an edit instead of opening one.
 
+A selected footprint can also be moved and reshaped, in Pick mode rather than a
+mode of its own: a Reshape mode would need a second way of choosing a feature
+and Pick already has one, so the gestures simply attach to whatever is selected.
+One polygon selected puts an amber handle on every ring vertex and a smaller
+blue one at every edge midpoint, styled and hit-tested like Image align's grab
+points; dragging a vertex moves it, dragging a midpoint turns it into a real
+vertex and carries it, and a double-click or Alt-click drops one, refusing to
+leave a ring with fewer than three. A GeoJSON ring repeats its first point last,
+so the closing copy follows its twin, and a MultiPolygon is handled ring by
+ring. Dragging inside the shape instead of on a handle translates it, and with
+several features selected there are no handles and a drag inside any of them
+moves the whole set. The arrow keys nudge the selection by one screen pixel, ten
+with Shift; both tools want those keys, and the damage editor takes them while
+it is on and holding a selection, because that is the more specific state. All
+of it runs on screen-pixel deltas through `project`/`unproject`, so a shape
+stays rigid under a drag and a nudge means the same distance at any zoom, and
+`dragPan` stands down for the duration so the map does not slide with it. A
+feature already in the collection keeps its new shape the moment the drag ends —
+`refreshEdits()` writes the working copy to `localStorage` exactly as a status
+change does, which is also how an edited baseline feature becomes a local
+override — while a candidate that has not been saved yet carries its geometry to
+Save. Each completed gesture pushes onto a 50-deep geometry undo stack, and a
+run of arrow presses coalesces into one step; **Undo geometry** in the panel
+walks it back.
+
 **Image align** (`#imgAl`, `IMGALIGN_KEY = nf26.imgalign`) hand-fits an
 ungeoreferenced photograph over the imagery. It is a fitting aid rather than
 part of the published map, but it is built by default (owner direction, 7 Sep
@@ -281,7 +323,7 @@ part of the published map, but it is built by default (owner direction, 7 Sep
 overlay never draws, since there would be no control to turn it off. A saved fit in
 `localStorage` is left alone either way, so the tool comes back exactly as it
 was left. It adds a MapLibre `image` source
-to both maps just above the `imagery` layer, so the photo can be checked against
+to both maps at `IMAGERY_BEFORE`, just above the whole imagery stack, so the photo can be checked against
 either side of the divider and against the basemap, and `setCoordinates()`
 pushes every change straight to the GPU. Turning the tool on takes the pointer
 from the damage editor and the popups. It can carry a warp mesh: at 1x1 the photo is one
@@ -326,8 +368,16 @@ dev server serves.
 Everything lives in the hash, written with `replaceState` on every change:
 
 ```
-#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&pn=0&cb=status&sb=0&sc=0&hx=corridor&oo=45&ov=+key,-key
+#m=swipe&pre=<id>,<id>&post=<id>,<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&pn=0&cb=status&sb=0&sc=0&hx=corridor&oo=45&ov=+key,-key
 ```
+
+`pre` and `post` are **comma-separated lists** of catalogue layer ids, in the
+order the scenes were ticked, or the literal `none` for a side showing only the
+basemap. A single id — every link written before September 2026 — parses as a
+one-element list, so old links keep working; ids that are no longer in the
+catalogue are dropped. Both keys are always written. A side the hash says
+nothing about is seeded from `default_<side>` in `data/imagery.json`, which
+stays a single id. Commas are written verbatim rather than percent-encoded.
 
 `ov` is a **diff against the default overlay set**, not the full list, which
 keeps the URL short. `+key` turns one on, `-key` turns one off. `hx` is the
@@ -351,14 +401,17 @@ disabled on both maps so the two never disagree.
 1. Produce `tiles/<id>/{z}/{x}/{y}.webp`.
 2. Append an entry to `data/imagery.json` following the contract above. The
    `coverage` value groups it in the corner tag; add a new one and it will appear
-   as its own optgroup, labelled by `CFG.COVERAGE_LABEL` (add a label there for a
-   readable name).
+   as its own heading, labelled by `CFG.COVERAGE_LABEL` (add a label there for a
+   readable name). `gsd_m` decides where the scene sits in the imagery stack when
+   several are on at once.
 3. Add a paragraph to `SCENES` in `app/config.js` keyed by the same id. It shows
-   as the option tooltip and in the "Sources & notes" drawer. Without it the
-   drawer falls back to the entry's `attribution`.
+   as the menu row's tooltip, in the sidebar metadata block while the scene is
+   selected, and in the "Sources & notes" drawer. Without it the drawer falls
+   back to the entry's `attribution`.
 
 No other change is needed — the corner tags, sidebar metadata, selected-scene
-footprint outline and notes list are all generated from the catalogue.
+footprint outlines (one per selected scene, drawn as the union) and notes list
+are all generated from the catalogue.
 
 ## Refreshing the HDX data
 

@@ -78,11 +78,14 @@ body[data-mode="pre"] #mapPost .maplibregl-ctrl-attrib { display: none; }
 body[data-mode="pre"] #divider, body[data-mode="post"] #divider { display: none; }
 
 /* ------------------------------------------------------------ corner tags */
-/* The two corner tags are <select>s: they pick the imagery for that side and
-   carry the "Pre only" / "Post only" view options.  A white outline marks the
-   side shown alone; in swipe mode both are plain. */
+/* Each corner tag is a button plus a checkbox menu: it picks any number of
+   imagery scenes for that side and carries the "Pre only" / "Post only" view
+   options.  A white outline marks the side shown alone; in swipe mode both are
+   plain.  The wrapper carries the position and the per-side colour, which the
+   button inherits. */
+.tagwrap { position: absolute; top: 10px; z-index: 6; max-width: 44%; }
 .tag {
-  position: absolute; top: 10px; z-index: 6; max-width: 44%;
+  display: block; max-width: 100%; color: inherit; text-align: left;
   padding: 3px 24px 3px 10px; border-radius: 4px; border: 1px solid transparent;
   font: inherit; font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
   background: rgba(12,17,22,.82) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238FA0AB' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 8px center;
@@ -92,12 +95,31 @@ body[data-mode="pre"] #divider, body[data-mode="post"] #divider { display: none;
 .tag:hover { border-color: var(--accent); }
 .tag:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .tag.only { border-color: #e6ecf0; box-shadow: 0 0 0 1px rgba(230,236,240,.35); }
-.tag option, .tag optgroup { text-transform: none; letter-spacing: 0; font-weight: 400;
-  color: var(--fg); background: var(--bg2); }
+.tagwrap.open .tag { border-color: var(--accent); }
 #tagPre { left: 12px; color: var(--pre); }
 /* Clear the MapLibre top-right control column (29px buttons + 10px margin). */
 #tagPost { right: 52px; color: var(--post); }
 body[data-mode="pre"] #tagPost, body[data-mode="post"] #tagPre { opacity: .45; }
+
+/* The scene menu: same checkbox rows as the sidebar overlay lists. */
+.tagmenu {
+  position: absolute; top: calc(100% + 4px); left: 0; min-width: 240px; max-width: 78vw;
+  max-height: 66vh; overflow-y: auto; z-index: 7;
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 5px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.5); padding: 4px;
+  color: var(--fg); font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none;
+}
+#tagPost .tagmenu { left: auto; right: 0; }
+.tagmenu .tm-hd { font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--fg-dim); padding: 6px 4px 2px; }
+.tagmenu .tm-empty { padding: 4px; color: var(--fg-dim); }
+.tagmenu label.tm-row { display: flex; align-items: center; gap: 7px; padding: 3px 4px;
+  cursor: pointer; border-radius: 3px; }
+.tagmenu label.tm-row:hover { background: var(--bg); }
+.tagmenu label.tm-row > span.t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tagmenu .tm-item { display: block; width: 100%; text-align: left; padding: 3px 4px;
+  background: none; border: 0; border-radius: 3px; color: inherit; font: inherit; cursor: pointer; }
+.tagmenu .tm-item:hover { background: var(--bg); }
 
 #readout { position: absolute; bottom: 8px; right: 10px; z-index: 3; font-size: 11.5px;
   background: rgba(18,22,28,.8); color: #cfd8e3; padding: 3px 8px; border-radius: 5px;
@@ -126,6 +148,9 @@ kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; background: var
 .field label { display: block; font-size: 11px; color: var(--fg-dim); margin-bottom: 3px; }
 .meta { font-size: 11px; color: var(--fg-dim); margin: 3px 0 0; }
 .meta b { color: #cfd8e3; font-weight: 600; }
+/* One block per selected scene, hairline-separated. */
+.meta .metasep { border-top: 1px solid var(--line); margin: 6px 0; }
+.meta .scenenote { display: block; margin-top: 2px; color: var(--fg-dim); opacity: .85; }
 .side-pre b { color: var(--pre); }
 .side-post b { color: var(--post); }
 
@@ -175,8 +200,10 @@ input[type=checkbox], input[type=radio] { accent-color: var(--accent); margin: 0
   #controls { box-shadow: 0 0 24px rgba(0,0,0,.6); }
   body.sidebar-open #stage { left: 0; }          /* the drawers float over the map */
   body.controls-open #stage { right: 0; }
-  .tag { max-width: 60%; font-size: 11px; }
+  .tagwrap { max-width: 60%; }
+  .tag { font-size: 11px; }
   #tagPost { top: 44px; right: auto; left: 12px; }   /* stack instead of overlapping */
+  #tagPost .tagmenu { left: 0; right: auto; }
   #readout { display: none; }
 }
 

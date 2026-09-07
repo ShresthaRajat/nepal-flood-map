@@ -28,9 +28,11 @@ const abs = u => /^(https?:)?\/\//.test(u) ? u : BASE + String(u).replace(/^\.?\
 
 // --------------------------------------------------------------- app state
 const state = {
-  mode: 'swipe', pre: null, post: null, swipe: 50,
+  // pre / post are ordered lists of catalogue layer ids — any number of scenes
+  // can be on per side; [] means "basemap only" (carried as `none` in the hash).
+  mode: 'swipe', pre: [], post: [], swipe: 50,
   base: 'esri', hillshade: false, contours: false, placeNames: true, colorBy: 'layer',
-  footprintOutline: false,  // dashed outline of the selected scene; off, reachable only via #fo=1
+  footprintOutline: false,  // dashed outline of the selected scenes; off, reachable only via #fo=1
   hotExtent: 'flood',       // 'flood' | 'corridor' — which HOT dataset the category list shows
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
   controls: null,           // right rail (layer controls): same resolution
@@ -124,9 +126,29 @@ async function loadHotTiles() {
 }
 
 const NO_IMAGERY = 'none';
+const IMG_PREFIX = 'imagery:';                 // source and layer id per selected scene
+const imgLayerId = id => IMG_PREFIX + id;
 const layersFor = side => catalog.layers.filter(l => l.side === side);
-const hasImagery = side => !!byId(state[side]);
 const byId = id => catalog.layers.find(l => l.id === id) || null;
+const selIds = side => state[side] || [];
+const isSel = (side, id) => selIds(side).indexOf(id) >= 0;
+const hasImagery = side => selIds(side).length > 0;
+/* Selected scenes in draw order: coarsest underneath, finest on top, so a
+ * 0.4 m frame reads over the 10 m scene it sits inside.  Ties keep catalogue
+ * order; a scene with no `gsd_m` is treated as finest and lands on top. */
+function selectedLayers(side) {
+  const idx = l => catalog.layers.indexOf(l);
+  return selIds(side).map(byId).filter(Boolean)
+    .sort((a, b) => ((b.gsd_m != null ? +b.gsd_m : 0) - (a.gsd_m != null ? +a.gsd_m : 0)) || (idx(a) - idx(b)));
+}
+/* Toggle one scene on a side, keeping the click order of the hash list. */
+function toggleScene(side, id, on) {
+  const list = selIds(side).slice();
+  const at = list.indexOf(id);
+  if (on && at < 0) list.push(id);
+  else if (!on && at >= 0) list.splice(at, 1);
+  state[side] = list;
+}
 
 // --------------------------------------------------------- style definition
 /* Feature status.  `status` is absent from the current PMTiles build, so each
@@ -186,11 +208,16 @@ const andF = (...fs) => ['all', ...fs.filter(Boolean)];
 const HDX = 'data/hdx/';
 const ATTR_HDX = CFG.HDX_CREDIT + ' via <a href="' + CFG.HDX_URL + '" target="_blank" rel="noopener">HDX</a>';
 
-function boundsFeature(l) {
-  if (!l || !l.bounds) return { type: 'FeatureCollection', features: [] };
-  return { type: 'FeatureCollection', features: [{ type: 'Feature', properties: { label: l.label },
-    geometry: { type: 'Polygon', coordinates: [[[l.bounds[0], l.bounds[1]], [l.bounds[2], l.bounds[1]],
-      [l.bounds[2], l.bounds[3]], [l.bounds[0], l.bounds[3]], [l.bounds[0], l.bounds[1]]]] } }] };
+/* One outline feature per selected scene — the union of the footprints. */
+function boundsFC(list) {
+  const features = [];
+  for (const l of (list || [])) {
+    if (!l || !l.bounds) continue;
+    features.push({ type: 'Feature', properties: { label: l.label },
+      geometry: { type: 'Polygon', coordinates: [[[l.bounds[0], l.bounds[1]], [l.bounds[2], l.bounds[1]],
+        [l.bounds[2], l.bounds[3]], [l.bounds[0], l.bounds[3]], [l.bounds[0], l.bounds[1]]]] } });
+  }
+  return { type: 'FeatureCollection', features };
 }
 function imagerySource(l) {
   if (!l) return null;
@@ -243,6 +270,8 @@ function buildDefs() {
     edits: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     edit_sel: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     edit_draw: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    // Vertex and midpoint grab points for the selected polygon (Damage editor, reshape).
+    edit_handles: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   };
   if (hotTiles) {
     for (const [ds, dir] of [['flood', 'hot_flood_npl'], ['corridor', 'hot_flood_npl_corridor']]) {
@@ -638,7 +667,7 @@ function buildDefs() {
     { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
     // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
     // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
-    { key: 'damage_edits', label: 'Building damage grading (analyst edits)', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: true, count: 327 },
+    { key: 'damage_edits', label: 'Building damage grading (analyst edits)', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: true, count: 65 },
     { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
     { key: 'roads_np', label: 'Highways and main roads (OSM, national)', color: HW_YELLOW,
       ids: ['roads_np-other-casing', 'roads_np-other', 'roads_np-hw-casing', 'roads_np-hw', 'roads_np-label'], on: true },
@@ -682,6 +711,14 @@ function buildDefs() {
     { id: 'edit_draw-point', type: 'circle', source: 'edit_draw',
       filter: ['==', ['geometry-type'], 'Point'],
       paint: { 'circle-radius': 4, 'circle-color': '#5eb0ff', 'circle-stroke-width': 1.5, 'circle-stroke-color': '#fff' } },
+    // Reshape handles, topmost of the lot: amber vertices and smaller blue edge
+    // midpoints, styled to match the Image align tool's grab points.
+    { id: 'edit_handles-pt', type: 'circle', source: 'edit_handles',
+      paint: {
+        'circle-radius': ['match', ['get', 'k'], 'v', 6, 4.5],
+        'circle-color': ['match', ['get', 'k'], 'v', '#ffb64d', '#5eb0ff'],
+        'circle-stroke-color': '#12161c', 'circle-stroke-width': 2,
+      } },
   );
 
 
@@ -755,24 +792,49 @@ function makeMap(container, defs, side) {
   return m;
 }
 
+/* Reconciles one map's imagery stack with that side's selection.  Scenes that
+ * are already on keep their source and their loaded tiles: only what changed is
+ * added or removed, so ticking a second scene does not flicker the first. */
 function applyImagery(side) {
   const m = maps[side]; if (!m) return;
   // The style can still be settling right after 'load' (GeoJSON/PMTiles sources
   // fetching); never drop the request silently, re-run once the map is idle.
   if (!m.isStyleLoaded()) { m.once('idle', () => applyImagery(side)); return; }
-  const l = byId(state[side]);
-  if (m.getLayer('imagery')) m.removeLayer('imagery');
-  if (m.getSource('imagery')) m.removeSource('imagery');
-  const src = imagerySource(l);
-  if (src) {
-    m.addSource('imagery', src);
-    const before = m.getLayer(IMAGERY_BEFORE) ? IMAGERY_BEFORE : undefined;
-    m.addLayer({ id: 'imagery', type: 'raster', source: 'imagery', paint: { 'raster-fade-duration': 120 } }, before);
+  const want = selectedLayers(side);                 // coarse first, fine last
+  const wantIds = want.map(l => l.id);
+  const style = m.getStyle();
+  const isImg = id => id.indexOf(IMG_PREFIX) === 0;
+  const sceneOf = id => id.slice(IMG_PREFIX.length);
+  const present = (style.layers || []).map(l => l.id).filter(isImg);
+
+  // 1. drop the scenes that were unticked, layer before source.
+  for (const lid of present) if (wantIds.indexOf(sceneOf(lid)) < 0) m.removeLayer(lid);
+  for (const sid of Object.keys(style.sources || {}))
+    if (isImg(sid) && wantIds.indexOf(sceneOf(sid)) < 0 && m.getSource(sid)) m.removeSource(sid);
+
+  // 2. reorder only if the survivors are no longer in stacking order.
+  const kept = present.filter(lid => wantIds.indexOf(sceneOf(lid)) >= 0);
+  const kSet = kept.map(sceneOf);
+  const target = wantIds.filter(id => kSet.indexOf(id) >= 0);
+  const reorder = kSet.join(',') !== target.join(',');
+
+  // 3. add or move, finest first, so each layer's `before` anchor already exists.
+  const anchor = m.getLayer(IMAGERY_BEFORE) ? IMAGERY_BEFORE : undefined;
+  for (let i = want.length - 1; i >= 0; i--) {
+    const lid = imgLayerId(want[i].id);
+    const next = i + 1 < want.length ? imgLayerId(want[i + 1].id) : null;
+    const before = next && m.getLayer(next) ? next : anchor;
+    if (!m.getLayer(lid)) {
+      if (!m.getSource(lid)) m.addSource(lid, imagerySource(want[i]));
+      m.addLayer({ id: lid, type: 'raster', source: lid, paint: { 'raster-fade-duration': 120 } }, before);
+    } else if (reorder) {
+      m.moveLayer(lid, before);
+    }
   }
-  // The photo overlay sits just above `imagery`; re-adding imagery would bury it.
+  // The photo overlay sits just above the imagery stack; re-adding imagery would bury it.
   if (imgAlign.on) imgAlignEnsureOn(m);
   const fp = m.getSource('sel_footprint');
-  if (fp) fp.setData(state.footprintOutline ? boundsFeature(l) : { type: 'FeatureCollection', features: [] });
+  if (fp) fp.setData(boundsFC(state.footprintOutline ? want : []));
   refreshTags();
   updateMeta(side);
   setTimeout(() => debugReport('applyImagery:' + side), 1500);
@@ -969,8 +1031,8 @@ function writeHash() {
   const c = maps.post.getCenter(), z = maps.post.getZoom();
   const p = new URLSearchParams();
   p.set('m', state.mode);
-  if (state.pre) p.set('pre', state.pre);
-  if (state.post) p.set('post', state.post);
+  p.set('pre', selIds('pre').join(',') || NO_IMAGERY);
+  p.set('post', selIds('post').join(',') || NO_IMAGERY);
   p.set('c', c.lng.toFixed(5) + ',' + c.lat.toFixed(5));
   p.set('z', z.toFixed(2));
   p.set('s', state.swipe.toFixed(1));
@@ -987,14 +1049,22 @@ function writeHash() {
   const ov = serialiseOverlays();
   if (ov) p.set('ov', ov);
   hashWriting = true;
-  history.replaceState(null, '', '#' + p.toString());
+  // Commas separate the scene lists, the centre pair and the overlay diff; they
+  // are legal in a fragment, so put them back verbatim for a readable link.
+  history.replaceState(null, '', '#' + p.toString().replace(/%2C/g, ','));
   setTimeout(() => { hashWriting = false; }, 0);
 }
 function readHash() {
   const p = new URLSearchParams(location.hash.replace(/^#/, ''));
   if (p.get('m')) state.mode = p.get('m');
-  if (p.get('pre')) state.pre = p.get('pre');
-  if (p.get('post')) state.post = p.get('post');
+  // `pre` / `post` are comma-separated id lists; a single id (every link
+  // written before Sep 2026) parses as a one-element list, `none` as empty.
+  for (const side of ['pre', 'post']) {
+    const v = p.get(side);
+    if (v === null) continue;
+    state[side] = v.split(',').map(x => x.trim()).filter(x => x && x !== NO_IMAGERY);
+    hashHadSide[side] = true;
+  }
   if (p.get('s')) state.swipe = parseFloat(p.get('s'));
   if (p.get('b')) state.base = p.get('b');
   if (p.get('hs')) state.hillshade = p.get('hs') === '1';
@@ -1016,6 +1086,7 @@ function readHash() {
   return p.get('ov');
 }
 let legacyAoiOff = false, legacyOverture = false;
+const hashHadSide = { pre: false, post: false };   // seed the defaults only when the hash is silent
 function applyOverlayDiff(ov) {
   state.overlays = new Set();
   for (const g of GROUPS) for (const e of g.entries) if (e.on) state.overlays.add(e.key);
@@ -1038,82 +1109,124 @@ function applyOverlayDiff(ov) {
 }
 
 // ----------------------------------------------------------------- sidebar
-const optionText = (side, l) =>
-  (side === 'pre' ? 'Pre' : 'Post') + ' \u00b7 ' + fmtDate(l.date) + ' \u00b7 ' + l.sensor +
-  (l.gsd_m ? ' ' + l.gsd_m + ' m' : '');
+/* Row text for the corner menus: the catalogue `label` ("28 Aug 2026 · Vantor
+ * WorldView-2 0.54 m") when the entry has one, else built from its fields. */
+const sceneText = l => l.label ||
+  (fmtDate(l.date) + ' \u00b7 ' + (l.sensor || '') + (l.gsd_m ? ' ' + l.gsd_m + ' m' : '')).trim();
 
-/* Appends this side's scenes to a <select>, grouped by coverage. */
-function fillScenes(sel, side) {
-  sel.appendChild(new Option('None \u00b7 basemap only', NO_IMAGERY));
-  const list = layersFor(side);
-  if (!list.length) { sel.appendChild(new Option('(no ' + side + ' imagery in catalogue)', '')); return 0; }
-  const order = ['trisuli_bazar', 'upper_valley', 'corridor'];
+const COVERAGE_ORDER = ['trisuli_bazar', 'upper_valley', 'corridor'];
+/* This side's scenes grouped by coverage, in the corner menu's display order. */
+function scenesByCoverage(side) {
   const byCov = {};
-  for (const l of list) (byCov[l.coverage || 'corridor'] ||= []).push(l);
-  const covs = Object.keys(byCov).sort((a, b) => order.indexOf(a) - order.indexOf(b));
-  for (const cov of covs) {
-    const og = document.createElement('optgroup');
-    og.label = CFG.COVERAGE_LABEL[cov] || cov;
-    for (const l of byCov[cov]) {
-      const o = new Option(optionText(side, l), l.id);
-      o.title = CFG.SCENES[l.id] || l.label || '';
-      og.appendChild(o);
-    }
-    sel.appendChild(og);
-  }
-  return list.length;
+  for (const l of layersFor(side)) (byCov[l.coverage || 'corridor'] ||= []).push(l);
+  return Object.keys(byCov)
+    .sort((a, b) => COVERAGE_ORDER.indexOf(a) - COVERAGE_ORDER.indexOf(b))
+    .map(cov => [CFG.COVERAGE_LABEL[cov] || cov, byCov[cov]]);
 }
 
-/* The two corner tags: scene picker plus the "<side> only" view option. */
+/* The two corner tags.  Each is a button carrying the current selection plus a
+ * pop-up menu of checkbox rows: any number of scenes can be on per side.  The
+ * menu stays open while rows are ticked and closes on Escape, an outside click
+ * or a view choice. */
 function buildTags() {
   for (const side of ['pre', 'post']) {
-    const t = $('#tag' + (side === 'pre' ? 'Pre' : 'Post'));
-    if (!t) continue;
+    const wrap = $('#tag' + (side === 'pre' ? 'Pre' : 'Post'));
+    if (!wrap) continue;
+    const btn = wrap.querySelector('.tag');
+    const menu = wrap.querySelector('.tagmenu');
+    const t = { wrap, btn, menu, boxes: [], only: null };
     tagEl[side] = t;
-    fillScenes(t, side);
-    const og = document.createElement('optgroup');
-    og.label = 'View';
-    const only = new Option(side === 'pre' ? 'Pre only' : 'Post only', '__only');
-    og.appendChild(only);
-    og.appendChild(new Option('Compare (swipe)', '__swipe'));
-    t.appendChild(og);
-    t.__only = only;
-    t.addEventListener('change', () => {
-      const v = t.value;
-      if (v === '__only') setMode(state.mode === side ? 'swipe' : side);
-      else if (v === '__swipe') setMode('swipe');
-      else if (v) { state[side] = v; applyImagery(side); writeHash(); }
-      refreshTags();
+
+    const none = el('button', 'tm-item tm-none', 'None \u00b7 basemap only');
+    none.type = 'button';
+    none.addEventListener('click', () => { state[side] = []; applyImagery(side); writeHash(); });
+    menu.appendChild(none);
+    t.none = none;
+
+    const groups = scenesByCoverage(side);
+    if (!groups.length) menu.appendChild(el('div', 'tm-empty', '(no ' + side + ' imagery in catalogue)'));
+    for (const [label, list] of groups) {
+      menu.appendChild(el('div', 'tm-hd', label));
+      for (const l of list) {
+        const row = el('label', 'tm-row');
+        const cb = el('input'); cb.type = 'checkbox'; cb.checked = isSel(side, l.id);
+        row.title = CFG.SCENES[l.id] || l.label || '';
+        row.append(cb, el('span', 't', sceneText(l)));
+        cb.addEventListener('change', () => { toggleScene(side, l.id, cb.checked); applyImagery(side); writeHash(); });
+        t.boxes.push({ id: l.id, cb });
+        menu.appendChild(row);
+      }
+    }
+
+    menu.appendChild(el('div', 'tm-hd', 'View'));
+    const only = el('button', 'tm-item', side === 'pre' ? 'Pre only' : 'Post only');
+    only.type = 'button';
+    only.addEventListener('click', () => { closeTagMenus(); setMode(state.mode === side ? 'swipe' : side); });
+    const both = el('button', 'tm-item', 'Compare (swipe)');
+    both.type = 'button';
+    both.addEventListener('click', () => { closeTagMenus(); setMode('swipe'); });
+    menu.append(only, both);
+    t.only = only;
+
+    btn.addEventListener('click', ev => { ev.stopPropagation(); openTagMenu(menu.hidden ? side : null); });
+    menu.addEventListener('click', ev => ev.stopPropagation());
+    wrap.addEventListener('keydown', ev => {
+      if (ev.key !== 'Escape' || menu.hidden) return;
+      closeTagMenus(); btn.focus(); ev.stopPropagation();
     });
   }
+  document.addEventListener('click', () => closeTagMenus());
   refreshTags();
 }
+function openTagMenu(side) {
+  for (const s2 of ['pre', 'post']) {
+    const t = tagEl[s2]; if (!t) continue;
+    const on = s2 === side;
+    t.menu.hidden = !on;
+    t.btn.setAttribute('aria-expanded', String(on));
+    t.wrap.classList.toggle('open', on);
+  }
+}
+const closeTagMenus = () => openTagMenu(null);
 
-/* Keeps both tags showing their current scene, ticks the active view option
+/* Keeps both tags showing their current selection, ticks the active view option
  * and outlines the side that is being shown alone. */
 function refreshTags() {
   for (const side of ['pre', 'post']) {
     const t = tagEl[side];
     if (!t) continue;
-    if (t.__only) t.__only.textContent = (state.mode === side ? '\u2713 ' : '') + (side === 'pre' ? 'Pre only' : 'Post only');
-    if (state[side]) t.value = state[side];
-    if (t.classList) t.classList.toggle('only', state.mode === side);
+    const ids = selIds(side);
+    t.only.textContent = (state.mode === side ? '\u2713 ' : '') + (side === 'pre' ? 'Pre only' : 'Post only');
+    t.none.textContent = (ids.length ? '' : '\u2713 ') + 'None \u00b7 basemap only';
+    const one = ids.length === 1 ? byId(ids[0]) : null;
+    t.btn.textContent = !ids.length ? 'None \u00b7 basemap only'
+      : one ? sceneText(one) : ids.length + ' scenes';
+    t.btn.title = ids.length > 1 ? selectedLayers(side).map(sceneText).join('\n') : '';
+    for (const b of t.boxes) b.cb.checked = isSel(side, b.id);
+    t.btn.classList.toggle('only', state.mode === side);
   }
 }
 function updateMeta(side) {
   const n = document.querySelector('#meta' + side);
-  if (n) n.innerHTML = describe(state[side]);
+  if (n) n.innerHTML = describeSide(side);
 }
-function describe(id) {
-  if (id === NO_IMAGERY) return 'No imagery, basemap only';
-  const l = byId(id);
+/* Sidebar metadata: one block per selected scene, in stacking order. */
+function describeSide(side) {
+  const list = selectedLayers(side);
+  if (!list.length) return 'No imagery, basemap only';
+  return list.map(describe).join('<div class="metasep"></div>');
+}
+function describe(l) {
   if (!l) return '<i>no layer selected</i>';
   const bits = [];
-  if (l.label) bits.push('<b>' + l.label + '</b>');
-  const facts = [l.provider, l.gsd_m ? l.gsd_m + ' m GSD' : null, CFG.COVERAGE_LABEL[l.coverage] || l.coverage,
+  bits.push('<b>' + (l.label || l.id) + '</b>');
+  const facts = [fmtDate(l.date), l.sensor, l.provider, l.gsd_m ? l.gsd_m + ' m GSD' : null,
+                 CFG.COVERAGE_LABEL[l.coverage] || l.coverage,
                  l.size_mb ? l.size_mb + ' MB' : null].filter(Boolean);
-  if (facts.length) bits.push(facts.join(' · '));
+  if (facts.length) bits.push(facts.join(' \u00b7 '));
   if (l.attribution) bits.push(l.attribution);
+  const note = CFG.SCENES[l.id];
+  if (note) bits.push('<span class="scenenote">' + note + '</span>');
   return bits.join('<br>');
 }
 
@@ -1157,13 +1270,13 @@ function renderSidebar() {
 
   // imagery selectors -----------------------------------------------------
   const imgBlock = el('div', 'block', '<h2>Imagery</h2>');
-  imgBlock.appendChild(el('p', 'note', 'Choose scenes with the tags at the top of the map.'));
+  imgBlock.appendChild(el('p', 'note', 'Choose scenes with the tags at the top of the map \u2014 tick as many as you like per side; coarser scenes sit under finer ones.'));
   for (const side of ['pre', 'post']) {
     const f = el('div', 'field');
     f.appendChild(el('label', null, side === 'pre' ? 'Before (left)' : 'After (right)'));
     const meta = el('p', 'meta side-' + side);
     meta.id = 'meta' + side;
-    meta.innerHTML = describe(state[side]);
+    meta.innerHTML = describeSide(side);
     f.appendChild(meta);
     imgBlock.appendChild(f);
   }
@@ -1664,7 +1777,7 @@ function wirePopups(m) {
   m.on('mousemove', ev => {
     $('#readout').textContent = ev.lngLat.lat.toFixed(5) + '°N, ' + ev.lngLat.lng.toFixed(5) + '°E · z' + m.getZoom().toFixed(1);
     if (imgAlign.on) { m.getCanvas().style.cursor = imgAlignCursor(m, ev.point); return; }
-    if (editorActive()) { m.getCanvas().style.cursor = 'crosshair'; return; }
+    if (editorActive()) { m.getCanvas().style.cursor = editorCursor(m, ev.point); return; }
     if (hoverTimer) return;
     hoverTimer = setTimeout(() => {
       hoverTimer = 0;
@@ -1691,6 +1804,18 @@ function wireKeyboard() {
     if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
     const m = maps.post; if (!m) return;
+    // Two tools want the arrows.  The damage editor takes them while it is on
+    // and holding a selection, because that is the more specific state; Image
+    // align gets them otherwise, and neither is a pan.
+    if (editorActive() && editor.sel.length && /^Arrow/.test(ev.key)) {
+      const d = ev.shiftKey ? 10 : 1;
+      if (ev.key === 'ArrowLeft') nudgeSel(-d, 0);
+      else if (ev.key === 'ArrowRight') nudgeSel(d, 0);
+      else if (ev.key === 'ArrowUp') nudgeSel(0, -d);
+      else nudgeSel(0, d);
+      ev.preventDefault();
+      return;
+    }
     // With Image align on the arrows are a fine positioning control for the
     // photo, not a pan: one screen pixel, ten with Shift.
     if (imgAlign.on && /^Arrow/.test(ev.key)) {
@@ -1759,6 +1884,10 @@ const editor = {
   ring: [],              // in-progress polygon vertices
   ui: {},                // sidebar nodes, filled by buildDamageEditor()
   lastClick: null,       // for swallowing the second click of a double-click
+  drag: null,            // in-progress geometry drag: {m, kind, p, r, i, sels, last, moved}
+  dragEnd: 0,            // when the last drag finished, so its trailing click is ignored
+  nudgeAt: 0,            // when the last arrow-key nudge landed (a run is one undo step)
+  geomHist: [],          // geometry undo stack, newest last
 };
 const editorActive = () => editor.mode !== 'off';
 
@@ -1837,7 +1966,7 @@ function setSelGeom(list) {
       .map(s => ({ type: 'Feature', properties: {}, geometry: s.geometry })) };
   eachMap(m => { const s = m.getSource('edit_sel'); if (s) s.setData(fc); });
 }
-function syncSel() { setSelGeom(editor.sel); renderEditForm(); markSelRows(); }
+function syncSel() { setSelGeom(editor.sel); syncHandles(); renderEditForm(); markSelRows(); }
 function clearSel() { editor.sel = []; syncSel(); }
 const selHas = id => editor.sel.some(s => s.id === id);
 
@@ -1969,6 +2098,305 @@ function drawFinish() {
   syncSel();
 }
 
+
+// ------------------------------------------------------- geometry: reshape
+/* Move and reshape the selection.  There is no separate Reshape mode: a mode
+ * of its own would need a second way of choosing a feature and Pick already
+ * has one, so the gestures simply attach to whatever Pick has selected.  With
+ * exactly one polygon selected every ring vertex gets an amber handle and
+ * every edge a smaller blue midpoint that inserts a vertex when dragged; with
+ * several selected there are no handles and a drag inside any of them moves
+ * the whole set.  Everything runs on screen-pixel deltas through
+ * project/unproject, so a shape stays rigid under a drag and a nudge means the
+ * same distance at any zoom or latitude. */
+const EDIT_VERT_PX = 12;    // grab radius for a vertex handle
+const EDIT_MID_PX = 9;      // grab radius for an edge midpoint handle
+const EDIT_HIST_MAX = 50;   // geometry undo depth
+
+const cloneGeom = g => JSON.parse(JSON.stringify(g));
+const isPolyGeom = g => !!g && (g.type === 'Polygon' || g.type === 'MultiPolygon');
+
+/* Every closed ring of a polygon or multipolygon, as [polyIndex, ringIndex, ring].
+ * Anything that is not a polygon yields nothing, so points and lines are simply
+ * left alone rather than throwing. */
+function editRings(g) {
+  if (!isPolyGeom(g)) return [];
+  const out = [];
+  const polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+  (polys || []).forEach((rings, pi) => (rings || []).forEach((ring, ri) => {
+    if (Array.isArray(ring) && ring.length >= 4) out.push([pi, ri, ring]);
+  }));
+  return out;
+}
+const editRingAt = (g, pi, ri) =>
+  g.type === 'Polygon' ? g.coordinates[ri] : ((g.coordinates[pi] || [])[ri]);
+
+/* Walk every coordinate pair of any geometry in place, for a rigid translate. */
+function eachCoord(g, fn) {
+  (function walk(c) {
+    if (!c) return;
+    if (typeof c[0] === 'number') { fn(c); return; }
+    for (const x of c) walk(x);
+  })(g.coordinates);
+}
+
+/* Handles are shown only for a lone polygon selection. */
+function handleGeom() {
+  const s = editor.sel;
+  return (editorActive() && editor.mode !== 'draw' && s.length === 1 && isPolyGeom(s[0].geometry))
+    ? s[0].geometry : null;
+}
+/* A ring repeats its first point last, so the closing copy is not its own
+ * handle; the midpoint of the last edge runs from the last point back to it. */
+function handlesFC() {
+  const g = handleGeom(), feats = [];
+  if (g) for (const [, , ring] of editRings(g)) {
+    const n = ring.length - 1;
+    for (let i = 0; i < n; i++) {
+      const a = ring[i], b = ring[i + 1];
+      feats.push({ type: 'Feature', properties: { k: 'm' },
+        geometry: { type: 'Point', coordinates: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] } });
+    }
+    // Vertices last, so an amber handle draws over the midpoints crowding it.
+    for (let i = 0; i < n; i++)
+      feats.push({ type: 'Feature', properties: { k: 'v' },
+        geometry: { type: 'Point', coordinates: [ring[i][0], ring[i][1]] } });
+  }
+  return { type: 'FeatureCollection', features: feats };
+}
+function pushHandles() {
+  const fc = handlesFC();
+  eachMap(m => { const s = m.getSource('edit_handles'); if (s) s.setData(fc); });
+  return fc.features.length > 0;
+}
+function syncHandles() {
+  const on = pushHandles();
+  // Double-click deletes a vertex while handles are up, so its zoom stands down.
+  eachMap(m => {
+    if (!m.doubleClickZoom || editor.mode === 'draw') return;
+    if (on) m.doubleClickZoom.disable(); else m.doubleClickZoom.enable();
+  });
+}
+
+// ----------------------------------------------------------- hit testing
+/* Nearest grab point to the pointer, or null.  Vertices are tested first and
+ * with the wider radius, so one always wins against the midpoints beside it. */
+function editHitHandle(m, pt) {
+  const g = handleGeom();
+  if (!g) return null;
+  let hit = null, bd = EDIT_VERT_PX;
+  for (const [pi, ri, ring] of editRings(g)) {
+    for (let i = 0; i < ring.length - 1; i++) {
+      const q = m.project(ring[i]), d = Math.hypot(q.x - pt.x, q.y - pt.y);
+      if (d <= bd) { bd = d; hit = { kind: 'vertex', p: pi, r: ri, i }; }
+    }
+  }
+  if (hit) return hit;
+  bd = EDIT_MID_PX;
+  for (const [pi, ri, ring] of editRings(g)) {
+    for (let i = 0; i < ring.length - 1; i++) {
+      const a = ring[i], b = ring[i + 1];
+      const q = m.project([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]);
+      const d = Math.hypot(q.x - pt.x, q.y - pt.y);
+      if (d <= bd) { bd = d; hit = { kind: 'mid', p: pi, r: ri, i }; }
+    }
+  }
+  return hit;
+}
+/* Is the pointer inside one of the selected polygons?  Even-odd over every
+ * ring, in screen space, so a hole reads as outside and a reprojected shape
+ * still tests true. */
+function editInSel(m, pt) {
+  for (const s of editor.sel) {
+    if (!isPolyGeom(s.geometry)) continue;
+    let inside = false;
+    for (const [, , ring] of editRings(s.geometry)) {
+      const q = ring.map(c => m.project(c));
+      for (let i = 0, j = q.length - 1; i < q.length; j = i++) {
+        const a = q[i], b = q[j];
+        if ((a.y > pt.y) !== (b.y > pt.y) &&
+            pt.x < (b.x - a.x) * (pt.y - a.y) / (b.y - a.y) + a.x) inside = !inside;
+      }
+    }
+    if (inside) return s;
+  }
+  return null;
+}
+function editorCursor(m, pt) {
+  if (editor.drag) return 'grabbing';
+  if (editor.mode !== 'draw' && editor.sel.length) {
+    if (editHitHandle(m, pt)) return 'grab';
+    if (editInSel(m, pt)) return 'move';
+  }
+  return 'crosshair';
+}
+
+// ------------------------------------------------------------------ undo
+/* One entry per completed gesture: the geometry of everything it touched,
+ * taken before the first pixel moves. */
+function pushGeomHist(sels) {
+  editor.geomHist.push(sels.filter(s => s.geometry)
+    .map(s => ({ id: s.id, geometry: cloneGeom(s.geometry) })));
+  while (editor.geomHist.length > EDIT_HIST_MAX) editor.geomHist.shift();
+  syncUndoBtn();
+}
+function syncUndoBtn() {
+  const b = editor.ui.undo;
+  if (b) {
+    b.disabled = !editor.geomHist.length;
+    b.textContent = 'Undo geometry' + (editor.geomHist.length ? ' (' + editor.geomHist.length + ')' : '');
+  }
+}
+function undoGeom() {
+  const h = editor.geomHist.pop();
+  if (!h || !h.length) { toast('No geometry change to undo'); syncUndoBtn(); return; }
+  for (const it of h) {
+    const g = cloneGeom(it.geometry);
+    const s = editor.sel.find(x => x.id === it.id);
+    if (s) s.geometry = g;
+    const f = editById(it.id);
+    if (f) f.geometry = g;
+  }
+  syncUndoBtn();
+  syncSel();
+  refreshEdits();
+  toast('Geometry restored');
+}
+
+// --------------------------------------------------------------- editing
+/* Take a private copy of the geometry and hand the same object to the saved
+ * feature, so edits-fill follows the drag without a copy per frame. */
+function editWorkGeom(s) {
+  s.geometry = cloneGeom(s.geometry);
+  const f = editById(s.id);
+  if (f) f.geometry = s.geometry;
+  return s.geometry;
+}
+function pushGeomLive() {
+  eachMap(m => { const s = m.getSource('edits'); if (s) s.setData(editFC()); });
+  setSelGeom(editor.sel);
+  pushHandles();
+}
+/* End of a gesture.  A feature already in the collection keeps its new shape
+ * straight away — the working copy goes to localStorage exactly as a status
+ * change does, and a baseline feature is written out as a local override.  A
+ * candidate that has not been saved yet carries its geometry to Save. */
+function commitGeom(sels) {
+  const now = new Date().toISOString();
+  let n = 0;
+  for (const s of sels) {
+    const f = editById(s.id);
+    if (!f) continue;
+    f.geometry = s.geometry;
+    f.properties.updated_at = now;
+    n++;
+  }
+  if (n) refreshEdits(); else pushGeomLive();
+  syncHandles();
+}
+function shiftGeom(m, g, dx, dy) {
+  eachCoord(g, c => {
+    const q = m.project(c), o = m.unproject([q.x + dx, q.y + dy]);
+    c[0] = o.lng; c[1] = o.lat;
+  });
+}
+function moveVertex(m, d, dx, dy) {
+  const g = d.sels[0] && d.sels[0].geometry;
+  const ring = g && editRingAt(g, d.p, d.r);
+  if (!ring || !ring[d.i]) return;
+  const q = m.project(ring[d.i]), o = m.unproject([q.x + dx, q.y + dy]);
+  ring[d.i] = [o.lng, o.lat];
+  const n = ring.length - 1;
+  if (d.i === 0) ring[n] = ring[0].slice();          // the ring closure follows its first point
+  else if (d.i === n) ring[0] = ring[n].slice();
+}
+/* Drop a vertex, refusing to leave a ring with fewer than three of them. */
+function deleteVertex(h) {
+  const s = editor.sel[0];
+  if (!s || !isPolyGeom(s.geometry)) return;
+  const cur = editRingAt(s.geometry, h.p, h.r);
+  if (!cur) return;
+  editor.dragEnd = Date.now();      // a hit on a handle is a delete, never a fresh pick
+  if (cur.length - 1 <= 3) { toast('A ring needs at least three points'); return; }
+  pushGeomHist([s]);
+  const ring = editRingAt(editWorkGeom(s), h.p, h.r);
+  ring.splice(h.i, 1);
+  if (h.i === 0) ring[ring.length - 1] = ring[0].slice();
+  commitGeom([s]);
+  toast('Vertex removed');
+}
+/* Arrow keys: one screen pixel, ten with Shift.  A run of presses coalesces
+ * into a single undo step instead of filling the stack one tap at a time. */
+function nudgeSel(dx, dy) {
+  const m = maps.post;
+  const sels = editor.sel.filter(s => s.geometry);
+  if (!m || !sels.length) return;
+  const now = Date.now();
+  if (now - editor.nudgeAt > 900) {
+    pushGeomHist(sels);
+    for (const s of sels) editWorkGeom(s);
+  }
+  editor.nudgeAt = now;
+  for (const s of sels) shiftGeom(m, s.geometry, dx, dy);
+  commitGeom(sels);
+}
+
+// --------------------------------------------------------------- pointer
+function editorDown(m, ev) {
+  if (imgAlign.on || editor.drag) return;             // Image align owns the pointer while it is on
+  if (!editorActive() || editor.mode === 'draw' || !editor.sel.length) return;
+  const oe = ev.originalEvent || {};
+  if (oe.shiftKey || oe.ctrlKey || oe.metaKey) return;   // those build the selection, not the shape
+  const h = editHitHandle(m, ev.point);
+  if (h && h.kind === 'vertex' && oe.altKey) {
+    deleteVertex(h);
+    if (ev.preventDefault) ev.preventDefault();
+    return;
+  }
+  if (!h && !editInSel(m, ev.point)) return;
+  const sels = h ? [editor.sel[0]] : editor.sel.filter(s => s.geometry);
+  if (!sels.length) return;
+  editor.drag = { m, kind: h ? h.kind : 'move', p: h ? h.p : 0, r: h ? h.r : 0, i: h ? h.i : 0,
+    sels, last: { x: ev.point.x, y: ev.point.y }, moved: false };
+  m.dragPan.disable();
+  m.getCanvas().style.cursor = 'grabbing';
+  if (ev.preventDefault) ev.preventDefault();
+}
+function editorDrag(m, ev) {
+  const d = editor.drag;
+  if (!d || d.m !== m) return;
+  const dx = ev.point.x - d.last.x, dy = ev.point.y - d.last.y;
+  if (!d.moved) {
+    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;   // a click, not a drag: no undo step yet
+    pushGeomHist(d.sels);
+    for (const s of d.sels) editWorkGeom(s);
+    if (d.kind === 'mid') {
+      // The midpoint becomes a real vertex the moment it is pulled, and the
+      // rest of the drag carries it.
+      const ring = editRingAt(d.sels[0].geometry, d.p, d.r);
+      const a = ring[d.i], b = ring[d.i + 1];
+      ring.splice(d.i + 1, 0, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]);
+      d.kind = 'vertex'; d.i += 1;
+    }
+    d.moved = true;
+  }
+  if (d.kind === 'vertex') moveVertex(m, d, dx, dy);
+  else for (const s of d.sels) shiftGeom(m, s.geometry, dx, dy);
+  d.last = { x: ev.point.x, y: ev.point.y };
+  pushGeomLive();
+  if (ev.preventDefault) ev.preventDefault();
+}
+function editorUp() {
+  const d = editor.drag;
+  if (!d) return;
+  editor.drag = null;
+  if (d.m.dragPan) d.m.dragPan.enable();
+  d.m.getCanvas().style.cursor = editorActive() ? 'crosshair' : '';
+  if (!d.moved) return;              // a click that never moved leaves no undo step
+  editor.dragEnd = Date.now();     // the click that follows a drag must not re-select
+  commitGeom(d.sels);
+}
+
 // -------------------------------------------------------------- map wiring
 /* Every OSM/Overture buildings fill layer, both datasets, derived from the
  * layer sets vectorGroup() registered rather than hardcoded. */
@@ -1989,6 +2417,7 @@ function editorClick(m, ev) {
     return;
   }
   if (editor.mode !== 'pick') return;
+  if (Date.now() - editor.dragEnd < 300) return;   // the tail of a move or reshape drag
   const oe = ev.originalEvent || {};
   const additive = !!(oe.shiftKey || oe.ctrlKey || oe.metaKey);
   if (editor.visible && layerLive(m, 'edits-fill')) {
@@ -2046,11 +2475,29 @@ function wireDamageEditor() {
   eachMap(m => {
     m.on('click', ev => editorClick(m, ev));
     m.on('dblclick', ev => {
-      if (editor.mode !== 'draw') return;
+      if (editor.mode === 'draw') {
+        if (ev.preventDefault) ev.preventDefault();
+        drawFinish();
+        return;
+      }
+      // On a vertex handle a double-click drops that vertex; the zoom is
+      // already disabled while handles are up, so nothing else moves.
+      if (imgAlign.on || !editorActive()) return;
+      const h = editHitHandle(m, ev.point);
+      if (!h || h.kind !== 'vertex') return;
       if (ev.preventDefault) ev.preventDefault();
-      drawFinish();
+      deleteVertex(h);
     });
+    m.on('mousedown', ev => editorDown(m, ev));
+    m.on('mousemove', ev => editorDrag(m, ev));
+    m.on('mouseup', editorUp);
+    m.on('touchstart', ev => { if (!ev.points || ev.points.length === 1) editorDown(m, ev); });
+    m.on('touchmove', ev => { if (!ev.points || ev.points.length === 1) editorDrag(m, ev); });
+    m.on('touchend', editorUp);
+    m.on('touchcancel', editorUp);
   });
+  // A pointer released off the canvas would otherwise leave dragPan disabled.
+  window.addEventListener('mouseup', editorUp);
   // Esc: drop the ring first, then the selection, then leave the mode alone.
   window.addEventListener('keydown', ev => {
     if (ev.key !== 'Escape') return;
@@ -2277,6 +2724,17 @@ function buildDamageEditor() {
   det.appendChild(modeF);
   editor.ui.hint = el('p', 'note', 'Pick a mode to start recording damage. Off restores the normal feature popups.');
   det.appendChild(editor.ui.hint);
+  det.appendChild(el('p', 'note', 'With something selected: drag inside it to move it. One polygon also gets ' +
+    'handles — drag an amber vertex to reshape, a blue midpoint to add one, double-click or Alt-click a vertex ' +
+    'to remove it. Arrow keys nudge by a screen pixel, ten with Shift. A saved feature keeps its new shape at ' +
+    'once; an unsaved one carries it to Save.'));
+  const undoRow = el('div', 'chips');
+  editor.ui.undo = el('button', null, 'Undo geometry');
+  editor.ui.undo.disabled = true;
+  editor.ui.undo.title = 'Step back through the last 50 moves and reshapes';
+  editor.ui.undo.addEventListener('click', undoGeom);
+  undoRow.appendChild(editor.ui.undo);
+  det.appendChild(undoRow);
 
   // Visibility lives with the other overlays ("Building damage grading (analyst edits)"); this row only counts.
   const vis = el('div', 'row');
@@ -2673,8 +3131,8 @@ function imgAlignTeardown(m) {
   for (const id of Object.keys(st.sources || {})) if (id.indexOf('imgalign') === 0 && m.getSource(id)) m.removeSource(id);
 }
 /* (Re)insert the overlay on one map.  Also called at the end of
- * applyImagery(), which re-adds the `imagery` layer at IMAGERY_BEFORE and
- * would otherwise leave the new scene sitting on top of the photo. */
+ * applyImagery(), which adds `imagery:<id>` layers at IMAGERY_BEFORE and would
+ * otherwise leave a newly ticked scene sitting on top of the photo. */
 function imgAlignEnsureOn(m) {
   if (!m.isStyleLoaded()) { m.once('idle', () => imgAlignEnsureOn(m)); return; }
   imgAlignTeardown(m);
@@ -3130,11 +3588,15 @@ async function main() {
   [catalog, terrain, hotTiles, aoiFlood] = await Promise.all([loadCatalog(), loadTerrain(), loadHotTiles(), loadAoi()]);
   const ovParam = readHash();
 
-  // A scene id from the hash that is not in the catalogue (stale link, renamed
-  // layer) falls back to the default instead of leaving the side empty.
+  // Scene ids from the hash that are not in the catalogue (stale link, renamed
+  // layer) are dropped.  A hash that says nothing about a side seeds that side
+  // from `default_<side>`, which stays a single id in data/imagery.json.
   for (const side of ['pre', 'post']) {
-    if (state[side] && state[side] !== NO_IMAGERY && !byId(state[side])) state[side] = null;
-    if (!state[side]) state[side] = catalog['default_' + side] || (layersFor(side)[0] || {}).id || null;
+    state[side] = selIds(side).filter(id => byId(id));
+    if (!hashHadSide[side] && !state[side].length) {
+      const def = catalog['default_' + side] || (layersFor(side)[0] || {}).id || null;
+      if (def && def !== NO_IMAGERY && byId(def)) state[side] = [def];
+    }
   }
 
   const defs = buildDefs();
@@ -3193,22 +3655,28 @@ main().catch(e => {
 /* ?debug=1 : report each map's imagery state on screen and to the dev server. */
 function debugReport(tag) {
   if (!QS.has('debug')) return;
-  const rep = { tag, t: Date.now(), state: { mode: state.mode, pre: state.pre, post: state.post, base: state.base }, maps: {} };
+  const rep = { tag, t: Date.now(), state: { mode: state.mode, pre: selIds('pre').join(','), post: selIds('post').join(','), base: state.base }, maps: {} };
   eachMap((m, side) => {
     let gl = null; try { gl = m.getCanvas().getContext('webgl2') || m.getCanvas().getContext('webgl'); } catch (e) {}
     const cc = m.getContainer().querySelector('.maplibregl-canvas-container');
-    const src = m.getSource('imagery');
     const ids = m.getStyle().layers.map(l => l.id);
+    const imgIds = ids.filter(id => id.indexOf(IMG_PREFIX) === 0);
+    const src = imgIds.length ? m.getSource(imgIds[imgIds.length - 1]) : null;
     rep.maps[side] = {
       styleLoaded: m.isStyleLoaded(), loaded: m.loaded(), zoom: +m.getZoom().toFixed(2),
       canvas: [m.getCanvas().width, m.getCanvas().height], container: [m.getContainer().clientWidth, m.getContainer().clientHeight],
       clip: cc ? getComputedStyle(cc).clipPath : null, webgl: !!gl, lostContext: gl ? gl.isContextLost() : null,
-      imagerySource: src ? (src.tiles || src.url) : null, imageryBounds: src ? src.bounds : null,
-      imageryLayerIdx: ids.indexOf('imagery'), baseOsmIdx: ids.indexOf('base-osm'), nLayers: ids.length, first6: ids.slice(0, 6),
-      imageryVis: m.getLayer('imagery') ? m.getLayoutProperty('imagery', 'visibility') : 'absent',
-      imageryOpacity: m.getLayer('imagery') ? m.getPaintProperty('imagery', 'raster-opacity') : null,
-      imageryTiles: (() => { try { const sc = m.style.sourceCaches['imagery'] || (m.style._otherSourceCaches || {})['imagery']; if (!sc) return null;
-        const ts = Object.values(sc._tiles || {}); return { n: ts.length, states: ts.reduce((a, t) => (a[t.state] = (a[t.state] || 0) + 1, a), {}) }; } catch (e) { return String(e); } })(),
+      imageryLayers: imgIds, imagerySource: src ? (src.tiles || src.url) : null, imageryBounds: src ? src.bounds : null,
+      imageryLayerIdx: imgIds.length ? ids.indexOf(imgIds[0]) : -1, baseOsmIdx: ids.indexOf('base-osm'), nLayers: ids.length, first6: ids.slice(0, 6),
+      imageryTiles: (() => { try {
+        const out = {};
+        for (const lid of imgIds) {
+          const sc = m.style.sourceCaches[lid] || (m.style._otherSourceCaches || {})[lid];
+          if (!sc) { out[lid] = null; continue; }
+          const ts = Object.values(sc._tiles || {});
+          out[lid] = { n: ts.length, states: ts.reduce((a, t) => (a[t.state] = (a[t.state] || 0) + 1, a), {}) };
+        }
+        return out; } catch (e) { return String(e); } })(),
     };
   });
   const txt = JSON.stringify(rep);

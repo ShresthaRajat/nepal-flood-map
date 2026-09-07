@@ -34,8 +34,14 @@
   <div id="divider" role="separator" aria-label="Comparison divider" aria-orientation="vertical" tabindex="0">
     <div class="knob">↔</div>
   </div>
-  <select class="tag" id="tagPre" aria-label="Before imagery and view"></select>
-  <select class="tag" id="tagPost" aria-label="After imagery and view"></select>
+  <div class="tagwrap" id="tagPre">
+    <button type="button" class="tag" aria-haspopup="true" aria-expanded="false" aria-label="Before imagery and view"></button>
+    <div class="tagmenu" role="group" aria-label="Before imagery scenes" hidden></div>
+  </div>
+  <div class="tagwrap" id="tagPost">
+    <button type="button" class="tag" aria-haspopup="true" aria-expanded="false" aria-label="After imagery and view"></button>
+    <div class="tagmenu" role="group" aria-label="After imagery scenes" hidden></div>
+  </div>
   <div id="readout"></div>
 </div>
 
