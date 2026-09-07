@@ -63,8 +63,13 @@ re-projection do not change the underlying license.
   - `data/hdx/hotosm_npl_waterways/` — country-wide OSM waterways, snapshot
     2026-08-09
   - `data/hdx/derived/places.geojson` — settlement names and positions from
-    OpenStreetMap via the Overpass API (three points positioned from Nominatim).
-    ODbL, © OpenStreetMap contributors.
+    OpenStreetMap via the Overpass API (several featured points positioned
+    from Nominatim or GeoNames where OSM has no place node). ODbL, © OpenStreetMap
+    contributors. The supplementary "locality" tier (minor river-corridor
+    settlements with no OSM node) is sourced from the **GeoNames** gazetteer,
+    [CC BY 4.0](https://www.geonames.org/), © GeoNames contributors —
+    coordinates there are gazetteer-grade (typically accurate to within a
+    few hundred metres, occasionally ~1 km).
   - `data/hdx/derived/collapse_origin.geojson`, `aoi_upstream_extension.geojson` —
     derived from the UN Satellite Centre (UNOSAT) FL20260826NPL geodatabase (HDX
     "Mudflow/Rockflow Impact Assessment in Rasuwa & Nuwakot"). **CC BY-SA 4.0**:

@@ -25,7 +25,7 @@ const abs = u => /^(https?:)?\/\//.test(u) ? u : BASE + String(u).replace(/^\.?\
 // --------------------------------------------------------------- app state
 const state = {
   mode: 'swipe', pre: null, post: null, swipe: 50,
-  base: 'osm', hillshade: false, contours: true, placeNames: true, colorBy: 'layer',
+  base: 'esri', hillshade: false, contours: false, placeNames: true, colorBy: 'layer',
   footprintOutline: false,  // dashed outline of the selected scene; off, reachable only via #fo=1
   hotExtent: 'flood',       // 'flood' | 'corridor' — which HOT dataset the category list shows
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
@@ -263,8 +263,9 @@ function buildDefs() {
   const push = (...ls) => layers.push(...ls);
 
   // 1. basemaps ------------------------------------------------------------
-  push({ id: 'base-osm', type: 'raster', source: 'osm' },
-       { id: 'base-esri', type: 'raster', source: 'esri', layout: { visibility: 'none' } });
+  // Esri World Imagery is the default basemap (owner direction, 7 Sep 2026); applyBase() re-applies state.base.
+  push({ id: 'base-osm', type: 'raster', source: 'osm', layout: { visibility: state.base === 'osm' ? 'visible' : 'none' } },
+       { id: 'base-esri', type: 'raster', source: 'esri', layout: { visibility: state.base === 'esri' ? 'visible' : 'none' } });
 
   // 2. imagery placeholder — real layer is inserted at runtime -------------
   // 3. hillshade -----------------------------------------------------------
@@ -379,7 +380,7 @@ function buildDefs() {
   HOT_CATS = [];
   for (const [cat, , label, color] of hotCats) if (!HOT_CATS.some(c => c.cat === cat))
     HOT_CATS.push({ cat, label: label.replace(/\s*\((OSM|Overture)\)$/, ''), color });
-  const HOT_DEFAULT_ON = ['bridges', 'roads'];
+  const HOT_DEFAULT_ON = [];   // every OSM / Overture feature category starts off (owner direction, 7 Sep 2026)
   const SETTLEMENT_RED = '#f87171';
   // Volunteer-recorded destroyed/damaged features read as damage, not as a
   // mapped-feature class: dark red outline over a translucent dark red fill,
@@ -461,7 +462,7 @@ function buildDefs() {
   // Flood extent goes under the HOT features so the dark red damage outlines stay crisp on top.
   push(
     { id: 'flood_extent-fill', type: 'fill', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.3 } },
+      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.2 } },
     { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
       paint: { 'line-color': '#991b1b', 'line-width': 1.2 } },
   );
@@ -580,7 +581,8 @@ function buildDefs() {
   );
 
   // Settlement labels (tools/build_places.py): district HQs and cities from z7, towns and the
-  // featured corridor places from z8, villages from z11, hamlets from z13.  A basemap toggle.
+  // featured corridor places from z8, villages from z11, hamlets from z13, gazetteer localities
+  // (GeoNames, no OSM node) from z14.  A basemap toggle.
   const PLACE_NAME = ['get', 'name'];
   const PLACE_HALO = { 'text-halo-color': 'rgba(8,12,18,.9)', 'text-halo-width': 1.6, 'text-halo-blur': 0.4 };
   const placeLayer = (id, filter, minzoom, size, font, color, dot) => {
@@ -598,6 +600,7 @@ function buildDefs() {
     ...placeLayer('places-town', ['==', ['get', 'rank'], 1], 8, ['interpolate', ['linear'], ['zoom'], 8, 11, 13, 13.5], ['Noto Sans Bold'], '#f8fafc', true),
     ...placeLayer('places-village', ['==', ['get', 'rank'], 2], 11, ['interpolate', ['linear'], ['zoom'], 11, 10.5, 15, 12], FONT, '#e2e8f0', false),
     ...placeLayer('places-hamlet', ['==', ['get', 'rank'], 3], 13, 10.5, FONT, '#cbd5e1', false),
+    ...placeLayer('places-locality', ['==', ['get', 'rank'], 4], 14, 10, FONT, '#94a3b8', false),
   ];
   PLACE_IDS = placeLayers.map(l => l.id);
 
@@ -631,7 +634,7 @@ function buildDefs() {
     { key: 'ems_roads', label: 'Road damage grading (Copernicus EMS, 27–31 Aug)', color: DAMAGE_ROAD_RED,
       ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548 },
     { key: 'flooded_roads', label: 'Roads inside the flood extent (computed)', color: DAMAGE_ROAD_RED,
-      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: true, count: 879 },
+      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879 },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
     { key: 'hot_aoi', label: 'Area of interest outline (HOT + upstream to the glacier)', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
   ] });
@@ -705,6 +708,19 @@ function makeMap(container, defs, side) {
     center: state.center || [85.15, 27.99], zoom: state.zoom != null ? state.zoom : 9,
   });
   m.__side = side;
+  // MapLibre opens the compact attribution expanded the first time it has text; start it collapsed to its
+  // (i) button so the bottom strip does not obstruct a first look at the map (owner direction, 7 Sep 2026).
+  // Watch the class list rather than the load event: the auto-open can come later than 'load'. One click expands it.
+  const attrib = m.getContainer().querySelector('.maplibregl-ctrl-attrib');
+  if (attrib) {
+    const SHOW = 'maplibregl-compact-show';
+    const collapse = () => { attrib.classList.remove(SHOW); attrib.removeAttribute('open'); };
+    if (attrib.classList.contains(SHOW)) collapse();
+    else {
+      const mo = new MutationObserver(() => { if (attrib.classList.contains(SHOW)) { collapse(); mo.disconnect(); } });
+      mo.observe(attrib, { attributes: true, attributeFilter: ['class'] });
+    }
+  }
   m.on('error', ev => {
     const msg = (ev && ev.error && ev.error.message) || '';
     if (/40[34]|Failed to fetch|NetworkError|AbortError/i.test(msg)) return;   // sparse tiles / missing optional data
@@ -875,7 +891,7 @@ function writeHash() {
   p.set('s', state.swipe.toFixed(1));
   p.set('b', state.base);
   if (state.hillshade) p.set('hs', '1');
-  if (!state.contours) p.set('ct', '0');
+  if (state.contours) p.set('ct', '1');   // off by default; ct=0 in old links still parses
   if (!state.placeNames) p.set('pn', '0');
   if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
   if (state.footprintOutline) p.set('fo', '1');
@@ -2219,7 +2235,8 @@ async function main() {
   wireDamageEditor();
   initDamageEdits();
 
-  if (!state.center) maps.post.fitBounds(CFG.HOME, { padding: 24, duration: 0 });
+  // Default view: Trisuli Bazar at street scale (owner direction, 7 Sep 2026); CFG.HOME stays the pan limit.
+  if (!state.center) maps.post.jumpTo({ center: CFG.DEFAULT_VIEW.center, zoom: CFG.DEFAULT_VIEW.zoom });
   maps.post.on('moveend', writeHash);
   maps.post.on('moveend', updateDamageInView);
   // the count column shows "z12+" for a category the current zoom is below

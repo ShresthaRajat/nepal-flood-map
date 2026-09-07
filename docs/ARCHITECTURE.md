@@ -47,7 +47,7 @@ server that ignores them returns whole 4–9 MB archives per tile fetch.
                 "bounds": [w, s, e, n], "minzoom": 8, "maxzoom": 19,
                 "tiles": "tiles/<id>/{z}/{x}/{y}.webp", "attribution": "…",
                 "coverage": "corridor|trisuli_bazar|upper_valley", "size_mb": 120 } ],
-  "default_pre": "pre_legion_20260205", "default_post": "post_wv02_20260828" }
+  "default_pre": "none", "default_post": "post_wv02_20260828" }
 ```
 
 `tiles` may be a repo-relative path or an absolute URL; both are accepted.
@@ -103,13 +103,16 @@ toggle disappear.
   widths (tapered below z14), trunk/primary yellow and the rest white; highways
   and anything named "Highway" are labelled by name from a symbol layer placed
   above the HOT layers. HOT roads themselves are white, yellow for trunk/primary
-  and red where `status` is damaged or destroyed, and are on by default.
+  and red where `status` is damaged or destroyed; like every HOT / Overture
+  category they start off (owner direction, 7 Sep 2026).
 - **Place names.** `data/hdx/derived/places.geojson`, settlement points from
   OpenStreetMap via the Overpass API (city/town/village/hamlet/suburb nodes in
   the map window) with a featured list that fixes tier and spelling for the
-  corridor towns and district HQs; built by `tools/build_places.py`. Fields
-  `name`, `name_ne`, `tier`, `rank`, `featured`, `source`. Rendered as a
-  basemap toggle (`pn=0` in the hash hides it), four symbol layers by rank.
+  corridor towns and district HQs, plus named HDX residential areas and GeoNames
+  gazetteer localities (CC BY 4.0) along the river where OSM has no place node;
+  built by `tools/build_places.py`. Fields `name`, `name_ne`, `tier`, `rank`,
+  `featured`, `source`, `geonames_id`. Rendered as a basemap toggle (`pn=0` in
+  the hash hides it), five symbol layers by rank (localities from z14).
 - **Glacier collapse origin and upstream AOI.** `data/hdx/derived/collapse_origin.geojson`
   (detachment zone polygon, its centroid as the origin point, two barrier lakes)
   and `data/hdx/derived/aoi_upstream_extension.geojson` (UNOSAT flood extent
@@ -216,8 +219,8 @@ Scenes are chosen from two `<select>` tags in the top corners of the stage,
 green on the left for the before side and amber on the right for the after side.
 Each opens with "None, basemap only", then that side's scenes grouped by
 coverage, then a "View" group holding "<side> only" and "Compare (swipe)".
-Choosing None adds no imagery source for that side and takes the OSM basemap on
-that map to full opacity; it is carried in the hash as `pre=none` / `post=none`.
+Choosing None adds no imagery source for that side and takes the basemap
+(Esri World Imagery by default, `b=` in the hash) on that map to full opacity; it is carried in the hash as `pre=none` / `post=none`.
 The two sides are independent, so one can show imagery while the other shows the
 basemap. Picking a view option changes the mode
 rather than the scene and the select snaps back to the current scene;

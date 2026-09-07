@@ -68,10 +68,12 @@ const PLACES = [
   { key:'upper',     label:'Syabrubesi–Rasuwagadhi', bounds:[[85.2900,28.1100],[85.4400,28.3700]] },
   { key:'fair',      label:'fAIr damage tile',     bounds:[[85.289155,28.11104],[85.437807,28.369382]] },
   { key:'origin',    label:'Collapse origin',      bounds:[[85.4300,28.2400],[85.5800,28.3600]] },
-  // Also the home view and the pan limit (+12 % margin); reaches east to the glacier (owner direction, 6 Sep 2026).
+  // The pan limit (+12 % margin); reaches east to the glacier (owner direction, 6 Sep 2026).
   { key:'corridor',  label:'Whole corridor',       bounds:[[84.5544,27.7933],[85.6200,28.4000]] },
 ];
 const HOME = PLACES[PLACES.length - 1].bounds;
+// Opening view when the hash carries no centre: Trisuli Bazar at street scale (owner direction, 7 Sep 2026).
+const DEFAULT_VIEW = { center: [85.15105, 27.92319], zoom: 15.7 };
 
 // Per-scene facts, keyed by the layer ids of the data/imagery.json contract.
 // Used by the "Sources & notes" drawer and by the source dropdowns as a tooltip.
@@ -130,10 +132,13 @@ and Legion frames over the upper valley (78–81 % cloud) and the 31 Aug and 5 S
 <h3>Terrain</h3>
 <p>Place names come from OpenStreetMap (Overpass API, © OpenStreetMap contributors, ODbL): every
 city, town, village and hamlet node in the map window, plus a featured list for the corridor so that
-Rasuwagadhi, Timure, Syabrubesi, Kalikasthan, Betrawati, Trisuli Bazar, Battar, Devighat, Galchhi,
-Salyantar, Malekhu, Benighat and Mugling, and the district headquarters Dhunche, Bidur, Dhading Besi,
-Gorkha and Kathmandu, always appear whatever OSM's place tag says. Salyantar, Battar and Khanikhola have
-no OSM place node and are positioned from Nominatim results.</p>
+Rasuwagadhi, Timure, Syabrubesi, Kalikasthan, Betrawati, Sole Bazar, Trishuli Bazar, Devighat, Kimtang,
+Galchhi, Salyantar, Malekhu, Benighat and Mugling, and the district headquarters Dhunche,
+Bidur (Battar), Dhading Besi, Gorkha and Kathmandu, always appear whatever OSM's place tag says.
+Kalikasthan, Salyantar, Khanikhola, Sole Bazar, Trishuli Bazar and Kimtang have no OSM place node and
+are positioned from Nominatim or GeoNames results. Below the hamlet tier, minor settlements along the
+river with no OSM node of their own come from the GeoNames gazetteer (CC BY 4.0), shown from zoom 14 in
+a fainter grey; their positions are gazetteer-grade and can be a few hundred metres off.</p>
 <p>Contours and hillshade are derived from the Copernicus GLO-30 DEM (© ESA / Airbus, 30 m). Contour
 lines reveal progressively with zoom — 1000, 500, 100, 50 then 10 m intervals — with index lines
 (multiples of 100 m) drawn heavier and elevation labels placed along the lines from zoom 13. The 50
@@ -200,6 +205,6 @@ layer come from volunteer field reports of varying age. Coordinates shown are ap
 partners. Map glyphs from the MapLibre demo font stack.</p>
 `;
 
-return { CATS, COUNTS, STATUS, FAIR, PLACES, HOME, SCENES, COVERAGE_LABEL, HDX_CREDIT, HDX_URL, NOTES_HTML,
+return { CATS, COUNTS, STATUS, FAIR, PLACES, HOME, DEFAULT_VIEW, SCENES, COVERAGE_LABEL, HDX_CREDIT, HDX_URL, NOTES_HTML,
          DAMAGE_EDITS_URL };
 })();

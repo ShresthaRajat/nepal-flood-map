@@ -251,7 +251,11 @@ def main():
             st['seen'][key] = sorted(seen | {i['id'] for i in items})[-2000:]
         st['runs'] += 1
         st['last_run'] = dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
-        save_state(st)
+        # A dry run must leave no trace.  Saving here would mark every scene
+        # just found as seen, and the next scheduled run would then treat it as
+        # old and never build it -- a scan would silently swallow new imagery.
+        if not args.dry_run:
+            save_state(st)
 
         total = sum(len(v) for v in new.values())
         if first:
@@ -274,7 +278,7 @@ def main():
             log('new: ' + l)
         notify(f'Nepal flood map: {total} new scene{"s" if total != 1 else ""}', ' · '.join(lines)[:230])
         if args.dry_run:
-            log('dry run; not building'); return
+            log('dry run; not building, state not saved'); return
 
         # ---- build what passes the gates
         built = []

@@ -50,6 +50,6 @@ for id_, (label, side, date, sensor, prov, gsd, attr, cov) in META.items():
         "attribution": attr, "coverage": cov, "size_mb": round(du(d) / 1e6, 1)})
 cat = {"generated": datetime.date.today().isoformat(),
        "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
-       "layers": layers, "default_pre": "pre_legion_20260205", "default_post": "post_wv02_20260828"}
+       "layers": layers, "default_pre": "none", "default_post": "post_wv02_20260828"}
 json.dump(cat, open(f"{R}/data/imagery.json", "w"), indent=1, ensure_ascii=False)
 for l in layers: print(f"{l['id']:24s} z{l['minzoom']}-{l['maxzoom']:<3} {l['size_mb']:>7} MB  {l['bounds']}")
