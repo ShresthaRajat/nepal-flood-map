@@ -110,6 +110,11 @@ re-projection do not change the underlying license.
 - **NAXA and volunteer field reports** — credited alongside HOT/OSM/Overture
   in the app's `HDX_CREDIT` string; treat as part of the same HDX dataset
   terms above unless a more specific license is published.
+- **Analyst building damage grading** — `data/edits/damage_edits.geojson`,
+  327 buildings graded in this app's Damage editor from post-event imagery
+  (7 Sep 2026). The grades are this project's own work; the footprints are
+  copied from Overture Maps (293) and OpenStreetMap (29), so the layer carries
+  their attribution and terms above. 5 polygons were drawn by hand.
 
 ## Terrain
 
