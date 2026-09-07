@@ -628,6 +628,9 @@ function buildDefs() {
     { key: 'hydro', label: 'Exposed hydropowers', color: '#facc15', ids: ['hydro-point'], on: true, count: 10 },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
     { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
+    // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
+    // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
+    { key: 'damage_edits', label: 'Building damage grading (analyst edits)', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: true, count: 327 },
     { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
     { key: 'roads_np', label: 'Highways and main roads (OSM, national)', color: HW_YELLOW,
       ids: ['roads_np-other-casing', 'roads_np-other', 'roads_np-hw-casing', 'roads_np-hw', 'roads_np-label'], on: true },
@@ -764,6 +767,7 @@ function eachMap(fn) { for (const side of ['pre', 'post']) if (maps[side]) fn(ma
 
 function applyOverlays() {
   for (const g of GROUPS) for (const e of g.entries) if (!e.hot) setVis(e.ids, state.overlays.has(e.key));
+  editor.visible = state.overlays.has('damage_edits');   // the edits layer is toggled from Overlays, not the editor
   applyHot();
 }
 /* HOT layers: visible when their dataset and source match the switches and the
@@ -2151,16 +2155,12 @@ function buildDamageEditor() {
   editor.ui.hint = el('p', 'note', 'Pick a mode to start recording damage. Off restores the normal feature popups.');
   det.appendChild(editor.ui.hint);
 
-  const vis = el('label', 'row');
-  const visCb = el('input'); visCb.type = 'checkbox'; visCb.checked = editor.visible;
+  // Visibility lives with the other overlays ("Building damage grading (analyst edits)"); this row only counts.
+  const vis = el('div', 'row');
   const sw = el('span', 'sw');
   sw.style.background = DAMAGE_ROAD_RED;
-  visCb.addEventListener('change', () => {
-    editor.visible = visCb.checked;
-    setVis(['edits-fill', 'edits-line'], editor.visible);
-  });
   editor.ui.cnt = el('span', 'cnt', '');
-  vis.append(visCb, sw, el('span', 't', 'Show my damage edits'), editor.ui.cnt);
+  vis.append(sw, el('span', 't', 'My damage edits (shown via the Overlays switch)'), editor.ui.cnt);
   det.appendChild(vis);
 
   editor.ui.form = el('div', 'dmgform');
