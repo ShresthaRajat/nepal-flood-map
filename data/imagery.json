@@ -369,6 +369,29 @@
    "source_ids": [
     "B1300011011E5810"
    ]
+  },
+  {
+   "id": "post_drone_trisuli_202609",
+   "label": "Sep 2026 (date TBC) \u00b7 Drone photo 0.47 m",
+   "side": "post",
+   "date": "2026-09-07",
+   "date_confirmed": false,
+   "sensor": "Drone (RGB camera)",
+   "provider": "Unconfirmed \u2014 social-media post",
+   "gsd_m": 0.48,
+   "bounds": [
+    85.14416,
+    27.919721,
+    85.150951,
+    27.927287
+   ],
+   "minzoom": 13,
+   "maxzoom": 19,
+   "tiles": "tiles/post_drone_trisuli_202609/{z}/{x}/{y}.webp",
+   "attribution": "\u00a9 photographer (unconfirmed), via social media \u2014 rights reserved",
+   "coverage": "trisuli_bazar",
+   "size_mb": 0.9,
+   "notes_build": "work/drone_trisuli/build_refined.py drone_align_pre_affine.json: single frame, affine fit (rot 28.2\u00b0, 0.484 x 0.474 m/px) solved against the cloud-free 5 Feb pre_legion_20260205 scene, which is the only sub-metre reference not under cloud here \u2014 the canal, the roads and both road bends are permanent and appear in both images. 153 tie points by masked NCC (pre_match.py, 128 px templates, \u00b122 px search seeded by the previous fit); robust affine through them (pre_refine.py). Residual to the pre-flood scene 0.98 m median, 2.41 m p90; against post_wv02_20260828 2.79 m median, and those two references themselves differ by 2.1 m. A second-order fit scored 0.67 m on Legion but 5.03 m on WorldView-2 and swung 10 m at the uncovered east corner, so it was rejected as overfitting. No tie point exists below the old bazaar (the river reach changed completely), so that end rides on the affine. UI overlays cropped/painted out"
   }
  ],
  "default_pre": "none",

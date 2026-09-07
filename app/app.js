@@ -7,6 +7,11 @@
 
 const CFG = window.CFG;
 const QS = new URLSearchParams(location.search);
+// ?align=1 reveals the Image align tool.  It is an owner-only fitting aid, not
+// part of the published map, so it stays out of the controls rail by default;
+// the flag is all that gates it, and a saved fit in localStorage is untouched
+// either way, so the tool comes back exactly as it was left.
+const ALIGN_TOOL = QS.has('align');
 const BASE = location.origin + location.pathname.replace(/[^/]*$/, '');
 const GLYPHS = 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf';
 const FONT = ['Noto Sans Regular'];
@@ -31,6 +36,7 @@ const state = {
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
   controls: null,           // right rail (layer controls): same resolution
   overlays: null,           // Set of enabled entry keys
+  ovOpacity: 1,             // 0-1 master transparency for the damage / ground-report overlay group
   center: null, zoom: null,
 };
 
@@ -51,6 +57,7 @@ let hotRefresh = null;      // sidebar callback: re-read counts after an extent/
 let QUERY_IDS = [];         // style layer ids that answer clicks
 let PAINT_TARGETS = [];     // {id, prop, def} for the colour-by-status switch
 let IMAGERY_BEFORE = null;  // style layer id the imagery layer is inserted before
+let OV_BASE = {};           // style layer id -> {paint prop: opacity as first built}, for the group slider
 const maps = {};            // {pre, post}
 const tagEl = {};           // {pre, post} corner <select> tags over the map
 
@@ -616,7 +623,9 @@ function buildDefs() {
     paint: { 'text-color': '#fde68a', 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.6, 'text-halo-blur': 0.3 } });
   push(...placeLayers);
 
-  groups.push({ title: 'Flood extent, damage & ground reports', entries: [
+  // `opacity: true` gives this group the master transparency slider; the damage
+  // and ground-report layers are the ones an analyst reads the imagery through.
+  groups.push({ title: 'Flood extent, damage & ground reports', opacity: true, entries: [
     { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
     { key: 'collapse', label: 'Glacier collapse origin & barrier lakes (UNOSAT)', color: '#c084fc',
       ids: ['collapse-zone-fill', 'collapse-zone-line', 'collapse-lake-fill', 'collapse-lake-line', 'collapse-origin-point', 'collapse-origin-label'],
@@ -689,6 +698,18 @@ function buildDefs() {
     || (CONTOUR_IDS.length ? CONTOUR_IDS[0] : null)
     || 'aoi_flood-line';
 
+  // Snapshot each layer's own opacity before anything scales it, so the group
+  // slider can multiply rather than overwrite and the relative styling holds.
+  OV_BASE = {};
+  for (const l of layers) {
+    const props = OV_OPACITY_PROPS[l.type];
+    if (!props) continue;
+    const paint = l.paint || {};
+    const rec = {};
+    for (const k of props) rec[k] = paint[k] !== undefined ? paint[k] : 1;
+    OV_BASE[l.id] = rec;
+  }
+
   GROUPS = groups;
   return { sources, layers };
 }
@@ -749,6 +770,8 @@ function applyImagery(side) {
     const before = m.getLayer(IMAGERY_BEFORE) ? IMAGERY_BEFORE : undefined;
     m.addLayer({ id: 'imagery', type: 'raster', source: 'imagery', paint: { 'raster-fade-duration': 120 } }, before);
   }
+  // The photo overlay sits just above `imagery`; re-adding imagery would bury it.
+  if (imgAlign.on) imgAlignEnsureOn(m);
   const fp = m.getSource('sel_footprint');
   if (fp) fp.setData(state.footprintOutline ? boundsFeature(l) : { type: 'FeatureCollection', features: [] });
   refreshTags();
@@ -789,6 +812,65 @@ function applyBase() {
   setVis(CONTOUR_IDS, state.contours);
   setVis(PLACE_IDS, state.placeNames);
 }
+// ------------------------------------------------- group transparency
+/* One slider fades the whole damage / ground-report group so the imagery
+ * underneath can be read.  Opacity is the only paint property with a natural
+ * "scale" — multiplying each layer's own value keeps a 0.35 fill reading as a
+ * wash under a 1.0 outline instead of flattening the two together. */
+const OV_OPACITY_PROPS = {
+  fill: ['fill-opacity'],
+  line: ['line-opacity'],
+  circle: ['circle-opacity', 'circle-stroke-opacity'],
+  symbol: ['icon-opacity', 'text-opacity'],
+  raster: ['raster-opacity'],
+};
+/* Every style layer behind the slider's group.  The two `hot` rows carry no
+ * ids of their own — applyHot() resolves them — so expand them the same way. */
+function overlayGroupIds() {
+  const g = (GROUPS || []).find(x => x.opacity);
+  if (!g) return [];
+  const out = [];
+  for (const e of g.entries) {
+    if (!e.hot) { out.push(...e.ids); continue; }
+    if (e.cat) { for (const h of HOT_LAYERS) if (h.cat === e.cat && h.s === e.src) out.push(...h.ids); }
+    else out.push('aoi_flood-line', 'aoi_corridor-line', 'aoi_upstream-line');
+  }
+  return out;
+}
+function applyOverlayOpacity() {
+  const k = state.ovOpacity;
+  const ids = overlayGroupIds();
+  eachMap(m => {
+    for (const id of ids) {
+      const base = OV_BASE[id];
+      if (!base || !m.getLayer(id)) continue;
+      for (const prop of Object.keys(base)) {
+        const b = base[prop];
+        // A data-driven base (the roads' damaged/undamaged case expression) is
+        // scaled inside the expression; at 100 % the original value goes back
+        // verbatim so nothing is left wrapped.
+        const v = k >= 1 ? b : (Array.isArray(b) ? ['*', b, k] : b * k);
+        try { m.setPaintProperty(id, prop, v); } catch (e) { /* layer type has no such prop */ }
+      }
+    }
+  });
+}
+function setOverlayOpacity(v, persist) {
+  state.ovOpacity = Math.max(0, Math.min(1, v));
+  applyOverlayOpacity();
+  if (persist !== false) {
+    try { localStorage.setItem('nf26.ov_opacity', String(state.ovOpacity)); } catch (e) { /* private mode */ }
+    writeHash();
+  }
+}
+function storedOverlayOpacity() {
+  try {
+    const v = parseFloat(localStorage.getItem('nf26.ov_opacity'));
+    if (isFinite(v) && v >= 0 && v <= 1) return v;
+  } catch (e) { /* private mode */ }
+  return 1;
+}
+
 function applyColorBy() {
   const useStatus = state.colorBy === 'status';
   eachMap(m => {
@@ -900,6 +982,7 @@ function writeHash() {
   if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
   if (state.footprintOutline) p.set('fo', '1');
   if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
+  if (state.ovOpacity < 1) p.set('oo', Math.round(state.ovOpacity * 100));
   if (!state.sidebar) p.set('sb', '0');
   if (!state.controls) p.set('sc', '0');
   const ov = serialiseOverlays();
@@ -922,6 +1005,9 @@ function readHash() {
   if (p.get('cb')) state.colorBy = p.get('cb');
   if (p.get('fo')) state.footprintOutline = p.get('fo') === '1';
   if (['flood', 'corridor'].includes(p.get('hx'))) state.hotExtent = p.get('hx');
+  // oo is a percentage; the hash wins over localStorage, as it does for the rails.
+  const oo = p.get('oo') !== null ? parseFloat(p.get('oo')) : NaN;
+  state.ovOpacity = isFinite(oo) ? Math.max(0, Math.min(1, oo / 100)) : storedOverlayOpacity();
   legacyOverture = p.get('ho') === 'overture';   // links from when OSM/Overture was a switch
   state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedRail('sidebar');
   state.controls = p.get('sc') ? p.get('sc') !== '0' : storedRail('controls');
@@ -1030,6 +1116,26 @@ function describe(id) {
   if (facts.length) bits.push(facts.join(' · '));
   if (l.attribution) bits.push(l.attribution);
   return bits.join('<br>');
+}
+
+/* The group transparency slider, sitting under that group's all on / all off
+ * row.  Live on input so the fade can be judged against the imagery, and only
+ * persisted on release so a sweep does not write eighty hash entries. */
+function buildGroupOpacity() {
+  const f = el('div', 'field ovop');
+  const lab = el('label', null, 'Layer opacity, whole group <span class="ovop-n"></span>');
+  const n = lab.querySelector('.ovop-n');
+  const sl = el('input');
+  sl.type = 'range'; sl.min = '0'; sl.max = '100'; sl.step = '1';
+  sl.value = String(Math.round(state.ovOpacity * 100));
+  sl.title = 'Fade every layer in this group together, keeping their relative styling';
+  sl.setAttribute('aria-label', 'Opacity of the flood extent, damage and ground report layers');
+  const show = () => { n.textContent = sl.value + '%'; };
+  show();
+  sl.addEventListener('input', () => { show(); setOverlayOpacity(+sl.value / 100, false); });
+  sl.addEventListener('change', () => { show(); setOverlayOpacity(+sl.value / 100); });
+  f.append(lab, sl);
+  return f;
 }
 
 function renderSidebar() {
@@ -1176,6 +1282,7 @@ function renderSidebar() {
     }
     const ctl = el('div', 'grp', '<button data-all="1">all on</button><button data-all="0">all off</button>');
     if (g.entries.length > 1 && !g.noAll) det.appendChild(ctl);
+    if (g.opacity) det.appendChild(buildGroupOpacity());
     const boxes = [], rows = [];
     for (const e of g.entries) {
       const row = el('label', 'row');
@@ -1227,6 +1334,9 @@ function renderSidebar() {
 
   // damage editor ---------------------------------------------------------
   cpad.appendChild(buildDamageEditor());
+
+  // image align (local owner tool, ?align=1 only) ---------------------------
+  if (ALIGN_TOOL) cpad.appendChild(buildImageAlign());
 
   // legend ----------------------------------------------------------------
   const lBlock = el('div', 'block', '<h2>Legend</h2>');
@@ -1543,6 +1653,7 @@ function popupHTML(label, props) {
 function wirePopups(m) {
   const live = () => QUERY_IDS.filter(id => m.getLayer(id) && m.getLayoutProperty(id, 'visibility') !== 'none');
   m.on('click', ev => {
+    if (imgAlign.on) return;             // the image-align tool owns the pointer while it is on
     if (editorActive()) return;          // the damage editor owns clicks while a mode is on
     const hits = m.queryRenderedFeatures(ev.point, { layers: live() });
     if (!hits.length) return;
@@ -1553,6 +1664,7 @@ function wirePopups(m) {
   let hoverTimer = 0;
   m.on('mousemove', ev => {
     $('#readout').textContent = ev.lngLat.lat.toFixed(5) + '°N, ' + ev.lngLat.lng.toFixed(5) + '°E · z' + m.getZoom().toFixed(1);
+    if (imgAlign.on) { m.getCanvas().style.cursor = imgAlignCursor(m, ev.point); return; }
     if (editorActive()) { m.getCanvas().style.cursor = 'crosshair'; return; }
     if (hoverTimer) return;
     hoverTimer = setTimeout(() => {
@@ -1580,6 +1692,17 @@ function wireKeyboard() {
     if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
     const m = maps.post; if (!m) return;
+    // With Image align on the arrows are a fine positioning control for the
+    // photo, not a pan: one screen pixel, ten with Shift.
+    if (imgAlign.on && /^Arrow/.test(ev.key)) {
+      const d = ev.shiftKey ? 10 : 1;
+      if (ev.key === 'ArrowLeft') imgAlignNudge(-d, 0);
+      else if (ev.key === 'ArrowRight') imgAlignNudge(d, 0);
+      else if (ev.key === 'ArrowUp') imgAlignNudge(0, -d);
+      else imgAlignNudge(0, d);
+      ev.preventDefault();
+      return;
+    }
     const step = ev.shiftKey ? 400 : 120;
     switch (ev.key) {
       case 'ArrowLeft':  m.panBy([-step, 0]); break;
@@ -1856,6 +1979,7 @@ const buildingFillIds = () => HOT_LAYERS
 const layerLive = (m, id) => m.getLayer(id) && m.getLayoutProperty(id, 'visibility') !== 'none';
 
 function editorClick(m, ev) {
+  if (imgAlign.on) return;              // Image align has the map; a drag must not drop a vertex
   if (editor.mode === 'draw') {
     // The second click of a double-click would otherwise land as a duplicate vertex.
     const now = Date.now(), lc = editor.lastClick;
@@ -2193,6 +2317,775 @@ function buildDamageEditor() {
   return block;
 }
 
+// ======================================================================== //
+// Image align                                                              //
+// ------------------------------------------------------------------------ //
+// Owner tool for hand-fitting an ungeoreferenced photograph onto the map.  A
+// MapLibre `image` source accepts any four corners, so the photo can be
+// dragged, rotated, scaled and stretched over the WorldView-2 / Legion layers
+// until it sits right, and the resulting corners exported as JSON to feed the
+// retile pipeline.  Everything is local: the working fit lives in
+// localStorage under IMGALIGN_KEY and nothing here writes data/imagery.json
+// or any committed file.  The maths runs in Web Mercator metres, not degrees,
+// so a rotation stays rigid instead of shearing with latitude.
+// ======================================================================== //
+
+const IMGALIGN_KEY = 'nf26.imgalign';
+const IMGALIGN_IMG = 'work/drone_trisuli/photo_clean.png';
+const IMGALIGN_W = 1525;
+const IMGALIGN_H = 828;
+// The published corners of post_drone_trisuli_202609, in the image order
+// MapLibre wants: top-left, top-right, bottom-right, bottom-left.  They come
+// from the affine solved against the cloud-free 5 Feb Legion scene
+// (work/drone_trisuli/drone_align_pre_affine.json), which is what the tiles
+// were built from, so "Reset to initial" returns to what the map is showing.
+const IMGALIGN_INIT = [
+  [85.1441602, 27.9212796], [85.1473678, 27.9272874],
+  [85.1509512, 27.9257288], [85.1477436, 27.9197209],
+];
+const IMGALIGN_CORNER_PX = 14;   // grab radius for a corner handle
+const IMGALIGN_EDGE_PX = 12;     // grab radius for an edge (midpoint) handle
+
+const imgAlign = {
+  on: false,
+  mode: 'move',            // 'move' | 'corners'
+  nx: 1, ny: 1,            // mesh cells across and down; 1x1 is the plain quad
+  grid: null,              // (nx+1)*(ny+1) [lon,lat] mesh vertices, row-major from top-left
+  cells: null,             // data: URLs of the sliced image, one per cell (null at 1x1)
+  url: IMGALIGN_IMG,
+  opacity: 0.7,
+  rot: 0,                  // running total for the rotation control; display only, the corners are the truth
+  coords: IMGALIGN_INIT.map(p => p.slice()),
+  hist: [],                // undo stack of {coords, rot} snapshots
+  drag: null,              // {m, kind, corner, last, a0} while a pointer is down
+  ui: {},                  // control-panel nodes, filled by buildImageAlign()
+};
+
+// ------------------------------------------------------------ Mercator maths
+const MERC_R = 6378137;
+const MERC_LAT_MAX = 85.05112878;
+function toMerc(p) {
+  const lat = Math.max(-MERC_LAT_MAX, Math.min(MERC_LAT_MAX, +p[1]));
+  return [MERC_R * (+p[0]) * Math.PI / 180,
+          MERC_R * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))];
+}
+function fromMerc(q) {
+  return [q[0] / MERC_R * 180 / Math.PI,
+          (2 * Math.atan(Math.exp(q[1] / MERC_R)) - Math.PI / 2) * 180 / Math.PI];
+}
+/* Run `fn(point, centre)` over the four corners in Mercator metres and write
+ * the result back as degrees.  Rotation about the centroid preserves it, so
+ * the centre is safe to compute once per call. */
+function imgAlignEach(fn) {
+  const k = imgAlign.coords.map(toMerc);
+  const c = [(k[0][0] + k[1][0] + k[2][0] + k[3][0]) / 4,
+             (k[0][1] + k[1][1] + k[2][1] + k[3][1]) / 4];
+  // Every mesh vertex moves, about the centre of the outer quad, so a rotation
+  // or a scale stays rigid however the interior has been pulled around.
+  imgAlign.grid = imgAlign.grid.map(p => fromMerc(fn(toMerc(p), c)));
+  imgAlignSyncCorners();
+}
+function imgAlignCentre() {
+  const m = imgAlign.coords.map(toMerc);
+  return fromMerc([(m[0][0] + m[1][0] + m[2][0] + m[3][0]) / 4,
+                   (m[0][1] + m[1][1] + m[2][1] + m[3][1]) / 4]);
+}
+
+// ------------------------------------------------------------------- mesh
+/* The photo is carried by a mesh of (nx+1)x(ny+1) vertices.  At 1x1 that is
+ * just the four corners and one MapLibre `image` source, exactly as before.
+ * Denser, each cell becomes its own image source over its own four vertices,
+ * so a vertex can be pulled onto the canal or a road bend and only the cells
+ * touching it move.  Adjacent cells share vertices, so the sheet stays joined.
+ * A single image source cannot do this: it takes four corners and no more. */
+const gi = (ix, iy) => iy * (imgAlign.nx + 1) + ix;
+const imgAlignIsMesh = () => imgAlign.nx > 1 || imgAlign.ny > 1;
+/* Grid index of outer corner c, in the export order TL, TR, BR, BL. */
+function cornerGI(c) {
+  const nx = imgAlign.nx, ny = imgAlign.ny;
+  return [gi(0, 0), gi(nx, 0), gi(nx, ny), gi(0, ny)][c];
+}
+function imgAlignSyncCorners() {
+  imgAlign.coords = [0, 1, 2, 3].map(c => imgAlign.grid[cornerGI(c)].slice());
+}
+/* Even mesh over a quad, interpolated in Mercator so the spacing is true. */
+function imgAlignGridFromCorners(coords, nx, ny) {
+  const M = coords.map(toMerc);
+  const out = [];
+  for (let iy = 0; iy <= ny; iy++) {
+    const v = iy / ny;
+    for (let ix = 0; ix <= nx; ix++) {
+      const u = ix / nx;
+      const tx = M[0][0] + (M[1][0] - M[0][0]) * u, ty = M[0][1] + (M[1][1] - M[0][1]) * u;
+      const bx = M[3][0] + (M[2][0] - M[3][0]) * u, by = M[3][1] + (M[2][1] - M[3][1]) * u;
+      out.push(fromMerc([tx + (bx - tx) * v, ty + (by - ty) * v]));
+    }
+  }
+  return out;
+}
+/* Bilinear sample of the current mesh at normalised (u, v), so changing the
+ * density keeps whatever deformation has already been dialled in. */
+function imgAlignSampleMesh(u, v) {
+  const nx = imgAlign.nx, ny = imgAlign.ny, g = imgAlign.grid;
+  const fx = Math.min(u * nx, nx - 1e-9), fy = Math.min(v * ny, ny - 1e-9);
+  const ix = Math.max(0, Math.min(Math.floor(fx), nx - 1));
+  const iy = Math.max(0, Math.min(Math.floor(fy), ny - 1));
+  const s = fx - ix, t = fy - iy;
+  const a = toMerc(g[gi(ix, iy)]), b = toMerc(g[gi(ix + 1, iy)]);
+  const c = toMerc(g[gi(ix, iy + 1)]), d = toMerc(g[gi(ix + 1, iy + 1)]);
+  const tx = a[0] + (b[0] - a[0]) * s, ty = a[1] + (b[1] - a[1]) * s;
+  const bx = c[0] + (d[0] - c[0]) * s, by = c[1] + (d[1] - c[1]) * s;
+  return fromMerc([tx + (bx - tx) * t, ty + (by - ty) * t]);
+}
+function imgAlignSetDensity(nx, ny) {
+  const pts = [];
+  for (let iy = 0; iy <= ny; iy++)
+    for (let ix = 0; ix <= nx; ix++) pts.push(imgAlignSampleMesh(ix / nx, iy / ny));
+  imgAlignPush();
+  imgAlign.nx = nx; imgAlign.ny = ny; imgAlign.grid = pts;
+  imgAlignSyncCorners();
+  imgAlignSlice(() => { imgAlignEnsure(); imgAlignApply(); imgAlignSyncUI(); });
+}
+const imgAlignCellCoords = (ix, iy) => [
+  imgAlign.grid[gi(ix, iy)], imgAlign.grid[gi(ix + 1, iy)],
+  imgAlign.grid[gi(ix + 1, iy + 1)], imgAlign.grid[gi(ix, iy + 1)]];
+
+/* Cut the source image into one data: URL per cell.  Same-origin, so the
+ * canvas is not tainted and toDataURL works; at 1x1 the file is used whole. */
+function imgAlignSlice(done) {
+  if (!imgAlignIsMesh()) { imgAlign.cells = null; if (done) done(); return; }
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    const nx = imgAlign.nx, ny = imgAlign.ny, out = [];
+    for (let iy = 0; iy < ny; iy++) {
+      for (let ix = 0; ix < nx; ix++) {
+        const x0 = Math.round(img.width * ix / nx), x1 = Math.round(img.width * (ix + 1) / nx);
+        const y0 = Math.round(img.height * iy / ny), y1 = Math.round(img.height * (iy + 1) / ny);
+        const cv = document.createElement('canvas');
+        cv.width = Math.max(1, x1 - x0); cv.height = Math.max(1, y1 - y0);
+        cv.getContext('2d').drawImage(img, x0, y0, cv.width, cv.height, 0, 0, cv.width, cv.height);
+        out.push(cv.toDataURL('image/png'));
+      }
+    }
+    imgAlign.cells = out;
+    if (done) done();
+  };
+  img.onerror = () => { toast('Could not read ' + imgAlign.url + ' to slice'); if (done) done(); };
+  img.src = abs(imgAlign.url);
+}
+
+// ------------------------------------------------------------- transforms
+/* Each of these mutates the corners only.  The caller pushes history once and
+ * calls imgAlignApply() afterwards, so a whole drag is a single undo step. */
+function imgAlignRotateBy(deg) {
+  const a = deg * Math.PI / 180, cs = Math.cos(a), sn = Math.sin(a);
+  imgAlignEach((p, c) => {
+    const x = p[0] - c[0], y = p[1] - c[1];
+    return [c[0] + x * cs - y * sn, c[1] + x * sn + y * cs];
+  });
+  const r = imgAlign.rot + deg;
+  imgAlign.rot = Math.round((((r + 180) % 360 + 360) % 360 - 180) * 100) / 100;
+}
+function imgAlignScaleBy(f) {
+  imgAlignEach((p, c) => [c[0] + (p[0] - c[0]) * f, c[1] + (p[1] - c[1]) * f]);
+}
+/* Stretch along the image's own axes rather than north/east: axis 0 is the
+ * width direction (top-left to top-right), axis 1 the height direction
+ * (top-left to bottom-left), each averaged over both opposite edges so a
+ * skewed quad still stretches sensibly. */
+function imgAlignStretchBy(axis, f) {
+  const m = imgAlign.coords.map(toMerc);
+  const edge = (a, b, c, d) => [((m[b][0] - m[a][0]) + (m[d][0] - m[c][0])) / 2,
+                                ((m[b][1] - m[a][1]) + (m[d][1] - m[c][1])) / 2];
+  let v = axis === 0 ? edge(0, 1, 3, 2) : edge(0, 3, 1, 2);
+  const len = Math.hypot(v[0], v[1]);
+  if (!len) return;
+  v = [v[0] / len, v[1] / len];
+  imgAlignEach((p, c) => {
+    const along = (p[0] - c[0]) * v[0] + (p[1] - c[1]) * v[1];
+    const d = along * (f - 1);
+    return [p[0] + v[0] * d, p[1] + v[1] * d];
+  });
+}
+function imgAlignTranslateBy(dx, dy) {
+  imgAlignEach(p => [p[0] + dx, p[1] + dy]);
+}
+/* Move by screen pixels, measured on whichever map is showing, so a nudge is
+ * the same visual distance at every zoom. */
+function imgAlignNudge(dx, dy) {
+  const m = maps.post || maps.pre;
+  if (!m) return;
+  const c = imgAlignCentre();
+  const p = m.project(c);
+  const ll = m.unproject([p.x + dx, p.y + dy]);
+  const from = toMerc(c), to = toMerc([ll.lng, ll.lat]);
+  imgAlignPush();
+  imgAlignTranslateBy(to[0] - from[0], to[1] - from[1]);
+  imgAlignApply();
+}
+
+// --------------------------------------------------------- history / state
+function imgAlignPush() {
+  imgAlign.hist.push({ grid: imgAlign.grid.map(p => p.slice()),
+                       nx: imgAlign.nx, ny: imgAlign.ny, rot: imgAlign.rot });
+  if (imgAlign.hist.length > 80) imgAlign.hist.shift();
+}
+function imgAlignUndo() {
+  const h = imgAlign.hist.pop();
+  if (!h) { toast('Nothing to undo'); return; }
+  const changed = h.nx !== imgAlign.nx || h.ny !== imgAlign.ny;
+  imgAlign.grid = h.grid; imgAlign.nx = h.nx; imgAlign.ny = h.ny; imgAlign.rot = h.rot;
+  imgAlignSyncCorners();
+  if (changed) imgAlignSlice(() => { imgAlignEnsure(); imgAlignApply(); imgAlignSyncUI(); });
+  else { imgAlignApply(); imgAlignSyncUI(); }
+}
+/* Reset drops the hand-fitting but keeps the mesh density, so the density is a
+ * working choice rather than something to set up again after every reset. */
+function imgAlignReset() {
+  imgAlignPush();
+  imgAlign.grid = imgAlignGridFromCorners(IMGALIGN_INIT, imgAlign.nx, imgAlign.ny);
+  imgAlign.rot = 0;
+  imgAlignSyncCorners();
+  imgAlignApply();
+  imgAlignSyncUI();
+  toast('Back to the automatic fit');
+}
+/* Flatten the mesh back onto its own outer quad, undoing interior deformation
+ * without touching where the four corners sit. */
+function imgAlignFlatten() {
+  imgAlignPush();
+  imgAlign.grid = imgAlignGridFromCorners(imgAlign.coords, imgAlign.nx, imgAlign.ny);
+  imgAlignApply();
+  imgAlignSyncUI();
+  toast('Mesh flattened to its corners');
+}
+function imgAlignSave() {
+  try {
+    localStorage.setItem(IMGALIGN_KEY, JSON.stringify({
+      v: 2, on: imgAlign.on, mode: imgAlign.mode, url: imgAlign.url,
+      opacity: imgAlign.opacity, rot: imgAlign.rot, coordinates: imgAlign.coords,
+      nx: imgAlign.nx, ny: imgAlign.ny, grid: imgAlign.grid,
+    }));
+  } catch (e) { /* private mode or storage full */ }
+}
+function imgAlignRestore() {
+  // The mesh is the store; the four corners are derived from it.  A v1 record
+  // predates the mesh and carries corners only, so it seeds a 1x1 grid.
+  imgAlign.grid = imgAlignGridFromCorners(imgAlign.coords, 1, 1);
+  let j = null;
+  try { j = JSON.parse(localStorage.getItem(IMGALIGN_KEY) || 'null'); } catch (e) { return; }
+  if (!j || typeof j !== 'object') return;
+  const c = j.coordinates;
+  const okPt = p => Array.isArray(p) && isFinite(p[0]) && isFinite(p[1]);
+  if (Array.isArray(c) && c.length === 4 && c.every(okPt)) {
+    imgAlign.coords = c.map(p => [+p[0], +p[1]]);
+    imgAlign.grid = imgAlignGridFromCorners(imgAlign.coords, 1, 1);
+  }
+  const nx = +j.nx, ny = +j.ny;
+  if (nx >= 1 && nx <= 8 && ny >= 1 && ny <= 8 && Array.isArray(j.grid) &&
+      j.grid.length === (nx + 1) * (ny + 1) && j.grid.every(okPt)) {
+    imgAlign.nx = nx; imgAlign.ny = ny;
+    imgAlign.grid = j.grid.map(p => [+p[0], +p[1]]);
+    imgAlignSyncCorners();
+  }
+  if (typeof j.url === 'string' && j.url) imgAlign.url = j.url;
+  if (typeof j.opacity === 'number' && j.opacity >= 0 && j.opacity <= 1) imgAlign.opacity = j.opacity;
+  if (j.mode === 'move' || j.mode === 'corners') imgAlign.mode = j.mode;
+  if (typeof j.rot === 'number' && isFinite(j.rot)) imgAlign.rot = j.rot;
+  // The stored on/off is honoured only when the flag is present; without it the
+  // overlay must not draw, since there would be no control to turn it off.
+  imgAlign.on = ALIGN_TOOL && !!j.on;
+}
+
+// ------------------------------------------------------------ map plumbing
+const imgAlignQuadFC = () => {
+  const nx = imgAlign.nx, ny = imgAlign.ny, g = imgAlign.grid, f = [];
+  const ls = co => ({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: co } });
+  for (let iy = 0; iy <= ny; iy++) {
+    const row = [];
+    for (let ix = 0; ix <= nx; ix++) row.push(g[gi(ix, iy)]);
+    f.push(ls(row));
+  }
+  for (let ix = 0; ix <= nx; ix++) {
+    const col = [];
+    for (let iy = 0; iy <= ny; iy++) col.push(g[gi(ix, iy)]);
+    f.push(ls(col));
+  }
+  return { type: 'FeatureCollection', features: f };
+};
+/* Midpoint of edge `i`, which runs from corner i to corner i+1: top, right,
+ * bottom, left.  Taken in Mercator so it sits on the drawn edge rather than
+ * drifting off it the way a raw degree average would. */
+function imgAlignEdgeMid(i) {
+  const a = toMerc(imgAlign.coords[i]), b = toMerc(imgAlign.coords[(i + 1) % 4]);
+  return fromMerc([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]);
+}
+/* Eight grab points: `k` is 'c' for a corner and 'e' for an edge stretcher,
+ * which the circle layer styles apart and the hit test reads back. */
+const imgAlignPtFC = () => {
+  const nx = imgAlign.nx, ny = imgAlign.ny, f = [];
+  const pt = (k, i, co) => f.push({ type: 'Feature', properties: { k, i },
+    geometry: { type: 'Point', coordinates: co } });
+  if (!imgAlignIsMesh()) {
+    // At 1x1 the edge handles are virtual midpoints that carry a whole side.
+    imgAlign.coords.forEach((c, i) => pt('c', i, c));
+    [0, 1, 2, 3].forEach(i => pt('e', i, imgAlignEdgeMid(i)));
+    return { type: 'FeatureCollection', features: f };
+  }
+  imgAlign.grid.forEach((p, idx) => {
+    const ix = idx % (nx + 1), iy = Math.floor(idx / (nx + 1));
+    const onx = ix === 0 || ix === nx, ony = iy === 0 || iy === ny;
+    pt(onx && ony ? 'c' : (onx || ony) ? 'e' : 'i', idx, p);
+  });
+  return { type: 'FeatureCollection', features: f };
+};
+
+function imgAlignTeardown(m) {
+  // The cell count changes with the mesh density, so sweep by prefix rather
+  // than by a fixed list.
+  let st = null;
+  try { st = m.getStyle(); } catch (e) { return; }
+  if (!st) return;
+  for (const l of st.layers || []) if (l.id.indexOf('imgalign') === 0 && m.getLayer(l.id)) m.removeLayer(l.id);
+  for (const id of Object.keys(st.sources || {})) if (id.indexOf('imgalign') === 0 && m.getSource(id)) m.removeSource(id);
+}
+/* (Re)insert the overlay on one map.  Also called at the end of
+ * applyImagery(), which re-adds the `imagery` layer at IMAGERY_BEFORE and
+ * would otherwise leave the new scene sitting on top of the photo. */
+function imgAlignEnsureOn(m) {
+  if (!m.isStyleLoaded()) { m.once('idle', () => imgAlignEnsureOn(m)); return; }
+  imgAlignTeardown(m);
+  if (!imgAlign.on) return;
+  // Above the imagery layer, below the terrain, overlays and labels.
+  const before = m.getLayer(IMAGERY_BEFORE) ? IMAGERY_BEFORE : undefined;
+  const add = (id, url, co) => {
+    try { m.addSource(id, { type: 'image', url, coordinates: co }); } catch (e) { return; }
+    m.addLayer({ id, type: 'raster', source: id,
+      paint: { 'raster-opacity': imgAlign.opacity, 'raster-fade-duration': 0 } }, before);
+  };
+  if (imgAlignIsMesh() && imgAlign.cells && imgAlign.cells.length === imgAlign.nx * imgAlign.ny) {
+    for (let iy = 0; iy < imgAlign.ny; iy++)
+      for (let ix = 0; ix < imgAlign.nx; ix++)
+        add('imgalign_c' + (iy * imgAlign.nx + ix), imgAlign.cells[iy * imgAlign.nx + ix],
+            imgAlignCellCoords(ix, iy));
+  } else {
+    add('imgalign', abs(imgAlign.url), imgAlign.coords);
+  }
+  // The outline and the grab handles go on top of everything, else they
+  // disappear under whichever overlay the analyst is aligning against.
+  m.addSource('imgalign_quad', { type: 'geojson', data: imgAlignQuadFC() });
+  m.addSource('imgalign_pts', { type: 'geojson', data: imgAlignPtFC() });
+  m.addLayer({ id: 'imgalign-edge', type: 'line', source: 'imgalign_quad',
+    paint: { 'line-color': '#5eb0ff', 'line-width': 1.4, 'line-dasharray': [3, 2] } });
+  m.addLayer({ id: 'imgalign-pt', type: 'circle', source: 'imgalign_pts',
+    layout: { visibility: imgAlign.mode === 'corners' ? 'visible' : 'none' },
+    paint: {
+      'circle-radius': ['match', ['get', 'k'], 'e', 5.5, 'i', 5, 7],
+      'circle-color': ['match', ['get', 'k'], 'e', '#5eb0ff', 'i', '#7ee787', '#ffb64d'],
+      'circle-stroke-color': '#12161c', 'circle-stroke-width': 2,
+    } });
+}
+const imgAlignEnsure = () => eachMap(imgAlignEnsureOn);
+
+/* Push the corners to both maps.  setCoordinates() keeps the decoded bitmap,
+ * so this is cheap enough to run on every mousemove. */
+function imgAlignApply(persist) {
+  eachMap(m => {
+    if (imgAlignIsMesh()) {
+      for (let iy = 0; iy < imgAlign.ny; iy++) {
+        for (let ix = 0; ix < imgAlign.nx; ix++) {
+          const src = m.getSource('imgalign_c' + (iy * imgAlign.nx + ix));
+          if (src && src.setCoordinates) {
+            try { src.setCoordinates(imgAlignCellCoords(ix, iy)); } catch (e) { /* degenerate cell */ }
+          }
+        }
+      }
+    } else {
+      const s = m.getSource('imgalign');
+      if (s && s.setCoordinates) { try { s.setCoordinates(imgAlign.coords); } catch (e) { /* degenerate quad */ } }
+    }
+    const q = m.getSource('imgalign_quad'); if (q) q.setData(imgAlignQuadFC());
+    const p = m.getSource('imgalign_pts'); if (p) p.setData(imgAlignPtFC());
+  });
+  if (imgAlign.ui.json) imgAlign.ui.json.value = imgAlignJSON();
+  if (persist !== false) imgAlignSave();
+}
+
+function imgAlignSetOn(on) {
+  imgAlign.on = !!on;
+  if (imgAlign.on && imgAlignIsMesh() && !imgAlign.cells) {
+    imgAlignSlice(() => { imgAlignEnsure(); imgAlignApply(); });
+  } else imgAlignEnsure();
+  eachMap(m => { m.getCanvas().style.cursor = imgAlign.on ? 'move' : (editorActive() ? 'crosshair' : ''); });
+  if (imgAlign.on && imgAlign.ui.det) imgAlign.ui.det.open = true;
+  imgAlignSyncUI();
+  imgAlignSave();
+}
+function imgAlignSetMode(mode) {
+  imgAlign.mode = mode;
+  eachMap(m => { if (m.getLayer('imgalign-pt'))
+    m.setLayoutProperty('imgalign-pt', 'visibility', mode === 'corners' ? 'visible' : 'none'); });
+  imgAlignSyncUI();
+  imgAlignSave();
+}
+function imgAlignSetOpacity(v) {
+  imgAlign.opacity = v;
+  eachMap(m => {
+    let st = null;
+    try { st = m.getStyle(); } catch (e) { return; }
+    for (const l of (st && st.layers) || [])
+      if (l.type === 'raster' && l.id.indexOf('imgalign') === 0) m.setPaintProperty(l.id, 'raster-opacity', v);
+  });
+  imgAlignSave();
+}
+function imgAlignLoad(url) {
+  const u = String(url || '').trim();
+  if (!u) { toast('Give an image URL first'); return; }
+  imgAlign.url = u;
+  imgAlignSlice(() => {
+    if (imgAlign.on) imgAlignEnsure();
+    imgAlignApply();
+    imgAlignSyncUI();
+    toast('Loaded ' + u);
+  });
+}
+
+// -------------------------------------------------------------- pointer UI
+/* Screen-space hit tests.  The quad can be any shape once corners have been
+ * dragged, so test the projected polygon rather than a lon/lat box. */
+function imgAlignInQuad(m, pt) {
+  const q = imgAlign.coords.map(c => m.project(c));
+  let inside = false;
+  for (let i = 0, j = 3; i < 4; j = i++) {
+    const a = q[i], b = q[j];
+    if ((a.y > pt.y) !== (b.y > pt.y) &&
+        pt.x < (b.x - a.x) * (pt.y - a.y) / (b.y - a.y) + a.x) inside = !inside;
+  }
+  return inside;
+}
+/* Nearest grab point to the pointer, or null.  Corners are tested first and
+ * with the larger radius, so a corner always wins over the edge handles
+ * crowding it once the quad is dragged small. */
+function imgAlignHitHandle(m, pt) {
+  let hit = null, bd = IMGALIGN_CORNER_PX;
+  if (imgAlignIsMesh()) {
+    // Every mesh vertex is its own handle; the outer ones get the wider radius.
+    const nx = imgAlign.nx, ny = imgAlign.ny;
+    imgAlign.grid.forEach((c, idx) => {
+      const ix = idx % (nx + 1), iy = Math.floor(idx / (nx + 1));
+      const outer = ix === 0 || ix === nx || iy === 0 || iy === ny;
+      const lim = outer ? IMGALIGN_CORNER_PX : IMGALIGN_EDGE_PX;
+      const p = m.project(c), d = Math.hypot(p.x - pt.x, p.y - pt.y);
+      if (d <= lim && (!hit || d < bd)) { bd = d; hit = { kind: 'vertex', i: idx }; }
+    });
+    return hit;
+  }
+  imgAlign.coords.forEach((c, i) => {
+    const p = m.project(c), d = Math.hypot(p.x - pt.x, p.y - pt.y);
+    if (d <= bd) { bd = d; hit = { kind: 'corner', i }; }
+  });
+  if (hit) return hit;
+  bd = IMGALIGN_EDGE_PX;
+  for (let i = 0; i < 4; i++) {
+    const p = m.project(imgAlignEdgeMid(i)), d = Math.hypot(p.x - pt.x, p.y - pt.y);
+    if (d <= bd) { bd = d; hit = { kind: 'edge', i }; }
+  }
+  return hit;
+}
+function imgAlignAngleAt(lngLat) {
+  const c = toMerc(imgAlignCentre()), p = toMerc([lngLat.lng, lngLat.lat]);
+  return Math.atan2(p[1] - c[1], p[0] - c[0]);
+}
+function imgAlignCursor(m, pt) {
+  if (imgAlign.drag) return 'grabbing';
+  if (imgAlign.mode === 'corners' && imgAlignHitHandle(m, pt)) return 'grab';
+  return imgAlignInQuad(m, pt) ? 'move' : '';
+}
+
+function imgAlignDown(m, ev) {
+  if (!imgAlign.on || imgAlign.drag) return;
+  const oe = ev.originalEvent || {};
+  const h = imgAlign.mode === 'corners' ? imgAlignHitHandle(m, ev.point) : null;
+  if (!h && !imgAlignInQuad(m, ev.point)) return;
+  const kind = h ? h.kind : (oe.shiftKey ? 'rotate' : 'move');
+  imgAlignPush();
+  imgAlign.drag = { m, kind, i: h ? h.i : -1,
+    last: toMerc([ev.lngLat.lng, ev.lngLat.lat]),
+    a0: kind === 'rotate' ? imgAlignAngleAt(ev.lngLat) : 0 };
+  m.dragPan.disable();
+  if (m.boxZoom) m.boxZoom.disable();
+  m.getCanvas().style.cursor = 'grabbing';
+  if (ev.preventDefault) ev.preventDefault();
+}
+function imgAlignDrag(m, ev) {
+  const d = imgAlign.drag;
+  if (!d || d.m !== m) return;
+  const now = toMerc([ev.lngLat.lng, ev.lngLat.lat]);
+  const dx = now[0] - d.last[0], dy = now[1] - d.last[1];
+  const nudgeGrid = j => {
+    const c = toMerc(imgAlign.grid[j]);
+    imgAlign.grid[j] = fromMerc([c[0] + dx, c[1] + dy]);
+  };
+  if (d.kind === 'vertex') {
+    // One mesh vertex: only the cells touching it deform, which is what lets a
+    // single road bend be pulled into place without disturbing the rest.
+    nudgeGrid(d.i);
+    imgAlignSyncCorners();
+  } else if (d.kind === 'corner') {
+    // Move by the pointer delta rather than snapping the corner to the cursor,
+    // so grabbing a handle off-centre does not jolt the quad.
+    nudgeGrid(cornerGI(d.i));
+    imgAlignSyncCorners();
+  } else if (d.kind === 'edge') {
+    // An edge stretcher carries both of its corners, so the opposite edge stays
+    // put and the drag reads as a stretch (or a skew, dragged sideways).
+    for (const j of [d.i, (d.i + 1) % 4]) nudgeGrid(cornerGI(j));
+    imgAlignSyncCorners();
+  } else if (d.kind === 'rotate') {
+    const a = imgAlignAngleAt(ev.lngLat);
+    imgAlignRotateBy((a - d.a0) * 180 / Math.PI);
+    d.a0 = a;
+  } else {
+    imgAlignTranslateBy(dx, dy);
+  }
+  d.last = now;
+  imgAlignApply(false);
+  if (ev.preventDefault) ev.preventDefault();
+}
+function imgAlignUp() {
+  const d = imgAlign.drag;
+  if (!d) return;
+  imgAlign.drag = null;
+  d.m.dragPan.enable();
+  // Shift-drag box zoom belongs to the damage editor's pick mode when that is on.
+  if (d.m.boxZoom && editor.mode !== 'pick') d.m.boxZoom.enable();
+  d.m.getCanvas().style.cursor = imgAlign.on ? 'move' : '';
+  imgAlignApply();
+  imgAlignSyncUI();
+}
+
+function wireImageAlign() {
+  eachMap(m => {
+    m.on('mousedown', ev => imgAlignDown(m, ev));
+    m.on('mousemove', ev => imgAlignDrag(m, ev));
+    m.on('mouseup', imgAlignUp);
+    m.on('touchstart', ev => { if (!ev.points || ev.points.length === 1) imgAlignDown(m, ev); });
+    m.on('touchmove', ev => { if (!ev.points || ev.points.length === 1) imgAlignDrag(m, ev); });
+    m.on('touchend', imgAlignUp);
+    m.on('touchcancel', imgAlignUp);
+  });
+  // A pointer released off the canvas would otherwise leave dragPan disabled.
+  window.addEventListener('mouseup', imgAlignUp);
+  imgAlignSetOn(imgAlign.on);
+}
+
+// ------------------------------------------------------------- export / IO
+function imgAlignJSON() {
+  const r = p => [+p[0].toFixed(7), +p[1].toFixed(7)];
+  const out = {
+    image: imgAlign.url, width: IMGALIGN_W, height: IMGALIGN_H,
+    coordinates: imgAlign.coords.map(r),
+  };
+  if (imgAlignIsMesh()) {
+    // Mesh vertices run row-major from the top-left of the image.  Each one is
+    // a ground control point at image pixel (ix/nx * width, iy/ny * height),
+    // which is what a thin-plate-spline warp needs.
+    out.mesh = { nx: imgAlign.nx, ny: imgAlign.ny, grid: imgAlign.grid.map(r) };
+  }
+  return JSON.stringify(out, null, 1);
+}
+async function imgAlignCopy() {
+  try { await navigator.clipboard.writeText(imgAlignJSON()); toast('Corners copied'); }
+  catch (e) { toast('Copy failed — select the text in the box instead'); }
+}
+function imgAlignDownload() {
+  const url = URL.createObjectURL(new Blob([imgAlignJSON()], { type: 'application/json' }));
+  const a = el('a');
+  a.href = url; a.download = 'drone_align.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast('Saved drone_align.json');
+}
+
+// -------------------------------------------------------------------- panel
+function imgAlignSyncUI() {
+  const u = imgAlign.ui;
+  if (!u.det) return;
+  for (const b of document.querySelectorAll('#imgAl .seg button[data-ia]'))
+    b.setAttribute('aria-pressed', String(b.dataset.ia === (imgAlign.on ? 'on' : 'off')));
+  for (const b of document.querySelectorAll('#imgAl .seg button[data-iam]'))
+    b.setAttribute('aria-pressed', String(b.dataset.iam === imgAlign.mode));
+  for (const b of document.querySelectorAll('#imgAl .seg button[data-iag]'))
+    b.setAttribute('aria-pressed', String(b.dataset.iag === imgAlign.nx + 'x' + imgAlign.ny));
+  if (u.url && document.activeElement !== u.url) u.url.value = imgAlign.url;
+  if (u.op && document.activeElement !== u.op) u.op.value = Math.round(imgAlign.opacity * 100);
+  if (u.opN) u.opN.textContent = Math.round(imgAlign.opacity * 100) + '%';
+  if (u.rot && document.activeElement !== u.rot) u.rot.value = imgAlign.rot;
+  if (u.rotN) u.rotN.textContent = imgAlign.rot.toFixed(1) + '°';
+  if (u.json) u.json.value = imgAlignJSON();
+  if (u.n) u.n.textContent = imgAlign.on ? 'on' : 'off';
+  if (u.hint) u.hint.textContent = !imgAlign.on
+    ? 'Turn the tool on to place the photo. Nothing is drawn while it is off.'
+    : imgAlign.mode !== 'corners'
+      ? 'Drag inside the photo to move it, shift-drag to rotate about its centre. Arrow keys nudge one pixel, ten with Shift.'
+      : imgAlignIsMesh()
+        ? 'Drag any mesh vertex to bend that part of the photo onto the map: amber at the corners, blue on the edges, green inside. ' +
+          'Only the cells touching a vertex move, so the canal and a road bend can be fitted one at a time.'
+        : 'Drag an amber corner to move that corner alone, or a blue edge handle to carry a whole side. ' +
+          'Pick a denser warp mesh above to bend the middle of the photo as well.';
+}
+
+function buildImageAlign() {
+  const block = el('div', 'block');
+  const det = el('details', 'imgal'); det.id = 'imgAl';
+  imgAlign.ui.det = det;
+  const sum = el('summary', null, 'Image align <span class="n">off</span>');
+  det.appendChild(sum);
+  imgAlign.ui.n = sum.querySelector('.n');
+
+  det.appendChild(el('p', 'note', 'Hand-fit an ungeoreferenced photograph over the imagery, then export its ' +
+    'four corners. Local only — this never touches <code>data/imagery.json</code>.'));
+
+  // on / off ---------------------------------------------------------------
+  const onF = el('div', 'field');
+  onF.appendChild(el('label', null, 'Tool'));
+  const onSeg = el('div', 'seg');
+  for (const [v, t] of [['off', 'Off'], ['on', 'On']]) {
+    const b = el('button', null, t);
+    b.dataset.ia = v;
+    b.addEventListener('click', () => imgAlignSetOn(v === 'on'));
+    onSeg.appendChild(b);
+  }
+  onF.appendChild(onSeg);
+  det.appendChild(onF);
+
+  // image ------------------------------------------------------------------
+  const urlF = el('div', 'field');
+  urlF.appendChild(el('label', null, 'Image URL'));
+  const urlRow = el('div', 'ia-row');
+  const url = el('input'); url.type = 'text'; url.value = imgAlign.url;
+  url.spellcheck = false;
+  url.addEventListener('keydown', ev => { if (ev.key === 'Enter') imgAlignLoad(url.value); });
+  const load = el('button', null, 'Load');
+  load.addEventListener('click', () => imgAlignLoad(url.value));
+  urlRow.append(url, load);
+  urlF.appendChild(urlRow);
+  imgAlign.ui.url = url;
+  det.appendChild(urlF);
+
+  // opacity ----------------------------------------------------------------
+  const opF = el('div', 'field');
+  const opL = el('label', null, 'Opacity <span class="ia-n">70%</span>');
+  opF.appendChild(opL);
+  imgAlign.ui.opN = opL.querySelector('.ia-n');
+  const op = el('input'); op.type = 'range'; op.min = '0'; op.max = '100'; op.step = '1';
+  op.value = String(Math.round(imgAlign.opacity * 100));
+  op.addEventListener('input', () => { imgAlignSetOpacity(+op.value / 100); imgAlignSyncUI(); });
+  opF.appendChild(op);
+  imgAlign.ui.op = op;
+  det.appendChild(opF);
+
+  // drag mode --------------------------------------------------------------
+  const mF = el('div', 'field');
+  mF.appendChild(el('label', null, 'Drag mode'));
+  const mSeg = el('div', 'seg');
+  for (const [v, t] of [['move', 'Move'], ['corners', 'Stretch']]) {
+    const b = el('button', null, t);
+    b.dataset.iam = v;
+    b.addEventListener('click', () => imgAlignSetMode(v));
+    mSeg.appendChild(b);
+  }
+  mF.appendChild(mSeg);
+  det.appendChild(mF);
+
+  // mesh density -----------------------------------------------------------
+  const gF = el('div', 'field');
+  gF.appendChild(el('label', null, 'Warp mesh'));
+  const gSeg = el('div', 'seg');
+  for (const [nx, ny, t] of [[1, 1, '1x1'], [2, 2, '2x2'], [3, 3, '3x3'], [3, 5, '3x5'], [4, 6, '4x6']]) {
+    const b = el('button', null, t);
+    b.dataset.iag = nx + 'x' + ny;
+    b.title = nx === 1 ? 'Plain quad: four corners and four side handles'
+      : 'Split the photo into ' + (nx * ny) + ' cells; drag any vertex to bend that part onto the map';
+    b.addEventListener('click', () => imgAlignSetDensity(nx, ny));
+    gSeg.appendChild(b);
+  }
+  gF.appendChild(gSeg);
+  det.appendChild(gF);
+
+  imgAlign.ui.hint = el('p', 'note', '');
+  det.appendChild(imgAlign.ui.hint);
+
+  // rotation ---------------------------------------------------------------
+  const rF = el('div', 'field');
+  const rL = el('label', null, 'Rotation <span class="ia-n">0.0°</span>');
+  rF.appendChild(rL);
+  imgAlign.ui.rotN = rL.querySelector('.ia-n');
+  const rot = el('input'); rot.type = 'range'; rot.min = '-180'; rot.max = '180'; rot.step = '0.5';
+  rot.value = String(imgAlign.rot);
+  // The slider is a delta control: the corners are the truth, so it applies the
+  // change since its last position rather than an absolute bearing.
+  let rotHeld = false;
+  rot.addEventListener('input', () => {
+    const d = (+rot.value) - imgAlign.rot;
+    if (!d) return;
+    if (!rotHeld) { imgAlignPush(); rotHeld = true; }
+    imgAlignRotateBy(d);
+    imgAlignApply();
+    imgAlignSyncUI();
+  });
+  rot.addEventListener('change', () => { rotHeld = false; });
+  rF.appendChild(rot);
+  imgAlign.ui.rot = rot;
+  const rBtn = el('div', 'chips ia-btns');
+  const step = (label, fn) => { const b = el('button', null, label); b.addEventListener('click', fn); return b; };
+  const bump = fn => { imgAlignPush(); fn(); imgAlignApply(); imgAlignSyncUI(); };
+  rBtn.append(
+    step('−0.5°', () => bump(() => imgAlignRotateBy(-0.5))),
+    step('+0.5°', () => bump(() => imgAlignRotateBy(0.5))));
+  rF.appendChild(rBtn);
+  det.appendChild(rF);
+
+  // scale and stretch ------------------------------------------------------
+  const sF = el('div', 'field');
+  sF.appendChild(el('label', null, 'Scale and stretch (1% steps)'));
+  const sRow = el('div', 'chips ia-btns');
+  sRow.append(
+    step('− size', () => bump(() => imgAlignScaleBy(1 / 1.01))),
+    step('+ size', () => bump(() => imgAlignScaleBy(1.01))),
+    step('− width', () => bump(() => imgAlignStretchBy(0, 1 / 1.01))),
+    step('+ width', () => bump(() => imgAlignStretchBy(0, 1.01))),
+    step('− height', () => bump(() => imgAlignStretchBy(1, 1 / 1.01))),
+    step('+ height', () => bump(() => imgAlignStretchBy(1, 1.01))));
+  sF.appendChild(sRow);
+  det.appendChild(sF);
+
+  // undo / reset -----------------------------------------------------------
+  const hRow = el('div', 'chips ia-btns');
+  hRow.append(step('Undo', imgAlignUndo), step('Flatten mesh', imgAlignFlatten),
+              step('Reset to initial', imgAlignReset));
+  det.appendChild(hRow);
+
+  // export -----------------------------------------------------------------
+  const json = el('textarea');
+  json.readOnly = true; json.rows = 7; json.spellcheck = false;
+  json.value = imgAlignJSON();
+  imgAlign.ui.json = json;
+  det.appendChild(json);
+  const eRow = el('div', 'chips ia-btns');
+  eRow.append(step('Copy JSON', imgAlignCopy), step('Download JSON', imgAlignDownload));
+  det.appendChild(eRow);
+  det.appendChild(el('p', 'note', 'Corners run top-left, top-right, bottom-right, bottom-left of the image — ' +
+    'the order a MapLibre <code>image</code> source and the retile scripts both expect. A denser mesh also ' +
+    'exports <code>mesh.grid</code>, its vertices row-major from the top-left, each one a control point for a ' +
+    'thin-plate-spline rewarp.'));
+
+  block.appendChild(det);
+  imgAlignSyncUI();
+  return block;
+}
+
 // -------------------------------------------------------------------- boot
 async function main() {
   const protocol = new pmtiles.Protocol();
@@ -2224,15 +3117,17 @@ async function main() {
   await Promise.all(['pre', 'post'].map(s => new Promise(res => maps[s].on('load', res))));
 
   applyImagery('pre'); applyImagery('post');
-  applyOverlays(); applyBase(); applyColorBy();
+  applyOverlays(); applyBase(); applyColorBy(); applyOverlayOpacity();
   syncMaps(maps.pre, maps.post);
   wirePopups(maps.pre); wirePopups(maps.post);
 
+  imgAlignRestore();
   renderSidebar();
   applyMode();
   setSwipe(state.swipe, false);
   wireDivider(); wireKeyboard();
   wireDamageEditor();
+  if (ALIGN_TOOL) wireImageAlign();
   initDamageEdits();
 
   // Default view: Trisuli Bazar at street scale (owner direction, 7 Sep 2026); CFG.HOME stays the pan limit.

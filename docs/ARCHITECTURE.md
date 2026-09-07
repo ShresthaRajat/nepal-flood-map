@@ -246,24 +246,102 @@ open rail floats over the stage instead of pushing it. State lives in
 precedence when it carries `sb` or `sc`. Maps are resized after the CSS
 transition finishes.
 
+The "Flood extent, damage & ground reports" group carries a master opacity
+slider under its all on / all off row, so the whole damage and ground-report
+stack can be faded back to read the imagery through it without unticking
+thirteen rows. `OV_BASE` snapshots every layer's own opacity as `buildDefs()`
+writes it, and `applyOverlayOpacity()` sets `base * slider` on both maps, so a
+0.35 fill stays a wash under a 1.0 outline instead of the two flattening
+together. A data-driven base (the roads' damaged/undamaged case expression) is
+scaled inside the expression as `['*', base, k]`; at 100% the original value
+goes back verbatim, so nothing is left wrapped. The group is marked
+`opacity: true` in its `groups.push()` entry, and the two `hot` rows in it —
+destroyed features and the AOI outline — have their layer ids resolved the same
+way `applyHot()` resolves them. The value lives in `localStorage` under
+`nf26.ov_opacity` and in the hash as `oo=<percent>`, omitted at 100%.
+
+### Local editing tools
+
+Two owner-only tools live at the bottom of the right rail. Neither talks to a
+server and neither writes a committed file; both keep their working state in
+`localStorage` and export it for you to commit by hand.
+
+The **Damage editor** (`#dmgEd`, `EDIT_KEY = nf26.damage_edits`) builds an
+analyst's own damage layer: pick an OSM or Overture building footprint off the
+map or draw a polygon freehand, grade it Destroyed / Damaged / Possibly damaged,
+and export the lot as GeoJSON. The working copy is layered over the committed
+file at `CFG.DAMAGE_EDITS_URL` by feature id; a 404 there just means nothing has
+been published yet. While a mode is on, `editorActive()` gates the normal
+feature popups so a click records an edit instead of opening one.
+
+**Image align** (`#imgAl`, `IMGALIGN_KEY = nf26.imgalign`) hand-fits an
+ungeoreferenced photograph over the imagery. It is a fitting aid rather than
+part of the published map, so it is hidden unless the page is loaded with
+`?align=1`; without the flag the section is not built and the overlay never
+draws, since there would be no control to turn it off. A saved fit in
+`localStorage` is left alone either way, so the tool comes back exactly as it
+was left. It adds a MapLibre `image` source
+to both maps just above the `imagery` layer, so the photo can be checked against
+either side of the divider and against the basemap, and `setCoordinates()`
+pushes every change straight to the GPU. Turning the tool on takes the pointer
+from the damage editor and the popups. It can carry a warp mesh: at 1x1 the photo is one
+`image` source over four corners, and at a denser setting each cell becomes its
+own `image` source over its own four vertices, sliced out of the file in a
+canvas at load time and handed over as a data URL. A single `image` source
+takes four corners and no more, so cells are the only way to bend the middle of
+a photo. Adjacent cells share vertices, so the sheet stays joined; a flat 4x6
+mesh reassembles to within 9 pixels of the plain quad. Dragging one vertex moves
+only the cells touching it, which is what lets a canal or a road bend be fitted
+without disturbing the rest. Changing the density resamples the current mesh
+bilinearly, so the fit already dialled in survives; Flatten pulls the interior
+back onto the outer quad without moving the corners.
+
+In Move mode a drag inside the
+quadrilateral translates it and a shift-drag rotates it about its centre. In
+Stretch mode a 1x1 mesh is a transform box of eight grab points: four amber corner
+handles that drag independently, and four smaller blue handles at the edge
+midpoints that carry both of that side's corners, so a side can be pushed in or
+out while the opposite one stays put. Between them the quad can be stretched or
+skewed into any shape an `image` source accepts. Both kinds move by the pointer
+delta rather than snapping to the cursor, so grabbing a handle off-centre does
+not jolt the photo, and a corner wins a hit test against an edge handle
+crowding it once the quad is dragged small. Buttons give 0.5 degrees of
+rotation, 1% of uniform scale and 1% of stretch along the image's own width and
+height axes, and the arrow keys nudge by one screen pixel, ten with Shift. All
+of the geometry runs in Web Mercator metres rather than degrees, so a rotation
+stays rigid instead of shearing with latitude. Undo walks back an 80-deep
+snapshot stack and Reset returns to the automatic fit the layer was built from.
+The read-only box shows the current corners in image order — top-left,
+top-right, bottom-right, bottom-left — and Copy or Download hands them over as
+`drone_align.json` for the retile pipeline. A denser mesh also exports
+`mesh.grid`, its vertices row-major from the top-left, each one a ground control
+point at image pixel (ix/nx x width, iy/ny x height) - the input a thin-plate-spline
+rewarp needs. It was added to correct
+`post_drone_trisuli_202609`, whose source photograph sits at
+`work/drone_trisuli/photo_clean.png`, but the image URL field takes any path the
+dev server serves.
+
 ## URL state
 
 Everything lives in the hash, written with `replaceState` on every change:
 
 ```
-#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&pn=0&cb=status&sb=0&sc=0&hx=corridor&ov=+key,-key
+#m=swipe&pre=<id>&post=<id>&c=<lng>,<lat>&z=<zoom>&s=<swipe %>&b=osm&hs=1&ct=0&pn=0&cb=status&sb=0&sc=0&hx=corridor&oo=45&ov=+key,-key
 ```
 
 `ov` is a **diff against the default overlay set**, not the full list, which
 keeps the URL short. `+key` turns one on, `-key` turns one off. `hx` is the
 HOT category list's extent switch (`flood` | `corridor`), omitted at its default.
+`oo` is the damage group's opacity as a percentage, omitted at 100 and taking
+precedence over the `nf26.ov_opacity` fallback the same way `sb` and `sc` do.
 OSM categories are keyed `hot_<cat>` and Overture ones `ovt_<cat>`; the two are
 separate overlay groups. Older links carrying `ho=overture` (from when source
 was a switch) are read and their `hot_` keys remapped to `ovt_`.
 
 ## Keyboard
 
-Arrows pan (hold shift for a larger step), `+`/`-` zoom, `[` and `]` move the
+Arrows pan (hold shift for a larger step) — or nudge the photo when the Image
+align tool is on — `+`/`-` zoom, `[` and `]` move the
 divider, `B` hides and shows the left info panel, `C` the right layer-controls rail. In the search box, up and down move
 through results, Enter flies to one and Escape clears. MapLibre's own keyboard handler is
 disabled on both maps so the two never disagree.

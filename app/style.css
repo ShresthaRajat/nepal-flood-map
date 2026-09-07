@@ -283,3 +283,27 @@ label.row[hidden] { display: none !important; }
 button.mini { font-size: 10.5px; padding: 1px 6px; line-height: 1.4; }
 #dmgEd code { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: #cfd8e3; }
 .dmg-list .brow.on { background: var(--bg3); box-shadow: inset 2px 0 0 var(--accent); }
+
+/* --------------------------------------------------------- image align */
+/* Owner tool for hand-fitting an ungeoreferenced photo; same rail and same
+   details/field furniture as the damage editor above. */
+.imgal .ia-row { display: flex; gap: 5px; }
+.imgal .ia-row input[type=text] { flex: 1; min-width: 0; }
+.imgal .ia-row button { flex: none; }
+.imgal input[type=text] { font: 11.5px ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--fg); background: var(--bg3); border: 1px solid var(--line);
+  border-radius: 5px; padding: 4px 7px; width: 100%; }
+.imgal input[type=range] { width: 100%; accent-color: var(--accent); margin: 2px 0 0; }
+.imgal .ia-n { color: var(--fg-dim); font-variant-numeric: tabular-nums; }
+.imgal .ia-btns { margin-top: 5px; }
+.imgal .ia-btns button { font-variant-numeric: tabular-nums; }
+.imgal textarea { width: 100%; margin-top: 8px; padding: 5px 7px; border-radius: 5px;
+  border: 1px solid var(--line); background: var(--bg3); color: var(--fg);
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical; }
+#imgAl code { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: #cfd8e3; }
+
+/* Master transparency for the damage / ground-report overlay group. */
+.field.ovop { margin: 2px 0 6px 16px; }
+.field.ovop label { display: flex; align-items: center; gap: 6px; }
+.field.ovop .ovop-n { margin-left: auto; font-variant-numeric: tabular-nums; }
+.field.ovop input[type=range] { width: 100%; accent-color: var(--accent); margin: 1px 0 0; }
