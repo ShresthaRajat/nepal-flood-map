@@ -276,9 +276,9 @@ feature popups so a click records an edit instead of opening one.
 
 **Image align** (`#imgAl`, `IMGALIGN_KEY = nf26.imgalign`) hand-fits an
 ungeoreferenced photograph over the imagery. It is a fitting aid rather than
-part of the published map, so it is hidden unless the page is loaded with
-`?align=1`; without the flag the section is not built and the overlay never
-draws, since there would be no control to turn it off. A saved fit in
+part of the published map, but it is built by default (owner direction, 7 Sep
+2026); `?align=0` hides it, in which case the section is not built and the
+overlay never draws, since there would be no control to turn it off. A saved fit in
 `localStorage` is left alone either way, so the tool comes back exactly as it
 was left. It adds a MapLibre `image` source
 to both maps just above the `imagery` layer, so the photo can be checked against

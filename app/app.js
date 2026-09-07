@@ -7,11 +7,10 @@
 
 const CFG = window.CFG;
 const QS = new URLSearchParams(location.search);
-// ?align=1 reveals the Image align tool.  It is an owner-only fitting aid, not
-// part of the published map, so it stays out of the controls rail by default;
-// the flag is all that gates it, and a saved fit in localStorage is untouched
-// either way, so the tool comes back exactly as it was left.
-const ALIGN_TOOL = QS.has('align');
+// The Image align tool (owner fitting aid) is always built; ?align=0 hides it.
+// A saved fit in localStorage is untouched either way, so the tool comes back
+// exactly as it was left.
+const ALIGN_TOOL = QS.get('align') !== '0';
 const BASE = location.origin + location.pathname.replace(/[^/]*$/, '');
 const GLYPHS = 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf';
 const FONT = ['Noto Sans Regular'];
@@ -2331,9 +2330,9 @@ function buildDamageEditor() {
 // ======================================================================== //
 
 const IMGALIGN_KEY = 'nf26.imgalign';
-const IMGALIGN_IMG = 'work/drone_trisuli/photo_clean.png';
-const IMGALIGN_W = 1525;
-const IMGALIGN_H = 828;
+const IMGALIGN_IMG = 'work/drone_trisuli/photo_v2.jpg';   // same frame as photo_clean.png, original JPEG without UI overlays
+const IMGALIGN_W = 1080;   // fallback only; the real size is measured when an image loads
+const IMGALIGN_H = 608;
 // The published corners of post_drone_trisuli_202609, in the image order
 // MapLibre wants: top-left, top-right, bottom-right, bottom-left.  They come
 // from the affine solved against the cloud-free 5 Feb Legion scene
@@ -2353,6 +2352,8 @@ const imgAlign = {
   grid: null,              // (nx+1)*(ny+1) [lon,lat] mesh vertices, row-major from top-left
   cells: null,             // data: URLs of the sliced image, one per cell (null at 1x1)
   url: IMGALIGN_IMG,
+  w: IMGALIGN_W, h: IMGALIGN_H,   // pixel size of the loaded image (measured in imgAlignLoad)
+  fits: {},                // per-image placements keyed by url: {coordinates, nx, ny, grid, rot}
   opacity: 0.7,
   rot: 0,                  // running total for the rotation control; display only, the corners are the truth
   coords: IMGALIGN_INIT.map(p => p.slice()),
@@ -2560,14 +2561,34 @@ function imgAlignFlatten() {
   imgAlignSyncUI();
   toast('Mesh flattened to its corners');
 }
+const imgAlignFit = () => ({ coordinates: imgAlign.coords, nx: imgAlign.nx, ny: imgAlign.ny, grid: imgAlign.grid, rot: imgAlign.rot });
 function imgAlignSave() {
   try {
+    imgAlign.fits[imgAlign.url] = imgAlignFit();   // each image keeps its own placement
     localStorage.setItem(IMGALIGN_KEY, JSON.stringify({
-      v: 2, on: imgAlign.on, mode: imgAlign.mode, url: imgAlign.url,
+      v: 3, on: imgAlign.on, mode: imgAlign.mode, url: imgAlign.url,
       opacity: imgAlign.opacity, rot: imgAlign.rot, coordinates: imgAlign.coords,
-      nx: imgAlign.nx, ny: imgAlign.ny, grid: imgAlign.grid,
+      nx: imgAlign.nx, ny: imgAlign.ny, grid: imgAlign.grid, fits: imgAlign.fits,
     }));
   } catch (e) { /* private mode or storage full */ }
+}
+/* Adopt a stored placement (a fit record) if it is well formed; returns true on success. */
+function imgAlignAdoptFit(j) {
+  const okPt = p => Array.isArray(p) && isFinite(p[0]) && isFinite(p[1]);
+  const c = j && j.coordinates;
+  if (!(Array.isArray(c) && c.length === 4 && c.every(okPt))) return false;
+  imgAlign.coords = c.map(p => [+p[0], +p[1]]);
+  imgAlign.nx = 1; imgAlign.ny = 1;
+  imgAlign.grid = imgAlignGridFromCorners(imgAlign.coords, 1, 1);
+  const nx = +j.nx, ny = +j.ny;
+  if (nx >= 1 && nx <= 8 && ny >= 1 && ny <= 8 && Array.isArray(j.grid) &&
+      j.grid.length === (nx + 1) * (ny + 1) && j.grid.every(okPt)) {
+    imgAlign.nx = nx; imgAlign.ny = ny;
+    imgAlign.grid = j.grid.map(p => [+p[0], +p[1]]);
+    imgAlignSyncCorners();
+  }
+  imgAlign.rot = (typeof j.rot === 'number' && isFinite(j.rot)) ? j.rot : 0;
+  return true;
 }
 function imgAlignRestore() {
   // The mesh is the store; the four corners are derived from it.  A v1 record
@@ -2590,6 +2611,7 @@ function imgAlignRestore() {
     imgAlignSyncCorners();
   }
   if (typeof j.url === 'string' && j.url) imgAlign.url = j.url;
+  if (j.fits && typeof j.fits === 'object') imgAlign.fits = j.fits;
   if (typeof j.opacity === 'number' && j.opacity >= 0 && j.opacity <= 1) imgAlign.opacity = j.opacity;
   if (j.mode === 'move' || j.mode === 'corners') imgAlign.mode = j.mode;
   if (typeof j.rot === 'number' && isFinite(j.rot)) imgAlign.rot = j.rot;
@@ -2739,15 +2761,29 @@ function imgAlignSetOpacity(v) {
   });
   imgAlignSave();
 }
+/* Record the image's true pixel size so the export names the grid the tiles are built from. */
+function imgAlignProbeSize(u) {
+  const probe = new Image();
+  probe.onload = () => { imgAlign.w = probe.naturalWidth; imgAlign.h = probe.naturalHeight; imgAlignSyncUI(); };
+  probe.onerror = () => toast('Could not load ' + u);
+  probe.src = u;
+}
 function imgAlignLoad(url) {
   const u = String(url || '').trim();
   if (!u) { toast('Give an image URL first'); return; }
+  if (imgAlign.url && imgAlign.url !== u) imgAlign.fits[imgAlign.url] = imgAlignFit();   // park the outgoing image's placement
   imgAlign.url = u;
+  // A previously placed image comes back where it was left; a new one starts
+  // where the quad is now, so it can be dragged into place from a known spot.
+  const had = imgAlignAdoptFit(imgAlign.fits[u]);
+  imgAlign.hist = [];
+  imgAlignProbeSize(u);
   imgAlignSlice(() => {
     if (imgAlign.on) imgAlignEnsure();
     imgAlignApply();
     imgAlignSyncUI();
-    toast('Loaded ' + u);
+    imgAlignSave();
+    toast((had ? 'Restored placement of ' : 'Loaded ') + u);
   });
 }
 
@@ -2884,7 +2920,7 @@ function wireImageAlign() {
 function imgAlignJSON() {
   const r = p => [+p[0].toFixed(7), +p[1].toFixed(7)];
   const out = {
-    image: imgAlign.url, width: IMGALIGN_W, height: IMGALIGN_H,
+    image: imgAlign.url, width: imgAlign.w, height: imgAlign.h,
     coordinates: imgAlign.coords.map(r),
   };
   if (imgAlignIsMesh()) {
@@ -3122,6 +3158,7 @@ async function main() {
   wirePopups(maps.pre); wirePopups(maps.post);
 
   imgAlignRestore();
+  if (ALIGN_TOOL) imgAlignProbeSize(imgAlign.url);
   renderSidebar();
   applyMode();
   setSwipe(state.swipe, false);
