@@ -133,21 +133,48 @@ const byId = id => catalog.layers.find(l => l.id === id) || null;
 const selIds = side => state[side] || [];
 const isSel = (side, id) => selIds(side).indexOf(id) >= 0;
 const hasImagery = side => selIds(side).length > 0;
-/* Selected scenes in draw order: coarsest underneath, finest on top, so a
- * 0.4 m frame reads over the 10 m scene it sits inside.  Ties keep catalogue
- * order; a scene with no `gsd_m` is treated as finest and lands on top. */
+/* Selected scenes in draw order: `state[side]` itself IS the stacking order,
+ * index 0 at the bottom and the last entry on top.  `toggleScene` picks a
+ * sensible spot for a newly-ticked scene (see `insertIndexForGsd`); after
+ * that, the Stacking rows in the tag menu let it be moved by hand, and this
+ * function just reflects whatever order the state list is in. */
 function selectedLayers(side) {
-  const idx = l => catalog.layers.indexOf(l);
-  return selIds(side).map(byId).filter(Boolean)
-    .sort((a, b) => ((b.gsd_m != null ? +b.gsd_m : 0) - (a.gsd_m != null ? +a.gsd_m : 0)) || (idx(a) - idx(b)));
+  return selIds(side).map(byId).filter(Boolean);
 }
-/* Toggle one scene on a side, keeping the click order of the hash list. */
+const gsdOf = l => (l && l.gsd_m != null) ? +l.gsd_m : 0;   // no gsd_m -> treated as finest
+/* Where a newly-ticked scene should land in an existing (possibly hand-
+ * reordered) stack: as if the whole list were coarsest-first/finest-last,
+ * but only this one scene is being placed, so ties land after (on top of)
+ * scenes already at that same gsd rather than reshuffling anything else. */
+function insertIndexForGsd(list, l) {
+  const g = gsdOf(l);
+  for (let i = 0; i < list.length; i++) if (gsdOf(byId(list[i])) < g) return i;
+  return list.length;
+}
+/* Toggle one scene on a side.  Ticking on inserts it where a gsd sort would
+ * put it (finest on top); the manual order set via the Stacking rows is
+ * otherwise left untouched.  Unticking just removes it. */
 function toggleScene(side, id, on) {
   const list = selIds(side).slice();
   const at = list.indexOf(id);
-  if (on && at < 0) list.push(id);
-  else if (!on && at >= 0) list.splice(at, 1);
+  if (on && at < 0) {
+    const l = byId(id);
+    list.splice(l ? insertIndexForGsd(list, l) : list.length, 0, id);
+  } else if (!on && at >= 0) list.splice(at, 1);
   state[side] = list;
+}
+/* Move one scene one step towards the top (dir=1) or the bottom (dir=-1) of
+ * the stack; a no-op past either end (the Stacking rows disable those
+ * buttons instead of relying on this to clamp). */
+function reorderScene(side, id, dir) {
+  const list = selIds(side).slice();
+  const at = list.indexOf(id);
+  const to = at + dir;
+  if (at < 0 || to < 0 || to >= list.length) return;
+  const tmp = list[at]; list[at] = list[to]; list[to] = tmp;
+  state[side] = list;
+  applyImagery(side);
+  writeHash();
 }
 
 // --------------------------------------------------------- style definition
@@ -802,7 +829,7 @@ function applyImagery(side) {
   // The style can still be settling right after 'load' (GeoJSON/PMTiles sources
   // fetching); never drop the request silently, re-run once the map is idle.
   if (!m.isStyleLoaded()) { m.once('idle', () => applyImagery(side)); return; }
-  const want = selectedLayers(side);                 // coarse first, fine last
+  const want = selectedLayers(side);                 // bottom first, top last
   const wantIds = want.map(l => l.id);
   const style = m.getStyle();
   const isImg = id => id.indexOf(IMG_PREFIX) === 0;
@@ -1061,6 +1088,8 @@ function readHash() {
   if (p.get('m')) state.mode = p.get('m');
   // `pre` / `post` are comma-separated id lists; a single id (every link
   // written before Sep 2026) parses as a one-element list, `none` as empty.
+  // The order is the stacking order (index 0 = bottom, last = top): keep it
+  // exactly as given, don't resort it.
   for (const side of ['pre', 'post']) {
     const v = p.get(side);
     if (v === null) continue;
@@ -1160,6 +1189,10 @@ function buildTags() {
       }
     }
 
+    const stack = el('div', 'tm-stack');
+    menu.appendChild(stack);
+    t.stack = stack;
+
     menu.appendChild(el('div', 'tm-hd', 'View'));
     const only = el('button', 'tm-item', side === 'pre' ? 'Pre only' : 'Post only');
     only.type = 'button';
@@ -1206,15 +1239,49 @@ function refreshTags() {
     t.btn.title = ids.length > 1 ? selectedLayers(side).map(sceneText).join('\n') : '';
     for (const b of t.boxes) b.cb.checked = isSel(side, b.id);
     t.btn.classList.toggle('only', state.mode === side);
+    renderStack(side);
+  }
+}
+/* Rebuilds the "Stacking" rows for one side's tag menu: only shown once two
+ * or more scenes are selected there, listed top-most first, each with \u25b2/\u25bc
+ * buttons that step it one place towards the top or bottom of the stack.
+ * Called from refreshTags so it always matches the current selection and
+ * order (including right after a reorder, so the menu stays in sync and
+ * open). */
+function renderStack(side) {
+  const t = tagEl[side];
+  if (!t || !t.stack) return;
+  const wrap = t.stack;
+  wrap.innerHTML = '';
+  const list = selIds(side);               // bottom -> top
+  if (list.length < 2) return;
+  wrap.appendChild(el('div', 'tm-hd', 'Stacking \u00b7 top first'));
+  for (let i = list.length - 1; i >= 0; i--) {
+    const l = byId(list[i]);
+    if (!l) continue;
+    const id = list[i];
+    const row = el('div', 'tm-row tm-stackrow');
+    row.appendChild(el('span', 't', sceneText(l)));
+    const up = el('button', 'tm-arrow', '\u25b2');
+    up.type = 'button'; up.title = 'Bring up'; up.disabled = i === list.length - 1;
+    up.setAttribute('aria-label', 'Bring ' + sceneText(l) + ' up');
+    const down = el('button', 'tm-arrow', '\u25bc');
+    down.type = 'button'; down.title = 'Send down'; down.disabled = i === 0;
+    down.setAttribute('aria-label', 'Send ' + sceneText(l) + ' down');
+    up.addEventListener('click', ev => { ev.stopPropagation(); reorderScene(side, id, 1); });
+    down.addEventListener('click', ev => { ev.stopPropagation(); reorderScene(side, id, -1); });
+    row.append(up, down);
+    wrap.appendChild(row);
   }
 }
 function updateMeta(side) {
   const n = document.querySelector('#meta' + side);
   if (n) n.innerHTML = describeSide(side);
 }
-/* Sidebar metadata: one block per selected scene, in stacking order. */
+/* Sidebar metadata: one block per selected scene, in stacking order, top of
+ * the stack first — matching the Stacking rows in the tag menu. */
 function describeSide(side) {
-  const list = selectedLayers(side);
+  const list = selectedLayers(side).slice().reverse();
   if (!list.length) return 'No imagery, basemap only';
   return list.map(describe).join('<div class="metasep"></div>');
 }
@@ -1272,7 +1339,7 @@ function renderSidebar() {
 
   // imagery selectors -----------------------------------------------------
   const imgBlock = el('div', 'block', '<h2>Imagery</h2>');
-  imgBlock.appendChild(el('p', 'note', 'Choose scenes with the tags at the top of the map \u2014 tick as many as you like per side; coarser scenes sit under finer ones.'));
+  imgBlock.appendChild(el('p', 'note', 'Choose scenes with the tags at the top of the map \u2014 tick as many as you like per side; finer scenes go on top by default, and the Stacking rows in the menu let you reorder overlapping scenes.'));
   for (const side of ['pre', 'post']) {
     const f = el('div', 'field');
     f.appendChild(el('label', null, side === 'pre' ? 'Before (left)' : 'After (right)'));
