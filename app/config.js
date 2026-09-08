@@ -201,6 +201,16 @@ and only approximate individual roofs. The fAIr damage layer is AI-scored and li
 upper-valley tile; it is not a validated damage assessment. Bridge conditions in the ground-report
 layer come from volunteer field reports of varying age. Coordinates shown are approximate.</p>
 
+<h3>Administrative boundaries</h3>
+<p>Province, district and municipality (local level) boundaries are from OCHA's Common Operational
+Dataset for Nepal (COD-AB), version v02 valid 14 March 2024 — the current federal structure. Survey
+Department of Nepal / UN Resident Coordinator's Office in Nepal, CC BY-IGO. Ward boundaries are the
+only ward-level (admin4) source found for Nepal: a 2018 Housing Recovery and Reconstruction Platform
+(HRRP) dataset covering the 31 districts affected by the 2015 earthquake, filtered here to Rasuwa and
+Nuwakot. CC0, but treat ward shapes and numbers as reference-only, not authoritative — see
+<code>data/admin/README.md</code> for the full provenance and caveats. All four layers are clipped to
+roughly the map's maximum pan extent and simplified for basemap display, off by default.</p>
+
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery
 partners. Map glyphs from the MapLibre demo font stack.</p>

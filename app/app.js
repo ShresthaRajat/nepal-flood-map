@@ -234,6 +234,12 @@ const andF = (...fs) => ['all', ...fs.filter(Boolean)];
 
 const HDX = 'data/hdx/';
 const ATTR_HDX = CFG.HDX_CREDIT + ' via <a href="' + CFG.HDX_URL + '" target="_blank" rel="noopener">HDX</a>';
+const ADMIN = 'data/admin/';
+// Province/district/municipality: OCHA COD-AB Nepal, v02 (2024-03-14), CC BY-IGO.
+const ATTR_ADMIN_COD = 'Survey Department of Nepal / UN RCO Nepal via OCHA COD-AB, CC BY-IGO';
+// Ward: HRRP Nepal 2018 ward boundaries for the 31 earthquake districts, filtered to
+// Rasuwa/Nuwakot; the only ward-level (admin4) source found for Nepal -- see data/admin/README.md.
+const ATTR_ADMIN_WARD = 'HRRP Nepal (2018), CC0 -- reference only, see data/admin/README.md';
 
 /* One outline feature per selected scene — the union of the footprints. */
 function boundsFC(list) {
@@ -290,6 +296,12 @@ function buildDefs() {
     roads_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf')],
       minzoom: 7, maxzoom: 13, bounds: [84.27, 27.43, 86.08, 28.52],
       attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
+    // Administrative boundaries (province/district/municipality/ward), clipped to roughly the map's
+    // max pan extent -- see data/admin/README.md for sources, licenses and the ward-data caveat.
+    admin_province: { type: 'geojson', data: ADMIN + 'admin_province.geojson', attribution: ATTR_ADMIN_COD },
+    admin_district: { type: 'geojson', data: ADMIN + 'admin_district.geojson', attribution: ATTR_ADMIN_COD },
+    admin_municipality: { type: 'geojson', data: ADMIN + 'admin_municipality.geojson', attribution: ATTR_ADMIN_COD },
+    admin_ward: { type: 'geojson', data: ADMIN + 'admin_ward.geojson', attribution: ATTR_ADMIN_WARD },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     // Damage editor: the analyst's own collection, the highlighted selection and
@@ -704,6 +716,44 @@ function buildDefs() {
       ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879 },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
     { key: 'hot_aoi', label: 'Area of interest outline (HOT + upstream to the glacier)', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
+  ] });
+
+  // 5a. Administrative boundaries (province/district/municipality/ward) ----
+  // Reference layers for government coordination: line + name label per level, off by
+  // default so they don't clutter the imagery until asked for. Province/district/
+  // municipality come from OCHA COD-AB (current, 2024); ward is a 2018 source limited to
+  // Rasuwa and Nuwakot -- see data/admin/README.md for provenance, licenses and caveats.
+  const ADMIN_COLOR = { province: '#38bdf8', district: '#a78bfa', municipality: '#34d399', ward: '#f472b6' };
+  const ADMIN_DASH  = { province: [4, 2], district: [3, 2], municipality: [2, 1.5], ward: [1, 1.5] };
+  const ADMIN_WIDTH = { province: 1.8, district: 1.3, municipality: 1, ward: 0.8 };
+  function adminLayers(level, nameExpr, minLabelZoom) {
+    const color = ADMIN_COLOR[level];
+    return [
+      { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level,
+        layout: { visibility: 'none', 'line-join': 'round' },
+        paint: { 'line-color': color, 'line-width': ADMIN_WIDTH[level], 'line-opacity': 0.85, 'line-dasharray': ADMIN_DASH[level] } },
+      { id: 'admin_' + level + '-label', type: 'symbol', source: 'admin_' + level, minzoom: minLabelZoom,
+        layout: { visibility: 'none', 'text-field': nameExpr, 'text-font': FONT,
+          'text-size': ['interpolate', ['linear'], ['zoom'], minLabelZoom, 10, minLabelZoom + 4, 12.5],
+          'text-max-width': 8, 'text-padding': 3 },
+        paint: { 'text-color': color, 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.5, 'text-halo-blur': 0.3 } },
+    ];
+  }
+  push(
+    ...adminLayers('province', ['get', 'adm1_name'], 6),
+    ...adminLayers('district', ['get', 'adm2_name'], 8),
+    ...adminLayers('municipality', ['get', 'adm3_name'], 10),
+    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12),
+  );
+  groups.push({ title: 'Administrative boundaries', entries: [
+    { key: 'admin_province', label: 'Province', color: ADMIN_COLOR.province,
+      ids: ['admin_province-line', 'admin_province-label'], on: false, count: 6 },
+    { key: 'admin_district', label: 'District', color: ADMIN_COLOR.district,
+      ids: ['admin_district-line', 'admin_district-label'], on: false, count: 42 },
+    { key: 'admin_municipality', label: 'Municipality / local level', color: ADMIN_COLOR.municipality,
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399 },
+    { key: 'admin_ward', label: 'Ward (Rasuwa & Nuwakot only, 2018 reference)', color: ADMIN_COLOR.ward,
+      ids: ['admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
   ] });
 
   // 6. search pin + selected-scene outline -----------------------------------
