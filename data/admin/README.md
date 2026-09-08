@@ -50,58 +50,21 @@ places (~0.1 m).
   0 otherwise. Computed with GDAL/OGR `Intersects()` against the already-clipped/
   simplified ward geometry (not the original survey-precision shapefile), so it is
   a basemap-scale approximation, not a precise cadastral join. Drives the ward
-  layer's green fill in `app/app.js` (`adminLayers('ward', ..., fillFilter)`).
-- **`severity` field** (`"severe"` | `"affected"` | absent/null): a second, higher
-  tier drawn in pink above the green, for wards that were severely hit rather than
-  merely touched by the flood.
-
-  **Method.** Per-ward count of HOT-recorded destroyed buildings (`status: Destroyed`,
-  `feature_type: building`/`building part`, from the wider corridor dataset
-  `data/hdx/hot_flood_npl_corridor/destroyed_features_osm.geojson`, point/centroid-in-ward).
-  Across the 117 wards this count has a clean natural break: 8 wards have 84-415
-  destroyed buildings, the next-highest ward has 33 (more than a 2.5x drop). Threshold:
-  **>= 80 destroyed buildings**. Other signals considered but not needed for the final
-  rule, since the building-count break already lined up cleanly with the named
-  hard-hit settlements: bridge ground reports (`data/hdx/hot_flood_npl/hot_flood_npl_bridge_damage.geojson`,
-  `status: Washed out`), Copernicus EMS road grading length per ward
-  (`data/hdx/derived/ems_road_grading.geojson`, `grade: Destroyed`/`Damaged`, geometry
-  intersection length in UTM 45N), and the analyst's locally edited damage collection
-  (`data/edits/damage_edits.geojson`, `status: destroyed`).
-
-  **Owner-directed additions.** Two of the named hard-hit settlements sit in wards the
-  building-count rule does not flag — Bidur/Battar (ward Bidur/4: 0 destroyed buildings
-  recorded, but 2.20 km of EMS-graded destroyed road) and Mailung (ward Uttargaya/1: 0
-  destroyed buildings recorded, but 5 "Washed out" bridge ground reports). Both were
-  added to the severe tier on owner direction rather than by the threshold, since the
-  underlying OSM/EMS damage recording is evidently incomplete there, not because the
-  wards were less affected.
-
-  **Result — 10 severe wards** (district/municipality/ward number, destroyed-building
-  count, notable settlement):
-  | Ward | Destroyed buildings | Notable place |
-  |---|---:|---|
-  | RASUWA/Gosaikunda/2 | 415 | Timure, Rasuwagadhi |
-  | NUWAKOT/Bidur/10 | 245 | Betrawati |
-  | RASUWA/Gosaikunda/5 | 234 | Syabrubesi |
-  | NUWAKOT/Bidur/9 | 170 | |
-  | NUWAKOT/Bidur/7 | 137 | |
-  | NUWAKOT/Bidur/1 | 114 | Trishuli Bazar |
-  | NUWAKOT/Bidur/5 | 95 | Devighat |
-  | RASUWA/Gosaikunda/1 | 84 | Thuman, Dalphedi, Dalgaun (upstream of Timure) |
-  | RASUWA/Uttargaya/1 | 0 | Mailung — owner-directed |
-  | NUWAKOT/Bidur/4 | 0 | Bidur/Battar — owner-directed |
-
-  The remaining 21 flood-affected wards keep `severity: "affected"` (green only).
-  Drives `admin_ward-fill-severe` / `admin_ward-line-severe` in `app/app.js`.
+  layer's orange fill in `app/app.js` (`adminLayers('ward', ..., fillFilter)`); the
+  ordinary green ward outline still applies to every ward regardless.
+- A `severity` field (`"severe"`/`"affected"`) briefly existed here for a two-tier
+  pink/orange-affected split; it was dropped on owner direction in favour of a
+  single orange tier for every flood-affected ward, and stripped from the file.
+  See the commit that added it ("ward layer: pink tier for severely hit wards")
+  and the one that reverted it ("ward layer: fill all flood-touching wards orange")
+  if that method is ever wanted again.
 
 ## Regenerating
 
 No `tools/build_admin_boundaries.*` script exists yet; these were produced with
 one-off `ogr2ogr`/GDAL-Python commands (`-clipsrc`/`-simplify`/`-t_srs`/`-where`/
-`-lco COORDINATE_PRECISION=6`, plus small scripts computing `flood_affected` via
-`ogr.Geometry.Intersects()` and `severity` via the destroyed-building count above)
-run directly against the downloaded HDX sources and the app's own derived damage
-files. If a future refresh needs the exact commands, see the commits that added
-this directory ("add district/province/municipality/ward boundary toggle layers"),
-the `flood_affected` field ("highlight only the flood-affected wards") and the
-`severity` field ("ward layer: pink tier for severely hit wards").
+`-lco COORDINATE_PRECISION=6`, plus a small script computing `flood_affected` via
+`ogr.Geometry.Intersects()`) run directly against the downloaded HDX sources. If a
+future refresh needs the exact commands, see the commit that added this directory
+("add district/province/municipality/ward boundary toggle layers") and the one
+that added `flood_affected` ("highlight only the flood-affected wards").

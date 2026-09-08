@@ -211,16 +211,9 @@ Nuwakot. CC0, but treat ward shapes and numbers as reference-only, not authorita
 <code>data/admin/README.md</code> for the full provenance and caveats. All four layers are clipped to
 roughly the map's maximum pan extent and simplified for basemap display, off by default. The whole
 group has its own opacity slider.</p>
-<p>Wards carry two damage tiers. <b>Green</b> marks the 21 (of 117) wards that intersect the observed
-flood extent but fall below the severe threshold. <b>Pink</b>, drawn above the green, marks 10 wards
-judged severely hit: 8 by a natural break in HOT-recorded destroyed buildings (wards with 84-415
-destroyed buildings; the next-highest ward has 33), covering Timure, Rasuwagadhi, Betrawati, Syabrubesi,
-Trishuli Bazar, Devighat and the settlements upstream of Timure. Two more — Bidur/Battar and Mailung —
-were added on owner direction: both are known hard-hit settlements, but the OSM/EMS damage recording in
-their wards is evidently incomplete (no destroyed buildings recorded there, only a stretch of
-EMS-graded destroyed road for Bidur/Battar and five "Washed out" bridge reports for Mailung), so the
-building-count threshold alone would have missed them. Every ward keeps its ordinary outline regardless
-of tier. Full method, data sources and the ward list: <code>data/admin/README.md</code>.</p>
+<p>An orange fill (with a darker orange edge) marks the 31 (of 117) wards that intersect the observed
+flood extent; every ward, affected or not, still gets the ordinary green outline. Full method, data
+sources and the ward list: <code>data/admin/README.md</code>.</p>
 
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery
