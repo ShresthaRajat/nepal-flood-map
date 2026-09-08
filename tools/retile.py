@@ -307,6 +307,16 @@ def build_pre_legion():
 
 
 def build_pre_s1():
+    """SUPERSEDED, not in BUILDERS: this used to place the trisuli-box-only
+    assets/trisuli/pre_s1_20260816.webp crop (minzoom 11-14, coverage
+    trisuli_bazar). tiles/pre_s1_20260816 is now a full-corridor pyramid
+    (bounds/zoom matching post_s1_20260828) built directly from Planetary
+    Computer sentinel-1-rtc STAC (relative orbit 85, same as the 28 Aug scene)
+    by a one-off script in work/cog/pre_s1_20260816/, not by this asset-based
+    pipeline -- there is no assets/full/pre_s1_20260816.webp to feed
+    full_extent_source() the way build_post_s1() does. Left here only so the
+    box-crop history isn't lost; do not add back to BUILDERS or it will
+    overwrite the full-corridor tiles with the old small crop."""
     tag = "pre_s1_20260816"
     out = box_source("pre_s1_20260816.webp", tag)
     add_layer(id=tag, label="16 Aug 2026 · Sentinel-1 RTC", side="pre", date="2026-08-16",
@@ -440,7 +450,10 @@ def build_post_pelican():
 
 
 BUILDERS = [
-    build_pre_s2, build_pre_ps, build_pre_legion, build_pre_s1,
+    build_pre_s2, build_pre_ps, build_pre_legion,
+    # build_pre_s1 intentionally excluded -- see its docstring: tiles/pre_s1_20260816
+    # is now a full-corridor pyramid built outside this pipeline, and rerunning it
+    # here would overwrite that with the old trisuli-box-only crop.
     build_post_s2, build_post_ps, build_post_ps26, build_post_ps28, build_post_s1,
     build_post_wv02, build_post_skysat31, build_post_skysat27,
     build_post_wv3, build_post_legion, build_post_pelican,

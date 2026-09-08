@@ -74,17 +74,17 @@
    "provider": "ESA Copernicus / Microsoft Planetary Computer",
    "gsd_m": 10,
    "bounds": [
-    85.12207,
-    27.89735,
-    85.18799,
-    27.95559
+    84.50684,
+    27.68353,
+    85.60547,
+    28.45903
    ],
-   "minzoom": 11,
+   "minzoom": 8,
    "maxzoom": 14,
    "tiles": "tiles/pre_s1_20260816/{z}/{x}/{y}.webp",
    "attribution": "© ESA Copernicus",
-   "coverage": "trisuli_bazar",
-   "size_mb": 0.1
+   "coverage": "corridor",
+   "size_mb": 51.7
   },
   {
    "id": "post_s2_20260827",

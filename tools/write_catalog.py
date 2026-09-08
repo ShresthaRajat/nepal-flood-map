@@ -8,7 +8,7 @@ META = {
  "pre_s2_20260603":     ("3 Jun 2026 · Sentinel-2 10 m","pre","2026-06-03","Sentinel-2","ESA Copernicus",10,"© ESA Copernicus","corridor"),
  "pre_ps_20260527":     ("27 May 2026 · PlanetScope 3 m","pre","2026-05-27","PlanetScope","Planet Labs PBC",3,"© Planet Labs PBC, CC-BY-NC 4.0","corridor"),
  "pre_legion_20260205": ("5 Feb 2026 · Vantor Legion 0.39 m","pre","2026-02-05","Legion","Vantor",0.39,"© 2026 Vantor via OpenAerialMap, CC-BY 4.0","trisuli_bazar"),
- "pre_s1_20260816":     ("16 Aug 2026 · Sentinel-1 radar 10 m","pre","2026-08-16","Sentinel-1 RTC","ESA Copernicus / Microsoft Planetary Computer",10,"© ESA Copernicus","trisuli_bazar"),
+ "pre_s1_20260816":     ("16 Aug 2026 · Sentinel-1 radar 10 m","pre","2026-08-16","Sentinel-1 RTC","ESA Copernicus / Microsoft Planetary Computer",10,"© ESA Copernicus","corridor"),
  "post_s2_20260827":    ("27 Aug 2026 · Sentinel-2 10 m","post","2026-08-27","Sentinel-2","ESA Copernicus",10,"© ESA Copernicus","corridor"),
  "post_ps_20260826":    ("26 Aug 2026 flood morning · PlanetScope 3 m","post","2026-08-26","PlanetScope","Planet Labs PBC",3,"© Planet Labs PBC, CC-BY-NC 4.0","corridor"),
  "post_ps26_mosaic":    ("26 Aug 2026 · PlanetScope 9-scene mosaic ~20 m","post","2026-08-26","PlanetScope","Planet Labs PBC",20,"© Planet Labs PBC, CC-BY-NC 4.0","corridor"),
