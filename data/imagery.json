@@ -418,6 +418,58 @@
    "source_ids": [
     "B1300011011F4F10"
    ]
+  },
+  {
+   "id": "post_wv02_20260908_ef5510",
+   "label": "8 Sep 2026 · Vantor WorldView-2 0.5 m",
+   "side": "post",
+   "date": "2026-09-08",
+   "sensor": "WorldView-2",
+   "provider": "Vantor",
+   "gsd_m": 0.5,
+   "bounds": [
+    85.05844,
+    27.82316,
+    85.22906,
+    27.96964
+   ],
+   "minzoom": 10,
+   "maxzoom": 17,
+   "tiles": "tiles/post_wv02_20260908_ef5510/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "trisuli_bazar",
+   "size_mb": 25.0,
+   "cloud_pct": 24,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "B030001100EF5510"
+   ]
+  },
+  {
+   "id": "post_wv02_20260908_ef5910",
+   "label": "8 Sep 2026 · Vantor WorldView-2 0.5 m",
+   "side": "post",
+   "date": "2026-09-08",
+   "sensor": "WorldView-2",
+   "provider": "Vantor",
+   "gsd_m": 0.5,
+   "bounds": [
+    85.2502,
+    28.06339,
+    85.42848,
+    28.22954
+   ],
+   "minzoom": 10,
+   "maxzoom": 17,
+   "tiles": "tiles/post_wv02_20260908_ef5910/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 26.3,
+   "cloud_pct": 48,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "B030001100EF5910"
+   ]
   }
  ],
  "default_pre": "none",
