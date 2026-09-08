@@ -728,15 +728,17 @@ function buildDefs() {
   // for damage and roads. `opacity: true` on the group below gives it its own fade slider,
   // separate from the flood/damage group's. Province/district/municipality come from OCHA
   // COD-AB (current, 2024); ward is a 2018 source limited to Rasuwa and Nuwakot -- see
-  // data/admin/README.md for provenance, licenses and caveats.
+  // data/admin/README.md for provenance, licenses and caveats. Only the wards that intersect
+  // the observed 27 Aug flood extent (31 of 117, precomputed into the `flood_affected` field
+  // by tools -- see data/admin/README.md) get the green fill; all wards still get an outline.
   const ADMIN_COLOR = { province: '#14532d', district: '#15803d', municipality: '#22c55e', ward: '#86efac' };
   const ADMIN_DASH  = { province: [4, 2], district: [3, 2], municipality: [2, 1.5], ward: [1, 1.5] };
   const ADMIN_WIDTH = { province: 2.6, district: 1.9, municipality: 1.4, ward: 1.1 };
-  function adminLayers(level, nameExpr, minLabelZoom, fill) {
+  function adminLayers(level, nameExpr, minLabelZoom, fillFilter) {
     const color = ADMIN_COLOR[level];
     const out = [];
-    if (fill) out.push({ id: 'admin_' + level + '-fill', type: 'fill', source: 'admin_' + level,
-      layout: { visibility: 'none' }, paint: { 'fill-color': color, 'fill-opacity': 0.18 } });
+    if (fillFilter) out.push({ id: 'admin_' + level + '-fill', type: 'fill', source: 'admin_' + level,
+      filter: fillFilter, layout: { visibility: 'none' }, paint: { 'fill-color': color, 'fill-opacity': 0.35 } });
     out.push(
       { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level,
         layout: { visibility: 'none', 'line-join': 'round' },
@@ -752,7 +754,7 @@ function buildDefs() {
     ...adminLayers('province', ['get', 'adm1_name'], 6),
     ...adminLayers('district', ['get', 'adm2_name'], 8),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10),
-    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12, true),
+    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12, ['==', ['get', 'flood_affected'], 1]),
   );
   groups.push({ title: 'Administrative boundaries', opacity: true, opacityKey: 'admin', entries: [
     { key: 'admin_province', label: 'Province', color: ADMIN_COLOR.province,
@@ -761,7 +763,7 @@ function buildDefs() {
       ids: ['admin_district-line', 'admin_district-label'], on: false, count: 42 },
     { key: 'admin_municipality', label: 'Municipality / local level', color: ADMIN_COLOR.municipality,
       ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399 },
-    { key: 'admin_ward', label: 'Ward (Rasuwa & Nuwakot only, 2018 reference)', color: ADMIN_COLOR.ward,
+    { key: 'admin_ward', label: 'Ward (Rasuwa & Nuwakot only, 2018 reference; fill highlights the 31 flood-affected wards)', color: ADMIN_COLOR.ward,
       ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
   ] });
 

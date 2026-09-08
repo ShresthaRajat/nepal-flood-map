@@ -44,11 +44,21 @@ places (~0.1 m).
   anything beyond visual orientation.
 - Reprojected from the source shapefile's "Nepal_MUTM_Central_84_Everest_1830"
   CRS to WGS84 (EPSG:4326) with GDAL.
+- **`flood_affected` field:** 1 for the 31 (of 117) ward polygons that intersect
+  the observed flood extent (`data/hdx/hot_flood_npl/hot_flood_npl_flood_extent.geojson`,
+  the same "Flood extent, observed 27 Aug 2026" polygon used elsewhere in the app),
+  0 otherwise. Computed with GDAL/OGR `Intersects()` against the already-clipped/
+  simplified ward geometry (not the original survey-precision shapefile), so it is
+  a basemap-scale approximation, not a precise cadastral join. Drives the ward
+  layer's fill in `app/app.js` (`adminLayers('ward', ..., fillFilter)`): only
+  affected wards are filled, every ward still gets an outline.
 
 ## Regenerating
 
 No `tools/build_admin_boundaries.*` script exists yet; these were produced with
-one-off `ogr2ogr` commands (`-clipsrc`/`-simplify`/`-t_srs`/`-where`/
-`-lco COORDINATE_PRECISION=6`) run directly against the downloaded HDX sources.
-If a future refresh needs the exact commands, see the commit that added this
-directory ("add district/province/municipality/ward boundary toggle layers").
+one-off `ogr2ogr`/GDAL-Python commands (`-clipsrc`/`-simplify`/`-t_srs`/`-where`/
+`-lco COORDINATE_PRECISION=6`, plus a small script computing `flood_affected` via
+`ogr.Geometry.Intersects()`) run directly against the downloaded HDX sources. If a
+future refresh needs the exact commands, see the commits that added this directory
+("add district/province/municipality/ward boundary toggle layers") and the
+`flood_affected` field ("highlight only the flood-affected wards").

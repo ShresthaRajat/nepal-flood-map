@@ -209,7 +209,9 @@ only ward-level (admin4) source found for Nepal: a 2018 Housing Recovery and Rec
 (HRRP) dataset covering the 31 districts affected by the 2015 earthquake, filtered here to Rasuwa and
 Nuwakot. CC0, but treat ward shapes and numbers as reference-only, not authoritative — see
 <code>data/admin/README.md</code> for the full provenance and caveats. All four layers are clipped to
-roughly the map's maximum pan extent and simplified for basemap display, off by default.</p>
+roughly the map's maximum pan extent and simplified for basemap display, off by default. Only the 31
+wards (of 117) that intersect the observed flood extent are filled; every ward still gets an outline.
+The whole group has its own opacity slider.</p>
 
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery
