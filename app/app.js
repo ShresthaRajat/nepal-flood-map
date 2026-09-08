@@ -755,10 +755,12 @@ function makeMap(container, defs, side) {
   const style = { version: 8, glyphs: GLYPHS,
     sources: JSON.parse(JSON.stringify(defs.sources)),
     layers: JSON.parse(JSON.stringify(defs.layers)) };
-  // Pin the view to the corridor frame (whole-corridor bounds plus a small
-  // margin): you cannot zoom out past it or pan away onto bare basemap.
+  // Pin the view to the corridor frame (whole-corridor bounds) plus a 100 km pan
+  // margin on every side, so imagery at the edges can be dragged into the middle
+  // of the screen (owner direction, 8 Sep 2026). The corridor frame itself is unchanged.
   const [w, s0, e, n] = [CFG.HOME[0][0], CFG.HOME[0][1], CFG.HOME[1][0], CFG.HOME[1][1]];
-  const mx = (e - w) * 0.12, my = (n - s0) * 0.12;
+  const PAN_KM = 100, midLat = (s0 + n) / 2;
+  const my = PAN_KM / 111.32, mx = PAN_KM / (111.32 * Math.cos(midLat * Math.PI / 180));
   const m = new maplibregl.Map({
     // Zoom stops at 17.49: past that Esri serves "Map data not yet available" tiles here and
     // the page looks broken (owner direction, 6 Sep 2026).
