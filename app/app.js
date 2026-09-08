@@ -38,6 +38,7 @@ const state = {
   controls: null,           // right rail (layer controls): same resolution
   overlays: null,           // Set of enabled entry keys
   ovOpacity: 1,             // 0-1 master transparency for the damage / ground-report overlay group
+  adminOpacity: 1,          // 0-1 master transparency for the administrative boundaries group
   center: null, zoom: null,
 };
 
@@ -692,7 +693,7 @@ function buildDefs() {
 
   // `opacity: true` gives this group the master transparency slider; the damage
   // and ground-report layers are the ones an analyst reads the imagery through.
-  groups.push({ title: 'Flood extent, damage & ground reports', opacity: true, entries: [
+  groups.push({ title: 'Flood extent, damage & ground reports', opacity: true, opacityKey: 'flood', entries: [
     { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
     { key: 'collapse', label: 'Glacier collapse origin & barrier lakes (UNOSAT)', color: '#c084fc',
       ids: ['collapse-zone-fill', 'collapse-zone-line', 'collapse-lake-fill', 'collapse-lake-line', 'collapse-origin-point', 'collapse-origin-label'],
@@ -719,16 +720,24 @@ function buildDefs() {
   ] });
 
   // 5a. Administrative boundaries (province/district/municipality/ward) ----
-  // Reference layers for government coordination: line + name label per level, off by
-  // default so they don't clutter the imagery until asked for. Province/district/
-  // municipality come from OCHA COD-AB (current, 2024); ward is a 2018 source limited to
-  // Rasuwa and Nuwakot -- see data/admin/README.md for provenance, licenses and caveats.
-  const ADMIN_COLOR = { province: '#38bdf8', district: '#a78bfa', municipality: '#34d399', ward: '#f472b6' };
+  // Reference layers for government coordination: line + name label per level (ward also
+  // gets a light fill so the ward area itself reads, not just its edge), off by default so
+  // they don't clutter the imagery until asked for. All four in shades of green, darkest
+  // and thickest for province down to lightest and thinnest for ward -- a shared hue keeps
+  // them reading as one "administrative" family, distinct from the reds/oranges/yellows used
+  // for damage and roads. `opacity: true` on the group below gives it its own fade slider,
+  // separate from the flood/damage group's. Province/district/municipality come from OCHA
+  // COD-AB (current, 2024); ward is a 2018 source limited to Rasuwa and Nuwakot -- see
+  // data/admin/README.md for provenance, licenses and caveats.
+  const ADMIN_COLOR = { province: '#14532d', district: '#15803d', municipality: '#22c55e', ward: '#86efac' };
   const ADMIN_DASH  = { province: [4, 2], district: [3, 2], municipality: [2, 1.5], ward: [1, 1.5] };
-  const ADMIN_WIDTH = { province: 1.8, district: 1.3, municipality: 1, ward: 0.8 };
-  function adminLayers(level, nameExpr, minLabelZoom) {
+  const ADMIN_WIDTH = { province: 2.6, district: 1.9, municipality: 1.4, ward: 1.1 };
+  function adminLayers(level, nameExpr, minLabelZoom, fill) {
     const color = ADMIN_COLOR[level];
-    return [
+    const out = [];
+    if (fill) out.push({ id: 'admin_' + level + '-fill', type: 'fill', source: 'admin_' + level,
+      layout: { visibility: 'none' }, paint: { 'fill-color': color, 'fill-opacity': 0.18 } });
+    out.push(
       { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level,
         layout: { visibility: 'none', 'line-join': 'round' },
         paint: { 'line-color': color, 'line-width': ADMIN_WIDTH[level], 'line-opacity': 0.85, 'line-dasharray': ADMIN_DASH[level] } },
@@ -736,16 +745,16 @@ function buildDefs() {
         layout: { visibility: 'none', 'text-field': nameExpr, 'text-font': FONT,
           'text-size': ['interpolate', ['linear'], ['zoom'], minLabelZoom, 10, minLabelZoom + 4, 12.5],
           'text-max-width': 8, 'text-padding': 3 },
-        paint: { 'text-color': color, 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.5, 'text-halo-blur': 0.3 } },
-    ];
+        paint: { 'text-color': color, 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.5, 'text-halo-blur': 0.3 } });
+    return out;
   }
   push(
     ...adminLayers('province', ['get', 'adm1_name'], 6),
     ...adminLayers('district', ['get', 'adm2_name'], 8),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10),
-    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12),
+    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12, true),
   );
-  groups.push({ title: 'Administrative boundaries', entries: [
+  groups.push({ title: 'Administrative boundaries', opacity: true, opacityKey: 'admin', entries: [
     { key: 'admin_province', label: 'Province', color: ADMIN_COLOR.province,
       ids: ['admin_province-line', 'admin_province-label'], on: false, count: 6 },
     { key: 'admin_district', label: 'District', color: ADMIN_COLOR.district,
@@ -753,7 +762,7 @@ function buildDefs() {
     { key: 'admin_municipality', label: 'Municipality / local level', color: ADMIN_COLOR.municipality,
       ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399 },
     { key: 'admin_ward', label: 'Ward (Rasuwa & Nuwakot only, 2018 reference)', color: ADMIN_COLOR.ward,
-      ids: ['admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
+      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
   ] });
 
   // 6. search pin + selected-scene outline -----------------------------------
@@ -964,10 +973,12 @@ const OV_OPACITY_PROPS = {
   symbol: ['icon-opacity', 'text-opacity'],
   raster: ['raster-opacity'],
 };
-/* Every style layer behind the slider's group.  The two `hot` rows carry no
- * ids of their own — applyHot() resolves them — so expand them the same way. */
-function overlayGroupIds() {
-  const g = (GROUPS || []).find(x => x.opacity);
+/* Every style layer behind one opacity-slider group, found by its `opacityKey`
+ * (so more than one group can carry its own independent slider). The two `hot`
+ * rows in the flood group carry no ids of their own — applyHot() resolves them
+ * — so expand them the same way. */
+function opacityGroupIds(key) {
+  const g = (GROUPS || []).find(x => x.opacity && (x.opacityKey || 'flood') === key);
   if (!g) return [];
   const out = [];
   for (const e of g.entries) {
@@ -977,9 +988,8 @@ function overlayGroupIds() {
   }
   return out;
 }
-function applyOverlayOpacity() {
-  const k = state.ovOpacity;
-  const ids = overlayGroupIds();
+function applyGroupOpacity(key, k) {
+  const ids = opacityGroupIds(key);
   eachMap(m => {
     for (const id of ids) {
       const base = OV_BASE[id];
@@ -995,6 +1005,14 @@ function applyOverlayOpacity() {
     }
   });
 }
+function storedGroupOpacity(storageKey) {
+  try {
+    const v = parseFloat(localStorage.getItem(storageKey));
+    if (isFinite(v) && v >= 0 && v <= 1) return v;
+  } catch (e) { /* private mode */ }
+  return 1;
+}
+function applyOverlayOpacity() { applyGroupOpacity('flood', state.ovOpacity); }
 function setOverlayOpacity(v, persist) {
   state.ovOpacity = Math.max(0, Math.min(1, v));
   applyOverlayOpacity();
@@ -1003,13 +1021,17 @@ function setOverlayOpacity(v, persist) {
     writeHash();
   }
 }
-function storedOverlayOpacity() {
-  try {
-    const v = parseFloat(localStorage.getItem('nf26.ov_opacity'));
-    if (isFinite(v) && v >= 0 && v <= 1) return v;
-  } catch (e) { /* private mode */ }
-  return 1;
+function storedOverlayOpacity() { return storedGroupOpacity('nf26.ov_opacity'); }
+function applyAdminOpacity() { applyGroupOpacity('admin', state.adminOpacity); }
+function setAdminOpacity(v, persist) {
+  state.adminOpacity = Math.max(0, Math.min(1, v));
+  applyAdminOpacity();
+  if (persist !== false) {
+    try { localStorage.setItem('nf26.admin_opacity', String(state.adminOpacity)); } catch (e) { /* private mode */ }
+    writeHash();
+  }
 }
+function storedAdminOpacity() { return storedGroupOpacity('nf26.admin_opacity'); }
 
 function applyColorBy() {
   const useStatus = state.colorBy === 'status';
@@ -1123,6 +1145,7 @@ function writeHash() {
   if (state.footprintOutline) p.set('fo', '1');
   if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
   if (state.ovOpacity < 1) p.set('oo', Math.round(state.ovOpacity * 100));
+  if (state.adminOpacity < 1) p.set('oa', Math.round(state.adminOpacity * 100));
   if (!state.sidebar) p.set('sb', '0');
   if (!state.controls) p.set('sc', '0');
   const ov = serialiseOverlays();
@@ -1155,9 +1178,11 @@ function readHash() {
   if (p.get('cb')) state.colorBy = p.get('cb');
   if (p.get('fo')) state.footprintOutline = p.get('fo') === '1';
   if (['flood', 'corridor'].includes(p.get('hx'))) state.hotExtent = p.get('hx');
-  // oo is a percentage; the hash wins over localStorage, as it does for the rails.
+  // oo/oa are percentages; the hash wins over localStorage, as it does for the rails.
   const oo = p.get('oo') !== null ? parseFloat(p.get('oo')) : NaN;
   state.ovOpacity = isFinite(oo) ? Math.max(0, Math.min(1, oo / 100)) : storedOverlayOpacity();
+  const oa = p.get('oa') !== null ? parseFloat(p.get('oa')) : NaN;
+  state.adminOpacity = isFinite(oa) ? Math.max(0, Math.min(1, oa / 100)) : storedAdminOpacity();
   legacyOverture = p.get('ho') === 'overture';   // links from when OSM/Overture was a switch
   state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedRail('sidebar');
   state.controls = p.get('sc') ? p.get('sc') !== '0' : storedRail('controls');
@@ -1352,19 +1377,24 @@ function describe(l) {
 /* The group transparency slider, sitting under that group's all on / all off
  * row.  Live on input so the fade can be judged against the imagery, and only
  * persisted on release so a sweep does not write eighty hash entries. */
-function buildGroupOpacity() {
+const OPACITY_GROUP_UI = {
+  flood: { get: () => state.ovOpacity, set: setOverlayOpacity, aria: 'Opacity of the flood extent, damage and ground report layers' },
+  admin: { get: () => state.adminOpacity, set: setAdminOpacity, aria: 'Opacity of the administrative boundary layers' },
+};
+function buildGroupOpacity(opacityKey) {
+  const cfg = OPACITY_GROUP_UI[opacityKey || 'flood'];
   const f = el('div', 'field ovop');
   const lab = el('label', null, 'Layer opacity, whole group <span class="ovop-n"></span>');
   const n = lab.querySelector('.ovop-n');
   const sl = el('input');
   sl.type = 'range'; sl.min = '0'; sl.max = '100'; sl.step = '1';
-  sl.value = String(Math.round(state.ovOpacity * 100));
+  sl.value = String(Math.round(cfg.get() * 100));
   sl.title = 'Fade every layer in this group together, keeping their relative styling';
-  sl.setAttribute('aria-label', 'Opacity of the flood extent, damage and ground report layers');
+  sl.setAttribute('aria-label', cfg.aria);
   const show = () => { n.textContent = sl.value + '%'; };
   show();
-  sl.addEventListener('input', () => { show(); setOverlayOpacity(+sl.value / 100, false); });
-  sl.addEventListener('change', () => { show(); setOverlayOpacity(+sl.value / 100); });
+  sl.addEventListener('input', () => { show(); cfg.set(+sl.value / 100, false); });
+  sl.addEventListener('change', () => { show(); cfg.set(+sl.value / 100); });
   f.append(lab, sl);
   return f;
 }
@@ -1513,7 +1543,7 @@ function renderSidebar() {
     }
     const ctl = el('div', 'grp', '<button data-all="1">all on</button><button data-all="0">all off</button>');
     if (g.entries.length > 1 && !g.noAll) det.appendChild(ctl);
-    if (g.opacity) det.appendChild(buildGroupOpacity());
+    if (g.opacity) det.appendChild(buildGroupOpacity(g.opacityKey));
     const boxes = [], rows = [];
     for (const e of g.entries) {
       const row = el('label', 'row');
@@ -3738,7 +3768,7 @@ async function main() {
   await Promise.all(['pre', 'post'].map(s => new Promise(res => maps[s].on('load', res))));
 
   applyImagery('pre'); applyImagery('post');
-  applyOverlays(); applyBase(); applyColorBy(); applyOverlayOpacity();
+  applyOverlays(); applyBase(); applyColorBy(); applyOverlayOpacity(); applyAdminOpacity();
   syncMaps(maps.pre, maps.post);
   wirePopups(maps.pre); wirePopups(maps.post);
 
