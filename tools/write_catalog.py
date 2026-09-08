@@ -12,7 +12,10 @@ META = {
  "post_s2_20260827":    ("27 Aug 2026 · Sentinel-2 10 m","post","2026-08-27","Sentinel-2","ESA Copernicus",10,"© ESA Copernicus","corridor"),
  "post_ps_20260826":    ("26 Aug 2026 flood morning · PlanetScope 3 m","post","2026-08-26","PlanetScope","Planet Labs PBC",3,"© Planet Labs PBC, CC-BY-NC 4.0","corridor"),
  "post_ps26_mosaic":    ("26 Aug 2026 · PlanetScope 9-scene mosaic ~20 m","post","2026-08-26","PlanetScope","Planet Labs PBC",20,"© Planet Labs PBC, CC-BY-NC 4.0","corridor"),
- "post_ps28_mosaic":    ("28 Aug 2026 · PlanetScope 5-scene mosaic ~20 m","post","2026-08-28","PlanetScope","Planet Labs PBC",20,"© Planet Labs PBC, CC-BY-NC 4.0","corridor"),
+ # post_ps28_mosaic: cropped to the upper valley north of Dhunche (8 Sep 2026); see the
+# guard notes in tools/retile.py (build_post_ps28) and tools/fix_box_layers.py (LAYERS)
+# before ever regenerating this layer -- a regenerate would rebuild the old full-corridor extent.
+"post_ps28_mosaic":    ("28 Aug 2026 · PlanetScope 5-scene mosaic ~20 m","post","2026-08-28","PlanetScope","Planet Labs PBC",20,"© Planet Labs PBC, CC-BY-NC 4.0","upper_valley"),
  "post_s1_20260828":    ("28 Aug 2026 · Sentinel-1 radar 10 m","post","2026-08-28","Sentinel-1 RTC","ESA Copernicus / Microsoft Planetary Computer",10,"© ESA Copernicus","corridor"),
  "post_wv02_20260828":  ("28 Aug 2026 · Vantor WorldView-2 0.54 m","post","2026-08-28","WorldView-2","Vantor",0.54,"© 2026 Vantor via OpenAerialMap, CC-BY 4.0","trisuli_bazar"),
  "post_skysat_20260831":("31 Aug 2026 · SkySat 0.65 m","post","2026-08-31","SkySat","Planet Labs PBC",0.65,"© Planet Labs PBC, CC-BY-NC 4.0","trisuli_bazar"),

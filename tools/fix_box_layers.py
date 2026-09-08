@@ -13,7 +13,11 @@ G = "/opt/homebrew/bin/"
 BOX = [85.1302, 27.9016, 85.1739, 27.9497]          # lon/lat of the Trisuli box
 BOX_RES = (1.08 / 36169, 0.75 / 28011)              # one world px in degrees
 # layer -> zoom of the whole-extent backdrop; the box always tiles to 16 (2.9 m)
-LAYERS = {"post_ps26_mosaic": 13, "post_ps28_mosaic": 13, "post_s1_20260828": 14,
+# post_ps28_mosaic intentionally excluded (8 Sep 2026): tiles/post_ps28_mosaic was cropped
+# in place to the upper valley north of Dhunche (coverage "upper_valley"); rebuilding it here
+# from work/vrt/post_ps28_mosaic_{full,box} would recreate the old full-corridor tiles and
+# overwrite the crop. See tools/retile.py build_post_ps28() docstring.
+LAYERS = {"post_ps26_mosaic": 13, "post_s1_20260828": 14,
           "pre_ps_20260527": 16, "post_ps_20260826": 16}
 def run(cmd): print("$", " ".join(cmd), flush=True); subprocess.run(cmd, check=True)
 def vrt(tag):

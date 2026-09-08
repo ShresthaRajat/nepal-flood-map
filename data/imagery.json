@@ -159,8 +159,8 @@
    "provider": "Planet Labs PBC",
    "gsd_m": 20,
    "bounds": [
-    84.90234,
-    27.68353,
+    85.2,
+    28.1,
     85.60547,
     28.45903
    ],
@@ -168,8 +168,8 @@
    "maxzoom": 13,
    "tiles": "tiles/post_ps28_mosaic/{z}/{x}/{y}.webp",
    "attribution": "© Planet Labs PBC, CC-BY-NC 4.0",
-   "coverage": "corridor",
-   "size_mb": 1.4
+   "coverage": "upper_valley",
+   "size_mb": 0.9
   },
   {
    "id": "post_s1_20260828",

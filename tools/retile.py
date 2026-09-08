@@ -362,6 +362,13 @@ def build_post_ps26():
 
 
 def build_post_ps28():
+    """SUPERSEDED, not in BUILDERS: this used to build the full-corridor mosaic
+    (bounds 84.90234,27.68353,85.60547,28.45903, coverage "corridor"). tiles/post_ps28_mosaic
+    was cropped in place on 8 Sep 2026 to the upper Bhote Koshi corridor north of Dhunche
+    (bounds 85.2,28.1,85.60547,28.45903, coverage "upper_valley" -- see data/imagery.json and
+    tools/write_catalog.py) by masking/deleting tiles outside that window, not by rerunning
+    this pipeline. Left here only so the full-corridor build history isn't lost; do not add
+    back to BUILDERS or it will overwrite the cropped tiles with the old full-extent version."""
     tag = "post_ps28_mosaic"
     full = full_extent_source("ps28_mosaic.webp", tag + "_full")
     box = box_source("ps28_mosaic.webp", tag + "_box")
@@ -454,7 +461,10 @@ BUILDERS = [
     # build_pre_s1 intentionally excluded -- see its docstring: tiles/pre_s1_20260816
     # is now a full-corridor pyramid built outside this pipeline, and rerunning it
     # here would overwrite that with the old trisuli-box-only crop.
-    build_post_s2, build_post_ps, build_post_ps26, build_post_ps28, build_post_s1,
+    build_post_s2, build_post_ps, build_post_ps26, build_post_s1,
+    # build_post_ps28 intentionally excluded -- see its docstring: tiles/post_ps28_mosaic
+    # is now cropped to the upper valley north of Dhunche, and rerunning it here would
+    # overwrite that with the old full-corridor mosaic.
     build_post_wv02, build_post_skysat31, build_post_skysat27,
     build_post_wv3, build_post_legion, build_post_pelican,
 ]
