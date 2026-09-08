@@ -473,5 +473,5 @@
   }
  ],
  "default_pre": "none",
- "default_post": "post_wv02_20260828"
+ "default_post": ["post_s2_20260827", "post_pelican_20260901", "post_wv02_20260908_ef5510", "post_wv02_20260908_ef5910"]
 }

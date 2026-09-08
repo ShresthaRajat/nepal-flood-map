@@ -3659,12 +3659,16 @@ async function main() {
 
   // Scene ids from the hash that are not in the catalogue (stale link, renamed
   // layer) are dropped.  A hash that says nothing about a side seeds that side
-  // from `default_<side>`, which stays a single id in data/imagery.json.
+  // from `default_<side>` in data/imagery.json: either a single id, or a list
+  // of ids already in stacking order (bottom to top) for a multi-scene
+  // default.  Any id no longer in the catalogue is dropped, in place.
   for (const side of ['pre', 'post']) {
     state[side] = selIds(side).filter(id => byId(id));
     if (!hashHadSide[side] && !state[side].length) {
       const def = catalog['default_' + side] || (layersFor(side)[0] || {}).id || null;
-      if (def && def !== NO_IMAGERY && byId(def)) state[side] = [def];
+      const defList = Array.isArray(def) ? def : (def && def !== NO_IMAGERY ? [def] : []);
+      const ids = defList.filter(id => byId(id));
+      if (ids.length) state[side] = ids;
     }
   }
 
