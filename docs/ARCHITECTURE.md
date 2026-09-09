@@ -25,6 +25,8 @@ from unpkg.
 | `data/terrain.json` | contours agent | Contour and hillshade tile descriptions. |
 | `data/reports.json` | reports | Official casualty, municipality, energy and community figures with a source and an "as of" date on every number. Feeds the four report sections in the left rail. |
 | `tools/merge_bipad_reports.py` | reports | Optional: merges a per-municipality summary extracted from Nepal's BIPAD incident portal into `data/reports.json`. |
+| `tools/build_hydropower_points.py` | reports | Merges the 10 surveyed HDX hydropower points with 9 hand-geocoded plants into `data/hdx/derived/hydropower_points.geojson`. |
+| `data/hdx/derived/hydropower_extra_src.geojson` | reports | The hand-geocoded plants as found, committed so the merge is reproducible offline. |
 | `data/hdx/` | HDX snapshot | GeoJSON + PMTiles, 5 Sep 2026. |
 | `tiles/<id>/{z}/{x}/{y}.webp` | retile agent | Imagery pyramids, 256 px, alpha. |
 | `tiles/contours/`, `tiles/hillshade/` | contours agent | Vector and raster terrain tiles. |
@@ -146,12 +148,52 @@ documented in `data/admin/README.md`:
   flood-affected ward count (Rasuwa and Nuwakot only; elsewhere "n/a"), and
   against `adm3_name` in `destroyed_features_osm.geojson` for the OSM-mapped
   sub-line.
-- `energy.projects[].name` / `hdx_name` against `name` in
-  `hot_flood_npl_exposed_hydropowers.geojson`, normalised by `hydroKey()` so
-  "Upper Trishuli 3A" and "Upper Trishuli-3A" match. The same join colours and
-  labels the `hydro-point` layer.
+- `energy.projects[].name` against `name` in
+  `data/hdx/derived/hydropower_points.geojson`, which the build script already
+  writes with the reports.json spellings, so the join is exact. `hydroKey()`
+  still normalises both sides — it strips punctuation, the word "project" and
+  the HEP/HPP suffixes — so a stale HDX spelling like "Upper Trishuli 3A" also
+  resolves. The same join colours and labels the `hydro-point` layer. Nineteen
+  of the twenty projects have a position; Upper Trishuli-2 has none and reads
+  "not located".
 - `communities.settlements[].name` / `aliases` against `name` in
   `data/hdx/derived/places.geojson` for the fly-to point and the Nepali name.
+
+### Hydropower points
+
+`data/hdx/derived/hydropower_points.geojson` is built by
+`tools/build_hydropower_points.py` from two committed inputs, so it rebuilds
+with no network access:
+
+- `hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson` — HOT's 10 surveyed
+  points, all `precision: exact`, `source: hdx`.
+- `derived/hydropower_extra_src.geojson` — 11 hand-geocoded features, of which 9
+  become plants. The second Chilime candidate (Wikidata, about 1.5 km from the
+  OSM one) and the Devighat anchor (already in HDX; it existed only to place the
+  adjacent solar plant) are dropped, and the Chilime alternative survives as a
+  note on the OSM point.
+
+Every output feature carries `name` (the reports.json spelling), `capacity_mw`,
+`river`, `status`, `district`, `municipality`, `source`, `source_ref`,
+`precision` and a display string `location`. `precision` is one of `exact`,
+`approximate` or `settlement-level`, and drives both the table tag and the map
+styling: anything but `exact` draws at 0.45 fill opacity inside a 2 px pale ring
+rather than solid with a black one, so a village-centre pin never reads as a
+survey. The popup states the location string and any caveat above the attribute
+table.
+
+`municipality` and `district` are resolved from the coordinate against
+`admin_municipality.geojson`, never copied from the source: the HDX export's own
+`municipality` field contradicts its `adm3_name` on several rows — Devighat is
+"Panchakanya" there and Bidur in both `adm3_name` and the boundary layer.
+
+Positions were checked against the OSM waterways export and three carry a note
+about it: the Mailung Khola plant's Wikipedia coordinate sits about 8 km east of
+the mapped Mailung Khola, Upper Mailung A is 1.2 km west of that channel, and
+the Sanjen Khola is absent from the waterways data altogether.
+
+`python3 tools/build_hydropower_points.py --check` reports the counts and the
+reports.json cross-check without writing.
 
 `tools/merge_bipad_reports.py` optionally tops the `municipalities` figures up
 from Nepal's BIPAD incident portal (NDRRMA's official register). It takes

@@ -306,30 +306,27 @@ const HYDRO_RADIUS = ['interpolate', ['linear'],
   ['coalesce', ['to-number', ['get', 'capacity_mw']], 0],
   0, 4, 25, 6, 60, 8, 120, 11, 216, 14];
 
-/* A match expression over the exposed-hydropower `name` values, built once from
- * reports.json.  Falls back to the original yellow when reports.json is absent
- * or a point has no reported status. */
+/* A match expression over the merged layer's `name` values, built once from
+ * reports.json.  Both sides use the same spellings, so the join needs no
+ * normalising here; hydroKey() still covers lookups from the sidebar, where a
+ * stale HDX spelling can arrive.  Falls back to the original yellow when
+ * reports.json is absent or a plant has no reported status. */
 function hydroColorExpr() {
-  const projects = hydroProjects();
   const pairs = [];
-  for (const name of HYDRO_HDX_NAMES) {
-    const pr = projects.get(hydroKey(name));
-    if (!pr || !pr.damage) continue;
-    pairs.push(name, dmgColor(pr.damage));
+  for (const pr of ((reports && reports.energy && reports.energy.projects) || [])) {
+    if (!pr.damage) continue;
+    pairs.push(pr.name, dmgColor(pr.damage));
   }
   if (!pairs.length) return DMG_COLOR['not reported'];
   return ['match', ['to-string', ['get', 'name']], ...pairs, DMG_COLOR['not reported']];
 }
 
-/* The ten point names in hot_flood_npl_exposed_hydropowers.geojson.  Listed
- * rather than read from the file because buildDefs() is synchronous and
- * MapLibre fetches that GeoJSON itself; the sidebar verifies the join against
- * the real file when the Hydropower section opens. */
-const HYDRO_HDX_NAMES = [
-  'Bhotekoshi Khola Hydropower Project', 'Devighat', 'Rasuwa Bhotekoshi', 'Rasuwagadhi',
-  'Trishuli', 'Trishuli Galchhi', 'Upper Trishuli 3A', 'Upper Trishuli 3B',
-  'Upper Trishuli-1', 'Upper Trishuli-I Cascade HEP',
-];
+/* Positions the extra plants got by hand are worth less than the surveyed ones,
+ * so anything but `precision: exact` draws translucent inside a pale ring. */
+const HYDRO_EXACT = ['==', ['to-string', ['get', 'precision']], 'exact'];
+const HYDRO_OPACITY = ['case', HYDRO_EXACT, 1, 0.45];
+const HYDRO_STROKE_W = ['case', HYDRO_EXACT, 1.5, 2];
+const HYDRO_STROKE_C = ['case', HYDRO_EXACT, '#000000', '#f1f5f9'];
 
 /* name -> project row, for both the map paint expression and the sidebar. */
 function hydroProjects() {
@@ -357,7 +354,10 @@ function buildDefs() {
     places: { type: 'geojson', data: HDX + 'derived/places.geojson', attribution: '© OpenStreetMap contributors' },
     flood_extent: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_flood_extent.geojson' },
     bridge_damage: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_bridge_damage.geojson' },
-    hydro: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson' },
+    // Merged by tools/build_hydropower_points.py: the 10 surveyed HDX points plus
+    // 9 hand-geocoded plants, named with the spellings data/reports.json uses.
+    hydro: { type: 'geojson', data: HDX + 'derived/hydropower_points.geojson',
+      attribution: ATTR_HDX + '; OpenStreetMap, Wikidata and Global Energy Monitor for the added plants' },
     fair: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage.geojson' },
     fair_aoi: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage_analyzed_aoi.geojson' },
     // National OSM waterways, pre-tiled by tools/build_waterways_tiles.sh (the 8 MB
@@ -698,7 +698,8 @@ function buildDefs() {
     // keep the original yellow).  Labelled from zoom 11.
     { id: 'hydro-point', type: 'circle', source: 'hydro', layout: { visibility: 'none' },
       paint: { 'circle-color': hydroColorExpr(), 'circle-radius': HYDRO_RADIUS,
-               'circle-stroke-width': 1.5, 'circle-stroke-color': '#000' } },
+               'circle-opacity': HYDRO_OPACITY, 'circle-stroke-width': HYDRO_STROKE_W,
+               'circle-stroke-color': HYDRO_STROKE_C } },
     { id: 'hydro-label', type: 'symbol', source: 'hydro', minzoom: 11,
       layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-font': FONT, 'text-size': 11,
         'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true },
@@ -788,8 +789,10 @@ function buildDefs() {
     { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
     { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58 },
-    { key: 'hydro', label: 'Exposed hydropowers (sized by MW, coloured by reported damage)', color: '#facc15',
-      ids: ['hydro-point', 'hydro-label'], on: true, count: 10 },
+    { key: 'hydro', label: 'Hydropower plants', color: '#facc15', ids: ['hydro-point', 'hydro-label'],
+      on: true, count: 19,
+      title: 'Sized by installed capacity and coloured by the damage status in data/reports.json. '
+        + 'Ten positions are HOT survey; the nine added by hand draw hollow, and the popup names the source.' },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
     { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
     // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
@@ -1675,6 +1678,7 @@ function renderSidebar() {
       // you zoom in; say so rather than leave a ticked box with an empty map.
       const minz = e.hot && e.cat ? HOT_MINZ[e.cat + '|' + e.src] : null;
       if (minz != null && minz > 9) row.title = e.label + ' — in the tiles from zoom ' + minz + ' down; the count column reads z' + minz + '+ while the view is above it';
+      else if (e.title) row.title = e.title;
       boxes.push([cb, e]); rows.push({ e, row, cb, sw, cnt });
       if (e.hot) hotRows.push({ e, row, cb, cnt, minz });
       det.appendChild(row);
@@ -2326,7 +2330,7 @@ async function renderEnergy(det, body) {
   if (!reports || !reports.energy) { body.innerHTML = REP_MISSING; return; }
   const en = reports.energy;
   const located = new Map();
-  const hp = await gj('hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson');
+  const hp = await gj('derived/hydropower_points.geojson');
   if (hp && hp.features) for (const f of hp.features) {
     const c = centroid(f.geometry);
     if (c) located.set(hydroKey((f.properties || {}).name), { c, p: f.properties || {} });
@@ -2384,9 +2388,18 @@ async function renderEnergy(det, body) {
   for (const pr of (en.projects || [])) {
     const loc = located.get(hydroKey(pr.name)) || (pr.hdx_name ? located.get(hydroKey(pr.hdx_name)) : null);
     const idAttr = loc ? ' class="pick" data-hydro="' + esc(hydroKey(pr.name)) + '"' : '';
+    // Every plant but Upper Trishuli-2 now has a position; the tag says how far
+    // to trust it, so a Nominatim village centre never passes for a survey.
+    const pz = loc ? String(loc.p.precision || 'exact') : '';
+    const locTag = loc
+      ? '<span class="st ' + (pz === 'exact' ? 'unaffected' : pz === 'approximate' ? 'damaged' : 'nr') + '"' +
+        ' title="' + esc(loc.p.location || '') + (loc.p.notes ? ' — ' + esc(loc.p.notes) : '') + '">' +
+        esc(pz === 'settlement-level' ? 'settlement-level' : pz) + '</span>'
+      : '<span class="st nr">not located</span>';
     html += '<tr' + idAttr + '><td><span class="nm">' + esc(pr.name) + '</span>' + srcLink(pr.src) +
       '<span class="sub">' + nl(pr.owner) + '</span>' +
-      '<span class="sub">' + nl(pr.status_before) + (loc ? '' : ' · not located') + '</span>' +
+      '<span class="sub">' + nl(pr.status_before) + '</span>' +
+      '<span class="sub">location: ' + locTag + '</span>' +
       (pr.note ? '<span class="sub">' + esc(pr.note) + '</span>' : '') +
       '</td><td class="n">' + (pr.mw == null ? REP_NA : esc(pr.mw)) + '</td><td>' + dmgChip(pr.damage) +
       '<span class="sub">' + nl(pr.what) + '</span>' +
@@ -2411,8 +2424,9 @@ async function renderEnergy(det, body) {
   }
   body.appendChild(el('p', 'note',
     'Missing-worker counts were revised downward as rescue and contact progressed; each figure is a snapshot of ' +
-    'its reporting date, not a settled total. Projects with a location join the yellow "Exposed hydropowers" ' +
-    'overlay by name; the rest are not in that dataset.'));
+    'its reporting date, not a settled total. Ten positions come from HOT\u2019s surveyed layer; nine were found by ' +
+    'hand in OpenStreetMap, Wikidata, the Global Energy Monitor hydropower tracker and Nominatim, and carry an ' +
+    'approximate or settlement-level tag. On the map those draw hollow rather than solid.'));
 
   // grid
   if ((en.grid || []).length) {
@@ -2534,9 +2548,15 @@ function popupHTML(label, props) {
   if (name) meta.push(esc(label));
   if (type) meta.push(esc(String(type).replace(/_/g, ' ')));
   if (p.adm3_name) meta.push(esc(p.adm3_name));
+  else if (p.municipality) meta.push(esc(p.municipality) + (p.district ? ', ' + esc(p.district) : ''));
+  if (p.capacity_mw != null) meta.push(esc(p.capacity_mw) + ' MW');
   if (p.damage_type) meta.push(esc(p.damage_type));
   if (meta.length) h += '<div class="pop-m">' + meta.join(' · ') + '</div>';
   if (p.status) h += '<div><span class="chip lg" style="background:' + statusColour(p.status) + '">' + esc(p.status) + '</span></div>';
+  // Hand-geocoded points say so on the face of the popup, not just in the
+  // attribute table: a settlement-level pin is a different claim from a survey.
+  if (p.location) h += '<div class="pop-loc">Location: ' + esc(p.location) + '</div>';
+  if (p.notes) h += '<div class="pop-n">' + esc(p.notes) + '</div>';
   const rows = Object.entries(p)
     .filter(([, v]) => v !== null && v !== '' && v !== 'null' && v !== undefined)
     .map(([k, v]) => '<tr><th>' + esc(k) + '</th><td>' +

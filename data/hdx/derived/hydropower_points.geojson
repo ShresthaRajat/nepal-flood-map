@@ -1,0 +1,444 @@
+{
+ "type": "FeatureCollection",
+ "name": "hydropower_points",
+ "note": "HOT/HDX exposed hydropowers merged with hand-geocoded plants; see tools/build_hydropower_points.py. `precision` says how far to trust each position.",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bhotekoshi Khola",
+    "capacity_mw": 33.5,
+    "river": "Bhote Koshi",
+    "status": "Survey",
+    "district": "Rasuwa",
+    "municipality": "Gosaikunda",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.345833,
+     28.170833
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Devighat",
+    "capacity_mw": 14.1,
+    "river": "Trishuli",
+    "status": "Operation",
+    "district": "Nuwakot",
+    "municipality": "Bidur",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.138889,
+     27.902222
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Rasuwa Bhotekoshi",
+    "capacity_mw": 120,
+    "river": "Bhote koshi",
+    "status": "Under Construction",
+    "district": "Rasuwa",
+    "municipality": "Gosaikunda",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.354167,
+     28.204722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Rasuwagadhi",
+    "capacity_mw": 111,
+    "river": "Bhote koshi",
+    "status": "Under Construction",
+    "district": "Rasuwa",
+    "municipality": "Gosaikunda",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.370139,
+     28.251111
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli",
+    "capacity_mw": 24,
+    "river": "Trishuli",
+    "status": "Operation",
+    "district": "Nuwakot",
+    "municipality": "Bidur",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.166111,
+     27.946389
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli Galchhi",
+    "capacity_mw": 75,
+    "river": "Trishuli",
+    "status": "Under Construction",
+    "district": "Nuwakot",
+    "municipality": "Belkotgadhi",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.022917,
+     27.827778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Upper Trishuli-3A",
+    "capacity_mw": 60,
+    "river": "Trishuli",
+    "status": "Under Construction",
+    "district": "Rasuwa",
+    "municipality": "Uttargaya",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.199167,
+     28.046528
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Upper Trishuli-3B",
+    "capacity_mw": 37,
+    "river": "Trishuli",
+    "status": "Under Construction",
+    "district": "Rasuwa",
+    "municipality": "Uttargaya",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.185,
+     28.004583
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Upper Trishuli-1",
+    "capacity_mw": 216,
+    "river": "Trishuli",
+    "status": "Under Construction",
+    "district": "Rasuwa",
+    "municipality": "Aamachhodingmo",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.255972,
+     28.10125
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Upper Trishuli-I Cascade",
+    "capacity_mw": 24.6,
+    "river": "Trishuli Ganga",
+    "status": "Survey",
+    "district": "Rasuwa",
+    "municipality": "Kalika",
+    "source": "hdx",
+    "source_ref": "hot_flood_npl_exposed_hydropowers.geojson",
+    "precision": "exact",
+    "location": "exact (HOT via HDX)",
+    "notes": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.209028,
+     28.0725
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Chilime",
+    "capacity_mw": 22.1,
+    "river": "Chilime Khola",
+    "status": null,
+    "district": "Rasuwa",
+    "municipality": "Aamachhodingmo",
+    "source": "osm",
+    "source_ref": "way/1554178917 (https://www.openstreetmap.org/way/1554178917)",
+    "precision": "approximate",
+    "location": "approximate (OpenStreetMap)",
+    "notes": "OSM way tagged name=Chilime Hydropower Plant, power=plant. Cross-checked against Wikidata Q17150837 (28.1865, 85.2999, ~1.5km NW) and GEM Global Hydropower Tracker (28.1577, 85.3332, ~3.2km SE); all three sources agree on the general Chilime/Aamachhodingmo-05 area in Rasuwa but disagree by up to ~3km, so downgraded from exact to approximate. Nominatim settlement match for 'Chilime' village: 28.1836, 85.3022 (close to Wikidata point)."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.30826,
+     28.17944
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sanjen",
+    "capacity_mw": 42.5,
+    "river": "Sanjen Khola",
+    "status": null,
+    "district": "Rasuwa",
+    "municipality": "Aamachhodingmo",
+    "source": "company",
+    "source_ref": "https://www.gem.wiki/Sanjen_Khola_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'exact')",
+    "precision": "approximate",
+    "location": "approximate (Global Energy Monitor)",
+    "notes": "No coordinates found in OSM, Wikidata, or the developer/EPC pages (chilime.com.np, chesco.com.np, nwrmap.pei.center) — those only give a text location ('Chilime VDC / Aamachhodingmo-5, Rasuwa District, powerhouse in Chilime Village at ~1745m, headworks at Tiloche ~2348m'). Downgraded GEM's 'exact' label to approximate since it could not be corroborated by a second source and the text description places it in the same general area as the separately-mapped Chilime plant, ~7km SE. Powerhouse vs. headworks (Tiloche) not separately locatable — no second feature added. The Sanjen Khola is not in the OSM waterways export; the nearest mapped watercourse is the Simlun Khola about 2 km away. Single-source point."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2861,
+     28.2442
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sanjen Upper",
+    "capacity_mw": 14.8,
+    "river": "Sanjen Khola",
+    "status": null,
+    "district": "Rasuwa",
+    "municipality": "Aamachhodingmo",
+    "source": "nominatim",
+    "source_ref": "https://nominatim.openstreetmap.org/search?q=Aamachhodingmo%2C%20Rasuwa%2C%20Nepal (village node)",
+    "precision": "settlement-level",
+    "location": "settlement-level only (Nominatim)",
+    "notes": "Not found in OSM or Wikidata. Company/EPC pages (nhe.com.np, chesco.com.np, nwrmap.info) describe the powerhouse as in 'Simbu Village, Chilime VDC, Rasuwa District' at ~2187m, with the dam on the Tiluche River, but give no coordinates, and 'Simbu' does not resolve in Nominatim. Point placed at the Nominatim-resolved center of Aamachhodingmo village (the VDC/rural municipality containing Chilime and, per sources, Simbu) as the closest verifiable place description — this is a coarse proxy, not the powerhouse site. Pinned to the Aamachhodingmo centre, about 1 km from the Chilime Khola, matching the developer's \"Simbu Village, Chilime\" description rather than the Sanjen Khola the project is named for."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3131,
+     28.1706
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mailung Khola",
+    "capacity_mw": 5,
+    "river": "Mailung Khola",
+    "status": null,
+    "district": "Rasuwa",
+    "municipality": "Gosaikunda",
+    "source": "wikidata",
+    "source_ref": "Q104871643 (coordinate taken from the en.wikipedia.org/wiki/Mailung_Khola_Hydropower_Station infobox; not present as a P625 claim on the Wikidata item itself)",
+    "precision": "approximate",
+    "location": "approximate (Wikidata)",
+    "notes": "energy.md notes conflicting capacity figures (5 MW vs 14.8 MW) and that both powerhouse and headworks were lost in the flood; only one combined location found, so a single point is given rather than separate powerhouse/dam features. The Wikipedia infobox coordinate sits about 8 km east of the Mailung Khola as mapped in OpenStreetMap and about 1 km from the Trishuli, so it locates the project only roughly."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.29211,
+     28.1092
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Upper Mailung A",
+    "capacity_mw": 6.42,
+    "river": "Mailung Khola",
+    "status": null,
+    "district": "Rasuwa",
+    "municipality": "Uttargaya",
+    "source": "company",
+    "source_ref": "https://www.gem.wiki/Upper_Mailun_Khola_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'exact')",
+    "precision": "approximate",
+    "location": "approximate (Global Energy Monitor)",
+    "notes": "Not in OSM or Wikidata. GEM Wiki places it in Uttargaya Rural Municipality, Rasuwa District, on the Mailung River at ~3300m (intake); IMS Group / Kathmandu Post coverage corroborates the Mailung River / Uttargaya location in general terms but gives no coordinates. Downgraded from GEM's 'exact' label since uncorroborated by a second independent source. About 1.2 km west of the mapped Mailung Khola, consistent with an upper intake but not on the channel itself."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1833,
+     28.0989
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Langtang Khola",
+    "capacity_mw": 20,
+    "river": "Langtang Khola",
+    "status": null,
+    "district": "Rasuwa",
+    "municipality": "Gosaikunda",
+    "source": "company",
+    "source_ref": "https://www.gem.wiki/Lantang_Khola_Yeti_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'approximate'; listed there at 310 MW nameplate — likely a data error/conflation with a larger storage-scheme entry, treat capacity with caution)",
+    "precision": "approximate",
+    "location": "approximate (Global Energy Monitor)",
+    "notes": "Not in OSM or Wikidata under this name. GEM Wiki places it in Langtang Valley, Rasuwa District, on the Langtang River (a Trishuli tributary), consistent with energy.md's description ('testing phase' as of the flood). GEM's own coordinate is labeled approximate."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3753,
+     28.1501
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Middle Trishuli Ganga",
+    "capacity_mw": 15.6,
+    "river": "Trishuli River",
+    "status": null,
+    "district": "Nuwakot",
+    "municipality": "Bidur",
+    "source": "nominatim",
+    "source_ref": "https://nominatim.openstreetmap.org/search?q=Gerkhu%2C%20Nuwakot%2C%20Nepal (suburb node, Bidur-11/Trishuli, Nuwakot)",
+    "precision": "settlement-level",
+    "location": "settlement-level only (Nominatim)",
+    "notes": "Full name 'Middle Trishuli Ganga Nadi Hydropower Project', developer Perfect Energy Development Pvt. Ltd. Not in OSM or Wikidata. nwrmap.pei.center gives location only as 'Gerkhu, Nuwakot' (project also affects Tupchhe and Manakamana VDCs in Nuwakot and Lahare Pauwa in Rasuwa per Kathmandu Post/Investopaper coverage, but no coordinates given for those). Gerkhu is the same general area as the existing 'Trishuli' HDX entry (Trishuli Hydropower Station, Gerkhu/Trishuli Bazar)."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1861,
+     27.9521
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Super Trishuli",
+    "capacity_mw": 100,
+    "river": "Trishuli River",
+    "status": null,
+    "district": "Gorkha",
+    "municipality": "Gandaki",
+    "source": "company",
+    "source_ref": "https://www.gem.wiki/Super_Trishuli_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'exact'); also see https://blueenergy.com.np/super-trishuli-hydro-power-project and https://ce-construction.com/projects/hydropower/super-trishuli-hydropower-project-100-mw/",
+    "precision": "approximate",
+    "location": "approximate (Global Energy Monitor)",
+    "notes": "Outside the original Rasuwa/Nuwakot bbox as expected — this is the plant energy.md notes as ~100km downstream, unaffected by the flood. Located on the Trishuli River between Gorkha and Chitwan districts (Butar/Manakamana, Gandaki Rural Municipality, Gorkha side, and Darechauk, Chitwan side), not at Devghat/Tanahun as the task brief guessed — nwrmap.pei.center lists affected VDCs as Darechauk (Chitwan), Jogimara (Dhading), and Makaising/Tanglichok/Bhumlichok/Ghyalchok/Taklung/Manakamana (Gorkha), all consistent with GEM's coordinate. Nominatim 'Manakamana, Gorkha' village center (27.9087, 84.5689, ~8km NW) corroborates the general area. Downgraded GEM's 'exact' label since only single-source and no dam/powerhouse split could be found."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.6424,
+     27.8683
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "NEA solar plant",
+    "capacity_mw": 25,
+    "river": null,
+    "status": null,
+    "district": "Nuwakot",
+    "municipality": "Bidur",
+    "source": "osm",
+    "source_ref": "way/1385457298 (https://www.openstreetmap.org/way/1385457298); cross-checked against en.wikipedia.org/wiki/Nuwakot_Solar_Power_Station infobox (27.890695, 85.133989, ~15m away — near-exact match)",
+    "precision": "exact",
+    "location": "exact (OpenStreetMap)",
+    "notes": "Officially 'Nuwakot Solar Power Station'. Located within/adjacent to the Devighat Hydropower Station premises, Bidur Municipality, Nuwakot (per Wikipedia: panels installed across six locations connected to Devighat's 66kV substation). Two further OSM-mapped solar plant polygons exist nearby, likely representing other sub-sites of the same distributed project: way/1385457302 (27.887037, 85.131768) and way/1385457304 (27.880080, 85.123117). This point is the northernmost/largest-looking of the three and matches the Wikipedia-cited coordinate most closely."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1344,
+     27.8908
+    ]
+   }
+  }
+ ]
+}

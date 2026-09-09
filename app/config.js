@@ -167,6 +167,14 @@ Rasuwa Flood Flash Update #4</a> (31 Aug 2026) and
 <a href="https://radionepalonline.com/en/2026/09/07/435557.html" target="_blank" rel="noopener">Radio Nepal</a> on
 electricity restoration; and <a href="https://bipadportal.gov.np/" target="_blank" rel="noopener">NDRRMA's BIPAD
 incident portal</a>.</p>
+<p>Hydropower positions: ten come from HOT's surveyed <i>exposed hydropowers</i> layer. The other nine plants in
+the table were located by hand from OpenStreetMap and Wikidata where either had the plant mapped, otherwise from
+the Global Energy Monitor hydropower tracker or, for two projects that have never published coordinates, from
+Nominatim's centre for the settlement the developer names. Those carry an "approximate" or "settlement-level" tag
+in the table and draw hollow rather than solid on the map, and the popup says which source placed them.
+Municipality and district for every plant are resolved from the coordinate against the boundary layer rather than
+copied from the source, because the HDX export's own <code>municipality</code> field contradicts its
+<code>adm3_name</code> on several rows. Built by <code>tools/build_hydropower_points.py</code>.</p>
 <p>Municipality-level detail comes from the "needs and priority" table in NDRRMA's situation report #01 of
 1 September 2026, which names the affected wards for eleven local levels in Rasuwa, Nuwakot and Dhading and says
 what relief had reached each. That report publishes no casualty count below district level, so the municipality

@@ -1,0 +1,159 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.30826, 28.17944] },
+      "properties": {
+        "name": "Chilime",
+        "capacity_mw": 22.1,
+        "river": "Chilime Khola",
+        "component": "plant_centroid",
+        "source": "osm",
+        "source_ref": "way/1554178917 (https://www.openstreetmap.org/way/1554178917)",
+        "precision": "approximate",
+        "notes": "OSM way tagged name=Chilime Hydropower Plant, power=plant. Cross-checked against Wikidata Q17150837 (28.1865, 85.2999, ~1.5km NW) and GEM Global Hydropower Tracker (28.1577, 85.3332, ~3.2km SE); all three sources agree on the general Chilime/Aamachhodingmo-05 area in Rasuwa but disagree by up to ~3km, so downgraded from exact to approximate. Nominatim settlement match for 'Chilime' village: 28.1836, 85.3022 (close to Wikidata point)."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.2999, 28.1865] },
+      "properties": {
+        "name": "Chilime",
+        "capacity_mw": 22.1,
+        "river": "Chilime Khola",
+        "component": "plant_centroid",
+        "source": "wikidata",
+        "source_ref": "Q17150837",
+        "precision": "approximate",
+        "notes": "Wikidata coordinate for 'Chilime Hydropower Plant' (described there as a dam). Included as a second candidate point alongside the OSM-derived point due to the ~3km spread between sources (see notes on the OSM feature)."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.2861, 28.2442] },
+      "properties": {
+        "name": "Sanjen",
+        "capacity_mw": 42.5,
+        "river": "Sanjen Khola",
+        "component": "plant_centroid",
+        "source": "company",
+        "source_ref": "https://www.gem.wiki/Sanjen_Khola_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'exact')",
+        "precision": "approximate",
+        "notes": "No coordinates found in OSM, Wikidata, or the developer/EPC pages (chilime.com.np, chesco.com.np, nwrmap.pei.center) — those only give a text location ('Chilime VDC / Aamachhodingmo-5, Rasuwa District, powerhouse in Chilime Village at ~1745m, headworks at Tiloche ~2348m'). Downgraded GEM's 'exact' label to approximate since it could not be corroborated by a second source and the text description places it in the same general area as the separately-mapped Chilime plant, ~7km SE. Powerhouse vs. headworks (Tiloche) not separately locatable — no second feature added."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.3131, 28.1706] },
+      "properties": {
+        "name": "Sanjen Upper",
+        "capacity_mw": 14.8,
+        "river": "Sanjen Khola",
+        "component": "plant_centroid",
+        "source": "nominatim",
+        "source_ref": "https://nominatim.openstreetmap.org/search?q=Aamachhodingmo%2C%20Rasuwa%2C%20Nepal (village node)",
+        "precision": "settlement-level",
+        "notes": "Not found in OSM or Wikidata. Company/EPC pages (nhe.com.np, chesco.com.np, nwrmap.info) describe the powerhouse as in 'Simbu Village, Chilime VDC, Rasuwa District' at ~2187m, with the dam on the Tiluche River, but give no coordinates, and 'Simbu' does not resolve in Nominatim. Point placed at the Nominatim-resolved center of Aamachhodingmo village (the VDC/rural municipality containing Chilime and, per sources, Simbu) as the closest verifiable place description — this is a coarse proxy, not the powerhouse site."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.29211, 28.1092] },
+      "properties": {
+        "name": "Mailung Khola",
+        "capacity_mw": 5,
+        "river": "Mailung Khola",
+        "component": "plant_centroid",
+        "source": "wikidata",
+        "source_ref": "Q104871643 (coordinate taken from the en.wikipedia.org/wiki/Mailung_Khola_Hydropower_Station infobox; not present as a P625 claim on the Wikidata item itself)",
+        "precision": "approximate",
+        "notes": "energy.md notes conflicting capacity figures (5 MW vs 14.8 MW) and that both powerhouse and headworks were lost in the flood; only one combined location found, so a single point is given rather than separate powerhouse/dam features."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.1833, 28.0989] },
+      "properties": {
+        "name": "Upper Mailung A",
+        "capacity_mw": 6.42,
+        "river": "Mailung Khola",
+        "component": "plant_centroid",
+        "source": "company",
+        "source_ref": "https://www.gem.wiki/Upper_Mailun_Khola_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'exact')",
+        "precision": "approximate",
+        "notes": "Not in OSM or Wikidata. GEM Wiki places it in Uttargaya Rural Municipality, Rasuwa District, on the Mailung River at ~3300m (intake); IMS Group / Kathmandu Post coverage corroborates the Mailung River / Uttargaya location in general terms but gives no coordinates. Downgraded from GEM's 'exact' label since uncorroborated by a second independent source."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.3753, 28.1501] },
+      "properties": {
+        "name": "Langtang Khola",
+        "capacity_mw": 20,
+        "river": "Langtang Khola",
+        "component": "plant_centroid",
+        "source": "company",
+        "source_ref": "https://www.gem.wiki/Lantang_Khola_Yeti_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'approximate'; listed there at 310 MW nameplate — likely a data error/conflation with a larger storage-scheme entry, treat capacity with caution)",
+        "precision": "approximate",
+        "notes": "Not in OSM or Wikidata under this name. GEM Wiki places it in Langtang Valley, Rasuwa District, on the Langtang River (a Trishuli tributary), consistent with energy.md's description ('testing phase' as of the flood). GEM's own coordinate is labeled approximate."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.1861, 27.9521] },
+      "properties": {
+        "name": "Middle Trishuli Ganga",
+        "capacity_mw": 15.6,
+        "river": "Trishuli River",
+        "component": "plant_centroid",
+        "source": "nominatim",
+        "source_ref": "https://nominatim.openstreetmap.org/search?q=Gerkhu%2C%20Nuwakot%2C%20Nepal (suburb node, Bidur-11/Trishuli, Nuwakot)",
+        "precision": "settlement-level",
+        "notes": "Full name 'Middle Trishuli Ganga Nadi Hydropower Project', developer Perfect Energy Development Pvt. Ltd. Not in OSM or Wikidata. nwrmap.pei.center gives location only as 'Gerkhu, Nuwakot' (project also affects Tupchhe and Manakamana VDCs in Nuwakot and Lahare Pauwa in Rasuwa per Kathmandu Post/Investopaper coverage, but no coordinates given for those). Gerkhu is the same general area as the existing 'Trishuli' HDX entry (Trishuli Hydropower Station, Gerkhu/Trishuli Bazar)."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [84.6424, 27.8683] },
+      "properties": {
+        "name": "Super Trishuli",
+        "capacity_mw": 100,
+        "river": "Trishuli River",
+        "component": "plant_centroid",
+        "source": "company",
+        "source_ref": "https://www.gem.wiki/Super_Trishuli_hydroelectric_plant (Global Energy Monitor Global Hydropower Tracker, labeled 'exact'); also see https://blueenergy.com.np/super-trishuli-hydro-power-project and https://ce-construction.com/projects/hydropower/super-trishuli-hydropower-project-100-mw/",
+        "precision": "approximate",
+        "notes": "Outside the original Rasuwa/Nuwakot bbox as expected — this is the plant energy.md notes as ~100km downstream, unaffected by the flood. Located on the Trishuli River between Gorkha and Chitwan districts (Butar/Manakamana, Gandaki Rural Municipality, Gorkha side, and Darechauk, Chitwan side), not at Devghat/Tanahun as the task brief guessed — nwrmap.pei.center lists affected VDCs as Darechauk (Chitwan), Jogimara (Dhading), and Makaising/Tanglichok/Bhumlichok/Ghyalchok/Taklung/Manakamana (Gorkha), all consistent with GEM's coordinate. Nominatim 'Manakamana, Gorkha' village center (27.9087, 84.5689, ~8km NW) corroborates the general area. Downgraded GEM's 'exact' label since only single-source and no dam/powerhouse split could be found."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.1344, 27.8908] },
+      "properties": {
+        "name": "NEA solar (Nuwakot)",
+        "capacity_mw": 25,
+        "river": null,
+        "component": "plant_centroid",
+        "source": "osm",
+        "source_ref": "way/1385457298 (https://www.openstreetmap.org/way/1385457298); cross-checked against en.wikipedia.org/wiki/Nuwakot_Solar_Power_Station infobox (27.890695, 85.133989, ~15m away — near-exact match)",
+        "precision": "exact",
+        "notes": "Officially 'Nuwakot Solar Power Station'. Located within/adjacent to the Devighat Hydropower Station premises, Bidur Municipality, Nuwakot (per Wikipedia: panels installed across six locations connected to Devighat's 66kV substation). Two further OSM-mapped solar plant polygons exist nearby, likely representing other sub-sites of the same distributed project: way/1385457302 (27.887037, 85.131768) and way/1385457304 (27.880080, 85.123117). This point is the northernmost/largest-looking of the three and matches the Wikipedia-cited coordinate most closely."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [85.1340051, 27.8881907] },
+      "properties": {
+        "name": "Devighat Hydropower Station",
+        "capacity_mw": 14.1,
+        "river": "Trishuli River",
+        "component": "plant_centroid",
+        "source": "wikidata",
+        "source_ref": "Q13182374 (coordinate from en.wikipedia.org/wiki/Devighat_Hydropower_Station infobox)",
+        "precision": "exact",
+        "notes": "Not requested as a NEEDED item (Devighat is already in the HDX layer per the task brief) but included here because it anchors the NEA solar plant location and can be used to sanity-check that point (solar site is ~230m north of Devighat, consistent with 'within the premises of Devighat Hydropower Station')."
+      }
+    }
+  ]
+}

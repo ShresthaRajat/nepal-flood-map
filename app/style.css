@@ -276,6 +276,9 @@ summary .n .chip { margin-left: 6px; }
 
 .pop-h { font-size: 13.5px; font-weight: 600; color: #111; margin-bottom: 1px; }
 .pop-m { font-size: 11.5px; color: #555; }
+/* How far to trust a point's position, said on the face of the popup. */
+.pop-loc { font-size: 11.5px; color: #1d4ed8; margin-top: 3px; }
+.pop-n { font-size: 11px; color: #555; margin-top: 3px; }
 .pop-all { margin-top: 6px; }
 .pop-all > summary { cursor: pointer; font-size: 11.5px; color: #555; font-weight: 500; }
 .pop-all table { margin-top: 4px; }
@@ -395,6 +398,7 @@ table.rep .nm { font-weight: 600; color: #dbe4ee; }
 table.rep .ne { color: var(--fg-dim); font-weight: 400; }
 table.rep .sub { display: block; font-size: 10px; color: var(--fg-dim); font-weight: 400; }
 table.rep .none { color: #6f7c8c; }
+table.rep .sub .st { font-size: 9.5px; }
 
 /* Status pill.  Neutral states are an outline so "not reported" never reads as
    a colour with meaning. */
