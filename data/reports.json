@@ -38,7 +38,7 @@
       "official": true
     },
     "nepalnews_0908": {
-      "label": "Nepalnews — toll 1,358, 5,326 missing",
+      "label": "NDRRMA figure via Nepalnews",
       "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1358-as-5326-remain-missing-as-of-6pm/",
       "date": "2026-09-08",
       "official": false
@@ -275,14 +275,22 @@
   "casualties": {
     "headline": {
       "bodies_recovered": {
-        "value": 1358,
-        "as_of": "2026-09-08",
-        "src": "nepalnews_0908"
+        "value": 1355,
+        "as_of": "2026-09-07",
+        "src": "mofa_0907",
+        "alt": {
+          "text": "1,358 as of 8 Sep, NDRRMA via Nepalnews",
+          "src": "nepalnews_0908"
+        }
       },
       "missing": {
         "value": 5326,
         "as_of": "2026-09-08",
-        "src": "nepalnews_0908"
+        "src": "nepalnews_0908",
+        "alt": {
+          "text": "MoFA says about 5,000 as of 7 Sep",
+          "src": "mofa_0907"
+        }
       },
       "injured": {
         "value": 279,

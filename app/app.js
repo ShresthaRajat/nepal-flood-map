@@ -2068,7 +2068,10 @@ function renderCasualties(pad) {
     t.innerHTML = '<span class="k">' + esc(label) + '</span>' +
       '<span class="v">' + (f && f.value != null ? repNum(f.value) : '—') + srcLink(f && f.src) + '</span>' +
       '<span class="d">' + (f && f.as_of ? 'as of ' + shortDate(f.as_of) : 'not reported') + '</span>' +
-      (sub ? '<span class="sub">' + sub + '</span>' : '');
+      (sub ? '<span class="sub">' + sub + '</span>' : '') +
+      // A second, lower-confidence reading of the same count: a later figure
+      // that only a news outlet carries, or the ministry's rounder number.
+      (f && f.alt ? '<span class="sub">' + esc(f.alt.text) + srcLink(f.alt.src) + '</span>' : '');
     tiles.appendChild(t);
   };
   // "Bodies recovered", never "Deaths": these are remains located, most of them
