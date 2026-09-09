@@ -4,14 +4,17 @@
 Downloads the Rapid Mapping grading GeoPackages for the four areas of interest,
 takes the road/bridge line features (`transportationL_*`) and merges them into
 one GeoJSON with a common schema, so the map can draw per-segment damage grades
-from 0.3-0.7 m post-event imagery.  For AOI03 (Bidur / Trisuli Bazar) the later
-monitoring product supersedes the initial grading.
+from 0.3-0.7 m post-event imagery.  For AOI03 (Bidur / Trisuli Bazar) and AOI05
+(Phosretar) the later monitoring product supersedes the initial grading.
 
   AOI01  Syapru Besi   post-event 27 Aug 2026, 0.3 m
   AOI02  Timure        post-event 27 Aug 2026, 0.3 m
   AOI03  Bidur         monitoring: post-event 27 Aug (0.7 m) and 28 Aug 2026 (0.6 m)
-  AOI05  Phosretar     post-event 31 Aug 2026, 0.3 / 0.5 m
-  (no AOI04 product has been published on HDX as of 6 Sep 2026)
+  AOI05  Phosretar     monitoring 1 (v2, 7 Sep 2026): post-event 5 Sep 2026,
+                       corrects missing damaged/destroyed bridges from the
+                       initial grading (v3, 4 Sep 2026)
+  (AOI04 Bharatpur and AOI06 Kyundi are still "Waiting" on Copernicus EMS as
+  of 9 Sep 2026, no products delivered)
 
 Grades: Destroyed, Damaged, Possibly damaged, No visible damage, Not Analysed.
 
@@ -39,7 +42,7 @@ PRODUCTS = [
     ('AOI01', 'AOI01/GRA_PRODUCT/EMSR927_AOI01_GRA_PRODUCT_v1', 'Syapru Besi'),
     ('AOI02', 'AOI02/GRA_PRODUCT/EMSR927_AOI02_GRA_PRODUCT_v2', 'Timure'),
     ('AOI03', 'AOI03/GRA_MONIT01/EMSR927_AOI03_GRA_MONIT01_v1', 'Bidur'),
-    ('AOI05', 'AOI05/GRA_PRODUCT/EMSR927_AOI05_GRA_PRODUCT_v3', 'Phosretar'),
+    ('AOI05', 'AOI05/GRA_MONIT01/EMSR927_AOI05_GRA_MONIT01_v2', 'Phosretar'),
 ]
 KEEP = ['obj_type', 'name', 'damage_gra', 'det_method', 'dmg_src_id']
 
@@ -86,7 +89,7 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, 'w') as fh:
     json.dump({'type': 'FeatureCollection', 'name': 'ems_road_grading',
                'description': 'Copernicus EMS Rapid Mapping EMSR927 grading: roads and bridges (transportationL), '
-                              'AOI01/02/05 initial products and AOI03 monitoring 1. CC BY 4.0. '
+                              'AOI01/02 initial products, AOI03 and AOI05 monitoring 1. CC BY 4.0. '
                               'Citation: Copernicus Emergency Management Service (© 2026 European Union), EMSR927',
                'features': features}, fh, separators=(',', ':'))
 print(f'{len(features)} graded segments: {counts}')
