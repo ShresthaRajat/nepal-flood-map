@@ -1,7 +1,7 @@
 {
-  "feature_count": 566,
+  "feature_count": 570,
   "geometry_types": {
-    "LINESTRING": 448,
+    "LINESTRING": 452,
     "POLYGON": 110,
     "POINT": 8
   },
@@ -17,18 +17,18 @@
       "type": "VARCHAR",
       "null_count": 0,
       "null_percent": 0.0,
-      "distinct_count": 566,
+      "distinct_count": 570,
       "top_values": [
         {
-          "value": "way/1126421509",
+          "value": "way/246173488",
           "count": 1
         },
         {
-          "value": "way/1134722793",
+          "value": "way/1553840464",
           "count": 1
         },
         {
-          "value": "way/1554631865",
+          "value": "way/341166945",
           "count": 1
         },
         {
@@ -36,7 +36,7 @@
           "count": 1
         },
         {
-          "value": "way/246173488",
+          "value": "way/341626301",
           "count": 1
         }
       ]
@@ -44,8 +44,8 @@
     {
       "name": "name",
       "type": "VARCHAR",
-      "null_count": 474,
-      "null_percent": 83.75,
+      "null_count": 478,
+      "null_percent": 83.86,
       "distinct_count": 44,
       "top_values": [
         {
@@ -65,7 +65,7 @@
           "count": 6
         },
         {
-          "value": "Briddhim Khola",
+          "value": "Trisuli",
           "count": 3
         }
       ]
@@ -73,8 +73,8 @@
     {
       "name": "name_en",
       "type": "VARCHAR",
-      "null_count": 545,
-      "null_percent": 96.29,
+      "null_count": 549,
+      "null_percent": 96.32,
       "distinct_count": 10,
       "top_values": [
         {
@@ -90,11 +90,11 @@
           "count": 3
         },
         {
-          "value": "Gyirong Zangbo",
+          "value": "Ghatte Khola",
           "count": 1
         },
         {
-          "value": "Kyirong Tsangpo",
+          "value": "Lamo jharna, Jalbire",
           "count": 1
         }
       ]
@@ -102,8 +102,8 @@
     {
       "name": "name_ne",
       "type": "VARCHAR",
-      "null_count": 552,
-      "null_percent": 97.53,
+      "null_count": 556,
+      "null_percent": 97.54,
       "distinct_count": 9,
       "top_values": [
         {
@@ -115,15 +115,15 @@
           "count": 2
         },
         {
-          "value": "\u0932\u0947\u0928\u094d\u0921\u0947 \u0916\u094b\u0932\u093e",
-          "count": 1
-        },
-        {
-          "value": "\u0938\u0932\u093e\u0928\u094d\u0916\u0941 \u0916\u094b\u0932\u093e",
-          "count": 1
-        },
-        {
           "value": "\u0924\u094d\u0930\u093f\u0936\u0942\u0932\u0940 \u0917\u0902\u0917\u093e \u0928\u0926\u0940",
+          "count": 1
+        },
+        {
+          "value": "\u0932\u093e\u0919\u091f\u093e\u0919 \u0916\u094b\u0932\u093e",
+          "count": 1
+        },
+        {
+          "value": "\u092b\u0932\u093e\u0916\u0941 \u0916\u094b\u0932\u093e",
           "count": 1
         }
       ]
@@ -137,11 +137,11 @@
       "top_values": [
         {
           "value": "Standing",
-          "count": 520
+          "count": 522
         },
         {
           "value": "Destroyed",
-          "count": 46
+          "count": 48
         }
       ]
     },
@@ -149,12 +149,12 @@
       "name": "waterway",
       "type": "VARCHAR",
       "null_count": 116,
-      "null_percent": 20.49,
+      "null_percent": 20.35,
       "distinct_count": 12,
       "top_values": [
         {
           "value": "stream",
-          "count": 308
+          "count": 312
         },
         {
           "value": "river",
@@ -177,7 +177,7 @@
     {
       "name": "covered",
       "type": "VARCHAR",
-      "null_count": 566,
+      "null_count": 570,
       "null_percent": 100.0,
       "distinct_count": 0,
       "top_values": []
@@ -185,7 +185,7 @@
     {
       "name": "width",
       "type": "VARCHAR",
-      "null_count": 566,
+      "null_count": 570,
       "null_percent": 100.0,
       "distinct_count": 0,
       "top_values": []
@@ -193,7 +193,7 @@
     {
       "name": "depth",
       "type": "VARCHAR",
-      "null_count": 566,
+      "null_count": 570,
       "null_percent": 100.0,
       "distinct_count": 0,
       "top_values": []
@@ -201,8 +201,8 @@
     {
       "name": "layer",
       "type": "VARCHAR",
-      "null_count": 505,
-      "null_percent": 89.22,
+      "null_count": 509,
+      "null_percent": 89.3,
       "distinct_count": 2,
       "top_values": [
         {
@@ -218,7 +218,7 @@
     {
       "name": "blockage",
       "type": "VARCHAR",
-      "null_count": 566,
+      "null_count": 570,
       "null_percent": 100.0,
       "distinct_count": 0,
       "top_values": []
@@ -226,8 +226,8 @@
     {
       "name": "tunnel",
       "type": "VARCHAR",
-      "null_count": 516,
-      "null_percent": 91.17,
+      "null_count": 520,
+      "null_percent": 91.23,
       "distinct_count": 3,
       "top_values": [
         {
@@ -247,8 +247,8 @@
     {
       "name": "natural_class",
       "type": "VARCHAR",
-      "null_count": 443,
-      "null_percent": 78.27,
+      "null_count": 447,
+      "null_percent": 78.42,
       "distinct_count": 1,
       "top_values": [
         {
@@ -260,8 +260,8 @@
     {
       "name": "water",
       "type": "VARCHAR",
-      "null_count": 472,
-      "null_percent": 83.39,
+      "null_count": 476,
+      "null_percent": 83.51,
       "distinct_count": 5,
       "top_values": [
         {
@@ -289,8 +289,8 @@
     {
       "name": "source",
       "type": "VARCHAR",
-      "null_count": 522,
-      "null_percent": 92.23,
+      "null_count": 526,
+      "null_percent": 92.28,
       "distinct_count": 11,
       "top_values": [
         {
@@ -324,7 +324,7 @@
       "top_values": [
         {
           "value": "NPL",
-          "count": 566
+          "count": 570
         }
       ]
     },
@@ -337,7 +337,7 @@
       "top_values": [
         {
           "value": "Nepal",
-          "count": 566
+          "count": 570
         }
       ]
     },
@@ -350,7 +350,7 @@
       "top_values": [
         {
           "value": "NP03",
-          "count": 515
+          "count": 519
         },
         {
           "value": "NP04",
@@ -367,7 +367,7 @@
       "top_values": [
         {
           "value": "Bagmati",
-          "count": 515
+          "count": 519
         },
         {
           "value": "Gandaki",
@@ -384,7 +384,7 @@
       "top_values": [
         {
           "value": "NP0329",
-          "count": 216
+          "count": 220
         },
         {
           "value": "NP0328",
@@ -399,7 +399,7 @@
           "count": 54
         },
         {
-          "value": "NP0436",
+          "value": "NP0440",
           "count": 25
         }
       ]
@@ -413,7 +413,7 @@
       "top_values": [
         {
           "value": "Rasuwa",
-          "count": 216
+          "count": 220
         },
         {
           "value": "Nuwakot",
@@ -446,18 +446,18 @@
         },
         {
           "value": "NP0329402",
-          "count": 97
+          "count": 99
         },
         {
           "value": "NP0329403",
           "count": 68
         },
         {
-          "value": "NP0335401",
-          "count": 29
+          "value": "NP0329401",
+          "count": 31
         },
         {
-          "value": "NP0329401",
+          "value": "NP0335401",
           "count": 29
         }
       ]
@@ -475,18 +475,18 @@
         },
         {
           "value": "Gosaikunda",
-          "count": 97
+          "count": 99
         },
         {
           "value": "Uttargaya",
           "count": 68
         },
         {
-          "value": "Ichchha Kamana",
-          "count": 29
+          "value": "Aamachhodingmo",
+          "count": 31
         },
         {
-          "value": "Aamachhodingmo",
+          "value": "Ichchha Kamana",
           "count": 29
         }
       ]
@@ -494,7 +494,7 @@
     {
       "name": "adm4_pcode",
       "type": "VARCHAR",
-      "null_count": 566,
+      "null_count": 570,
       "null_percent": 100.0,
       "distinct_count": 0,
       "top_values": []
@@ -502,7 +502,7 @@
     {
       "name": "adm4_name",
       "type": "VARCHAR",
-      "null_count": 566,
+      "null_count": 570,
       "null_percent": 100.0,
       "distinct_count": 0,
       "top_values": []
@@ -510,8 +510,8 @@
     {
       "name": "name_latin",
       "type": "VARCHAR",
-      "null_count": 473,
-      "null_percent": 83.57,
+      "null_count": 477,
+      "null_percent": 83.68,
       "distinct_count": 45,
       "top_values": [
         {
@@ -537,6 +537,6 @@
       ]
     }
   ],
-  "summary": "566 features. geometry types: 448 LINESTRING, 110 POLYGON, 8 POINT. 15 of 26 columns are >=50% null (name, name_en, name_ne, covered, width, depth, layer, blockage, tunnel, natural_class, water, source, adm4_pcode, adm4_name, name_latin).",
+  "summary": "570 features. geometry types: 452 LINESTRING, 110 POLYGON, 8 POINT. 15 of 26 columns are >=50% null (name, name_en, name_ne, covered, width, depth, layer, blockage, tunnel, natural_class, water, source, adm4_pcode, adm4_name, name_latin).",
   "temporal": null
 }

@@ -1,7 +1,7 @@
 oex export
 ==========
 
-Generated:        2026-09-06 10:01:56 UTC
+Generated:        2026-09-09 04:00:58 UTC
 oex version:      0.4.13
 Project:          https://github.com/osgeonepal/oex
 
@@ -11,11 +11,11 @@ Bounding box:     (84.5544, 27.7933, 85.3819, 28.2825)
 
 Dataset:          waterways
 Format:           GeoJSON (geojson)
-Features:         397
+Features:         400
 
 Source:           OpenStreetMap contributors
 Source URL:       https://www.openstreetmap.org/
-Snapshot:         2026-09-06T09:55:20Z
+Snapshot:         2026-09-09T03:54:39Z
 License:          hdx-odc-odbl
 License URL:      https://opendatacommons.org/licenses/odbl/1-0/
 

@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>pmtiles test</title></head>
+<body>
+<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
+<script>
+(async () => {
+  try {
+    const p = new pmtiles.PMTiles('data/hdx/pmtiles/hot_flood_npl.pmtiles');
+    const header = await p.getHeader();
+    console.log('HEADER_OK', JSON.stringify({minZoom: header.minZoom, maxZoom: header.maxZoom, tileType: header.tileType}));
+    const z = Math.max(header.minZoom, 12);
+    const tile = await p.getZxy(z, Math.floor(Math.random()*1), 0).catch(e => ({err: e.message}));
+    // Instead try a protocol-style fetch through addProtocol path like the app does.
+    const protocol = new pmtiles.Protocol();
+    console.log('PROTOCOL_TILE_TYPE', typeof protocol.tile);
+    // exercise tile() the way maplibre would, with a tilejson request
+    const res = await protocol.tile({ type: 'json', url: 'pmtiles://data/hdx/pmtiles/hot_flood_npl.pmtiles' }, { signal: new AbortController().signal });
+    console.log('TILEJSON_OK', JSON.stringify(res.data).slice(0, 200));
+  } catch (e) {
+    console.log('PMTILES_TEST_ERROR', e && e.message, e && e.stack);
+  }
+})();
+</script>
+</body></html>

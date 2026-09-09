@@ -4,26 +4,26 @@
     {
       "category": "buildings",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:01:48Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:01:46Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 51799,
+        "feature_count": 51914,
         "geometry_types": {
-          "POLYGON": 50126,
-          "LINESTRING": 1666,
+          "POLYGON": 49552,
+          "LINESTRING": 2355,
           "POINT": 7
         },
         "bbox": [
           84.4195692,
           27.7392576,
           85.384918,
-          28.286082
+          28.2861027
         ],
         "columns": [
           {
@@ -31,13 +31,13 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 51799,
+            "distinct_count": 51914,
             "top_values": []
           },
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 51739,
+            "null_count": 51854,
             "null_percent": 99.88,
             "distinct_count": 58,
             "top_values": [
@@ -50,7 +50,7 @@
                 "count": 2
               },
               {
-                "value": "Upper Trishuli-3B Powerhouse",
+                "value": "`",
                 "count": 1
               },
               {
@@ -58,7 +58,7 @@
                 "count": 1
               },
               {
-                "value": "`",
+                "value": "Upper Trishuli-3B Powerhouse",
                 "count": 1
               }
             ]
@@ -66,16 +66,16 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 51797,
+            "null_count": 51912,
             "null_percent": 100.0,
             "distinct_count": 2,
             "top_values": [
               {
-                "value": "Rasuwagadhi Hydropower Dam",
+                "value": "Sub-Tropical Horticulture Development Center",
                 "count": 1
               },
               {
-                "value": "Sub-Tropical Horticulture Development Center",
+                "value": "Rasuwagadhi Hydropower Dam",
                 "count": 1
               }
             ]
@@ -83,7 +83,7 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 51797,
+            "null_count": 51912,
             "null_percent": 100.0,
             "distinct_count": 2,
             "top_values": [
@@ -106,11 +106,11 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 50129
+                "count": 49555
               },
               {
                 "value": "Destroyed",
-                "count": 1655
+                "count": 2344
               },
               {
                 "value": "Damaged",
@@ -127,11 +127,11 @@
             "top_values": [
               {
                 "value": "yes",
-                "count": 50505
+                "count": 50622
               },
               {
                 "value": "house",
-                "count": 882
+                "count": 881
               },
               {
                 "value": "residential",
@@ -150,16 +150,16 @@
           {
             "name": "building_levels",
             "type": "VARCHAR",
-            "null_count": 51785,
+            "null_count": 51900,
             "null_percent": 99.97,
             "distinct_count": 4,
             "top_values": [
               {
-                "value": "1",
+                "value": "2",
                 "count": 6
               },
               {
-                "value": "2",
+                "value": "1",
                 "count": 6
               },
               {
@@ -175,7 +175,7 @@
           {
             "name": "building_materials",
             "type": "VARCHAR",
-            "null_count": 51799,
+            "null_count": 51914,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -183,7 +183,7 @@
           {
             "name": "was_building_levels",
             "type": "VARCHAR",
-            "null_count": 51796,
+            "null_count": 51911,
             "null_percent": 99.99,
             "distinct_count": 3,
             "top_values": [
@@ -204,7 +204,7 @@
           {
             "name": "damage_type",
             "type": "VARCHAR",
-            "null_count": 51517,
+            "null_count": 51632,
             "null_percent": 99.46,
             "distinct_count": 2,
             "top_values": [
@@ -221,7 +221,7 @@
           {
             "name": "end_date",
             "type": "VARCHAR",
-            "null_count": 51677,
+            "null_count": 51792,
             "null_percent": 99.76,
             "distinct_count": 1,
             "top_values": [
@@ -234,7 +234,7 @@
           {
             "name": "addr_full",
             "type": "VARCHAR",
-            "null_count": 51799,
+            "null_count": 51914,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -242,12 +242,20 @@
           {
             "name": "addr_housenumber",
             "type": "VARCHAR",
-            "null_count": 51793,
+            "null_count": 51908,
             "null_percent": 99.99,
             "distinct_count": 6,
             "top_values": [
               {
+                "value": "Satar 001",
+                "count": 1
+              },
+              {
                 "value": "45000",
+                "count": 1
+              },
+              {
+                "value": "4",
                 "count": 1
               },
               {
@@ -257,21 +265,13 @@
               {
                 "value": "Briddim-3,",
                 "count": 1
-              },
-              {
-                "value": "4",
-                "count": 1
-              },
-              {
-                "value": "Satar 001",
-                "count": 1
               }
             ]
           },
           {
             "name": "addr_street",
             "type": "VARCHAR",
-            "null_count": 51783,
+            "null_count": 51898,
             "null_percent": 99.97,
             "distinct_count": 11,
             "top_values": [
@@ -300,7 +300,7 @@
           {
             "name": "addr_city",
             "type": "VARCHAR",
-            "null_count": 51786,
+            "null_count": 51901,
             "null_percent": 99.97,
             "distinct_count": 7,
             "top_values": [
@@ -313,15 +313,15 @@
                 "count": 2
               },
               {
+                "value": "Bahuntar",
+                "count": 1
+              },
+              {
                 "value": "Lingling",
                 "count": 1
               },
               {
-                "value": "Dhading",
-                "count": 1
-              },
-              {
-                "value": "Benighat",
+                "value": "Thuman",
                 "count": 1
               }
             ]
@@ -329,7 +329,7 @@
           {
             "name": "office",
             "type": "VARCHAR",
-            "null_count": 51798,
+            "null_count": 51913,
             "null_percent": 100.0,
             "distinct_count": 1,
             "top_values": [
@@ -342,8 +342,8 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 49347,
-            "null_percent": 95.27,
+            "null_count": 49462,
+            "null_percent": 95.28,
             "distinct_count": 15,
             "top_values": [
               {
@@ -377,7 +377,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 51799
+                "count": 51914
               }
             ]
           },
@@ -390,7 +390,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 51799
+                "count": 51914
               }
             ]
           },
@@ -403,11 +403,11 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 44226
+                "count": 44339
               },
               {
                 "value": "NP04",
-                "count": 7573
+                "count": 7575
               }
             ]
           },
@@ -420,11 +420,11 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 44226
+                "count": 44339
               },
               {
                 "value": "Gandaki",
-                "count": 7573
+                "count": 7575
               }
             ]
           },
@@ -441,7 +441,7 @@
               },
               {
                 "value": "NP0330",
-                "count": 12474
+                "count": 12617
               },
               {
                 "value": "NP0335",
@@ -449,11 +449,11 @@
               },
               {
                 "value": "NP0329",
-                "count": 4498
+                "count": 4468
               },
               {
                 "value": "NP0440",
-                "count": 3822
+                "count": 3824
               }
             ]
           },
@@ -470,7 +470,7 @@
               },
               {
                 "value": "Dhading",
-                "count": 12474
+                "count": 12617
               },
               {
                 "value": "Chitawan",
@@ -478,11 +478,11 @@
               },
               {
                 "value": "Rasuwa",
-                "count": 4498
+                "count": 4468
               },
               {
                 "value": "Tanahu",
-                "count": 3822
+                "count": 3824
               }
             ]
           },
@@ -507,7 +507,7 @@
               },
               {
                 "value": "NP0330410",
-                "count": 3139
+                "count": 3282
               },
               {
                 "value": "NP0440406",
@@ -536,7 +536,7 @@
               },
               {
                 "value": "Galchhi",
-                "count": 3139
+                "count": 3282
               },
               {
                 "value": "Devghat",
@@ -547,7 +547,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 51799,
+            "null_count": 51914,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -555,7 +555,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 51799,
+            "null_count": 51914,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -563,58 +563,58 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 51739,
+            "null_count": 51854,
             "null_percent": 99.88,
             "distinct_count": 58,
             "top_values": [
-              {
-                "value": "Samudayik Bidhya Mandir",
-                "count": 2
-              },
               {
                 "value": "Rice Mill",
                 "count": 2
               },
               {
-                "value": "Upper Trishuli-3B Powerhouse",
+                "value": "Samudayik Bidhya Mandir",
+                "count": 2
+              },
+              {
+                "value": "`",
                 "count": 1
               },
               {
-                "value": "Gas Factory",
+                "value": "Mailung Khola Project",
                 "count": 1
               },
               {
-                "value": "Benighat Rorang Gaunpalika Office",
+                "value": "Teacher Cantine",
                 "count": 1
               }
             ]
           }
         ],
-        "summary": "51,799 features. geometry types: 50,126 POLYGON, 1,666 LINESTRING, 7 POINT. 17 of 28 columns are >=50% null (name, name_en, name_ne, building_levels, building_materials, was_building_levels, damage_type, end_date, addr_full, addr_housenumber, addr_street, addr_city, office, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "51,914 features. geometry types: 49,552 POLYGON, 2,355 LINESTRING, 7 POINT. 17 of 28 columns are >=50% null (name, name_en, name_ne, building_levels, building_materials, was_building_levels, damage_type, end_date, addr_full, addr_housenumber, addr_street, addr_city, office, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "destroyed_features",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:01:58Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:12Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 2131,
+        "feature_count": 2878,
         "geometry_types": {
-          "LINESTRING": 2038,
+          "LINESTRING": 2785,
           "POINT": 74,
           "POLYGON": 19
         },
         "bbox": [
-          85.070124,
-          27.8540507,
+          85.055909,
+          27.8520937,
           85.4078962,
           28.3064407
         ],
@@ -624,15 +624,15 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 2131,
+            "distinct_count": 2878,
             "top_values": []
           },
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 2068,
-            "null_percent": 97.04,
-            "distinct_count": 52,
+            "null_count": 2808,
+            "null_percent": 97.57,
+            "distinct_count": 59,
             "top_values": [
               {
                 "value": "Upper Trishuli-3 Hydropower Project",
@@ -643,15 +643,15 @@
                 "count": 3
               },
               {
+                "value": "Water Tank and Tap",
+                "count": 2
+              },
+              {
                 "value": "Pasang Lhamu Highway",
                 "count": 2
               },
               {
                 "value": "Devighat temple",
-                "count": 2
-              },
-              {
-                "value": "\u70ed\u7d22\u6865 \u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
                 "count": 2
               }
             ]
@@ -659,8 +659,8 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 2107,
-            "null_percent": 98.87,
+            "null_count": 2854,
+            "null_percent": 99.17,
             "distinct_count": 23,
             "top_values": [
               {
@@ -672,15 +672,15 @@
                 "count": 1
               },
               {
-                "value": "Bank",
-                "count": 1
-              },
-              {
-                "value": "Immigration Office Nepal",
+                "value": "Potala Guesthouse",
                 "count": 1
               },
               {
                 "value": "New Yala Peak Guesthouse",
+                "count": 1
+              },
+              {
+                "value": "Rasuwagadhi Hydropower Dam",
                 "count": 1
               }
             ]
@@ -688,9 +688,9 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 2126,
-            "null_percent": 99.77,
-            "distinct_count": 3,
+            "null_count": 2872,
+            "null_percent": 99.79,
+            "distinct_count": 4,
             "top_values": [
               {
                 "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940\u092e\u093e \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
@@ -702,6 +702,10 @@
               },
               {
                 "value": "\u0924\u0940\u092e\u0941\u0930\u0947 \u0924\u093e\u0924\u094b\u092a\u093e\u0928\u0940",
+                "count": 1
+              },
+              {
+                "value": "\u092b\u0932\u093e\u0916\u0941 \u0916\u094b\u0932\u093e \u092a\u0941\u0932",
                 "count": 1
               }
             ]
@@ -715,7 +719,7 @@
             "top_values": [
               {
                 "value": "Destroyed",
-                "count": 2115
+                "count": 2862
               },
               {
                 "value": "Damaged",
@@ -732,31 +736,31 @@
             "top_values": [
               {
                 "value": "building",
-                "count": 1670
+                "count": 2359
               },
               {
                 "value": "road",
-                "count": 237
+                "count": 276
+              },
+              {
+                "value": "bridge",
+                "count": 56
               },
               {
                 "value": "natural",
                 "count": 50
               },
               {
-                "value": "bridge",
-                "count": 44
-              },
-              {
-                "value": "amenity",
-                "count": 22
+                "value": "land use",
+                "count": 28
               }
             ]
           },
           {
             "name": "damage_type",
             "type": "VARCHAR",
-            "null_count": 1838,
-            "null_percent": 86.25,
+            "null_count": 2585,
+            "null_percent": 89.82,
             "distinct_count": 3,
             "top_values": [
               {
@@ -776,17 +780,17 @@
           {
             "name": "damage_event",
             "type": "VARCHAR",
-            "null_count": 112,
-            "null_percent": 5.26,
+            "null_count": 114,
+            "null_percent": 3.96,
             "distinct_count": 4,
             "top_values": [
               {
                 "value": "2026NepalFlood",
-                "count": 1834
+                "count": 2580
               },
               {
                 "value": "2026 Nepal Floods",
-                "count": 176
+                "count": 175
               },
               {
                 "value": "8\u00b726\u5409\u9686\u53e3\u5cb8\u6ce5\u77f3\u6d41",
@@ -801,13 +805,13 @@
           {
             "name": "damage_date",
             "type": "VARCHAR",
-            "null_count": 1955,
-            "null_percent": 91.74,
+            "null_count": 2701,
+            "null_percent": 93.85,
             "distinct_count": 2,
             "top_values": [
               {
                 "value": "2026-08-26",
-                "count": 174
+                "count": 175
               },
               {
                 "value": "2026-08-27",
@@ -818,13 +822,13 @@
           {
             "name": "end_date",
             "type": "VARCHAR",
-            "null_count": 1962,
-            "null_percent": 92.07,
+            "null_count": 2705,
+            "null_percent": 93.99,
             "distinct_count": 2,
             "top_values": [
               {
                 "value": "2026-08-26",
-                "count": 167
+                "count": 171
               },
               {
                 "value": "2025-07-08",
@@ -835,8 +839,8 @@
           {
             "name": "was_building_levels",
             "type": "VARCHAR",
-            "null_count": 2119,
-            "null_percent": 99.44,
+            "null_count": 2866,
+            "null_percent": 99.58,
             "distinct_count": 5,
             "top_values": [
               {
@@ -864,13 +868,13 @@
           {
             "name": "destroyed_building",
             "type": "VARCHAR",
-            "null_count": 476,
-            "null_percent": 22.34,
+            "null_count": 534,
+            "null_percent": 18.55,
             "distinct_count": 9,
             "top_values": [
               {
                 "value": "yes",
-                "count": 1613
+                "count": 2301
               },
               {
                 "value": "house",
@@ -885,7 +889,7 @@
                 "count": 6
               },
               {
-                "value": "school",
+                "value": "hotel",
                 "count": 3
               }
             ]
@@ -893,46 +897,46 @@
           {
             "name": "destroyed_highway",
             "type": "VARCHAR",
-            "null_count": 1854,
-            "null_percent": 87.0,
-            "distinct_count": 10,
+            "null_count": 2551,
+            "null_percent": 88.64,
+            "distinct_count": 11,
             "top_values": [
               {
                 "value": "path",
-                "count": 80
+                "count": 96
               },
               {
                 "value": "service",
-                "count": 63
+                "count": 70
               },
               {
                 "value": "unclassified",
-                "count": 45
-              },
-              {
-                "value": "track",
-                "count": 24
+                "count": 52
               },
               {
                 "value": "primary",
-                "count": 23
+                "count": 29
+              },
+              {
+                "value": "track",
+                "count": 28
               }
             ]
           },
           {
             "name": "destroyed_bridge",
             "type": "VARCHAR",
-            "null_count": 2087,
-            "null_percent": 97.94,
+            "null_count": 2822,
+            "null_percent": 98.05,
             "distinct_count": 3,
             "top_values": [
               {
                 "value": "yes",
-                "count": 41
+                "count": 52
               },
               {
                 "value": "aqueduct",
-                "count": 2
+                "count": 3
               },
               {
                 "value": "viaduct",
@@ -943,17 +947,17 @@
           {
             "name": "destroyed_waterway",
             "type": "VARCHAR",
-            "null_count": 2116,
-            "null_percent": 99.3,
+            "null_count": 2862,
+            "null_percent": 99.44,
             "distinct_count": 3,
             "top_values": [
               {
-                "value": "weir",
+                "value": "canal",
                 "count": 7
               },
               {
-                "value": "canal",
-                "count": 6
+                "value": "weir",
+                "count": 7
               },
               {
                 "value": "dam",
@@ -964,16 +968,16 @@
           {
             "name": "destroyed_amenity",
             "type": "VARCHAR",
-            "null_count": 2106,
-            "null_percent": 98.83,
+            "null_count": 2853,
+            "null_percent": 99.13,
             "distinct_count": 11,
             "top_values": [
               {
-                "value": "toilets",
+                "value": "restaurant",
                 "count": 4
               },
               {
-                "value": "restaurant",
+                "value": "toilets",
                 "count": 4
               },
               {
@@ -993,8 +997,8 @@
           {
             "name": "damaged_building",
             "type": "VARCHAR",
-            "null_count": 2116,
-            "null_percent": 99.3,
+            "null_count": 2863,
+            "null_percent": 99.48,
             "distinct_count": 1,
             "top_values": [
               {
@@ -1006,29 +1010,29 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 2101,
-            "null_percent": 98.59,
-            "distinct_count": 10,
+            "null_count": 2750,
+            "null_percent": 95.55,
+            "distinct_count": 12,
             "top_values": [
+              {
+                "value": "Bing",
+                "count": 88
+              },
+              {
+                "value": "MapBox",
+                "count": 17
+              },
               {
                 "value": "GPS",
                 "count": 10
               },
               {
-                "value": "Bing",
-                "count": 10
+                "value": "Digital Globe,2015-05-03",
+                "count": 3
               },
               {
-                "value": "MapBox",
+                "value": "Strava heat map",
                 "count": 2
-              },
-              {
-                "value": "Esri",
-                "count": 2
-              },
-              {
-                "value": "http://www.mapillary.com/map/e/LJA_9J2t1rbBryOWdlT9Yg",
-                "count": 1
               }
             ]
           },
@@ -1041,7 +1045,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 2131
+                "count": 2878
               }
             ]
           },
@@ -1054,7 +1058,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 2131
+                "count": 2878
               }
             ]
           },
@@ -1062,12 +1066,12 @@
             "name": "adm1_pcode",
             "type": "VARCHAR",
             "null_count": 1,
-            "null_percent": 0.05,
+            "null_percent": 0.03,
             "distinct_count": 1,
             "top_values": [
               {
                 "value": "NP03",
-                "count": 2130
+                "count": 2877
               }
             ]
           },
@@ -1075,12 +1079,12 @@
             "name": "adm1_name",
             "type": "VARCHAR",
             "null_count": 1,
-            "null_percent": 0.05,
+            "null_percent": 0.03,
             "distinct_count": 1,
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 2130
+                "count": 2877
               }
             ]
           },
@@ -1088,16 +1092,16 @@
             "name": "adm2_pcode",
             "type": "VARCHAR",
             "null_count": 1,
-            "null_percent": 0.05,
+            "null_percent": 0.03,
             "distinct_count": 2,
             "top_values": [
               {
-                "value": "NP0329",
-                "count": 1115
+                "value": "NP0328",
+                "count": 1749
               },
               {
-                "value": "NP0328",
-                "count": 1015
+                "value": "NP0329",
+                "count": 1128
               }
             ]
           },
@@ -1105,16 +1109,16 @@
             "name": "adm2_name",
             "type": "VARCHAR",
             "null_count": 1,
-            "null_percent": 0.05,
+            "null_percent": 0.03,
             "distinct_count": 2,
             "top_values": [
               {
-                "value": "Rasuwa",
-                "count": 1115
+                "value": "Nuwakot",
+                "count": 1749
               },
               {
-                "value": "Nuwakot",
-                "count": 1015
+                "value": "Rasuwa",
+                "count": 1128
               }
             ]
           },
@@ -1122,28 +1126,28 @@
             "name": "adm3_pcode",
             "type": "VARCHAR",
             "null_count": 1,
-            "null_percent": 0.05,
-            "distinct_count": 5,
+            "null_percent": 0.03,
+            "distinct_count": 7,
             "top_values": [
               {
-                "value": "NP0329402",
-                "count": 1062
+                "value": "NP0328301",
+                "count": 1444
               },
               {
-                "value": "NP0328301",
-                "count": 1008
+                "value": "NP0329402",
+                "count": 1075
+              },
+              {
+                "value": "NP0328402",
+                "count": 275
               },
               {
                 "value": "NP0329401",
                 "count": 52
               },
               {
-                "value": "NP0328402",
-                "count": 7
-              },
-              {
-                "value": "NP0329403",
-                "count": 1
+                "value": "NP0328302",
+                "count": 16
               }
             ]
           },
@@ -1151,35 +1155,35 @@
             "name": "adm3_name",
             "type": "VARCHAR",
             "null_count": 1,
-            "null_percent": 0.05,
-            "distinct_count": 5,
+            "null_percent": 0.03,
+            "distinct_count": 7,
             "top_values": [
               {
-                "value": "Gosaikunda",
-                "count": 1062
+                "value": "Bidur",
+                "count": 1444
               },
               {
-                "value": "Bidur",
-                "count": 1008
+                "value": "Gosaikunda",
+                "count": 1075
+              },
+              {
+                "value": "Kispang",
+                "count": 275
               },
               {
                 "value": "Aamachhodingmo",
                 "count": 52
               },
               {
-                "value": "Kispang",
-                "count": 7
-              },
-              {
-                "value": "Uttargaya",
-                "count": 1
+                "value": "Belkotgadhi",
+                "count": 16
               }
             ]
           },
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 2131,
+            "null_count": 2878,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -1187,7 +1191,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 2131,
+            "null_count": 2878,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -1195,9 +1199,9 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 2052,
-            "null_percent": 96.29,
-            "distinct_count": 70,
+            "null_count": 2792,
+            "null_percent": 97.01,
+            "distinct_count": 77,
             "top_values": [
               {
                 "value": "Upper Trishuli-3 Hydropower Project",
@@ -1208,7 +1212,7 @@
                 "count": 3
               },
               {
-                "value": "Devighat temple",
+                "value": "Pasang Lhamu Highway",
                 "count": 2
               },
               {
@@ -1222,25 +1226,25 @@
             ]
           }
         ],
-        "summary": "2,131 features. geometry types: 2,038 LINESTRING, 74 POINT, 19 POLYGON. 16 of 29 columns are >=50% null (name, name_en, name_ne, damage_type, damage_date, end_date, was_building_levels, destroyed_highway, destroyed_bridge, destroyed_waterway, destroyed_amenity, damaged_building, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "2,878 features. geometry types: 2,785 LINESTRING, 74 POINT, 19 POLYGON. 16 of 29 columns are >=50% null (name, name_en, name_ne, damage_type, damage_date, end_date, was_building_levels, destroyed_highway, destroyed_bridge, destroyed_waterway, destroyed_amenity, damaged_building, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "roads",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:04Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:19Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 5318,
+        "feature_count": 5341,
         "geometry_types": {
-          "LINESTRING": 5282,
+          "LINESTRING": 5305,
           "POINT": 34,
           "POLYGON": 2
         },
@@ -1256,14 +1260,14 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 5318,
+            "distinct_count": 5341,
             "top_values": []
           },
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 5109,
-            "null_percent": 96.07,
+            "null_count": 5132,
+            "null_percent": 96.09,
             "distinct_count": 70,
             "top_values": [
               {
@@ -1291,7 +1295,7 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 5263,
+            "null_count": 5286,
             "null_percent": 98.97,
             "distinct_count": 25,
             "top_values": [
@@ -1308,11 +1312,11 @@
                 "count": 6
               },
               {
-                "value": "Lamnbauluwa Bridge",
+                "value": "Pokhare khola",
                 "count": 2
               },
               {
-                "value": "Pokhare khola",
+                "value": "Lamnbauluwa Bridge",
                 "count": 2
               }
             ]
@@ -1320,17 +1324,13 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 5295,
+            "null_count": 5318,
             "null_percent": 99.57,
             "distinct_count": 14,
             "top_values": [
               {
                 "value": "\u092a\u0943\u0925\u094d\u0935\u0940 \u0930\u093e\u091c\u092e\u093e\u0930\u094d\u0917",
                 "count": 7
-              },
-              {
-                "value": "\u0932\u093e\u092e\u0941\u092c\u093e\u0932\u0941\u0935\u093e \u092a\u0941\u0932",
-                "count": 2
               },
               {
                 "value": "\u0938\u093f\u092e\u0932\u0924\u093e\u0932 \u092a\u0941\u0932",
@@ -1341,7 +1341,11 @@
                 "count": 2
               },
               {
-                "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
+                "value": "\u0932\u093e\u092e\u0941\u092c\u093e\u0932\u0941\u0935\u093e \u092a\u0941\u0932",
+                "count": 2
+              },
+              {
+                "value": "\u092b\u0932\u093e\u0916\u0941 \u0916\u094b\u0932\u093e \u092a\u0941\u0932",
                 "count": 1
               }
             ]
@@ -1355,11 +1359,11 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 5041
+                "count": 5014
               },
               {
                 "value": "Destroyed",
-                "count": 277
+                "count": 327
               }
             ]
           },
@@ -1372,15 +1376,15 @@
             "top_values": [
               {
                 "value": "path",
-                "count": 2138
+                "count": 2143
               },
               {
                 "value": "unclassified",
-                "count": 972
+                "count": 979
               },
               {
                 "value": "track",
-                "count": 845
+                "count": 850
               },
               {
                 "value": "residential",
@@ -1388,20 +1392,20 @@
               },
               {
                 "value": "service",
-                "count": 443
+                "count": 446
               }
             ]
           },
           {
             "name": "surface",
             "type": "VARCHAR",
-            "null_count": 4699,
-            "null_percent": 88.36,
+            "null_count": 4717,
+            "null_percent": 88.32,
             "distinct_count": 14,
             "top_values": [
               {
                 "value": "unpaved",
-                "count": 430
+                "count": 432
               },
               {
                 "value": "asphalt",
@@ -1413,7 +1417,7 @@
               },
               {
                 "value": "paved",
-                "count": 29
+                "count": 32
               },
               {
                 "value": "concrete",
@@ -1424,7 +1428,7 @@
           {
             "name": "smoothness",
             "type": "VARCHAR",
-            "null_count": 5269,
+            "null_count": 5292,
             "null_percent": 99.08,
             "distinct_count": 7,
             "top_values": [
@@ -1453,16 +1457,16 @@
           {
             "name": "width",
             "type": "VARCHAR",
-            "null_count": 5304,
+            "null_count": 5327,
             "null_percent": 99.74,
             "distinct_count": 7,
             "top_values": [
               {
-                "value": "2.5",
+                "value": "6",
                 "count": 4
               },
               {
-                "value": "6",
+                "value": "2.5",
                 "count": 4
               },
               {
@@ -1470,7 +1474,7 @@
                 "count": 2
               },
               {
-                "value": "4.87",
+                "value": "1.5",
                 "count": 1
               },
               {
@@ -1482,8 +1486,8 @@
           {
             "name": "lanes",
             "type": "VARCHAR",
-            "null_count": 5268,
-            "null_percent": 99.06,
+            "null_count": 5289,
+            "null_percent": 99.03,
             "distinct_count": 2,
             "top_values": [
               {
@@ -1492,14 +1496,14 @@
               },
               {
                 "value": "1",
-                "count": 11
+                "count": 13
               }
             ]
           },
           {
             "name": "oneway",
             "type": "VARCHAR",
-            "null_count": 5254,
+            "null_count": 5277,
             "null_percent": 98.8,
             "distinct_count": 2,
             "top_values": [
@@ -1516,21 +1520,21 @@
           {
             "name": "bridge",
             "type": "VARCHAR",
-            "null_count": 5142,
-            "null_percent": 96.69,
+            "null_count": 5175,
+            "null_percent": 96.89,
             "distinct_count": 1,
             "top_values": [
               {
                 "value": "yes",
-                "count": 176
+                "count": 166
               }
             ]
           },
           {
             "name": "layer",
             "type": "VARCHAR",
-            "null_count": 5110,
-            "null_percent": 96.09,
+            "null_count": 5133,
+            "null_percent": 96.11,
             "distinct_count": 3,
             "top_values": [
               {
@@ -1550,8 +1554,8 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 5026,
-            "null_percent": 94.51,
+            "null_count": 5047,
+            "null_percent": 94.5,
             "distinct_count": 28,
             "top_values": [
               {
@@ -1585,7 +1589,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 5318
+                "count": 5341
               }
             ]
           },
@@ -1598,7 +1602,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 5318
+                "count": 5341
               }
             ]
           },
@@ -1611,7 +1615,7 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 4309
+                "count": 4332
               },
               {
                 "value": "NP04",
@@ -1628,7 +1632,7 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 4309
+                "count": 4332
               },
               {
                 "value": "Gandaki",
@@ -1645,7 +1649,7 @@
             "top_values": [
               {
                 "value": "NP0328",
-                "count": 2002
+                "count": 2010
               },
               {
                 "value": "NP0330",
@@ -1656,12 +1660,12 @@
                 "count": 700
               },
               {
-                "value": "NP0440",
-                "count": 590
+                "value": "NP0329",
+                "count": 599
               },
               {
-                "value": "NP0329",
-                "count": 584
+                "value": "NP0440",
+                "count": 590
               }
             ]
           },
@@ -1674,7 +1678,7 @@
             "top_values": [
               {
                 "value": "Nuwakot",
-                "count": 2002
+                "count": 2010
               },
               {
                 "value": "Dhading",
@@ -1685,12 +1689,12 @@
                 "count": 700
               },
               {
-                "value": "Tanahu",
-                "count": 590
+                "value": "Rasuwa",
+                "count": 599
               },
               {
-                "value": "Rasuwa",
-                "count": 584
+                "value": "Tanahu",
+                "count": 590
               }
             ]
           },
@@ -1703,7 +1707,7 @@
             "top_values": [
               {
                 "value": "NP0328301",
-                "count": 1439
+                "count": 1443
               },
               {
                 "value": "NP0440406",
@@ -1732,7 +1736,7 @@
             "top_values": [
               {
                 "value": "Bidur",
-                "count": 1439
+                "count": 1443
               },
               {
                 "value": "Devghat",
@@ -1755,7 +1759,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 5318,
+            "null_count": 5341,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -1763,7 +1767,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 5318,
+            "null_count": 5341,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -1771,8 +1775,8 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 5103,
-            "null_percent": 95.96,
+            "null_count": 5126,
+            "null_percent": 95.97,
             "distinct_count": 76,
             "top_values": [
               {
@@ -1798,25 +1802,25 @@
             ]
           }
         ],
-        "summary": "5,318 features. geometry types: 5,282 LINESTRING, 34 POINT, 2 POLYGON. 14 of 25 columns are >=50% null (name, name_en, name_ne, surface, smoothness, width, lanes, oneway, bridge, layer, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "5,341 features. geometry types: 5,305 LINESTRING, 34 POINT, 2 POLYGON. 14 of 25 columns are >=50% null (name, name_en, name_ne, surface, smoothness, width, lanes, oneway, bridge, layer, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "waterways",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:11Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:27Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 566,
+        "feature_count": 570,
         "geometry_types": {
-          "LINESTRING": 448,
+          "LINESTRING": 452,
           "POLYGON": 110,
           "POINT": 8
         },
@@ -1832,18 +1836,18 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 566,
+            "distinct_count": 570,
             "top_values": [
               {
-                "value": "way/1126421509",
+                "value": "way/246173488",
                 "count": 1
               },
               {
-                "value": "way/1134722793",
+                "value": "way/1553840464",
                 "count": 1
               },
               {
-                "value": "way/1554631865",
+                "value": "way/341166945",
                 "count": 1
               },
               {
@@ -1851,7 +1855,7 @@
                 "count": 1
               },
               {
-                "value": "way/246173488",
+                "value": "way/341626301",
                 "count": 1
               }
             ]
@@ -1859,8 +1863,8 @@
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 474,
-            "null_percent": 83.75,
+            "null_count": 478,
+            "null_percent": 83.86,
             "distinct_count": 44,
             "top_values": [
               {
@@ -1880,7 +1884,7 @@
                 "count": 6
               },
               {
-                "value": "Briddhim Khola",
+                "value": "Trisuli",
                 "count": 3
               }
             ]
@@ -1888,8 +1892,8 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 545,
-            "null_percent": 96.29,
+            "null_count": 549,
+            "null_percent": 96.32,
             "distinct_count": 10,
             "top_values": [
               {
@@ -1905,11 +1909,11 @@
                 "count": 3
               },
               {
-                "value": "Gyirong Zangbo",
+                "value": "Ghatte Khola",
                 "count": 1
               },
               {
-                "value": "Kyirong Tsangpo",
+                "value": "Lamo jharna, Jalbire",
                 "count": 1
               }
             ]
@@ -1917,8 +1921,8 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 552,
-            "null_percent": 97.53,
+            "null_count": 556,
+            "null_percent": 97.54,
             "distinct_count": 9,
             "top_values": [
               {
@@ -1930,15 +1934,15 @@
                 "count": 2
               },
               {
-                "value": "\u0932\u0947\u0928\u094d\u0921\u0947 \u0916\u094b\u0932\u093e",
-                "count": 1
-              },
-              {
-                "value": "\u0938\u0932\u093e\u0928\u094d\u0916\u0941 \u0916\u094b\u0932\u093e",
-                "count": 1
-              },
-              {
                 "value": "\u0924\u094d\u0930\u093f\u0936\u0942\u0932\u0940 \u0917\u0902\u0917\u093e \u0928\u0926\u0940",
+                "count": 1
+              },
+              {
+                "value": "\u0932\u093e\u0919\u091f\u093e\u0919 \u0916\u094b\u0932\u093e",
+                "count": 1
+              },
+              {
+                "value": "\u092b\u0932\u093e\u0916\u0941 \u0916\u094b\u0932\u093e",
                 "count": 1
               }
             ]
@@ -1952,11 +1956,11 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 520
+                "count": 522
               },
               {
                 "value": "Destroyed",
-                "count": 46
+                "count": 48
               }
             ]
           },
@@ -1964,12 +1968,12 @@
             "name": "waterway",
             "type": "VARCHAR",
             "null_count": 116,
-            "null_percent": 20.49,
+            "null_percent": 20.35,
             "distinct_count": 12,
             "top_values": [
               {
                 "value": "stream",
-                "count": 308
+                "count": 312
               },
               {
                 "value": "river",
@@ -1992,7 +1996,7 @@
           {
             "name": "covered",
             "type": "VARCHAR",
-            "null_count": 566,
+            "null_count": 570,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2000,7 +2004,7 @@
           {
             "name": "width",
             "type": "VARCHAR",
-            "null_count": 566,
+            "null_count": 570,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2008,7 +2012,7 @@
           {
             "name": "depth",
             "type": "VARCHAR",
-            "null_count": 566,
+            "null_count": 570,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2016,8 +2020,8 @@
           {
             "name": "layer",
             "type": "VARCHAR",
-            "null_count": 505,
-            "null_percent": 89.22,
+            "null_count": 509,
+            "null_percent": 89.3,
             "distinct_count": 2,
             "top_values": [
               {
@@ -2033,7 +2037,7 @@
           {
             "name": "blockage",
             "type": "VARCHAR",
-            "null_count": 566,
+            "null_count": 570,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2041,8 +2045,8 @@
           {
             "name": "tunnel",
             "type": "VARCHAR",
-            "null_count": 516,
-            "null_percent": 91.17,
+            "null_count": 520,
+            "null_percent": 91.23,
             "distinct_count": 3,
             "top_values": [
               {
@@ -2062,8 +2066,8 @@
           {
             "name": "natural_class",
             "type": "VARCHAR",
-            "null_count": 443,
-            "null_percent": 78.27,
+            "null_count": 447,
+            "null_percent": 78.42,
             "distinct_count": 1,
             "top_values": [
               {
@@ -2075,8 +2079,8 @@
           {
             "name": "water",
             "type": "VARCHAR",
-            "null_count": 472,
-            "null_percent": 83.39,
+            "null_count": 476,
+            "null_percent": 83.51,
             "distinct_count": 5,
             "top_values": [
               {
@@ -2104,8 +2108,8 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 522,
-            "null_percent": 92.23,
+            "null_count": 526,
+            "null_percent": 92.28,
             "distinct_count": 11,
             "top_values": [
               {
@@ -2139,7 +2143,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 566
+                "count": 570
               }
             ]
           },
@@ -2152,7 +2156,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 566
+                "count": 570
               }
             ]
           },
@@ -2165,7 +2169,7 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 515
+                "count": 519
               },
               {
                 "value": "NP04",
@@ -2182,7 +2186,7 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 515
+                "count": 519
               },
               {
                 "value": "Gandaki",
@@ -2199,7 +2203,7 @@
             "top_values": [
               {
                 "value": "NP0329",
-                "count": 216
+                "count": 220
               },
               {
                 "value": "NP0328",
@@ -2214,7 +2218,7 @@
                 "count": 54
               },
               {
-                "value": "NP0436",
+                "value": "NP0440",
                 "count": 25
               }
             ]
@@ -2228,7 +2232,7 @@
             "top_values": [
               {
                 "value": "Rasuwa",
-                "count": 216
+                "count": 220
               },
               {
                 "value": "Nuwakot",
@@ -2261,18 +2265,18 @@
               },
               {
                 "value": "NP0329402",
-                "count": 97
+                "count": 99
               },
               {
                 "value": "NP0329403",
                 "count": 68
               },
               {
-                "value": "NP0335401",
-                "count": 29
+                "value": "NP0329401",
+                "count": 31
               },
               {
-                "value": "NP0329401",
+                "value": "NP0335401",
                 "count": 29
               }
             ]
@@ -2290,18 +2294,18 @@
               },
               {
                 "value": "Gosaikunda",
-                "count": 97
+                "count": 99
               },
               {
                 "value": "Uttargaya",
                 "count": 68
               },
               {
-                "value": "Ichchha Kamana",
-                "count": 29
+                "value": "Aamachhodingmo",
+                "count": 31
               },
               {
-                "value": "Aamachhodingmo",
+                "value": "Ichchha Kamana",
                 "count": 29
               }
             ]
@@ -2309,7 +2313,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 566,
+            "null_count": 570,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2317,7 +2321,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 566,
+            "null_count": 570,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2325,8 +2329,8 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 473,
-            "null_percent": 83.57,
+            "null_count": 477,
+            "null_percent": 83.68,
             "distinct_count": 45,
             "top_values": [
               {
@@ -2352,25 +2356,25 @@
             ]
           }
         ],
-        "summary": "566 features. geometry types: 448 LINESTRING, 110 POLYGON, 8 POINT. 15 of 26 columns are >=50% null (name, name_en, name_ne, covered, width, depth, layer, blockage, tunnel, natural_class, water, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "570 features. geometry types: 452 LINESTRING, 110 POLYGON, 8 POINT. 15 of 26 columns are >=50% null (name, name_en, name_ne, covered, width, depth, layer, blockage, tunnel, natural_class, water, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "bridges",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:17Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:33Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 223,
+        "feature_count": 224,
         "geometry_types": {
-          "LINESTRING": 222,
+          "LINESTRING": 223,
           "POINT": 1
         },
         "bbox": [
@@ -2385,18 +2389,18 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 223,
+            "distinct_count": 224,
             "top_values": [
               {
-                "value": "way/140332497",
+                "value": "way/1422422619",
                 "count": 1
               },
               {
-                "value": "way/742117040",
+                "value": "way/1553613629",
                 "count": 1
               },
               {
-                "value": "way/1187533976",
+                "value": "way/1408714159",
                 "count": 1
               },
               {
@@ -2412,8 +2416,8 @@
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 161,
-            "null_percent": 72.2,
+            "null_count": 162,
+            "null_percent": 72.32,
             "distinct_count": 41,
             "top_values": [
               {
@@ -2429,11 +2433,11 @@
                 "count": 3
               },
               {
-                "value": "\u70ed\u7d22\u4e34\u65f6\u4fbf\u6865 \u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940\u092e\u093e \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
+                "value": "\u0938\u093f\u092e\u0932\u0924\u093e\u0932 \u092a\u0941\u0932",
                 "count": 2
               },
               {
-                "value": "Jalbire Bridge",
+                "value": "Dumpe khola",
                 "count": 2
               }
             ]
@@ -2441,12 +2445,16 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 197,
-            "null_percent": 88.34,
+            "null_count": 198,
+            "null_percent": 88.39,
             "distinct_count": 20,
             "top_values": [
               {
-                "value": "Prithvi Rajmarga",
+                "value": "Pokhare khola",
+                "count": 2
+              },
+              {
+                "value": "Resuo Bridge",
                 "count": 2
               },
               {
@@ -2454,15 +2462,11 @@
                 "count": 2
               },
               {
-                "value": "Pokhare khola",
+                "value": "Prithvi Highway",
                 "count": 2
               },
               {
                 "value": "Simaltal Bridge",
-                "count": 2
-              },
-              {
-                "value": "Resuo Bridge",
                 "count": 2
               }
             ]
@@ -2470,12 +2474,12 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 208,
-            "null_percent": 93.27,
+            "null_count": 209,
+            "null_percent": 93.3,
             "distinct_count": 10,
             "top_values": [
               {
-                "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940\u092e\u093e \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
+                "value": "\u0932\u093e\u092e\u0941\u092c\u093e\u0932\u0941\u0935\u093e \u092a\u0941\u0932",
                 "count": 2
               },
               {
@@ -2483,15 +2487,15 @@
                 "count": 2
               },
               {
-                "value": "\u092a\u0943\u0925\u094d\u0935\u0940 \u0930\u093e\u091c\u092e\u093e\u0930\u094d\u0917",
-                "count": 2
-              },
-              {
-                "value": "\u0932\u093e\u092e\u0941\u092c\u093e\u0932\u0941\u0935\u093e \u092a\u0941\u0932",
+                "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940\u092e\u093e \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
                 "count": 2
               },
               {
                 "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
+                "count": 2
+              },
+              {
+                "value": "\u092a\u0943\u0925\u094d\u0935\u0940 \u0930\u093e\u091c\u092e\u093e\u0930\u094d\u0917",
                 "count": 2
               }
             ]
@@ -2505,11 +2509,11 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 179
+                "count": 168
               },
               {
                 "value": "Destroyed",
-                "count": 44
+                "count": 56
               }
             ]
           },
@@ -2522,7 +2526,7 @@
             "top_values": [
               {
                 "value": "yes",
-                "count": 217
+                "count": 218
               },
               {
                 "value": "aqueduct",
@@ -2541,8 +2545,8 @@
           {
             "name": "bridge_structure",
             "type": "VARCHAR",
-            "null_count": 184,
-            "null_percent": 82.51,
+            "null_count": 185,
+            "null_percent": 82.59,
             "distinct_count": 4,
             "top_values": [
               {
@@ -2566,8 +2570,8 @@
           {
             "name": "highway",
             "type": "VARCHAR",
-            "null_count": 46,
-            "null_percent": 20.63,
+            "null_count": 57,
+            "null_percent": 25.45,
             "distinct_count": 11,
             "top_values": [
               {
@@ -2576,26 +2580,26 @@
               },
               {
                 "value": "unclassified",
-                "count": 40
+                "count": 39
               },
               {
                 "value": "path",
-                "count": 37
+                "count": 35
               },
               {
                 "value": "footway",
-                "count": 27
+                "count": 26
               },
               {
                 "value": "primary",
-                "count": 10
+                "count": 8
               }
             ]
           },
           {
             "name": "railway",
             "type": "VARCHAR",
-            "null_count": 223,
+            "null_count": 224,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2603,7 +2607,7 @@
           {
             "name": "waterway",
             "type": "VARCHAR",
-            "null_count": 222,
+            "null_count": 223,
             "null_percent": 99.55,
             "distinct_count": 1,
             "top_values": [
@@ -2616,8 +2620,8 @@
           {
             "name": "man_made",
             "type": "VARCHAR",
-            "null_count": 220,
-            "null_percent": 98.65,
+            "null_count": 221,
+            "null_percent": 98.66,
             "distinct_count": 1,
             "top_values": [
               {
@@ -2629,8 +2633,8 @@
           {
             "name": "layer",
             "type": "VARCHAR",
-            "null_count": 15,
-            "null_percent": 6.73,
+            "null_count": 16,
+            "null_percent": 7.14,
             "distinct_count": 2,
             "top_values": [
               {
@@ -2646,7 +2650,7 @@
           {
             "name": "width",
             "type": "VARCHAR",
-            "null_count": 219,
+            "null_count": 220,
             "null_percent": 98.21,
             "distinct_count": 2,
             "top_values": [
@@ -2663,7 +2667,7 @@
           {
             "name": "maxweight",
             "type": "VARCHAR",
-            "null_count": 222,
+            "null_count": 223,
             "null_percent": 99.55,
             "distinct_count": 1,
             "top_values": [
@@ -2676,8 +2680,8 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 207,
-            "null_percent": 92.83,
+            "null_count": 208,
+            "null_percent": 92.86,
             "distinct_count": 7,
             "top_values": [
               {
@@ -2693,11 +2697,11 @@
                 "count": 2
               },
               {
-                "value": "MapBox",
+                "value": "Bing Imagery",
                 "count": 1
               },
               {
-                "value": "Digital Globe",
+                "value": "GPS",
                 "count": 1
               }
             ]
@@ -2711,7 +2715,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 223
+                "count": 224
               }
             ]
           },
@@ -2724,7 +2728,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 223
+                "count": 224
               }
             ]
           },
@@ -2737,7 +2741,7 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 193
+                "count": 194
               },
               {
                 "value": "NP04",
@@ -2754,7 +2758,7 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 193
+                "count": 194
               },
               {
                 "value": "Gandaki",
@@ -2779,7 +2783,7 @@
               },
               {
                 "value": "NP0329",
-                "count": 44
+                "count": 45
               },
               {
                 "value": "NP0335",
@@ -2808,7 +2812,7 @@
               },
               {
                 "value": "Rasuwa",
-                "count": 44
+                "count": 45
               },
               {
                 "value": "Chitawan",
@@ -2844,7 +2848,7 @@
                 "count": 18
               },
               {
-                "value": "NP0330407",
+                "value": "NP0335401",
                 "count": 14
               }
             ]
@@ -2873,7 +2877,7 @@
                 "count": 18
               },
               {
-                "value": "Siddhalek",
+                "value": "Ichchha Kamana",
                 "count": 14
               }
             ]
@@ -2881,7 +2885,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 223,
+            "null_count": 224,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2889,7 +2893,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 223,
+            "null_count": 224,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -2897,8 +2901,8 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 160,
-            "null_percent": 71.75,
+            "null_count": 161,
+            "null_percent": 71.88,
             "distinct_count": 44,
             "top_values": [
               {
@@ -2914,26 +2918,26 @@
                 "count": 2
               },
               {
-                "value": "Resuo Bridge",
+                "value": "Army Road",
                 "count": 2
               },
               {
-                "value": "Khani khola",
+                "value": "Prithvi Highway",
                 "count": 2
               }
             ]
           }
         ],
-        "summary": "223 features. geometry types: 222 LINESTRING, 1 POINT. 13 of 26 columns are >=50% null (name, name_en, name_ne, bridge_structure, railway, waterway, man_made, width, maxweight, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "224 features. geometry types: 223 LINESTRING, 1 POINT. 13 of 26 columns are >=50% null (name, name_en, name_ne, bridge_structure, railway, waterway, man_made, width, maxweight, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "education_facilities",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:22Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:39Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -2961,10 +2965,6 @@
             "distinct_count": 146,
             "top_values": [
               {
-                "value": "node/4941787232",
-                "count": 1
-              },
-              {
                 "value": "node/4969563549",
                 "count": 1
               },
@@ -2977,7 +2977,11 @@
                 "count": 1
               },
               {
-                "value": "node/11977604118",
+                "value": "node/4941787232",
+                "count": 1
+              },
+              {
+                "value": "node/5045819002",
                 "count": 1
               }
             ]
@@ -3006,7 +3010,7 @@
                 "count": 1
               },
               {
-                "value": "Shree Rastriya Aardharbhut Bidhalaya, Dhusha",
+                "value": "Shri Panchayat Pra V",
                 "count": 1
               }
             ]
@@ -3019,7 +3023,11 @@
             "distinct_count": 7,
             "top_values": [
               {
-                "value": "Kalika Higher Secondary school",
+                "value": "Panchakanaya star English Sec. boarding school",
+                "count": 1
+              },
+              {
+                "value": "Souvenir Boarding School\u0938\u0941\u092d\u0947\u0928",
                 "count": 1
               },
               {
@@ -3027,15 +3035,11 @@
                 "count": 1
               },
               {
+                "value": "Kalika Higher Secondary school",
+                "count": 1
+              },
+              {
                 "value": "Dibyaratna boarding school",
-                "count": 1
-              },
-              {
-                "value": "Panchakanaya star English Sec. boarding school",
-                "count": 1
-              },
-              {
-                "value": "Rising Star English Boarding School",
                 "count": 1
               }
             ]
@@ -3073,13 +3077,13 @@
           {
             "name": "amenity",
             "type": "VARCHAR",
-            "null_count": 13,
-            "null_percent": 8.9,
+            "null_count": 12,
+            "null_percent": 8.22,
             "distinct_count": 2,
             "top_values": [
               {
                 "value": "school",
-                "count": 130
+                "count": 131
               },
               {
                 "value": "college",
@@ -3090,13 +3094,13 @@
           {
             "name": "building",
             "type": "VARCHAR",
-            "null_count": 130,
-            "null_percent": 89.04,
+            "null_count": 131,
+            "null_percent": 89.73,
             "distinct_count": 1,
             "top_values": [
               {
                 "value": "school",
-                "count": 16
+                "count": 15
               }
             ]
           },
@@ -3137,7 +3141,7 @@
             "distinct_count": 3,
             "top_values": [
               {
-                "value": "Adamtar",
+                "value": "nuwakot",
                 "count": 1
               },
               {
@@ -3145,7 +3149,7 @@
                 "count": 1
               },
               {
-                "value": "nuwakot",
+                "value": "Adamtar",
                 "count": 1
               }
             ]
@@ -3305,7 +3309,7 @@
                 "count": 9
               },
               {
-                "value": "NP0335401",
+                "value": "NP0330409",
                 "count": 8
               }
             ]
@@ -3334,7 +3338,7 @@
                 "count": 9
               },
               {
-                "value": "Ichchha Kamana",
+                "value": "Gandaki",
                 "count": 8
               }
             ]
@@ -3363,12 +3367,16 @@
             "distinct_count": 134,
             "top_values": [
               {
+                "value": "Samudayik Bidhya Mandir",
+                "count": 2
+              },
+              {
                 "value": "Shree kalika Pra Vi",
                 "count": 2
               },
               {
-                "value": "Samudayik Bidhya Mandir",
-                "count": 2
+                "value": "Shri Shilingtar Pra V",
+                "count": 1
               },
               {
                 "value": "Shri Rana Bhuwaneswari Uccha Madhyamik Prabidhik Bidyalaya",
@@ -3376,10 +3384,6 @@
               },
               {
                 "value": "Shree Barahi Pra.V",
-                "count": 1
-              },
-              {
-                "value": "shree jd boarding school",
                 "count": 1
               }
             ]
@@ -3392,9 +3396,9 @@
     {
       "category": "health_facilities",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:28Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:45Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -3421,11 +3425,11 @@
             "distinct_count": 18,
             "top_values": [
               {
-                "value": "node/9510297618",
+                "value": "node/9519234918",
                 "count": 1
               },
               {
-                "value": "node/9519234918",
+                "value": "node/9510297618",
                 "count": 1
               },
               {
@@ -3454,19 +3458,19 @@
                 "count": 2
               },
               {
-                "value": "Primary Health Center, Gajuri",
-                "count": 1
-              },
-              {
                 "value": "Kabilas Health Center",
                 "count": 1
               },
               {
-                "value": "Bihani Pharmacy",
+                "value": "Darpan Ayurbed Aaushadalaya",
                 "count": 1
               },
               {
-                "value": "Sanjivani Hospital",
+                "value": "Trishuli Hospital",
+                "count": 1
+              },
+              {
+                "value": "Benighat Health Cllinic",
                 "count": 1
               }
             ]
@@ -3483,10 +3487,6 @@
                 "count": 1
               },
               {
-                "value": "Panchakanaya Community Hospital",
-                "count": 1
-              },
-              {
                 "value": "community health services",
                 "count": 1
               },
@@ -3496,6 +3496,10 @@
               },
               {
                 "value": "lions dental hospital",
+                "count": 1
+              },
+              {
+                "value": "Panchakanaya Community Hospital",
                 "count": 1
               }
             ]
@@ -3816,19 +3820,19 @@
                 "count": 2
               },
               {
-                "value": "Landseed Health Care Chitwan",
-                "count": 1
-              },
-              {
-                "value": "Bihani Pharmacy",
-                "count": 1
-              },
-              {
                 "value": "Highway Community Hospital",
                 "count": 1
               },
               {
-                "value": "Devghat BHCC",
+                "value": "Kabilas Health Center",
+                "count": 1
+              },
+              {
+                "value": "Panchakanaya Community Hospital",
+                "count": 1
+              },
+              {
+                "value": "community health services",
                 "count": 1
               }
             ]
@@ -3841,19 +3845,19 @@
     {
       "category": "populated_places",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:33Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:51Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 152,
+        "feature_count": 150,
         "geometry_types": {
-          "POINT": 116,
-          "POLYGON": 36
+          "POINT": 115,
+          "POLYGON": 35
         },
         "bbox": [
           84.4463215,
@@ -3867,18 +3871,14 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 152,
+            "distinct_count": 150,
             "top_values": [
-              {
-                "value": "node/14144169223",
-                "count": 1
-              },
               {
                 "value": "node/3415530630",
                 "count": 1
               },
               {
-                "value": "node/279374585",
+                "value": "node/14144169226",
                 "count": 1
               },
               {
@@ -3886,7 +3886,11 @@
                 "count": 1
               },
               {
-                "value": "node/14144169226",
+                "value": "node/14144086244",
+                "count": 1
+              },
+              {
+                "value": "node/3478521322",
                 "count": 1
               }
             ]
@@ -3894,8 +3898,8 @@
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 107,
-            "null_percent": 70.39,
+            "null_count": 105,
+            "null_percent": 70.0,
             "distinct_count": 44,
             "top_values": [
               {
@@ -3903,7 +3907,7 @@
                 "count": 2
               },
               {
-                "value": "\u0905\u0930\u094d\u091a\u0932\u0947",
+                "value": "\u0921\u093e\u0932\u094d\u092b\u0947\u0921\u0940",
                 "count": 1
               },
               {
@@ -3911,7 +3915,7 @@
                 "count": 1
               },
               {
-                "value": "\u0921\u093e\u0932\u094d\u092b\u0947\u0921\u0940",
+                "value": "\u0905\u0930\u094d\u091a\u0932\u0947",
                 "count": 1
               },
               {
@@ -3923,12 +3927,16 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 115,
-            "null_percent": 75.66,
+            "null_count": 113,
+            "null_percent": 75.33,
             "distinct_count": 37,
             "top_values": [
               {
-                "value": "Sano Bharkhu",
+                "value": "Uttargaya",
+                "count": 1
+              },
+              {
+                "value": "Shyaphru",
                 "count": 1
               },
               {
@@ -3940,11 +3948,7 @@
                 "count": 1
               },
               {
-                "value": "Archale",
-                "count": 1
-              },
-              {
-                "value": "Shanti Bazar",
+                "value": "Chipleti",
                 "count": 1
               }
             ]
@@ -3952,12 +3956,16 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 115,
-            "null_percent": 75.66,
+            "null_count": 113,
+            "null_percent": 75.33,
             "distinct_count": 37,
             "top_values": [
               {
-                "value": "\u0921\u093e\u0932\u094d\u092b\u0947\u0921\u0940",
+                "value": "\u0938\u093e\u0932\u093f\u092e \u092d\u093f\u0924\u094d\u0924\u093e",
+                "count": 1
+              },
+              {
+                "value": "\u0926\u0947\u0935\u0940\u0918\u093e\u091f",
                 "count": 1
               },
               {
@@ -3965,15 +3973,11 @@
                 "count": 1
               },
               {
+                "value": "\u0921\u093e\u0932\u094d\u092b\u0947\u0921\u0940",
+                "count": 1
+              },
+              {
                 "value": "\u0917\u091c\u0941\u0930\u0940",
-                "count": 1
-              },
-              {
-                "value": "\u092e\u0932\u0947\u0916\u0941",
-                "count": 1
-              },
-              {
-                "value": "\u0938\u0932\u093e\u0919\u0918\u093e\u091f",
                 "count": 1
               }
             ]
@@ -3987,7 +3991,7 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 152
+                "count": 150
               }
             ]
           },
@@ -4000,11 +4004,11 @@
             "top_values": [
               {
                 "value": "hamlet",
-                "count": 96
+                "count": 95
               },
               {
                 "value": "village",
-                "count": 49
+                "count": 48
               },
               {
                 "value": "isolated_dwelling",
@@ -4019,8 +4023,8 @@
           {
             "name": "population",
             "type": "VARCHAR",
-            "null_count": 151,
-            "null_percent": 99.34,
+            "null_count": 149,
+            "null_percent": 99.33,
             "distinct_count": 1,
             "top_values": [
               {
@@ -4032,7 +4036,7 @@
           {
             "name": "is_in",
             "type": "VARCHAR",
-            "null_count": 152,
+            "null_count": 150,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -4040,8 +4044,8 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 148,
-            "null_percent": 97.37,
+            "null_count": 146,
+            "null_percent": 97.33,
             "distinct_count": 3,
             "top_values": [
               {
@@ -4067,7 +4071,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 152
+                "count": 150
               }
             ]
           },
@@ -4080,7 +4084,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 152
+                "count": 150
               }
             ]
           },
@@ -4093,7 +4097,7 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 118
+                "count": 116
               },
               {
                 "value": "NP04",
@@ -4110,7 +4114,7 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 118
+                "count": 116
               },
               {
                 "value": "Gandaki",
@@ -4127,11 +4131,11 @@
             "top_values": [
               {
                 "value": "NP0330",
-                "count": 56
+                "count": 55
               },
               {
                 "value": "NP0329",
-                "count": 27
+                "count": 26
               },
               {
                 "value": "NP0328",
@@ -4156,11 +4160,11 @@
             "top_values": [
               {
                 "value": "Dhading",
-                "count": 56
+                "count": 55
               },
               {
                 "value": "Rasuwa",
-                "count": 27
+                "count": 26
               },
               {
                 "value": "Nuwakot",
@@ -4185,7 +4189,7 @@
             "top_values": [
               {
                 "value": "NP0330410",
-                "count": 23
+                "count": 22
               },
               {
                 "value": "NP0440405",
@@ -4197,7 +4201,7 @@
               },
               {
                 "value": "NP0329402",
-                "count": 14
+                "count": 13
               },
               {
                 "value": "NP0330408",
@@ -4214,7 +4218,7 @@
             "top_values": [
               {
                 "value": "Galchhi",
-                "count": 23
+                "count": 22
               },
               {
                 "value": "Aanbu Khaireni",
@@ -4226,7 +4230,7 @@
               },
               {
                 "value": "Gosaikunda",
-                "count": 14
+                "count": 13
               },
               {
                 "value": "Benighat Rorang",
@@ -4237,7 +4241,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 152,
+            "null_count": 150,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -4245,7 +4249,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 152,
+            "null_count": 150,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -4253,43 +4257,43 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 106,
-            "null_percent": 69.74,
+            "null_count": 104,
+            "null_percent": 69.33,
             "distinct_count": 44,
             "top_values": [
-              {
-                "value": "Adamghat",
-                "count": 2
-              },
               {
                 "value": "Ghyalchok",
                 "count": 2
               },
               {
-                "value": "Dashdhunga",
+                "value": "Adamghat",
+                "count": 2
+              },
+              {
+                "value": "Archale",
                 "count": 1
               },
               {
-                "value": "Ghatbesi",
+                "value": "Silintar",
                 "count": 1
               },
               {
-                "value": "Purano Malekhu",
+                "value": "Galchhi",
                 "count": 1
               }
             ]
           }
         ],
-        "summary": "152 features. geometry types: 116 POINT, 36 POLYGON. 9 of 20 columns are >=50% null (name, name_en, name_ne, population, is_in, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "150 features. geometry types: 115 POINT, 35 POLYGON. 9 of 20 columns are >=50% null (name, name_en, name_ne, population, is_in, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "residential_areas",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:38Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:02:56Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -4298,8 +4302,8 @@
       "metadata": {
         "feature_count": 1476,
         "geometry_types": {
-          "POLYGON": 1472,
-          "LINESTRING": 4
+          "POLYGON": 1467,
+          "LINESTRING": 9
         },
         "bbox": [
           84.4200469,
@@ -4328,19 +4332,19 @@
                 "count": 2
               },
               {
-                "value": "Keurintar Village Area",
+                "value": "KapraGhari",
                 "count": 1
               },
               {
-                "value": "Majhimtar",
+                "value": "Gre",
                 "count": 1
               },
               {
-                "value": "Nayabasti",
+                "value": "Hattigauda",
                 "count": 1
               },
               {
-                "value": "Pimaltar",
+                "value": "\u092e\u093e\u0938\u094d\u091f\u093e\u0930 \u091c\u0917\u094d\u0917\u093e \u090f\u0915\u093f\u0915\u0930\u0923 \u0915\u094d\u0937\u0947\u0924\u094d\u0930",
                 "count": 1
               }
             ]
@@ -4380,11 +4384,11 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 1473
+                "count": 1467
               },
               {
                 "value": "Destroyed",
-                "count": 3
+                "count": 9
               }
             ]
           },
@@ -4421,11 +4425,11 @@
                 "count": 28
               },
               {
-                "value": "Mapbox",
+                "value": "MapBox",
                 "count": 1
               },
               {
-                "value": "MapBox",
+                "value": "Mapbox",
                 "count": 1
               }
             ]
@@ -4499,11 +4503,11 @@
             "top_values": [
               {
                 "value": "NP0330",
-                "count": 484
+                "count": 486
               },
               {
                 "value": "NP0328",
-                "count": 394
+                "count": 395
               },
               {
                 "value": "NP0335",
@@ -4511,7 +4515,7 @@
               },
               {
                 "value": "NP0329",
-                "count": 142
+                "count": 139
               },
               {
                 "value": "NP0440",
@@ -4528,11 +4532,11 @@
             "top_values": [
               {
                 "value": "Dhading",
-                "count": 484
+                "count": 486
               },
               {
                 "value": "Nuwakot",
-                "count": 394
+                "count": 395
               },
               {
                 "value": "Chitawan",
@@ -4540,7 +4544,7 @@
               },
               {
                 "value": "Rasuwa",
-                "count": 142
+                "count": 139
               },
               {
                 "value": "Tanahu",
@@ -4557,7 +4561,7 @@
             "top_values": [
               {
                 "value": "NP0328301",
-                "count": 204
+                "count": 205
               },
               {
                 "value": "NP0330407",
@@ -4565,7 +4569,7 @@
               },
               {
                 "value": "NP0330410",
-                "count": 127
+                "count": 129
               },
               {
                 "value": "NP0330408",
@@ -4586,7 +4590,7 @@
             "top_values": [
               {
                 "value": "Bidur",
-                "count": 204
+                "count": 205
               },
               {
                 "value": "Siddhalek",
@@ -4594,7 +4598,7 @@
               },
               {
                 "value": "Galchhi",
-                "count": 127
+                "count": 129
               },
               {
                 "value": "Benighat Rorang",
@@ -4634,7 +4638,7 @@
                 "count": 2
               },
               {
-                "value": "Dharapani",
+                "value": "Phosretar",
                 "count": 1
               },
               {
@@ -4652,16 +4656,16 @@
             ]
           }
         ],
-        "summary": "1,476 features. geometry types: 1,472 POLYGON, 4 LINESTRING. 8 of 19 columns are >=50% null (name, name_en, name_ne, population, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "1,476 features. geometry types: 1,467 POLYGON, 9 LINESTRING. 8 of 19 columns are >=50% null (name, name_en, name_ne, population, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "financial_services",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:44Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:03:02Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -4687,23 +4691,23 @@
             "distinct_count": 97,
             "top_values": [
               {
-                "value": "node/2857819512",
+                "value": "node/12672929246",
                 "count": 1
               },
               {
-                "value": "node/9802458093",
+                "value": "node/9519236917",
                 "count": 1
               },
               {
-                "value": "node/9802458091",
+                "value": "node/9519235920",
                 "count": 1
               },
               {
-                "value": "node/9802458089",
+                "value": "node/5715638275",
                 "count": 1
               },
               {
-                "value": "node/9802458084",
+                "value": "node/9802458085",
                 "count": 1
               }
             ]
@@ -4716,7 +4720,7 @@
             "distinct_count": 82,
             "top_values": [
               {
-                "value": "Bank of Kathmandu",
+                "value": "Nabil Bank Limited",
                 "count": 2
               },
               {
@@ -4728,11 +4732,11 @@
                 "count": 2
               },
               {
-                "value": "Nabil Bank Limited",
+                "value": "Bank of Kathmandu",
                 "count": 2
               },
               {
-                "value": "NIC Asia",
+                "value": "NBBL BANK Battar Branch",
                 "count": 1
               }
             ]
@@ -4753,7 +4757,7 @@
                 "count": 1
               },
               {
-                "value": "hamro Bikash bank",
+                "value": "Panchakanaya finance",
                 "count": 1
               },
               {
@@ -4761,7 +4765,7 @@
                 "count": 1
               },
               {
-                "value": "Panchakanaya finance",
+                "value": "hamro Bikash bank",
                 "count": 1
               }
             ]
@@ -4816,6 +4820,14 @@
             "distinct_count": 6,
             "top_values": [
               {
+                "value": "Siddhartha Bank ATM",
+                "count": 1
+              },
+              {
+                "value": "machhapuchre Bank Limited",
+                "count": 1
+              },
+              {
                 "value": "Mega Bank Nepal Limited",
                 "count": 1
               },
@@ -4825,14 +4837,6 @@
               },
               {
                 "value": "Rastriya Banijya Bank",
-                "count": 1
-              },
-              {
-                "value": "machhapuchre Bank Limited",
-                "count": 1
-              },
-              {
-                "value": "NIC ASIA BANK",
                 "count": 1
               }
             ]
@@ -5025,11 +5029,11 @@
                 "count": 7
               },
               {
-                "value": "Gosaikunda",
+                "value": "Benighat Rorang",
                 "count": 3
               },
               {
-                "value": "Benighat Rorang",
+                "value": "Gosaikunda",
                 "count": 3
               }
             ]
@@ -5058,11 +5062,11 @@
             "distinct_count": 87,
             "top_values": [
               {
-                "value": "Rastriya Banijya Bank",
+                "value": "NIC ATM",
                 "count": 2
               },
               {
-                "value": "Bank of Kathmandu",
+                "value": "Rastriya Banijya Bank",
                 "count": 2
               },
               {
@@ -5070,7 +5074,7 @@
                 "count": 2
               },
               {
-                "value": "NIC ATM",
+                "value": "Bank of Kathmandu",
                 "count": 2
               },
               {
@@ -5087,20 +5091,20 @@
     {
       "category": "points_of_interest",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:49Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:03:08Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 572,
+        "feature_count": 576,
         "geometry_types": {
           "POINT": 488,
-          "POLYGON": 72,
-          "LINESTRING": 12
+          "POLYGON": 73,
+          "LINESTRING": 15
         },
         "bbox": [
           84.4236085,
@@ -5114,26 +5118,26 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 572,
+            "distinct_count": 576,
             "top_values": [
               {
-                "value": "node/5144728070",
+                "value": "node/4969563549",
                 "count": 1
               },
               {
-                "value": "node/5234901722",
+                "value": "node/4969579345",
                 "count": 1
               },
               {
-                "value": "node/5234901723",
+                "value": "node/5019534984",
                 "count": 1
               },
               {
-                "value": "node/5234909921",
+                "value": "node/2656112032",
                 "count": 1
               },
               {
-                "value": "node/4941787232",
+                "value": "node/2656136789",
                 "count": 1
               }
             ]
@@ -5141,8 +5145,8 @@
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 217,
-            "null_percent": 37.94,
+            "null_count": 221,
+            "null_percent": 38.37,
             "distinct_count": 344,
             "top_values": [
               {
@@ -5150,19 +5154,19 @@
                 "count": 2
               },
               {
-                "value": "Nabil Bank Limited",
-                "count": 2
-              },
-              {
                 "value": "The Burger House & Crunchy Fried Chicken",
                 "count": 2
               },
               {
-                "value": "Bank of Kathmandu",
+                "value": "Water Tank and Tap",
                 "count": 2
               },
               {
-                "value": "NIC ATM",
+                "value": "Devighat temple",
+                "count": 2
+              },
+              {
+                "value": "Bank of Kathmandu",
                 "count": 2
               }
             ]
@@ -5170,16 +5174,12 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 440,
-            "null_percent": 76.92,
+            "null_count": 444,
+            "null_percent": 77.08,
             "distinct_count": 132,
             "top_values": [
               {
-                "value": "The Trisuli Center",
-                "count": 1
-              },
-              {
-                "value": "Bridge",
+                "value": "Guest House",
                 "count": 1
               },
               {
@@ -5187,11 +5187,15 @@
                 "count": 1
               },
               {
-                "value": "Guest House",
+                "value": "Camp Springwood",
                 "count": 1
               },
               {
-                "value": "Camp Springwood",
+                "value": "The Trisuli Center",
+                "count": 1
+              },
+              {
+                "value": "Bridge",
                 "count": 1
               }
             ]
@@ -5199,8 +5203,8 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 563,
-            "null_percent": 98.43,
+            "null_count": 567,
+            "null_percent": 98.44,
             "distinct_count": 8,
             "top_values": [
               {
@@ -5208,19 +5212,19 @@
                 "count": 2
               },
               {
-                "value": "\u0930\u093e\u091c\u0941 \u0939\u094b\u091f\u0947\u0932",
-                "count": 1
-              },
-              {
-                "value": "\u0936\u094d\u0930\u0940 \u091a\u0915\u094d\u0930 \u092e\u0939\u093e\u0915\u093e\u0932\u0940 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915 \u0935\u093f\u0926\u094d\u092f\u093e\u0932\u092f",
-                "count": 1
-              },
-              {
-                "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940\u092e\u093e \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
+                "value": "\u0930\u0938\u0941\u0935\u093e\u0917\u0922\u0940 \u092e\u093f\u0924\u0947\u0930\u0940 \u092a\u0941\u0932",
                 "count": 1
               },
               {
                 "value": "\u0936\u094d\u0930\u0940 \u0905\u092e\u0932\u0947\u0936\u094d\u200d\u0935\u0930 \u0906\u092f\u0932 \u0938\u094d\u091f\u094b\u0930",
+                "count": 1
+              },
+              {
+                "value": "\u0905\u0926\u0941\u0935\u093e\u092c\u093e\u0930\u0940 \u092e\u0928\u094d\u0926\u093f\u0930",
+                "count": 1
+              },
+              {
+                "value": "\u0936\u094d\u0930\u0940 \u091a\u0915\u094d\u0930 \u092e\u0939\u093e\u0915\u093e\u0932\u0940 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915 \u0935\u093f\u0926\u094d\u092f\u093e\u0932\u092f",
                 "count": 1
               }
             ]
@@ -5234,7 +5238,7 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 507
+                "count": 511
               },
               {
                 "value": "Destroyed",
@@ -5245,13 +5249,13 @@
           {
             "name": "amenity",
             "type": "VARCHAR",
-            "null_count": 185,
-            "null_percent": 32.34,
+            "null_count": 188,
+            "null_percent": 32.64,
             "distinct_count": 29,
             "top_values": [
               {
                 "value": "school",
-                "count": 130
+                "count": 131
               },
               {
                 "value": "bank",
@@ -5274,8 +5278,8 @@
           {
             "name": "man_made",
             "type": "VARCHAR",
-            "null_count": 540,
-            "null_percent": 94.41,
+            "null_count": 541,
+            "null_percent": 93.92,
             "distinct_count": 15,
             "top_values": [
               {
@@ -5287,24 +5291,24 @@
                 "count": 5
               },
               {
+                "value": "pipeline",
+                "count": 4
+              },
+              {
                 "value": "utility_pole",
                 "count": 3
               },
               {
                 "value": "bridge",
                 "count": 3
-              },
-              {
-                "value": "water_well",
-                "count": 2
               }
             ]
           },
           {
             "name": "shop",
             "type": "VARCHAR",
-            "null_count": 524,
-            "null_percent": 91.61,
+            "null_count": 528,
+            "null_percent": 91.67,
             "distinct_count": 24,
             "top_values": [
               {
@@ -5312,19 +5316,19 @@
                 "count": 6
               },
               {
-                "value": "electronics",
-                "count": 5
-              },
-              {
                 "value": "hardware",
                 "count": 5
               },
               {
-                "value": "supermarket",
-                "count": 3
+                "value": "electronics",
+                "count": 5
               },
               {
                 "value": "variety_store",
+                "count": 3
+              },
+              {
+                "value": "supermarket",
                 "count": 3
               }
             ]
@@ -5332,8 +5336,8 @@
           {
             "name": "tourism",
             "type": "VARCHAR",
-            "null_count": 465,
-            "null_percent": 81.29,
+            "null_count": 469,
+            "null_percent": 81.42,
             "distinct_count": 10,
             "top_values": [
               {
@@ -5361,8 +5365,8 @@
           {
             "name": "opening_hours",
             "type": "VARCHAR",
-            "null_count": 550,
-            "null_percent": 96.15,
+            "null_count": 554,
+            "null_percent": 96.18,
             "distinct_count": 11,
             "top_values": [
               {
@@ -5378,11 +5382,11 @@
                 "count": 2
               },
               {
-                "value": "Mo-Fr 10:00-17:00; Sa-Su 00:00-24:00",
+                "value": "Su-Fr 08:00-19:00",
                 "count": 1
               },
               {
-                "value": "Mo-Su 07:00-19:00",
+                "value": "Mo-Su 09:00-21:00",
                 "count": 1
               }
             ]
@@ -5390,7 +5394,7 @@
           {
             "name": "beds",
             "type": "VARCHAR",
-            "null_count": 570,
+            "null_count": 574,
             "null_percent": 99.65,
             "distinct_count": 1,
             "top_values": [
@@ -5403,7 +5407,7 @@
           {
             "name": "rooms",
             "type": "VARCHAR",
-            "null_count": 570,
+            "null_count": 574,
             "null_percent": 99.65,
             "distinct_count": 2,
             "top_values": [
@@ -5420,7 +5424,7 @@
           {
             "name": "addr_full",
             "type": "VARCHAR",
-            "null_count": 572,
+            "null_count": 576,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -5428,12 +5432,12 @@
           {
             "name": "addr_housenumber",
             "type": "VARCHAR",
-            "null_count": 567,
+            "null_count": 571,
             "null_percent": 99.13,
             "distinct_count": 5,
             "top_values": [
               {
-                "value": "777",
+                "value": "9",
                 "count": 1
               },
               {
@@ -5441,15 +5445,15 @@
                 "count": 1
               },
               {
-                "value": "8848tvx",
-                "count": 1
-              },
-              {
                 "value": "44900",
                 "count": 1
               },
               {
-                "value": "9",
+                "value": "777",
+                "count": 1
+              },
+              {
+                "value": "8848tvx",
                 "count": 1
               }
             ]
@@ -5457,8 +5461,8 @@
           {
             "name": "addr_street",
             "type": "VARCHAR",
-            "null_count": 523,
-            "null_percent": 91.43,
+            "null_count": 527,
+            "null_percent": 91.49,
             "distinct_count": 34,
             "top_values": [
               {
@@ -5478,7 +5482,7 @@
                 "count": 2
               },
               {
-                "value": "Coloney",
+                "value": "Bidur-3, Nuwakot",
                 "count": 1
               }
             ]
@@ -5486,8 +5490,8 @@
           {
             "name": "addr_city",
             "type": "VARCHAR",
-            "null_count": 560,
-            "null_percent": 97.9,
+            "null_count": 564,
+            "null_percent": 97.92,
             "distinct_count": 7,
             "top_values": [
               {
@@ -5499,11 +5503,11 @@
                 "count": 1
               },
               {
-                "value": "Bidur",
+                "value": "Baireni",
                 "count": 1
               },
               {
-                "value": "Lingling",
+                "value": "nuwakot",
                 "count": 1
               },
               {
@@ -5515,8 +5519,8 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 563,
-            "null_percent": 98.43,
+            "null_count": 567,
+            "null_percent": 98.44,
             "distinct_count": 4,
             "top_values": [
               {
@@ -5546,7 +5550,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 572
+                "count": 576
               }
             ]
           },
@@ -5559,7 +5563,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 572
+                "count": 576
               }
             ]
           },
@@ -5572,7 +5576,7 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 519
+                "count": 523
               },
               {
                 "value": "NP04",
@@ -5589,7 +5593,7 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 519
+                "count": 523
               },
               {
                 "value": "Gandaki",
@@ -5606,11 +5610,11 @@
             "top_values": [
               {
                 "value": "NP0328",
-                "count": 228
+                "count": 231
               },
               {
                 "value": "NP0330",
-                "count": 156
+                "count": 157
               },
               {
                 "value": "NP0329",
@@ -5635,11 +5639,11 @@
             "top_values": [
               {
                 "value": "Nuwakot",
-                "count": 228
+                "count": 231
               },
               {
                 "value": "Dhading",
-                "count": 156
+                "count": 157
               },
               {
                 "value": "Rasuwa",
@@ -5664,7 +5668,7 @@
             "top_values": [
               {
                 "value": "NP0328301",
-                "count": 209
+                "count": 212
               },
               {
                 "value": "NP0329402",
@@ -5693,7 +5697,7 @@
             "top_values": [
               {
                 "value": "Bidur",
-                "count": 209
+                "count": 212
               },
               {
                 "value": "Gosaikunda",
@@ -5716,7 +5720,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 572,
+            "null_count": 576,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -5724,7 +5728,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 572,
+            "null_count": 576,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -5732,12 +5736,12 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 106,
-            "null_percent": 18.53,
+            "null_count": 110,
+            "null_percent": 19.1,
             "distinct_count": 455,
             "top_values": [
               {
-                "value": "Bank of Kathmandu",
+                "value": "The Burger House & Crunchy Fried Chicken",
                 "count": 2
               },
               {
@@ -5745,30 +5749,30 @@
                 "count": 2
               },
               {
-                "value": "Gajuri Hospital",
+                "value": "Bank of Kathmandu",
                 "count": 2
               },
               {
-                "value": "Nabil Bank Limited",
+                "value": "Water Kingdom",
                 "count": 2
               },
               {
-                "value": "NIC ATM",
+                "value": "Rastriya Banijya Bank",
                 "count": 2
               }
             ]
           }
         ],
-        "summary": "572 features. geometry types: 488 POINT, 72 POLYGON, 12 LINESTRING. 15 of 28 columns are >=50% null (name_en, name_ne, man_made, shop, tourism, opening_hours, beds, rooms, addr_full, addr_housenumber, addr_street, addr_city, source, adm4_pcode, adm4_name).",
+        "summary": "576 features. geometry types: 488 POINT, 73 POLYGON, 15 LINESTRING. 15 of 28 columns are >=50% null (name_en, name_ne, man_made, shop, tourism, opening_hours, beds, rooms, addr_full, addr_housenumber, addr_street, addr_city, source, adm4_pcode, adm4_name).",
         "temporal": null
       }
     },
     {
       "category": "open_spaces",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:02:55Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:03:14Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -5795,23 +5799,23 @@
             "distinct_count": 93,
             "top_values": [
               {
-                "value": "way/342132784",
+                "value": "way/414446440",
                 "count": 1
               },
               {
-                "value": "way/302566637",
+                "value": "way/341630031",
                 "count": 1
               },
               {
-                "value": "way/302756010",
+                "value": "way/382735433",
                 "count": 1
               },
               {
-                "value": "way/382735461",
+                "value": "way/954502066",
                 "count": 1
               },
               {
-                "value": "way/1553120511",
+                "value": "way/1553909427",
                 "count": 1
               }
             ]
@@ -5824,11 +5828,11 @@
             "distinct_count": 7,
             "top_values": [
               {
-                "value": "football ground/paila ko pokhari",
+                "value": "campus ground",
                 "count": 1
               },
               {
-                "value": "helipat",
+                "value": "Sand Pocket Area",
                 "count": 1
               },
               {
@@ -5836,7 +5840,7 @@
                 "count": 1
               },
               {
-                "value": "Mango Garden",
+                "value": "football ground/paila ko pokhari",
                 "count": 1
               },
               {
@@ -5894,15 +5898,15 @@
                 "count": 1
               },
               {
-                "value": "garden",
-                "count": 1
-              },
-              {
                 "value": "park",
                 "count": 1
               },
               {
                 "value": "common",
+                "count": 1
+              },
+              {
+                "value": "garden",
                 "count": 1
               }
             ]
@@ -6095,7 +6099,7 @@
                 "count": 13
               },
               {
-                "value": "NP0436",
+                "value": "NP0335",
                 "count": 10
               }
             ]
@@ -6149,11 +6153,11 @@
                 "count": 6
               },
               {
-                "value": "NP0328302",
+                "value": "NP0329403",
                 "count": 6
               },
               {
-                "value": "NP0436409",
+                "value": "NP0330410",
                 "count": 6
               }
             ]
@@ -6174,15 +6178,15 @@
                 "count": 12
               },
               {
-                "value": "Galchhi",
-                "count": 6
-              },
-              {
-                "value": "Gandaki",
-                "count": 6
-              },
-              {
                 "value": "Ichchha Kamana",
+                "count": 6
+              },
+              {
+                "value": "Uttargaya",
+                "count": 6
+              },
+              {
+                "value": "Galchhi",
                 "count": 6
               }
             ]
@@ -6211,15 +6215,11 @@
             "distinct_count": 7,
             "top_values": [
               {
-                "value": "Mango Garden",
-                "count": 1
-              },
-              {
                 "value": "Bagua Bazar",
                 "count": 1
               },
               {
-                "value": "helipat",
+                "value": "Mango Garden",
                 "count": 1
               },
               {
@@ -6227,7 +6227,11 @@
                 "count": 1
               },
               {
-                "value": "Farming Land",
+                "value": "helipat",
+                "count": 1
+              },
+              {
+                "value": "campus ground",
                 "count": 1
               }
             ]
@@ -6240,18 +6244,18 @@
     {
       "category": "helipads",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:03:00Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:03:20Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
       "boundary": "user-provided",
       "metadata": {
-        "feature_count": 23,
+        "feature_count": 22,
         "geometry_types": {
-          "LINESTRING": 18,
+          "LINESTRING": 17,
           "POLYGON": 3,
           "POINT": 2
         },
@@ -6267,10 +6271,10 @@
             "type": "VARCHAR",
             "null_count": 0,
             "null_percent": 0.0,
-            "distinct_count": 23,
+            "distinct_count": 22,
             "top_values": [
               {
-                "value": "way/346053069",
+                "value": "way/345143830",
                 "count": 1
               },
               {
@@ -6278,15 +6282,15 @@
                 "count": 1
               },
               {
-                "value": "way/342533919",
+                "value": "way/346053069",
                 "count": 1
               },
               {
-                "value": "way/1553511515",
+                "value": "node/3498339453",
                 "count": 1
               },
               {
-                "value": "way/341902040",
+                "value": "way/343706264",
                 "count": 1
               }
             ]
@@ -6294,7 +6298,7 @@
           {
             "name": "name",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6302,7 +6306,7 @@
           {
             "name": "name_en",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6310,7 +6314,7 @@
           {
             "name": "name_ne",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6324,7 +6328,7 @@
             "top_values": [
               {
                 "value": "Standing",
-                "count": 20
+                "count": 19
               },
               {
                 "value": "Destroyed",
@@ -6339,8 +6343,8 @@
           {
             "name": "aeroway",
             "type": "VARCHAR",
-            "null_count": 17,
-            "null_percent": 73.91,
+            "null_count": 16,
+            "null_percent": 72.73,
             "distinct_count": 1,
             "top_values": [
               {
@@ -6352,7 +6356,7 @@
           {
             "name": "emergency",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6361,19 +6365,19 @@
             "name": "emergency_helipad",
             "type": "VARCHAR",
             "null_count": 6,
-            "null_percent": 26.09,
+            "null_percent": 27.27,
             "distinct_count": 1,
             "top_values": [
               {
                 "value": "potential",
-                "count": 17
+                "count": 16
               }
             ]
           },
           {
             "name": "amenity",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6381,7 +6385,7 @@
           {
             "name": "surface",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6389,7 +6393,7 @@
           {
             "name": "operator",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6397,7 +6401,7 @@
           {
             "name": "operator_type",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6405,7 +6409,7 @@
           {
             "name": "access",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6413,7 +6417,7 @@
           {
             "name": "source",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6427,7 +6431,7 @@
             "top_values": [
               {
                 "value": "NPL",
-                "count": 23
+                "count": 22
               }
             ]
           },
@@ -6440,7 +6444,7 @@
             "top_values": [
               {
                 "value": "Nepal",
-                "count": 23
+                "count": 22
               }
             ]
           },
@@ -6453,7 +6457,7 @@
             "top_values": [
               {
                 "value": "NP03",
-                "count": 22
+                "count": 21
               },
               {
                 "value": "NP04",
@@ -6470,7 +6474,7 @@
             "top_values": [
               {
                 "value": "Bagmati",
-                "count": 22
+                "count": 21
               },
               {
                 "value": "Gandaki",
@@ -6491,14 +6495,14 @@
               },
               {
                 "value": "NP0329",
-                "count": 5
-              },
-              {
-                "value": "NP0330",
-                "count": 1
+                "count": 4
               },
               {
                 "value": "NP0436",
+                "count": 1
+              },
+              {
+                "value": "NP0330",
                 "count": 1
               }
             ]
@@ -6516,7 +6520,7 @@
               },
               {
                 "value": "Rasuwa",
-                "count": 5
+                "count": 4
               },
               {
                 "value": "Gorkha",
@@ -6536,23 +6540,23 @@
             "distinct_count": 8,
             "top_values": [
               {
-                "value": "NP0328301",
-                "count": 6
-              },
-              {
                 "value": "NP0328302",
                 "count": 6
               },
               {
-                "value": "NP0329402",
-                "count": 4
+                "value": "NP0328301",
+                "count": 6
               },
               {
-                "value": "NP0328402",
-                "count": 2
+                "value": "NP0329402",
+                "count": 3
               },
               {
                 "value": "NP0328403",
+                "count": 2
+              },
+              {
+                "value": "NP0328402",
                 "count": 2
               }
             ]
@@ -6574,7 +6578,7 @@
               },
               {
                 "value": "Gosaikunda",
-                "count": 4
+                "count": 3
               },
               {
                 "value": "Kispang",
@@ -6589,7 +6593,7 @@
           {
             "name": "adm4_pcode",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6597,7 +6601,7 @@
           {
             "name": "adm4_name",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
@@ -6605,22 +6609,22 @@
           {
             "name": "name_latin",
             "type": "VARCHAR",
-            "null_count": 23,
+            "null_count": 22,
             "null_percent": 100.0,
             "distinct_count": 0,
             "top_values": []
           }
         ],
-        "summary": "23 features. geometry types: 18 LINESTRING, 3 POLYGON, 2 POINT. 14 of 25 columns are >=50% null (name, name_en, name_ne, aeroway, emergency, amenity, surface, operator, operator_type, access, source, adm4_pcode, adm4_name, name_latin).",
+        "summary": "22 features. geometry types: 17 LINESTRING, 3 POLYGON, 2 POINT. 14 of 25 columns are >=50% null (name, name_en, name_ne, aeroway, emergency, amenity, surface, operator, operator_type, access, source, adm4_pcode, adm4_name, name_latin).",
         "temporal": null
       }
     },
     {
       "category": "police_stations",
       "source_name": "osm",
-      "snapshot_label": "2026-09-06T02:56:35Z",
-      "dataset_source": "OpenStreetMap (Postpass 2026-09-06T02:56:35Z)",
-      "generated_utc": "2026-09-06T03:03:06Z",
+      "snapshot_label": "2026-09-09T02:57:34Z",
+      "dataset_source": "OpenStreetMap (Postpass 2026-09-09T02:57:34Z)",
+      "generated_utc": "2026-09-09T03:03:25Z",
       "oex_version": "0.4.13",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -6646,7 +6650,7 @@
             "distinct_count": 11,
             "top_values": [
               {
-                "value": "node/9510265542",
+                "value": "node/2857847365",
                 "count": 1
               },
               {
@@ -6654,15 +6658,15 @@
                 "count": 1
               },
               {
-                "value": "node/2857847365",
-                "count": 1
-              },
-              {
                 "value": "node/4962963958",
                 "count": 1
               },
               {
-                "value": "node/6166941586",
+                "value": "node/9519235919",
+                "count": 1
+              },
+              {
+                "value": "node/9510265542",
                 "count": 1
               }
             ]
@@ -6675,15 +6679,7 @@
             "distinct_count": 7,
             "top_values": [
               {
-                "value": "Police Post Syapru Besi",
-                "count": 1
-              },
-              {
-                "value": "Tourist Police",
-                "count": 1
-              },
-              {
-                "value": "Area Police Office Gajuri",
+                "value": "Temporary Police Post Aadhamghat",
                 "count": 1
               },
               {
@@ -6691,7 +6687,15 @@
                 "count": 1
               },
               {
-                "value": "Area Police Office",
+                "value": "Tourist Police",
+                "count": 1
+              },
+              {
+                "value": "Police Post Syapru Besi",
+                "count": 1
+              },
+              {
+                "value": "Area Police Office Gajuri",
                 "count": 1
               }
             ]
@@ -6877,11 +6881,11 @@
                 "count": 5
               },
               {
-                "value": "NP0328",
+                "value": "NP0329",
                 "count": 3
               },
               {
-                "value": "NP0329",
+                "value": "NP0328",
                 "count": 3
               }
             ]
@@ -6898,11 +6902,11 @@
                 "count": 5
               },
               {
-                "value": "Rasuwa",
+                "value": "Nuwakot",
                 "count": 3
               },
               {
-                "value": "Nuwakot",
+                "value": "Rasuwa",
                 "count": 3
               }
             ]
@@ -6927,7 +6931,7 @@
                 "count": 2
               },
               {
-                "value": "NP0330408",
+                "value": "NP0329401",
                 "count": 1
               },
               {
@@ -6944,11 +6948,11 @@
             "distinct_count": 6,
             "top_values": [
               {
-                "value": "Bidur",
+                "value": "Galchhi",
                 "count": 3
               },
               {
-                "value": "Galchhi",
+                "value": "Bidur",
                 "count": 3
               },
               {
@@ -6960,7 +6964,7 @@
                 "count": 1
               },
               {
-                "value": "Gajuri",
+                "value": "Benighat Rorang",
                 "count": 1
               }
             ]
@@ -6989,15 +6993,11 @@
             "distinct_count": 10,
             "top_values": [
               {
-                "value": "Area Police Office",
-                "count": 1
-              },
-              {
-                "value": "Police Station",
-                "count": 1
-              },
-              {
                 "value": "Betrawati check post \u092c\u0947\u0924\u094d\u0930\u093e\u0935\u0924\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u091c\u093e\u0901\u091a",
+                "count": 1
+              },
+              {
+                "value": "Tourist Police",
                 "count": 1
               },
               {
@@ -7005,7 +7005,11 @@
                 "count": 1
               },
               {
-                "value": "Tourist Police",
+                "value": "Area Police Office Gajuri",
+                "count": 1
+              },
+              {
+                "value": "Area Police Office",
                 "count": 1
               }
             ]
