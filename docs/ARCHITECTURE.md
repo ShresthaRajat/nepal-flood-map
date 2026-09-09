@@ -89,12 +89,12 @@ toggle disappear.
   `tiles/hot_flood_npl_corridor/{z}/{x}/{y}.pbf`, one source-layer per HOT layer
   and no filter needed. Used automatically when the matching
   `tiles/<dataset>/metadata.json` is present.
-- **Waterways of Nepal.** `tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf`, z8–13,
+- **Waterways of Nepal.** `data/hdx/tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf`, z8–13,
   one source-layer `waterways` with `name`, `waterway`, `natural_class`, `water`
   and `width`. Built from the national HDX `hotosm_npl_waterways` export by
   `tools/build_waterways_tiles.sh`; not part of the two HOT flood datasets, so
   it ignores the Extent switch.
-- **Highways and main roads.** `tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf`, z7–13,
+- **Highways and main roads.** `data/hdx/tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf`, z7–13,
   source-layer `roads` (`highway`, `name`, `name_en`, `name_latin`, `surface`,
   `bridge`; the export has no `ref`), motorway/trunk/primary/secondary/tertiary
   plus unclassified ways named Highway/Rajmarg/Lokmarg/Rajpath. Built from the
