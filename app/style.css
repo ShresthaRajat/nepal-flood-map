@@ -414,6 +414,10 @@ table.rep .none { color: #6f7c8c; }
 .reprow:last-child { border-bottom: none; }
 .reprow b { color: #dbe4ee; }
 .reprow .sub { display: block; font-size: 10px; color: var(--fg-dim); }
+.reprow .dist { display: inline; }
+.reprow .body { display: block; font-size: 11px; color: #b9c4d2; }
+.reprow.pick { cursor: pointer; border-radius: 4px; }
+.reprow.pick:hover { background: var(--bg2); }
 .prov { font-size: 10.5px; color: #9aa6b5; margin: 6px 0 0; padding-left: 14px; }
 .prov li { margin: 2px 0; }
 .asof { font-size: 10.5px; color: var(--fg-dim); margin: 0 0 8px; font-variant-numeric: tabular-nums; }

@@ -2250,14 +2250,11 @@ async function renderMunicipalities(det, body) {
       : 'flood-affected wards: n/a (ward data covers Rasuwa and Nuwakot only)';
     const row = el('div', 'reprow' + (r.shape ? ' pick' : ''));
     row.innerHTML = '<b>' + esc(m.name) + '</b>' + (m.name_ne ? ' <span class="ne">' + esc(m.name_ne) + '</span>' : '') +
-      ' <span class="sub" style="display:inline">' + esc(m.district) + '</span>' +
+      ' <span class="sub dist">' + esc(m.district) + '</span>' +
       '<span class="sub">' + (figs.length ? figs.join(' · ') : REP_NA) + '</span>' +
       '<span class="sub">' + esc(osm) + ' · ' + esc(wtxt) + '</span>' +
       (m.summary && m.summary.text ? '<span class="sub">' + esc(m.summary.text) + srcLink(m.summary.src) + '</span>' : '');
-    if (r.shape) {
-      row.style.cursor = 'pointer';
-      row.addEventListener('click', () => highlightMuni(r.shape));
-    }
+    if (r.shape) row.addEventListener('click', () => highlightMuni(r.shape));
     body.appendChild(row);
   }
 
@@ -2463,7 +2460,7 @@ async function renderCommunities(det, body) {
     body.appendChild(el('div', 'subhd', 'Corridor'));
     for (const c of co.corridor) {
       const p = el('div', 'reprow');
-      p.innerHTML = '<span class="sub" style="font-size:11px;color:#b9c4d2">' + esc(c.text) +
+      p.innerHTML = '<span class="body">' + esc(c.text) +
         (c.as_of ? ' <span class="d">(as of ' + esc(shortDate(c.as_of)) + ')</span>' : '') + srcLink(c.src) + '</span>';
       body.appendChild(p);
     }
