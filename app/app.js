@@ -299,6 +299,38 @@ const hydroKey = n => String(n || '').toLowerCase()
   .replace(/\b(project|projects|hep|hpp|hydro)\b/g, ' ')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
+/* Circle radius from installed capacity: a 14 MW plant still reads as a dot,
+ * a 216 MW one is unmistakable, and the scale is square-root-ish so the big
+ * projects do not swamp the corridor. */
+const HYDRO_RADIUS = ['interpolate', ['linear'],
+  ['coalesce', ['to-number', ['get', 'capacity_mw']], 0],
+  0, 4, 25, 6, 60, 8, 120, 11, 216, 14];
+
+/* A match expression over the exposed-hydropower `name` values, built once from
+ * reports.json.  Falls back to the original yellow when reports.json is absent
+ * or a point has no reported status. */
+function hydroColorExpr() {
+  const projects = hydroProjects();
+  const pairs = [];
+  for (const name of HYDRO_HDX_NAMES) {
+    const pr = projects.get(hydroKey(name));
+    if (!pr || !pr.damage) continue;
+    pairs.push(name, dmgColor(pr.damage));
+  }
+  if (!pairs.length) return DMG_COLOR['not reported'];
+  return ['match', ['to-string', ['get', 'name']], ...pairs, DMG_COLOR['not reported']];
+}
+
+/* The ten point names in hot_flood_npl_exposed_hydropowers.geojson.  Listed
+ * rather than read from the file because buildDefs() is synchronous and
+ * MapLibre fetches that GeoJSON itself; the sidebar verifies the join against
+ * the real file when the Hydropower section opens. */
+const HYDRO_HDX_NAMES = [
+  'Bhotekoshi Khola Hydropower Project', 'Devighat', 'Rasuwa Bhotekoshi', 'Rasuwagadhi',
+  'Trishuli', 'Trishuli Galchhi', 'Upper Trishuli 3A', 'Upper Trishuli 3B',
+  'Upper Trishuli-1', 'Upper Trishuli-I Cascade HEP',
+];
+
 /* name -> project row, for both the map paint expression and the sidebar. */
 function hydroProjects() {
   const out = new Map();
@@ -661,8 +693,16 @@ function buildDefs() {
         'text-allow-overlap': true },
       filter: ['==', ['get', 'kind'], 'origin'],
       paint: { 'text-color': '#f5f3ff', 'text-halo-color': 'rgba(30,27,75,.9)', 'text-halo-width': 1.6 } },
+    // Sized by installed capacity, coloured by the damage status reported in
+    // data/reports.json (joined on name through hydroKey(); unmatched points
+    // keep the original yellow).  Labelled from zoom 11.
     { id: 'hydro-point', type: 'circle', source: 'hydro', layout: { visibility: 'none' },
-      paint: { 'circle-color': '#facc15', 'circle-radius': 6, 'circle-stroke-width': 1.5, 'circle-stroke-color': '#000' } },
+      paint: { 'circle-color': hydroColorExpr(), 'circle-radius': HYDRO_RADIUS,
+               'circle-stroke-width': 1.5, 'circle-stroke-color': '#000' } },
+    { id: 'hydro-label', type: 'symbol', source: 'hydro', minzoom: 11,
+      layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-font': FONT, 'text-size': 11,
+        'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true },
+      paint: { 'text-color': '#fef9c3', 'text-halo-color': 'rgba(0,0,0,.85)', 'text-halo-width': 1.6 } },
     { id: 'bridge_damage-point', type: 'circle', source: 'bridge_damage', layout: { visibility: 'none' },
       paint: { 'circle-color': bridgeColor, 'circle-radius': 6, 'circle-stroke-width': 1.5, 'circle-stroke-color': '#fff' } },
   );
@@ -748,7 +788,8 @@ function buildDefs() {
     { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
     { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58 },
-    { key: 'hydro', label: 'Exposed hydropowers', color: '#facc15', ids: ['hydro-point'], on: true, count: 10 },
+    { key: 'hydro', label: 'Exposed hydropowers (sized by MW, coloured by reported damage)', color: '#facc15',
+      ids: ['hydro-point', 'hydro-label'], on: true, count: 10 },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
     { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
     // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
