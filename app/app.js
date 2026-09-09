@@ -47,6 +47,7 @@ let terrain = null;
 let hotTiles = null;        // {flood:Set<sourceLayer>, corridor:Set, minzoom, maxzoom} once built
 let aoiFlood = null;        // flood-affected AOI geometry, for colouring settlement names inside it
 let catalogNote = '';
+let reports = null;         // data/reports.json: official casualty, municipality, energy and community figures
 let GROUPS = [];            // sidebar model
 let ENTRY = {};             // key -> entry
 let LABEL_OF = {};          // style layer id -> human label
@@ -84,6 +85,17 @@ async function loadCatalog() {
 }
 async function loadTerrain() {
   try { return await getJSON('data/terrain.json'); } catch (e) { return null; }
+}
+
+/* Official report figures, built by hand from named situation reports and
+ * optionally topped up from the BIPAD portal by tools/merge_bipad_reports.py.
+ * Optional like every other data file: without it the four report sections in
+ * the left rail each render a one-line note and nothing throws. */
+async function loadReports() {
+  try {
+    const j = await getJSON('data/reports.json');
+    return (j && typeof j === 'object') ? j : null;
+  } catch (e) { return null; }
 }
 
 /* Attribute-complete per-layer vector tiles, if the data agent has built them.
@@ -264,6 +276,39 @@ function imagerySource(l) {
 
 /* Builds sources + layers + the sidebar model.  Called once, then the same
  * definitions are handed to both maps (only the imagery layer differs). */
+/* Damage-status palette for the report sections and the hydropower points.
+ * Deliberately clear of CFG.STATUS and CFG.FAIR so a red hydropower dot is not
+ * mistaken for a destroyed OSM building. */
+const DMG_COLOR = {
+  'destroyed': '#b91c1c', 'severely damaged': '#ea580c', 'damaged': '#ca8a04',
+  'unaffected': '#059669', 'not reported': '#facc15',
+};
+const DMG_CLASS = {
+  'destroyed': 'destroyed', 'severely damaged': 'severe', 'damaged': 'damaged',
+  'unaffected': 'unaffected', 'not reported': 'nr',
+};
+const dmgColor = v => DMG_COLOR[String(v || '').toLowerCase()] || DMG_COLOR['not reported'];
+
+/* HDX spells a few projects differently from the reports ("Upper Trishuli 3A"
+ * vs "Upper Trishuli-3A", "Bhotekoshi Khola Hydropower Project" vs "Bhotekoshi
+ * Khola").  Normalising away punctuation, the word "project" and the HEP/HPP
+ * suffixes makes the join tolerant in both directions. */
+const hydroKey = n => String(n || '').toLowerCase()
+  .replace(/[\u2010-\u2015]/g, '-')
+  .replace(/\b(hydropower|hydroelectric|hydel)\b/g, ' ')
+  .replace(/\b(project|projects|hep|hpp|hydro)\b/g, ' ')
+  .replace(/[^a-z0-9]+/g, ' ').trim();
+
+/* name -> project row, for both the map paint expression and the sidebar. */
+function hydroProjects() {
+  const out = new Map();
+  for (const pr of ((reports && reports.energy && reports.energy.projects) || [])) {
+    out.set(hydroKey(pr.name), pr);
+    if (pr.hdx_name) out.set(hydroKey(pr.hdx_name), pr);
+  }
+  return out;
+}
+
 function buildDefs() {
   const sources = {
     osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256,
@@ -304,6 +349,7 @@ function buildDefs() {
     admin_municipality: { type: 'geojson', data: ADMIN + 'admin_municipality.geojson', attribution: ATTR_ADMIN_COD },
     admin_ward: { type: 'geojson', data: ADMIN + 'admin_ward.geojson', attribution: ATTR_ADMIN_WARD },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    report_hl: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     // Damage editor: the analyst's own collection, the highlighted selection and
     // the in-progress ring.  All three start empty and are fed from localStorage.
@@ -772,8 +818,14 @@ function buildDefs() {
       ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
   ] });
 
-  // 6. search pin + selected-scene outline -----------------------------------
+  // 6. search pin + selected-scene outline + report highlight ----------------
   push(
+    // Municipality outline flashed when a report row is clicked; cleared after
+    // a few seconds by highlightMuni().
+    { id: 'report_hl-fill', type: 'fill', source: 'report_hl',
+      paint: { 'fill-color': '#5eb0ff', 'fill-opacity': 0.1 } },
+    { id: 'report_hl-line', type: 'line', source: 'report_hl',
+      paint: { 'line-color': '#8ecbff', 'line-width': 2.2, 'line-opacity': 0.95 } },
     { id: 'search_pin-halo', type: 'circle', source: 'search_pin',
       paint: { 'circle-radius': 13, 'circle-color': '#5eb0ff', 'circle-opacity': 0.28,
                'circle-stroke-width': 1.5, 'circle-stroke-color': '#5eb0ff' } },
@@ -1410,7 +1462,10 @@ function renderSidebar() {
   const pad = $('#panel .pad');            // left: info, search, reports, legend, notes, imagery
   const cpad = $('#controls .pad');        // right: view, basemap, overlays
 
-  // search ----------------------------------------------------------------
+  // a. as-of strip, directly under the static title and intro ---------------
+  renderAsOf(pad);
+
+  // b. search --------------------------------------------------------------
   renderSearch(pad);
 
   // mode ------------------------------------------------------------------
@@ -1488,12 +1543,13 @@ function renderSidebar() {
   zBlock.appendChild(share);
   pad.appendChild(zBlock);
 
-  // bridge ground reports + damage summary, both loaded on first open ------
-  const lazy = (title, note, fill) => {
+  // Collapsible sections whose body is built on first open.  `cls` adds a
+  // class to the body so the report panels can carry a taller scroll cap.
+  const lazy = (title, note, fill, cls) => {
     const b = el('div', 'block');
     const det = el('details');
     det.appendChild(el('summary', null, title));
-    const body = el('div', 'lazy', '<p class="note">' + note + '</p>');
+    const body = el('div', 'lazy' + (cls ? ' ' + cls : ''), '<p class="note">' + note + '</p>');
     det.appendChild(body);
     let done = false;
     det.addEventListener('toggle', () => { if (done) return; done = true; fill(det, body); });
@@ -1501,8 +1557,16 @@ function renderSidebar() {
     pad.appendChild(b);
     return det;
   };
+  // c. casualties — rendered straight away and open by default -------------
+  renderCasualties(pad);
+
+  // d-f. the three remaining report sections, each loaded on first open -----
+  lazy('Municipality reports', 'Loading…', renderMunicipalities, 'rep');
+  lazy('Hydropower &amp; grid', 'Loading…', renderEnergy, 'rep');
+  lazy('Communities affected', 'Loading…', renderCommunities, 'rep');
+
+  // g. bridge ground reports, then legend, notes and imagery ---------------
   lazy('Bridge ground reports', 'Loading…', renderBridges);
-  lazy('Damage by municipality', 'Loading…', renderDamage);
 
   // overlays --------------------------------------------------------------
   const oBlock = el('div', 'block', '<h2>Overlays</h2>');
@@ -1555,6 +1619,7 @@ function renderSidebar() {
     for (const e of g.entries) {
       const row = el('label', 'row');
       const cb = el('input'); cb.type = 'checkbox'; cb.checked = state.overlays.has(e.key);
+      cb.dataset.ovkey = e.key;      // so a report row can switch its own layer on
       const sw = el('span', 'sw' + (e.outline ? ' outline' : ''));
       sw.style.background = e.color; sw.style.borderColor = e.color;
       row.append(cb, sw, el('span', 't', e.label));
@@ -1848,35 +1913,13 @@ async function renderBridges(det, body) {
   }
 }
 
-// ---------------------------------------------------------- damage summary
+// -------------------------------------- destroyed-feature counts (OSM)
+/* The per-municipality aggregation moved into the Municipality reports section
+ * (loadDamageByMuni); this keeps the classifier and the in-view recount that
+ * runs on every moveend. */
 const DAMAGE_CLASS = { building: 'buildings', 'building part': 'buildings', road: 'roads',
   tunnel: 'roads', bridge: 'bridges' };
 let damageRows = null;
-async function renderDamage(det, body) {
-  const d = await gj('hot_flood_npl/destroyed_features_osm.geojson');
-  if (!d || !d.features) { body.innerHTML = '<p class="note">Destroyed-feature data not available.</p>'; return; }
-  damageRows = d.features.map(f => {
-    const p = f.properties || {};
-    return { adm3: p.adm3_name || 'Unknown', cls: DAMAGE_CLASS[p.feature_type] || 'other',
-             status: p.status || '', c: centroid(f.geometry) };
-  }).filter(r => r.c);
-  const by = {};
-  for (const r of damageRows) {
-    const m = (by[r.adm3] ||= { buildings: 0, roads: 0, bridges: 0, other: 0, total: 0 });
-    m[r.cls]++; m.total++;
-  }
-  const names = Object.keys(by).sort((a, b) => by[b].total - by[a].total);
-  let html = '<table class="dmg"><thead><tr><th>Municipality</th><th>Bldg</th><th>Road</th><th>Brdg</th><th>Other</th></tr></thead><tbody>';
-  for (const n of names) {
-    const m = by[n];
-    html += '<tr><td>' + esc(n) + '</td><td>' + m.buildings + '</td><td>' + m.roads +
-            '</td><td>' + m.bridges + '</td><td>' + m.other + '</td></tr>';
-  }
-  html += '</tbody></table><p class="inview" id="dmgInView"></p>' +
-    '<p class="note">Volunteer-recorded in OpenStreetMap; not field-verified.</p>';
-  body.innerHTML = html;
-  updateDamageInView();
-}
 function updateDamageInView() {
   const out = document.querySelector('#dmgInView');
   if (!out || !damageRows || !maps.post) return;
@@ -1891,6 +1934,505 @@ function updateDamageInView() {
   }
   out.innerHTML = '<b>In current view:</b> ' + m.total + ' recorded — ' + m.buildings +
     ' buildings, ' + m.roads + ' roads, ' + m.bridges + ' bridges, ' + m.other + ' other.';
+}
+
+// ========================================================== report sections
+/* Casualties, municipality reports, hydropower & grid and communities affected,
+ * all fed by data/reports.json (see docs/ARCHITECTURE.md).  Every figure in
+ * these panels carries an "as of" date and a clickable source; where no
+ * official figure exists the cell says "not reported" rather than estimating.
+ * reports.json is optional — each section degrades to a one-line note. */
+
+const REP_NA = '<span class="none">not reported</span>';
+const REP_MISSING = '<p class="note">Reports not built. <code>data/reports.json</code> is absent or unreadable.</p>';
+
+const repSrc = id => (reports && reports.sources && reports.sources[id]) || null;
+
+/* Tiny superscript anchor; the source label and date live in the tooltip. */
+function srcLink(id) {
+  const s = repSrc(id);
+  if (!s) return '';
+  const t = s.label + (s.date ? ' · ' + fmtDate(s.date) : '') + (s.official ? '' : ' (not an official source)');
+  return '<a class="src' + (s.official ? '' : ' unoff') + '" href="' + esc(s.url) + '" target="_blank" rel="noopener"' +
+    ' title="' + esc(t) + '">↗</a>';
+}
+const repNum = v => (v == null || v === '') ? null : Number(v).toLocaleString('en-US');
+/* "2026-09-08" -> "8 Sep".  fmtDate() gives the long form for tooltips. */
+function shortDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
+  return m ? (+m[3]) + ' ' + MONTHS[+m[2] - 1] : '';
+}
+/* A {value, as_of, src} figure object as a table cell body. */
+function figCell(f) {
+  if (!f || f.value == null) return REP_NA;
+  return '<b>' + repNum(f.value) + '</b>' + srcLink(f.src) +
+    (f.as_of ? '<span class="sub">' + shortDate(f.as_of) + '</span>' : '');
+}
+/* A service-status object as a pill.  Unknown or absent reads "not reported". */
+function stChip(o) {
+  const st = (o && o.status) || 'not_reported';
+  const cls = st === 'not_reported' ? 'nr' : esc(st);
+  const label = st === 'not_reported' ? 'not reported' : st;
+  const bits = [];
+  if (o && o.detail) bits.push(o.detail);
+  if (o && o.as_of) bits.push('as of ' + fmtDate(o.as_of));
+  const s = o && o.src ? repSrc(o.src) : null;
+  if (s) bits.push(s.label + (s.official ? '' : ' (not an official source)'));
+  return '<span class="st ' + cls + '"' + (bits.length ? ' title="' + esc(bits.join(' — ')) + '"' : '') + '>' +
+    esc(label) + '</span>' + (o && o.src ? srcLink(o.src) : '');
+}
+/* Project damage status as a pill, using the DMG_CLASS palette. */
+function dmgChip(v) {
+  const k = String(v || 'not reported').toLowerCase();
+  const cls = DMG_CLASS[k] || 'nr';
+  return '<span class="st ' + cls + '">' + esc(k === 'not reported' ? 'not reported' : k) + '</span>';
+}
+
+/* Fetch and memoise a repo-relative JSON file by full path.  gj() is rooted at
+ * data/hdx/; the admin boundaries and reports live elsewhere. */
+const jsonCache = {};
+async function cachedJSON(url) {
+  if (jsonCache[url] !== undefined) return jsonCache[url];
+  try { jsonCache[url] = await getJSON(url); } catch (e) { jsonCache[url] = null; }
+  return jsonCache[url];
+}
+
+// ------------------------------------------------------- a. as-of strip
+function renderAsOf(pad) {
+  if (!reports) return;
+  const p = el('p', 'asof');
+  const ids = Object.keys(reports.sources || {}).filter(k => (reports.sources[k] || {}).official);
+  const named = ['NDRRMA', 'MoFA', 'OCHA', 'NEA'];
+  p.innerHTML = 'Official figures as of <b>' + esc(fmtDate(reports.as_of)) + '</b> · sources: ' +
+    named.join(', ') + ' and named news reports · ' + ids.length + ' official of ' +
+    Object.keys(reports.sources || {}).length + ' cited';
+  p.title = 'Every figure in the report sections below carries its own date and source link.';
+  pad.appendChild(p);
+}
+
+// ----------------------------------------------------------- c. casualties
+function renderCasualties(pad) {
+  const b = el('div', 'block');
+  const det = el('details'); det.open = true;
+  det.appendChild(el('summary', null, 'Casualties'));
+  const body = el('div', null, '');
+  det.appendChild(body); b.appendChild(det); pad.appendChild(b);
+  if (!reports || !reports.casualties) { body.innerHTML = REP_MISSING; return; }
+  const c = reports.casualties;
+  const h = c.headline || {};
+
+  const tiles = el('div', 'tiles');
+  const tile = (label, f, sub) => {
+    const t = el('div', 'tile');
+    t.innerHTML = '<span class="k">' + esc(label) + '</span>' +
+      '<span class="v">' + (f && f.value != null ? repNum(f.value) : '—') + srcLink(f && f.src) + '</span>' +
+      '<span class="d">' + (f && f.as_of ? 'as of ' + shortDate(f.as_of) : 'not reported') + '</span>' +
+      (sub ? '<span class="sub">' + sub + '</span>' : '');
+    tiles.appendChild(t);
+  };
+  // "Bodies recovered", never "Deaths": these are remains located, most of them
+  // not yet identified (owner direction, 9 Sep 2026).
+  tile('Bodies recovered', h.bodies_recovered, 'located, mostly not yet identified');
+  tile('Missing', h.missing, 'a separate count, not presumed dead');
+  tile('Injured', h.injured, 'not restated in later updates');
+  tile('Rescued', h.rescued);
+  body.appendChild(tiles);
+
+  // time series
+  if ((c.series || []).length) {
+    body.appendChild(el('div', 'subhd', 'How the count moved'));
+    const wrap = el('div', 'scrollx');
+    let html = '<table class="rep"><thead><tr><th>As of</th><th class="n">Bodies</th>' +
+      '<th class="n">Missing</th><th class="n">Injured</th><th class="n">Rescued</th></tr></thead><tbody>';
+    for (const r of c.series) {
+      const cell = v => v == null ? '<span class="none">—</span>' : repNum(v);
+      html += '<tr' + (r.note ? ' title="' + esc(r.note) + '"' : '') + '><td>' + esc(shortDate(r.as_of)) +
+        srcLink(r.src) + '</td><td class="n">' + cell(r.bodies_recovered) + '</td><td class="n">' +
+        cell(r.missing) + '</td><td class="n">' + cell(r.injured) + '</td><td class="n">' +
+        cell(r.rescued) + '</td></tr>';
+    }
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+    body.appendChild(wrap);
+  }
+
+  // China (counted separately) and foreign nationals
+  if (c.china) {
+    const r = el('div', 'reprow');
+    r.innerHTML = '<b>China, Gyirong county (Tibet)</b>' + srcLink(c.china.src) +
+      '<span class="sub">' + repNum(c.china.deaths) + ' dead, ' + repNum(c.china.missing) +
+      ' missing as of ' + esc(shortDate(c.china.as_of)) + '. ' + esc(c.china.note || '') + '</span>';
+    r.title = c.china.detail || '';
+    body.appendChild(r);
+  }
+  if (c.foreign_nationals) {
+    const f = c.foreign_nationals;
+    const alt = (f.alternates || []).map(a => esc(a.label) + ' ' + repNum(a.value) + srcLink(a.src)).join(', ');
+    const r = el('div', 'reprow');
+    r.innerHTML = '<b>Foreign nationals missing</b>' + srcLink(f.src) +
+      '<span class="sub">MoFA about ' + repNum(f.value) + ' from 35 countries as of ' +
+      esc(shortDate(f.as_of)) + (alt ? '. Other agencies: ' + alt : '') + '. ' + esc(f.note || '') + '</span>';
+    body.appendChild(r);
+  }
+
+  if ((c.notes || []).length) {
+    const ul = el('ul', 'prov');
+    for (const n of c.notes) ul.appendChild(el('li', null, esc(n)));
+    body.appendChild(el('div', 'subhd', 'What these numbers are'));
+    body.appendChild(ul);
+  }
+}
+
+// ------------------------------------------------ d. municipality reports
+/* COD-AB (2024) is the join key; the 2018 ward file and the reports spell four
+ * of these differently.  See data/admin/README.md and reports.json aliases. */
+const muniKey = n => String(n || '').toLowerCase()
+  .replace(/\b(rural municipality|municipality|metropolitan city|sub-metropolitan city|gaunpalika|nagarpalika|rm|np)\b/g, ' ')
+  .replace(/[^a-z0-9]+/g, '').trim();
+const DIST_KEY = { chitwan: 'chitawan', tanahun: 'tanahu' };
+const distKey = d => { const k = String(d || '').toLowerCase().trim(); return DIST_KEY[k] || k; };
+
+let damageRowsLoaded = null;
+/* Buckets destroyed_features_osm.geojson by municipality; also fills the
+ * module-level damageRows that updateDamageInView() recounts on moveend. */
+async function loadDamageByMuni() {
+  if (damageRowsLoaded) return damageRowsLoaded;
+  const d = await gj('hot_flood_npl/destroyed_features_osm.geojson');
+  const by = {};
+  if (d && d.features) {
+    damageRows = d.features.map(f => {
+      const p = f.properties || {};
+      return { adm3: p.adm3_name || 'Unknown', cls: DAMAGE_CLASS[p.feature_type] || 'other',
+               status: p.status || '', c: centroid(f.geometry) };
+    }).filter(r => r.c);
+    for (const r of damageRows) {
+      const m = (by[muniKey(r.adm3)] ||= { name: r.adm3, buildings: 0, roads: 0, bridges: 0, other: 0, total: 0 });
+      m[r.cls]++; m.total++;
+    }
+  }
+  damageRowsLoaded = by;
+  return by;
+}
+
+/* Flood-affected ward counts per municipality, Rasuwa and Nuwakot only. */
+async function loadWardCounts() {
+  const g = await cachedJSON(ADMIN + 'admin_ward.geojson');
+  const out = {};
+  if (!g || !g.features) return null;
+  for (const f of g.features) {
+    const p = f.properties || {};
+    const k = muniKey(p.GaPa_NaPa);
+    const rec = (out[k] ||= { wards: 0, affected: 0, district: p.DISTRICT || '' });
+    rec.wards++;
+    if (p.flood_affected === 1) rec.affected++;
+  }
+  return out;
+}
+
+/* Municipality polygons keyed by name, with a bbox for fitBounds. */
+async function loadMuniShapes() {
+  const g = await cachedJSON(ADMIN + 'admin_municipality.geojson');
+  const out = {};
+  if (!g || !g.features) return out;
+  for (const f of g.features) {
+    const p = f.properties || {};
+    const k = muniKey(p.adm3_name) + '|' + distKey(p.adm2_name);
+    let w = 180, s = 90, e = -180, n = -90;
+    eachCoord(f.geometry, ([x, y]) => {
+      if (x < w) w = x; if (x > e) e = x;
+      if (y < s) s = y; if (y > n) n = y;
+    });
+    if (w > e) continue;
+    (out[k] ||= { bbox: [[w, s], [e, n]], features: [] }).features.push(f);
+    const b = out[k].bbox;
+    b[0][0] = Math.min(b[0][0], w); b[0][1] = Math.min(b[0][1], s);
+    b[1][0] = Math.max(b[1][0], e); b[1][1] = Math.max(b[1][1], n);
+  }
+  return out;
+}
+
+let hlTimer = null;
+/* Fit both maps to a municipality and flash its outline for three seconds. */
+function highlightMuni(shape) {
+  if (!shape || !maps.post) return;
+  const fc = { type: 'FeatureCollection', features: shape.features };
+  eachMap(m => { const src = m.getSource('report_hl'); if (src) src.setData(fc); });
+  maps.post.fitBounds(shape.bbox, { padding: 40, duration: 900 });
+  clearTimeout(hlTimer);
+  hlTimer = setTimeout(() => eachMap(m => {
+    const src = m.getSource('report_hl');
+    if (src) src.setData({ type: 'FeatureCollection', features: [] });
+  }), 3200);
+}
+
+const MUNI_METRICS = [
+  ['deaths_bodies', 'bodies'], ['missing', 'missing'], ['injured', 'injured'],
+  ['people_affected', 'people affected'], ['families_affected', 'families affected'],
+  ['households_isolated', 'households isolated'], ['people_isolated', 'people isolated'],
+  ['houses_destroyed', 'houses destroyed'], ['houses_affected', 'houses affected'],
+  ['infrastructure_destroyed', 'infrastructure destroyed'],
+];
+
+async function renderMunicipalities(det, body) {
+  if (!reports || !(reports.municipalities || []).length) { body.innerHTML = REP_MISSING; return; }
+  const [byDamage, wards, shapes] = await Promise.all([loadDamageByMuni(), loadWardCounts(), loadMuniShapes()]);
+  const rows = reports.municipalities.map(m => {
+    const keys = [muniKey(m.name), ...(m.aliases || []).map(muniKey)];
+    const dmg = keys.map(k => byDamage[k]).find(Boolean) || null;
+    const wc = wards ? keys.map(k => wards[k]).find(Boolean) || null : null;
+    const shape = shapes[muniKey(m.name) + '|' + distKey(m.district)] || null;
+    const fig = m.figures || {};
+    const off = ['deaths_bodies', 'missing'].reduce((a, k) => a + ((fig[k] && fig[k].value) || 0), 0);
+    return { m, dmg, wc, shape, off };
+  });
+  rows.sort((a, b) => b.off - a.off || (b.dmg ? b.dmg.total : 0) - (a.dmg ? a.dmg.total : 0) ||
+    a.m.name.localeCompare(b.m.name));
+
+  const head = det.querySelector('summary');
+  if (head) head.innerHTML = 'Municipality reports <span class="n">' + rows.length + '</span>';
+
+  body.innerHTML = '';
+  body.appendChild(el('p', 'note',
+    'Official figures where they exist, at the level they were published. No NDRRMA or MoFA source publishes a ' +
+    'municipality-level casualty table, so most casualty cells read "not reported" rather than an estimate. ' +
+    'Click a row to zoom the map to that municipality.'));
+  for (const r of rows) {
+    const m = r.m, fig = m.figures || {};
+    const figs = MUNI_METRICS.filter(([k]) => fig[k] && fig[k].value != null)
+      .map(([k, label]) => '<b>' + repNum(fig[k].value) + '</b> ' + esc(label) +
+        ' <span class="d">' + esc(shortDate(fig[k].as_of)) + '</span>' + srcLink(fig[k].src));
+    const osm = r.dmg
+      ? 'OSM-mapped: ' + r.dmg.buildings + ' buildings, ' + r.dmg.roads + ' roads, ' + r.dmg.bridges +
+        ' bridges' + (r.dmg.other ? ', ' + r.dmg.other + ' other' : '')
+      : 'OSM-mapped: none recorded';
+    const wtxt = r.wc ? r.wc.affected + ' of ' + r.wc.wards + ' wards flood-affected'
+      : 'flood-affected wards: n/a (ward data covers Rasuwa and Nuwakot only)';
+    const row = el('div', 'reprow' + (r.shape ? ' pick' : ''));
+    row.innerHTML = '<b>' + esc(m.name) + '</b>' + (m.name_ne ? ' <span class="ne">' + esc(m.name_ne) + '</span>' : '') +
+      ' <span class="sub" style="display:inline">' + esc(m.district) + '</span>' +
+      '<span class="sub">' + (figs.length ? figs.join(' · ') : REP_NA) + '</span>' +
+      '<span class="sub">' + esc(osm) + ' · ' + esc(wtxt) + '</span>' +
+      (m.summary && m.summary.text ? '<span class="sub">' + esc(m.summary.text) + srcLink(m.summary.src) + '</span>' : '');
+    if (r.shape) {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', () => highlightMuni(r.shape));
+    }
+    body.appendChild(row);
+  }
+
+  // Bodies recovered by district, downstream of the corridor.
+  if ((reports.downstream_bodies || []).length) {
+    body.appendChild(el('div', 'subhd', 'Bodies recovered downstream, by district'));
+    const wrap = el('div', 'scrollx');
+    let html = '<table class="rep"><thead><tr><th>District</th><th class="n">Bodies recovered</th><th>As of</th></tr></thead><tbody>';
+    for (const d of reports.downstream_bodies) {
+      html += '<tr' + (d.detail ? ' title="' + esc(d.detail) + '"' : '') + '><td>' + esc(d.district) +
+        '</td><td class="n">' + repNum(d.value) + srcLink(d.src) + '</td><td>' + esc(shortDate(d.as_of)) + '</td></tr>';
+    }
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+    body.appendChild(wrap);
+    body.appendChild(el('p', 'note',
+      'These counts are where remains were found, not where people lived. Bodies travelled up to 240 km down the ' +
+      'Trishuli and Narayani, which is why Chitwan and Nawalparasi exceed the upstream districts.'));
+  }
+  body.appendChild(el('p', 'inview', ''));
+  body.querySelector('.inview').id = 'dmgInView';
+  body.appendChild(el('p', 'note', 'OSM-mapped counts are volunteer-recorded in OpenStreetMap and not field-verified.'));
+  updateDamageInView();
+}
+
+// ------------------------------------------------------- e. hydropower & grid
+async function renderEnergy(det, body) {
+  if (!reports || !reports.energy) { body.innerHTML = REP_MISSING; return; }
+  const en = reports.energy;
+  const located = new Map();
+  const hp = await gj('hot_flood_npl/hot_flood_npl_exposed_hydropowers.geojson');
+  if (hp && hp.features) for (const f of hp.features) {
+    const c = centroid(f.geometry);
+    if (c) located.set(hydroKey((f.properties || {}).name), { c, p: f.properties || {} });
+  }
+  const head = det.querySelector('summary');
+  if (head) head.innerHTML = 'Hydropower &amp; grid <span class="n">' + (en.projects || []).length + '</span>';
+  body.innerHTML = '';
+
+  // summary tiles
+  const s = en.summary || {};
+  const tiles = el('div', 'tiles');
+  if (s.generation_offline) {
+    const g = s.generation_offline, sub = g.sub;
+    const t = el('div', 'tile');
+    t.innerHTML = '<span class="k">Generation offline</span><span class="v">' + repNum(g.value) + ' ' +
+      esc(g.unit || 'MW') + srcLink(g.src) + '</span><span class="d">as of ' + esc(shortDate(g.as_of)) + '</span>' +
+      (sub ? '<span class="sub">' + esc(sub.label || 'earlier') + ' ' + repNum(sub.value) + ' ' +
+        esc(sub.unit || 'MW') + ', ' + esc(shortDate(sub.as_of)) + srcLink(sub.src) + '</span>' : '');
+    if (g.note) t.title = g.note;
+    tiles.appendChild(t);
+  }
+  if (s.projects_damaged) {
+    const p = s.projects_damaged;
+    const t = el('div', 'tile');
+    t.innerHTML = '<span class="k">Projects damaged</span><span class="v">' + repNum(p.value) + srcLink(p.src) +
+      '</span><span class="d">as of ' + esc(shortDate(p.as_of)) + '</span>' +
+      (p.note ? '<span class="sub">' + esc(p.note) + '</span>' : '');
+    tiles.appendChild(t);
+  }
+  if (s.under_construction && (s.under_construction.conflict || []).length) {
+    const u = s.under_construction;
+    const t = el('div', 'tile wide');
+    t.innerHTML = '<span class="k">Under construction affected</span><span class="v">' +
+      u.conflict.map(x => repNum(x.value) + ' ' + esc(x.unit || 'MW') + srcLink(x.src)).join(' or ') +
+      '</span><span class="d">sources conflict, ' +
+      u.conflict.map(x => shortDate(x.as_of)).join(' and ') + '</span>' +
+      (u.note ? '<span class="sub">' + esc(u.note) + '</span>' : '');
+    tiles.appendChild(t);
+  }
+  body.appendChild(tiles);
+
+  // project table
+  const wrap = el('div', 'scrollx');
+  let html = '<table class="rep"><thead><tr><th>Project</th><th class="n">MW</th><th>Damage</th>' +
+    '<th>Workers missing</th></tr></thead><tbody>';
+  const nl = v => (v == null || String(v).toLowerCase() === 'not reported' || v === '') ? REP_NA : esc(v);
+  for (const pr of (en.projects || [])) {
+    const loc = located.get(hydroKey(pr.name)) || (pr.hdx_name ? located.get(hydroKey(pr.hdx_name)) : null);
+    const idAttr = loc ? ' class="pick" data-hydro="' + esc(hydroKey(pr.name)) + '"' : '';
+    html += '<tr' + idAttr + '><td><span class="nm">' + esc(pr.name) + '</span>' + srcLink(pr.src) +
+      '<span class="sub">' + nl(pr.owner) + '</span>' +
+      '<span class="sub">' + nl(pr.status_before) + (loc ? '' : ' · not located') + '</span>' +
+      (pr.note ? '<span class="sub">' + esc(pr.note) + '</span>' : '') +
+      '</td><td class="n">' + (pr.mw == null ? REP_NA : esc(pr.mw)) + '</td><td>' + dmgChip(pr.damage) +
+      '<span class="sub">' + nl(pr.what) + '</span>' +
+      (pr.loss ? '<span class="sub">' + esc(pr.loss) + '</span>' : '') +
+      '</td><td>' + nl(pr.workers_missing) + '</td></tr>';
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  body.appendChild(wrap);
+  for (const tr of wrap.querySelectorAll('tr.pick')) {
+    tr.addEventListener('click', () => {
+      const loc = located.get(tr.dataset.hydro);
+      if (!loc) { toast('Not located in the exposed-hydropower layer'); return; }
+      // Click the Overlays checkbox rather than mutating state, so the tick,
+      // the layer and the hash all stay in step.
+      const cb = document.querySelector('#controls input[data-ovkey="hydro"]');
+      if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event('change')); }
+      dropPin(loc.c, 13);
+      if (maps.post) new maplibregl.Popup({ maxWidth: '340px' })
+        .setLngLat(loc.c).setHTML(popupHTML('Exposed hydropower', loc.p)).addTo(maps.post);
+    });
+  }
+  body.appendChild(el('p', 'note',
+    'Missing-worker counts were revised downward as rescue and contact progressed; each figure is a snapshot of ' +
+    'its reporting date, not a settled total. Projects with a location join the yellow "Exposed hydropowers" ' +
+    'overlay by name; the rest are not in that dataset.'));
+
+  // grid
+  if ((en.grid || []).length) {
+    body.appendChild(el('div', 'subhd', 'Grid'));
+    for (const g of en.grid) {
+      const r = el('div', 'reprow');
+      r.innerHTML = '<b>' + esc(g.element) + '</b> ' + dmgChip(g.damage) + (g.src ? srcLink(g.src) : '') +
+        '<span class="sub">' + esc(g.detail || '') + (g.as_of ? ' (as of ' + esc(shortDate(g.as_of)) + ')' : '') + '</span>';
+      body.appendChild(r);
+    }
+  }
+  if ((en.restoration || []).length) {
+    body.appendChild(el('div', 'subhd', 'Distribution restored'));
+    const w2 = el('div', 'scrollx');
+    let h2 = '<table class="rep"><thead><tr><th>District</th><th class="n">Restored</th>' +
+      '<th class="n">Households</th><th>As of</th></tr></thead><tbody>';
+    for (const r of en.restoration) {
+      h2 += '<tr' + (r.note || r.detail ? ' title="' + esc(r.note || r.detail) + '"' : '') + '><td>' +
+        esc(r.district) + (r.detail ? '<span class="sub">' + esc(r.detail) + '</span>' : '') +
+        '</td><td class="n">' + (r.pct == null ? REP_NA : esc(r.pct) + '%') + srcLink(r.src) +
+        '</td><td class="n">' + (r.households == null ? REP_NA : repNum(r.households)) +
+        '</td><td>' + esc(shortDate(r.as_of)) + '</td></tr>';
+    }
+    h2 += '</tbody></table>';
+    w2.innerHTML = h2;
+    body.appendChild(w2);
+  }
+  if ((en.impact || []).length) {
+    body.appendChild(el('div', 'subhd', 'System impact'));
+    for (const i of en.impact) {
+      const p = el('p', 'note');
+      p.innerHTML = esc(i.text) + srcLink(i.src);
+      body.appendChild(p);
+    }
+  }
+}
+
+// --------------------------------------------------- f. communities affected
+async function renderCommunities(det, body) {
+  if (!reports || !reports.communities) { body.innerHTML = REP_MISSING; return; }
+  const co = reports.communities;
+  const places = await gj('derived/places.geojson');
+  const byName = new Map();
+  if (places && places.features) for (const f of places.features) {
+    const p = f.properties || {};
+    const c = centroid(f.geometry);
+    if (!c || !p.name) continue;
+    const k = String(p.name).toLowerCase().replace(/[^a-z0-9]+/g, '');
+    if (!byName.has(k)) byName.set(k, { c, name: p.name, ne: p.name_ne || '' });
+  }
+  const findPlace = st => {
+    for (const n of [st.name, ...(st.aliases || [])]) {
+      const k = String(n).toLowerCase().replace(/[^a-z0-9]+/g, '');
+      if (byName.has(k)) return byName.get(k);
+    }
+    return null;
+  };
+
+  const head = det.querySelector('summary');
+  if (head) head.innerHTML = 'Communities affected <span class="n">' + (co.settlements || []).length + '</span>';
+  body.innerHTML = '';
+  body.appendChild(el('p', 'note',
+    'Road, power and water status per settlement. Every chip carries its date and source in its tooltip. ' +
+    '"planned" means a Bailey bridge is planned or being installed while the crossing is still out. ' +
+    'Click a settlement to fly to it.'));
+
+  const wrap = el('div', 'scrollx');
+  let html = '<table class="rep"><thead><tr><th>Settlement</th><th>Road</th><th>Power</th><th>Water</th>' +
+    '<th>Site</th></tr></thead><tbody>';
+  const rows = [];
+  for (const st of (co.settlements || [])) {
+    const pl = findPlace(st);
+    rows.push({ st, pl });
+    const ne = st.name_ne || (pl && pl.ne) || '';
+    html += '<tr' + (pl ? ' class="pick"' : '') + '><td><span class="nm">' + esc(st.name) + '</span>' +
+      (ne ? ' <span class="ne">' + esc(ne) + '</span>' : '') +
+      '<span class="sub">' + esc(st.municipality || '') + (st.district ? ', ' + esc(st.district) : '') +
+      (pl ? '' : ' · not located') + '</span></td>' +
+      '<td>' + stChip(st.road) + '</td><td>' + stChip(st.power) + '</td><td>' + stChip(st.water) + '</td>' +
+      '<td>' + stChip(st.displacement_site) + (st.telecom ? '<span class="sub">telecom ' + stChip(st.telecom) + '</span>' : '') +
+      '</td></tr>';
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  body.appendChild(wrap);
+  const trs = wrap.querySelectorAll('tbody tr');
+  rows.forEach((r, i) => {
+    const tr = trs[i];
+    if (!tr || !r.pl) return;
+    tr.addEventListener('click', () => dropPin(r.pl.c, 13));
+  });
+
+  if ((co.corridor || []).length) {
+    body.appendChild(el('div', 'subhd', 'Corridor'));
+    for (const c of co.corridor) {
+      const p = el('div', 'reprow');
+      p.innerHTML = '<span class="sub" style="font-size:11px;color:#b9c4d2">' + esc(c.text) +
+        (c.as_of ? ' <span class="d">(as of ' + esc(shortDate(c.as_of)) + ')</span>' : '') + srcLink(c.src) + '</span>';
+      body.appendChild(p);
+    }
+  }
+  const unoff = (co.settlements || []).some(st =>
+    ['road', 'power', 'water', 'telecom', 'displacement_site'].some(k => st[k] && st[k].unofficial));
+  if (unoff) body.appendChild(el('p', 'warn',
+    'One row cites the community-run Rasuwa Flood Bulletin, which is not an official source. It is used only where ' +
+    'every official cell for that settlement would otherwise read "not reported", and its chips are marked with an ' +
+    'amber source link.'));
 }
 
 // -------------------------------------------------------------- popup body
@@ -3741,7 +4283,8 @@ async function main() {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
 
-  [catalog, terrain, hotTiles, aoiFlood] = await Promise.all([loadCatalog(), loadTerrain(), loadHotTiles(), loadAoi()]);
+  [catalog, terrain, hotTiles, aoiFlood, reports] = await Promise.all(
+    [loadCatalog(), loadTerrain(), loadHotTiles(), loadAoi(), loadReports()]);
   const ovParam = readHash();
 
   // Scene ids from the hash that are not in the catalogue (stale link, renamed
@@ -3803,6 +4346,10 @@ async function main() {
   if (ctog) ctog.addEventListener('click', toggleControls);
   window.addEventListener('resize', () => eachMap(m => m.resize()));
   window.addEventListener('hashchange', () => { if (!hashWriting) location.reload(); });
+  // ?debug=1 also exposes the module internals, so a harness page can inspect
+  // map and overlay state from outside the IIFE.  Off by default.
+  if (QS.has('debug')) window.NF26 = { maps, state, get GROUPS() { return GROUPS; },
+    get ENTRY() { return ENTRY; }, get reports() { return reports; } };
 }
 
 main().catch(e => {

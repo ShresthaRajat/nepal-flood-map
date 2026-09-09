@@ -249,10 +249,6 @@ summary .n .chip { margin-left: 6px; }
 .brow .t { min-width: 0; }
 .lazy { max-height: 300px; overflow-y: auto; }
 
-table.dmg { width: 100%; border-collapse: collapse; font-size: 11.5px; font-variant-numeric: tabular-nums; }
-table.dmg th { text-align: right; color: var(--fg-dim); font-weight: 500; padding: 2px 4px; border-bottom: 1px solid var(--line); }
-table.dmg th:first-child, table.dmg td:first-child { text-align: left; }
-table.dmg td { text-align: right; padding: 2px 4px; border-bottom: 1px solid rgba(49,59,72,.5); }
 .inview { font-size: 11.5px; color: #cfd8e3; margin: 7px 0 0; }
 
 .roadlg .hd { color: var(--fg-dim); font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; margin-top: 8px; }
@@ -344,3 +340,89 @@ button.mini { font-size: 10.5px; padding: 1px 6px; line-height: 1.4; }
 .field.ovop label { display: flex; align-items: center; gap: 6px; }
 .field.ovop .ovop-n { margin-left: auto; font-variant-numeric: tabular-nums; }
 .field.ovop input[type=range] { width: 100%; accent-color: var(--accent); margin: 1px 0 0; }
+
+/* ------------------------------------------------------- report sections */
+/* Casualties, municipality reports, hydropower & grid, communities.  Fed by
+   data/reports.json.  Two chip palettes, both deliberately away from the
+   STATUS / FAIR colours used for OSM features and AI damage classes. */
+:root {
+  /* service status: road / power / water */
+  --st-cut: #e11d48;
+  --st-limited: #d97706;
+  --st-restored: #10b981;
+  --st-planned: #6366f1;
+  --st-none: transparent;
+  /* project damage status */
+  --dm-destroyed: #b91c1c;
+  --dm-severe: #ea580c;
+  --dm-damaged: #ca8a04;
+  --dm-unaffected: #059669;
+  --dm-none: transparent;
+}
+
+#panel > .pad { min-width: 0; }
+
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tile { background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; min-width: 0; }
+.tile .k { display: block; font-size: 9.5px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--fg-dim); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .v { display: block; font-size: 19px; line-height: 1.15; font-weight: 600;
+  font-variant-numeric: tabular-nums; margin: 1px 0 0; }
+.tile .d { display: block; font-size: 10px; color: var(--fg-dim); font-variant-numeric: tabular-nums; }
+.tile .sub { display: block; font-size: 10px; color: var(--fg-dim); margin-top: 2px; }
+.tile.wide { grid-column: 1 / -1; }
+.tile.wide .v { font-size: 14px; }
+
+/* Tiny superscript source anchor.  Title carries the source label and date. */
+a.src { color: var(--accent); text-decoration: none; font-size: 9.5px; vertical-align: super;
+  margin-left: 2px; opacity: .8; }
+a.src:hover { opacity: 1; text-decoration: underline; }
+a.src.unoff { color: var(--accent2); }
+
+/* Wide tables scroll inside their own box so the rail itself never does. */
+.scrollx { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+.lazy.rep { max-height: 460px; }
+
+table.rep { width: 100%; border-collapse: collapse; font-size: 11px; font-variant-numeric: tabular-nums; }
+table.rep th { text-align: left; color: var(--fg-dim); font-weight: 500; padding: 3px 5px 3px 0;
+  border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0;
+  background: var(--bg); z-index: 1; }
+table.rep td { padding: 3px 5px 3px 0; border-bottom: 1px solid rgba(49,59,72,.5); vertical-align: top; }
+table.rep td.n, table.rep th.n { text-align: right; }
+table.rep tbody tr.pick { cursor: pointer; }
+table.rep tbody tr.pick:hover { background: var(--bg2); }
+table.rep .nm { font-weight: 600; color: #dbe4ee; }
+table.rep .ne { color: var(--fg-dim); font-weight: 400; }
+table.rep .sub { display: block; font-size: 10px; color: var(--fg-dim); font-weight: 400; }
+table.rep .none { color: #6f7c8c; }
+
+/* Status pill.  Neutral states are an outline so "not reported" never reads as
+   a colour with meaning. */
+.st { display: inline-block; padding: 0 6px; border-radius: 999px; font-size: 10px; font-weight: 600;
+  color: #0b0f14; white-space: nowrap; border: 1px solid transparent; }
+.st.cut { background: var(--st-cut); }
+.st.limited { background: var(--st-limited); }
+.st.restored { background: var(--st-restored); }
+.st.planned { background: var(--st-planned); color: #f2f4ff; }
+.st.not_reported, .st.nr { background: var(--st-none); border-color: var(--line); color: var(--fg-dim); font-weight: 500; }
+.st.destroyed { background: var(--dm-destroyed); color: #fff1f1; }
+.st.severe { background: var(--dm-severe); }
+.st.damaged { background: var(--dm-damaged); }
+.st.unaffected { background: var(--dm-unaffected); color: #ecfdf5; }
+
+.reprow { padding: 4px 0; border-bottom: 1px solid rgba(49,59,72,.5); font-size: 11px; }
+.reprow:last-child { border-bottom: none; }
+.reprow b { color: #dbe4ee; }
+.reprow .sub { display: block; font-size: 10px; color: var(--fg-dim); }
+.prov { font-size: 10.5px; color: #9aa6b5; margin: 6px 0 0; padding-left: 14px; }
+.prov li { margin: 2px 0; }
+.asof { font-size: 10.5px; color: var(--fg-dim); margin: 0 0 8px; font-variant-numeric: tabular-nums; }
+.asof a { color: var(--accent); text-decoration: none; }
+.asof a:hover { text-decoration: underline; }
+.subhd { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-dim);
+  font-weight: 600; margin: 10px 0 3px; }
+
+@media (max-width: 780px) {
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tile .v { font-size: 17px; }
+}
