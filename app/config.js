@@ -126,10 +126,12 @@ the Purepu Glacier, about 35 km upstream. First scientific paper on this event:
 <a href="https://arxiv.org/abs/2609.04563" target="_blank" rel="noopener">"When a high-mountain slope failure
 cascades downstream: physical footprint and evolving exposure of the 2026 Gyirong mixed rock-ice cascade"</a>
 (arXiv 2609.04563).</p>
-<p>Casualty and damage figures change daily and are not reproduced on this map; for current, dated numbers
-see Nepal's Ministry of Foreign Affairs
+<p>Casualty and damage figures change daily. The Casualties, Municipality reports, Hydropower &amp; grid and
+Communities affected sections in this panel carry the figures as at the date stamped on each one, taken from
+Nepal's Ministry of Foreign Affairs
 <a href="https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/" target="_blank" rel="noopener">Situation
-Update on Bhote Koshi River Floods</a> (7 Sep 2026 14:00 NPT edition) and NDRRMA. Flood-front arrival times
+Update on Bhote Koshi River Floods</a> (7 Sep 2026 14:00 NPT edition), NDRRMA and OCHA; for anything newer go to
+those sources directly. Flood-front arrival times
 cited elsewhere on this site come from the Flood Forecasting Division's (DHM) technical report of 27 Aug
 2026, as summarised in
 <a href="https://en.wikipedia.org/wiki/Timeline_of_the_2026_Nepal%E2%80%93Tibet_floods" target="_blank" rel="noopener">Wikipedia's
@@ -139,6 +141,45 @@ timeline</a>; treat those times as approximate until the DHM report itself is ob
 analysis</a> (<a href="https://github.com/geo-pera/bhotekoshi-2026-reconstruction" target="_blank" rel="noopener">code
 and data</a>, CC BY-NC 4.0) and <a href="https://rasuwaflood.org" target="_blank" rel="noopener">rasuwaflood.org</a>
 (Apil K.C., University of Michigan).</p>
+
+<h3>Reports</h3>
+<p>The four report sections in this panel are built from <code>data/reports.json</code>. Every number in them
+carries its own "as of" date and a link to the source it came from; the small arrow beside a figure opens that
+source, in blue for an official one and amber for anything that is not. Where no official figure exists at that
+level the cell reads "not reported" — nothing on this map is estimated, interpolated or carried across from a
+neighbouring place.</p>
+<p>Two labelling points worth keeping in mind. The headline casualty number is <b>bodies recovered</b>, not
+identified deaths: only about 4% of the roughly 900 bodies found by 1 September had been formally identified.
+And the district figures record <b>where remains were found</b>, not where people lived, which is why Chitwan and
+the two Nawalparasi districts exceed Rasuwa and Nuwakot — bodies travelled up to 240 km downstream. "Missing" is
+a separate category that Nepal's authorities do not treat as presumed dead.</p>
+<p>Official and inter-governmental sources used:
+<a href="https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf" target="_blank" rel="noopener">NDRRMA
+Rasuwa-Bhotekoshi Flood Situation Report #1</a> (1 Sep 2026);
+<a href="https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/" target="_blank" rel="noopener">MoFA
+daily situation updates</a> (6 and 7 Sep 2026);
+<a href="https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-4-31-august-2026" target="_blank" rel="noopener">OCHA
+Rasuwa Flood Flash Update #4</a> (31 Aug 2026) and
+<a href="https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-5-1-september-2026" target="_blank" rel="noopener">#5</a>
+(1 Sep 2026);
+<a href="https://dtm.iom.int/nepal" target="_blank" rel="noopener">IOM Displacement Tracking Matrix</a>;
+<a href="https://www.unicef.org/press-releases/" target="_blank" rel="noopener">UNICEF</a> on water and sanitation;
+<a href="https://radionepalonline.com/en/2026/09/07/435557.html" target="_blank" rel="noopener">Radio Nepal</a> on
+electricity restoration; and <a href="https://bipadportal.gov.np/" target="_blank" rel="noopener">NDRRMA's BIPAD
+incident portal</a>.</p>
+<p>A note on BIPAD, since it is the obvious place to look for municipality-level figures. As of 9 September 2026
+its incident register does not contain this event: across the eight corridor districts for 26 Aug to 9 Sep it
+holds 45 incidents totalling 2 deaths, and Rasuwa has two unrelated high-altitude reports and nothing about the
+flood. NDRRMA tracked this disaster through its situation reports and rescue lists instead. Nothing from BIPAD is
+therefore used on this map; <code>tools/merge_bipad_reports.py</code> is ready to merge it in if and when the
+register is backfilled.</p>
+<p>Nepal Electricity Authority figures reach this map through named press reporting rather than an NEA
+publication: the Kathmandu Post of 30 Aug and 6 Sep 2026, Nepalnews, Spotlight Nepal, OnlineKhabar, myRepublica,
+Nepal Press, Khabarhub, Korea JoongAng Daily, NPR and Mongabay. Those are marked as unofficial sources in the
+panels. Where sources disagree — MW knocked off the grid, the number of projects damaged, the size of the
+sector's losses, the count of missing foreign nationals — both or all figures are shown side by side rather than
+one being picked. The community-run Rasuwa Flood Bulletin is cited on a single settlement row and tagged
+unofficial there.</p>
 
 <h3>Imagery</h3>
 <p>Before/after scenes are registered to a common frame and served as 256&nbsp;px Web Mercator WebP
