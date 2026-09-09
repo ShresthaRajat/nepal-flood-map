@@ -2211,7 +2211,7 @@ const MUNI_METRICS = [
   ['people_affected', 'people affected'], ['families_affected', 'families affected'],
   ['households_isolated', 'households isolated'], ['people_isolated', 'people isolated'],
   ['houses_destroyed', 'houses destroyed'], ['houses_affected', 'houses affected'],
-  ['infrastructure_destroyed', 'infrastructure destroyed'],
+  ['holding_centres', 'holding centres'], ['infrastructure_destroyed', 'infrastructure destroyed'],
 ];
 
 async function renderMunicipalities(det, body) {
@@ -2224,10 +2224,13 @@ async function renderMunicipalities(det, body) {
     const shape = shapes[muniKey(m.name) + '|' + distKey(m.district)] || null;
     const fig = m.figures || {};
     const off = ['deaths_bodies', 'missing'].reduce((a, k) => a + ((fig[k] && fig[k].value) || 0), 0);
-    return { m, dmg, wc, shape, off };
+    // Tie-break on whether NDRRMA said anything about the place at all, so the
+    // eleven local levels in its needs table sort above the ones with nothing.
+    const reported = (m.wards_official ? 2 : 0) + (m.summary && m.summary.text ? 1 : 0);
+    return { m, dmg, wc, shape, off, reported };
   });
   rows.sort((a, b) => b.off - a.off || (b.dmg ? b.dmg.total : 0) - (a.dmg ? a.dmg.total : 0) ||
-    a.m.name.localeCompare(b.m.name));
+    b.reported - a.reported || a.m.name.localeCompare(b.m.name));
 
   const head = det.querySelector('summary');
   if (head) head.innerHTML = 'Municipality reports <span class="n">' + rows.length + '</span>';
@@ -2246,12 +2249,18 @@ async function renderMunicipalities(det, body) {
       ? 'OSM-mapped: ' + r.dmg.buildings + ' buildings, ' + r.dmg.roads + ' roads, ' + r.dmg.bridges +
         ' bridges' + (r.dmg.other ? ', ' + r.dmg.other + ' other' : '')
       : 'OSM-mapped: none recorded';
-    const wtxt = r.wc ? r.wc.affected + ' of ' + r.wc.wards + ' wards flood-affected'
+    const wtxt = r.wc ? r.wc.affected + ' of ' + r.wc.wards + ' wards intersect the flood extent'
       : 'flood-affected wards: n/a (ward data covers Rasuwa and Nuwakot only)';
+    // NDRRMA names the affected wards per local level; the count above is derived
+    // from the observed flood extent instead, so both are shown.
+    const wo = m.wards_official;
+    const wotxt = wo ? 'Wards reported affected: ' + esc(wo.text) +
+      ' <span class="d">' + esc(shortDate(wo.as_of)) + '</span>' + srcLink(wo.src) : '';
     const row = el('div', 'reprow' + (r.shape ? ' pick' : ''));
     row.innerHTML = '<b>' + esc(m.name) + '</b>' + (m.name_ne ? ' <span class="ne">' + esc(m.name_ne) + '</span>' : '') +
       ' <span class="sub dist">' + esc(m.district) + '</span>' +
       '<span class="sub">' + (figs.length ? figs.join(' · ') : REP_NA) + '</span>' +
+      (wotxt ? '<span class="sub">' + wotxt + '</span>' : '') +
       '<span class="sub">' + esc(osm) + ' · ' + esc(wtxt) + '</span>' +
       (m.summary && m.summary.text ? '<span class="sub">' + esc(m.summary.text) + srcLink(m.summary.src) + '</span>' : '');
     if (r.shape) row.addEventListener('click', () => highlightMuni(r.shape));
@@ -2262,18 +2271,47 @@ async function renderMunicipalities(det, body) {
   if ((reports.downstream_bodies || []).length) {
     body.appendChild(el('div', 'subhd', 'Bodies recovered downstream, by district'));
     const wrap = el('div', 'scrollx');
-    let html = '<table class="rep"><thead><tr><th>District</th><th class="n">Bodies recovered</th><th>As of</th></tr></thead><tbody>';
+    // A row may carry one figure per reporting date; the columns are the union of
+    // the dates present, oldest first, so the movement between them is visible.
+    const rowsOf = d => d.series || [{ as_of: d.as_of, value: d.value, src: d.src }];
+    const dates = [...new Set(reports.downstream_bodies.flatMap(d => rowsOf(d).map(x => x.as_of)))].sort();
+    let html = '<table class="rep"><thead><tr><th>District</th>' +
+      dates.map(dt => '<th class="n">' + esc(shortDate(dt)) + '</th>').join('') + '</tr></thead><tbody>';
     for (const d of reports.downstream_bodies) {
-      html += '<tr' + (d.detail ? ' title="' + esc(d.detail) + '"' : '') + '><td>' + esc(d.district) +
-        '</td><td class="n">' + repNum(d.value) + srcLink(d.src) + '</td><td>' + esc(shortDate(d.as_of)) + '</td></tr>';
+      const byDate = {};
+      for (const x of rowsOf(d)) byDate[x.as_of] = x;
+      html += '<tr' + (d.detail ? ' title="' + esc(d.detail) + '"' : '') + '><td>' + esc(d.district) + '</td>' +
+        dates.map(dt => '<td class="n">' + (byDate[dt] && byDate[dt].value != null
+          ? repNum(byDate[dt].value) + srcLink(byDate[dt].src) : REP_NA) + '</td>').join('') + '</tr>';
     }
     html += '</tbody></table>';
     wrap.innerHTML = html;
     body.appendChild(wrap);
     body.appendChild(el('p', 'note',
       'These counts are where remains were found, not where people lived. Bodies travelled up to 240 km down the ' +
-      'Trishuli and Narayani, which is why Chitwan and Nawalparasi exceed the upstream districts.'));
+      'Trishuli and Narayani, which is why Chitwan and Nawalparasi exceed the upstream districts. Rasuwa, the ' +
+      'epicentre, shows the fewest of all on 1 September.'));
   }
+  if ((reports.district_figures || []).length) {
+    body.appendChild(el('div', 'subhd', 'Reported at district level only'));
+    const w3 = el('div', 'scrollx');
+    let h3 = '<table class="rep"><thead><tr><th>District</th><th>Figure</th><th class="n">Value</th>' +
+      '<th>As of</th></tr></thead><tbody>';
+    for (const f of reports.district_figures) {
+      h3 += '<tr' + (f.detail ? ' title="' + esc(f.detail) + '"' : '') + '><td>' + esc(f.district) +
+        '</td><td>' + esc(f.label) + '</td><td class="n">' + repNum(f.value) + srcLink(f.src) +
+        '</td><td>' + esc(shortDate(f.as_of)) + '</td></tr>';
+    }
+    h3 += '</tbody></table>';
+    w3.innerHTML = h3;
+    body.appendChild(w3);
+  }
+  body.appendChild(el('p', 'note',
+    'Municipality-level detail comes from the "needs and priority" table in NDRRMA situation report #01 of ' +
+    '1 September, which names the affected wards and what had reached each local level but publishes no ' +
+    'casualty counts below district level. NDRRMA issued later reports, including #7 on 7 September, but none ' +
+    'of those PDFs could be retrieved, so nothing here is dated after 1 September except the second column of ' +
+    'the district table and the figures that carry a later source.'));
   body.appendChild(el('p', 'inview', ''));
   body.querySelector('.inview').id = 'dmgInView';
   body.appendChild(el('p', 'note', 'OSM-mapped counts are volunteer-recorded in OpenStreetMap and not field-verified.'));
@@ -2313,6 +2351,14 @@ async function renderEnergy(det, body) {
     t.innerHTML = '<span class="k">Projects damaged</span><span class="v">' + repNum(p.value) + srcLink(p.src) +
       '</span><span class="d">as of ' + esc(shortDate(p.as_of)) + '</span>' +
       (p.note ? '<span class="sub">' + esc(p.note) + '</span>' : '');
+    tiles.appendChild(t);
+  }
+  if (s.capacity_affected) {
+    const a = s.capacity_affected;
+    const t = el('div', 'tile');
+    t.innerHTML = '<span class="k">Capacity affected</span><span class="v">' + repNum(a.value) + ' ' +
+      esc(a.unit || 'MW') + srcLink(a.src) + '</span><span class="d">as of ' + esc(shortDate(a.as_of)) + '</span>' +
+      (a.note ? '<span class="sub">' + esc(a.note) + '</span>' : '');
     tiles.appendChild(t);
   }
   if (s.under_construction && (s.under_construction.conflict || []).length) {
