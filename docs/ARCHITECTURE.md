@@ -23,6 +23,8 @@ from unpkg.
 | `docs/ARCHITECTURE.md` | app | This file. |
 | `data/imagery.json` | retile agent | Imagery catalogue. |
 | `data/terrain.json` | contours agent | Contour and hillshade tile descriptions. |
+| `data/reports.json` | reports | Official casualty, municipality, energy and community figures with a source and an "as of" date on every number. Feeds the four report sections in the left rail. |
+| `tools/merge_bipad_reports.py` | reports | Optional: merges a per-municipality summary extracted from Nepal's BIPAD incident portal into `data/reports.json`. |
 | `data/hdx/` | HDX snapshot | GeoJSON + PMTiles, 5 Sep 2026. |
 | `tiles/<id>/{z}/{x}/{y}.webp` | retile agent | Imagery pyramids, 256 px, alpha. |
 | `tiles/contours/`, `tiles/hillshade/` | contours agent | Vector and raster terrain tiles. |
@@ -77,6 +79,85 @@ Both files are optional. Without `data/imagery.json` the app falls back to
 `work/imagery.dev.json`, and without either it still renders basemaps and
 overlays. Without `data/terrain.json` the contour group and the hillshade
 toggle disappear.
+
+`data/reports.json`
+
+```json
+{ "as_of": "2026-09-09",
+  "sources": { "<id>": { "label": "…", "url": "…", "date": "YYYY-MM-DD", "official": true } },
+  "casualties": {
+    "headline": { "bodies_recovered": {"value":1358,"as_of":"2026-09-08","src":"<id>"},
+                  "missing": {…}, "injured": {…}, "rescued": {…} },
+    "series": [ {"as_of":"…","bodies_recovered":…,"missing":…,"injured":…,"rescued":…,"src":"<id>","note":"…"} ],
+    "china": {"deaths":…,"missing":…,"as_of":"…","src":"<id>","earlier":{…},"detail":"…","note":"…"},
+    "foreign_nationals": {"value":…,"as_of":"…","src":"<id>","alternates":[{"label":"…","value":…,"src":"<id>"}]},
+    "notes": ["…"] },
+  "municipalities": [ { "name": "…", "name_ne": "…", "aliases": ["…"], "district": "…",
+                        "figures": { "<metric>": {"value":…,"as_of":"…","src":"<id>","detail":"…"} },
+                        "summary": {"text":"…","src":"<id>"} } ],
+  "downstream_bodies": [ {"district":"…","value":…,"as_of":"…","src":"<id>"} ],
+  "energy": { "summary": {"generation_offline":{…,"sub":{…}}, "under_construction":{"conflict":[…]},
+                          "projects_damaged":{…}},
+              "projects": [ {"name":"…","mw":…,"owner":"…","status_before":"…",
+                             "damage":"destroyed|severely damaged|damaged|unaffected|not reported",
+                             "what":"…","workers_missing":"…","loss":"…","src":"<id>","hdx_name":"…"} ],
+              "grid": [ {"element":"…","damage":"…","detail":"…","as_of":"…","src":"<id>"} ],
+              "restoration": [ {"district":"…","pct":…,"households":…,"as_of":"…","src":"<id>"} ],
+              "impact": [ {"text":"…","src":"<id>"} ] },
+  "communities": {
+    "settlements": [ { "name":"…", "name_ne":"…", "aliases":["…"], "municipality":"…", "district":"…",
+                       "road": {"status":"cut|limited|restored|planned|not_reported","detail":"…",
+                                "as_of":"…","src":"<id>","unofficial":true},
+                       "power": {…}, "water": {…}, "telecom": {…}, "displacement_site": {…} } ],
+    "corridor": [ {"text":"…","as_of":"…","src":"<id>"} ] } }
+```
+
+Every figure object carries `as_of` and `src`; `src` is a key into `sources`,
+and `sources[id].official` decides whether the little `↗` anchor renders in the
+accent blue (official) or amber (not official). Where no official figure exists
+the field is `null` or absent and the panel renders "not reported" — nothing in
+this file is estimated or interpolated.
+
+`data/reports.json` is optional and is loaded once at startup alongside the
+imagery catalogue (`loadReports()`). Without it the four report sections each
+render a single "Reports not built" line and nothing throws.
+
+Joins out of this file, all name-based and all tolerant of the spelling drift
+documented in `data/admin/README.md`:
+
+- `municipalities[].name` + `district` against `adm3_name` / `adm2_name` in
+  `data/admin/admin_municipality.geojson`, for the click-to-zoom bbox and the
+  flashed `report_hl` outline. `aliases` covers Parbati Kunda ↔ Aamachhodingmo,
+  Dupcheshwar → Dupcheshwor, Meghang → Myagang and Tarkeshwar → Tarakeshwor.
+- the same key against `GaPa_NaPa` in `admin_ward.geojson` for the
+  flood-affected ward count (Rasuwa and Nuwakot only; elsewhere "n/a"), and
+  against `adm3_name` in `destroyed_features_osm.geojson` for the OSM-mapped
+  sub-line.
+- `energy.projects[].name` / `hdx_name` against `name` in
+  `hot_flood_npl_exposed_hydropowers.geojson`, normalised by `hydroKey()` so
+  "Upper Trishuli 3A" and "Upper Trishuli-3A" match. The same join colours and
+  labels the `hydro-point` layer.
+- `communities.settlements[].name` / `aliases` against `name` in
+  `data/hdx/derived/places.geojson` for the fly-to point and the Nepali name.
+
+`tools/merge_bipad_reports.py` optionally tops the `municipalities` figures up
+from Nepal's BIPAD incident portal (NDRRMA's official register). It takes
+`--bipad <file>`, is a no-op when that file is absent, writes a BIPAD value only
+where reports.json has no value for that metric unless `--overwrite` is given,
+and adds a `bipad` entry to `sources` when it writes anything. `--dry-run`
+prints what it would write; `--incidents-only` attaches the incident lists and
+no figures.
+
+**Nothing from BIPAD ships.** An extraction on 9 September 2026 found that the
+register does not contain this event: 45 incidents across the eight corridor
+districts for 26 Aug to 9 Sep, summing to 2 deaths and 15 injuries, against
+NDRRMA's own 1,358 recovered and 5,326 missing; a national unfiltered scan of
+the same window returns 557 incidents, so this is not a district-filter
+artefact. Rasuwa, the epicentre, holds two unrelated "High Altitude" reports.
+Merging those totals would attribute "1 death, 1 injured, 2 families affected"
+to Gosaikunda, where NDRRMA reports 3,702 households isolated — a real BIPAD
+number about a different hazard. The script is kept, and tested against the real
+file shape, for the day the register is backfilled.
 
 `data/hdx/` has two interchangeable vector back ends, chosen per category by
 `resolve()` in `app/app.js`:
@@ -185,12 +266,18 @@ points — so roads always sit above building fills and below every point layer.
 
 ## Panels
 
-Search, bridge reports and the damage summary read the GeoJSON in `data/hdx/`
+The left rail runs: title and intro, the reports "as of" strip, search, Zoom to,
+**Casualties** (open by default), **Municipality reports**, **Hydropower &
+grid**, **Communities affected**, bridge ground reports, legend, Sources &
+notes, then imagery metadata. The four report sections are built from
+`data/reports.json`; the first renders eagerly, the other three on first open.
+
+Search, bridge reports and the municipality report section read the GeoJSON in `data/hdx/`
 directly, cached in `gjCache`, loaded lazily: search on first focus of the box,
-the other two on first open of their `<details>`. All three fail soft — a missing
-file leaves a short note in place of the panel. The damage summary keeps feature
-centroids in memory and recounts what is in the viewport on `moveend` with a bbox
-test.
+the others on first open of their `<details>`. All fail soft — a missing file
+leaves a short note in place of the panel. The destroyed-feature counts keep
+feature centroids in memory and recount what is in the viewport on `moveend`
+with a bbox test.
 
 ## How the two maps work
 
