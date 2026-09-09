@@ -167,6 +167,12 @@ Rasuwa Flood Flash Update #4</a> (31 Aug 2026) and
 <a href="https://radionepalonline.com/en/2026/09/07/435557.html" target="_blank" rel="noopener">Radio Nepal</a> on
 electricity restoration; and <a href="https://bipadportal.gov.np/" target="_blank" rel="noopener">NDRRMA's BIPAD
 incident portal</a>.</p>
+<p>Municipality-level detail comes from the "needs and priority" table in NDRRMA's situation report #01 of
+1 September 2026, which names the affected wards for eleven local levels in Rasuwa, Nuwakot and Dhading and says
+what relief had reached each. That report publishes no casualty count below district level, so the municipality
+rows show official casualty figures nowhere and say "not reported" instead. NDRRMA issued later reports, including
+#7 dated 7 September, but none of those PDFs could be retrieved, so anything dated after 1 September on this map
+comes from MoFA daily updates or named press reporting rather than an NDRRMA document.</p>
 <p>A note on BIPAD, since it is the obvious place to look for municipality-level figures. As of 9 September 2026
 its incident register does not contain this event: across the eight corridor districts for 26 Aug to 9 Sep it
 holds 45 incidents totalling 2 deaths, and Rasuwa has two unrelated high-altitude reports and nothing about the

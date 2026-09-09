@@ -94,8 +94,12 @@ toggle disappear.
     "notes": ["…"] },
   "municipalities": [ { "name": "…", "name_ne": "…", "aliases": ["…"], "district": "…",
                         "figures": { "<metric>": {"value":…,"as_of":"…","src":"<id>","detail":"…"} },
+                        "wards_official": {"text":"1, 2, 3, 5","as_of":"…","src":"<id>"},
                         "summary": {"text":"…","src":"<id>"} } ],
-  "downstream_bodies": [ {"district":"…","value":…,"as_of":"…","src":"<id>"} ],
+  "downstream_bodies": [ {"district":"…","detail":"…",
+                          "series":[{"as_of":"…","value":…,"src":"<id>"}]} ],
+  "district_figures": [ {"district":"…","label":"houses fully damaged","value":…,
+                         "as_of":"…","src":"<id>","detail":"…"} ],
   "energy": { "summary": {"generation_offline":{…,"sub":{…}}, "under_construction":{"conflict":[…]},
                           "projects_damaged":{…}},
               "projects": [ {"name":"…","mw":…,"owner":"…","status_before":"…",
@@ -111,6 +115,15 @@ toggle disappear.
                        "power": {…}, "water": {…}, "telecom": {…}, "displacement_site": {…} } ],
     "corridor": [ {"text":"…","as_of":"…","src":"<id>"} ] } }
 ```
+
+`wards_official` is NDRRMA's own list of affected wards for that local level,
+kept separate from the ward count the app derives by intersecting
+`admin_ward.geojson` with the observed flood extent — the panel shows both,
+because they answer different questions. `downstream_bodies` carries a `series`
+so the district table renders one column per reporting date; a bare
+`value`/`as_of`/`src` on the row still works and reads as a single column.
+`district_figures` holds the numbers NDRRMA published at district level only,
+which have no municipality row to sit on.
 
 Every figure object carries `as_of` and `src`; `src` is a key into `sources`,
 and `sources[id].official` decides whether the little `↗` anchor renders in the

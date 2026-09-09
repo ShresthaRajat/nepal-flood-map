@@ -1,439 +1,2070 @@
 {
   "as_of": "2026-09-09",
   "sources": {
-    "rw_0828": { "label": "ReliefWeb — flash flood leaves 18 missing", "url": "https://reliefweb.int/report/nepal/flash-flood-rasuwa-and-nuwakot-leaves-18-missing-and-approximately-60-houses-swept-away", "date": "2026-08-28", "official": false },
-    "ocha_fu4": { "label": "OCHA — Rasuwa Flood Flash Update #4", "url": "https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-4-31-august-2026", "date": "2026-08-31", "official": true },
-    "ocha_fu5": { "label": "OCHA — Rasuwa Flood Flash Update #5", "url": "https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-5-1-september-2026", "date": "2026-09-01", "official": true },
-    "ndrrma_sitrep1": { "label": "NDRRMA — Rasuwa-Bhotekoshi Flood SitRep #1", "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf", "date": "2026-09-01", "official": true },
-    "mofa_0906": { "label": "MoFA — daily situation update, 6 Sep", "url": "https://mofa.gov.np/content/1878/daily-update-6-september-2026/", "date": "2026-09-06", "official": true },
-    "mofa_0907": { "label": "MoFA — daily situation update, 7 Sep", "url": "https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/", "date": "2026-09-07", "official": true },
-    "nepalnews_0908": { "label": "Nepalnews — toll 1,358, 5,326 missing", "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1358-as-5326-remain-missing-as-of-6pm/", "date": "2026-09-08", "official": false },
-    "nepalnews_districts": { "label": "Nepalnews — district breakdown of bodies recovered (NDRRMA figures)", "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1358-as-5326-remain-missing-as-of-6pm/", "date": "2026-09-08", "official": false },
-    "nepalnews_foreign": { "label": "Nepalnews — 178 Indians among 517 foreign nationals missing", "url": "https://english.nepalnews.com/s/travel-tourism/bhote-koshi-flood-178-indians-among-517-foreign-nationals-missing-overall-count-reaches-644/", "date": "2026-09-06", "official": false },
-    "tibetanreview": { "label": "Tibetan Review, citing Xinhua — Gyirong toll", "url": "https://www.tibetanreview.net/witnesses-estimate-deaths-missing-in-tibet-due-to-aug-26-nepal-border-flash-floods-to-be-much-higher/", "date": "2026-09-04", "official": false },
-    "cnn_0906": { "label": "CNN — on the ground in China's wiped-out border zone", "url": "https://www.cnn.com/2026/09/06/china/china-nepal-floods-gyirong-port-intl-hnk", "date": "2026-09-06", "official": false },
-    "deshsanchar": { "label": "Desh Sanchar — 24 bodies in a single house, Bidur-10", "url": "https://english.deshsanchar.com/24-bodies-found-in-single-house-in-nuwakots-bidur-municipality/", "date": "2026-08-28", "official": false },
-    "ratopati": { "label": "Ratopati — 200+ out of contact in Bidur", "url": "https://english.ratopati.com/story/76893/more-than-200-citizens-in-bidur-are-without-contact-making-it-difficult-to-deliver-food-across-the-river", "date": "2026-08-29", "official": false },
-    "theprint_simle": { "label": "ThePrint — the road to Rasuwa is gone", "url": "https://theprint.in/", "date": "2026-09-05", "official": false },
-    "khabarhub_betrawati": { "label": "Khabarhub — Betrawati survivors", "url": "https://english.khabarhub.com/2026/30/565706/", "date": "2026-08-30", "official": false },
-    "npr_0904": { "label": "NPR — two workers pulled from a hydropower tunnel after 9 days", "url": "https://www.npr.org/2026/09/04/g-s1-141943/workers-rescued-nepal-tunnel", "date": "2026-09-04", "official": false },
-    "ktm_0826": { "label": "Kathmandu Post — flood damages Syabrubesi and hydropower projects", "url": "https://kathmandupost.com/national/2026/08/26/major-flood-damages-syabrubesi-hydropower-projects-in-rasuwa", "date": "2026-08-26", "official": false },
-    "ktm_0829": { "label": "Kathmandu Post — washed-out bridges force reliance on choppers", "url": "https://kathmandupost.com/national/2026/08/29/", "date": "2026-08-29", "official": false },
-    "ktm_0830": { "label": "Kathmandu Post — hydropower damage could run into billions", "url": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions", "date": "2026-08-30", "official": false },
-    "ktm_0902": { "label": "Kathmandu Post — authorities scramble after the Krishnabhir cave-in", "url": "https://kathmandupost.com/national/2026/09/02/", "date": "2026-09-02", "official": false },
-    "ktm_0904": { "label": "Kathmandu Post — new track cut to reopen the Prithvi highway", "url": "https://kathmandupost.com/national/2026/09/04/", "date": "2026-09-04", "official": false },
-    "ktm_0906": { "label": "Kathmandu Post — power restored in much of Rasuwa and Nuwakot, pockets remain dark", "url": "https://kathmandupost.com/national/2026/09/06/power-restored-in-much-of-flood-hit-rasuwa-and-nuwakot-but-pockets-remain-dark", "date": "2026-09-06", "official": false },
-    "ktm_0908": { "label": "Kathmandu Post — Dhunche has relief supplies, getting aid to villages is the problem", "url": "https://kathmandupost.com/national/2026/09/08/", "date": "2026-09-08", "official": false },
-    "mongabay": { "label": "Mongabay — Nepal's hydropower-first strategy put to the test", "url": "https://news.mongabay.com/2026/09/nepals-flood-disaster-puts-its-hydropower-first-strategy-exports-to-the-test/", "date": "2026-09-05", "official": false },
-    "nepalnews_energy": { "label": "Nepalnews — flood damages 6 major hydropower and transmission facilities", "url": "https://english.nepalnews.com/s/business/rasuwa-flood-damages-6-major-hydropower-transmission-facilities-disrupts-power-supply/", "date": "2026-09-01", "official": false },
-    "spotlight_0901": { "label": "Spotlight Nepal — floods damage 12 hydropower projects", "url": "https://www.spotlightnepal.com/2026/09/01/floods-bhotekoshi-damage-12-hydropower-projects/", "date": "2026-09-01", "official": false },
-    "spotlight_0909": { "label": "Spotlight Nepal — temporary road reaches the Chilime site", "url": "https://www.spotlightnepal.com/2026/09/09/rasuwa-flood-temporary-road-rescue-site-chilime-hydropower-project-come-operation-today/", "date": "2026-09-09", "official": false },
-    "bajarko_0901": { "label": "Bajarko Chirfar — Chilime and Rasuwagadhi damage, missing employees", "url": "https://eng.bajarkochirfar.com/2026/09/01/rasuwa-floods-damage-chilime-rasuwagadhi-hydropower-missing-employees/", "date": "2026-09-01", "official": false },
-    "kjd": { "label": "Korea JoongAng Daily — flood threatens the $647m Korea-led project", "url": "https://www.koreajoongangdaily.com/business/deadly-flood-in-nepal-threatens-647-million-korealed-hydropower-project/12847739", "date": "2026-09-02", "official": false },
-    "nef_83": { "label": "Nepal Energy Forum — 83% restored in Rasuwa, 95% in Nuwakot", "url": "http://www.nepalenergyforum.com/83-of-electricity-services-restored-in-rasuwa-95-in-nuwakot/", "date": "2026-09-06", "official": false },
-    "radionepal_0907": { "label": "Radio Nepal — electricity restored to 99.8% of households in Dhading", "url": "https://radionepalonline.com/en/2026/09/07/435557.html", "date": "2026-09-07", "official": true },
-    "radionepal_0902": { "label": "Radio Nepal — Krishnabhir section to reopen this month, PM Shah", "url": "https://radionepalonline.com/en/2026/09/02/435277.html", "date": "2026-09-02", "official": true },
-    "onlinekhabar_bridges": { "label": "OnlineKhabar — at least 19 bridges and 40 km of road damaged along the Trishuli", "url": "https://english.onlinekhabar.com/flood-damage-19-bridges-trishuli.html", "date": "2026-08-27", "official": false },
-    "onlinekhabar_detour": { "label": "OnlineKhabar — alternative road opens to flood-hit areas across the Trishuli", "url": "https://english.onlinekhabar.com/alternative-road-trishuli.html", "date": "2026-09-02", "official": false },
-    "myrepublica_plh": { "label": "myRepublica — obstructed Pasang Lhamu Highway resumes", "url": "https://myrepublica.nagariknetwork.com/", "date": "2026-09-06", "official": false },
-    "nepalpress_water": { "label": "Nepal Press — 55 drinking-water projects damaged in four districts", "url": "https://english.nepalpress.com/2026/09/06/", "date": "2026-09-06", "official": false },
-    "unicef_0903": { "label": "UNICEF — thousands of children still without safe water", "url": "https://www.unicef.org/press-releases/", "date": "2026-09-03", "official": true },
-    "ictframe_ncell": { "label": "ICT Frame — Ncell restores 24 mobile towers", "url": "https://ictframe.com/", "date": "2026-09-07", "official": false },
-    "nepalitelecom": { "label": "Nepali Telecom — Nepal Telecom restores network sites after the floods", "url": "https://www.nepalitelecom.com/", "date": "2026-09-01", "official": false },
-    "iom_dtm": { "label": "IOM Displacement Tracking Matrix — Nepal", "url": "https://dtm.iom.int/nepal", "date": "2026-09-05", "official": true },
-    "businessstandard_0830": { "label": "Business Standard — India to supply advance power to Nepal", "url": "https://www.business-standard.com/india-news/india-to-supply-advance-power-to-nepal-to-cope-with-flash-flood-tragedy-126083000415_1.html", "date": "2026-08-30", "official": false },
-    "peoplesreview_0908": { "label": "Peoples' Review — Krishnabhir alternative two-way track under construction", "url": "https://www.peoplesreview.com.np/", "date": "2026-09-08", "official": false },
-    "wiki_npl": { "label": "Wikipedia — 2026 Nepal floods (secondary aggregate)", "url": "https://en.wikipedia.org/wiki/2026_Nepal_floods", "date": "2026-09-09", "official": false },
-    "wiki_npl_tibet": { "label": "Wikipedia — 2026 Nepal-Tibet floods (secondary aggregate)", "url": "https://en.wikipedia.org/wiki/2026_Nepal-China_floods", "date": "2026-09-09", "official": false },
-    "rasuwa_bulletin": { "label": "Rasuwa Flood Bulletin (community-run, unofficial)", "url": "https://nirajbhusal.github.io/rasuwa-flood-bulletin/", "date": "2026-09-09", "official": false }
+    "rw_0828": {
+      "label": "ReliefWeb — flash flood leaves 18 missing",
+      "url": "https://reliefweb.int/report/nepal/flash-flood-rasuwa-and-nuwakot-leaves-18-missing-and-approximately-60-houses-swept-away",
+      "date": "2026-08-28",
+      "official": false
+    },
+    "ocha_fu4": {
+      "label": "OCHA — Rasuwa Flood Flash Update #4",
+      "url": "https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-4-31-august-2026",
+      "date": "2026-08-31",
+      "official": true
+    },
+    "ocha_fu5": {
+      "label": "OCHA — Rasuwa Flood Flash Update #5",
+      "url": "https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-5-1-september-2026",
+      "date": "2026-09-01",
+      "official": true
+    },
+    "ndrrma_sitrep1": {
+      "label": "NDRRMA - Rasuwa-Bhotekoshi Flood SitRep #01, 1 Sep 2026 09:00 NPT",
+      "url": "https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf",
+      "date": "2026-09-01",
+      "official": true
+    },
+    "mofa_0906": {
+      "label": "MoFA — daily situation update, 6 Sep",
+      "url": "https://mofa.gov.np/content/1878/daily-update-6-september-2026/",
+      "date": "2026-09-06",
+      "official": true
+    },
+    "mofa_0907": {
+      "label": "MoFA — daily situation update, 7 Sep",
+      "url": "https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/",
+      "date": "2026-09-07",
+      "official": true
+    },
+    "nepalnews_0908": {
+      "label": "Nepalnews — toll 1,358, 5,326 missing",
+      "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1358-as-5326-remain-missing-as-of-6pm/",
+      "date": "2026-09-08",
+      "official": false
+    },
+    "nepalnews_districts": {
+      "label": "Nepalnews — district breakdown of bodies recovered (NDRRMA figures)",
+      "url": "https://english.nepalnews.com/s/nation/bhote-koshi-flood-death-toll-rises-to-1358-as-5326-remain-missing-as-of-6pm/",
+      "date": "2026-09-08",
+      "official": false
+    },
+    "nepalnews_foreign": {
+      "label": "Nepalnews — 178 Indians among 517 foreign nationals missing",
+      "url": "https://english.nepalnews.com/s/travel-tourism/bhote-koshi-flood-178-indians-among-517-foreign-nationals-missing-overall-count-reaches-644/",
+      "date": "2026-09-06",
+      "official": false
+    },
+    "tibetanreview": {
+      "label": "Tibetan Review, citing Xinhua — Gyirong toll",
+      "url": "https://www.tibetanreview.net/witnesses-estimate-deaths-missing-in-tibet-due-to-aug-26-nepal-border-flash-floods-to-be-much-higher/",
+      "date": "2026-09-04",
+      "official": false
+    },
+    "cnn_0906": {
+      "label": "CNN — on the ground in China's wiped-out border zone",
+      "url": "https://www.cnn.com/2026/09/06/china/china-nepal-floods-gyirong-port-intl-hnk",
+      "date": "2026-09-06",
+      "official": false
+    },
+    "deshsanchar": {
+      "label": "Desh Sanchar — 24 bodies in a single house, Bidur-10",
+      "url": "https://english.deshsanchar.com/24-bodies-found-in-single-house-in-nuwakots-bidur-municipality/",
+      "date": "2026-08-28",
+      "official": false
+    },
+    "ratopati": {
+      "label": "Ratopati — 200+ out of contact in Bidur",
+      "url": "https://english.ratopati.com/story/76893/more-than-200-citizens-in-bidur-are-without-contact-making-it-difficult-to-deliver-food-across-the-river",
+      "date": "2026-08-29",
+      "official": false
+    },
+    "theprint_simle": {
+      "label": "ThePrint — the road to Rasuwa is gone",
+      "url": "https://theprint.in/",
+      "date": "2026-09-05",
+      "official": false
+    },
+    "khabarhub_betrawati": {
+      "label": "Khabarhub — Betrawati survivors",
+      "url": "https://english.khabarhub.com/2026/30/565706/",
+      "date": "2026-08-30",
+      "official": false
+    },
+    "npr_0904": {
+      "label": "NPR — two workers pulled from a hydropower tunnel after 9 days",
+      "url": "https://www.npr.org/2026/09/04/g-s1-141943/workers-rescued-nepal-tunnel",
+      "date": "2026-09-04",
+      "official": false
+    },
+    "ktm_0826": {
+      "label": "Kathmandu Post — flood damages Syabrubesi and hydropower projects",
+      "url": "https://kathmandupost.com/national/2026/08/26/major-flood-damages-syabrubesi-hydropower-projects-in-rasuwa",
+      "date": "2026-08-26",
+      "official": false
+    },
+    "ktm_0829": {
+      "label": "Kathmandu Post — washed-out bridges force reliance on choppers",
+      "url": "https://kathmandupost.com/national/2026/08/29/",
+      "date": "2026-08-29",
+      "official": false
+    },
+    "ktm_0830": {
+      "label": "Kathmandu Post — hydropower damage could run into billions",
+      "url": "https://kathmandupost.com/national/2026/08/30/flood-damage-to-nepal-s-hydropower-sector-could-run-into-billions",
+      "date": "2026-08-30",
+      "official": false
+    },
+    "ktm_0902": {
+      "label": "Kathmandu Post — authorities scramble after the Krishnabhir cave-in",
+      "url": "https://kathmandupost.com/national/2026/09/02/",
+      "date": "2026-09-02",
+      "official": false
+    },
+    "ktm_0904": {
+      "label": "Kathmandu Post — new track cut to reopen the Prithvi highway",
+      "url": "https://kathmandupost.com/national/2026/09/04/",
+      "date": "2026-09-04",
+      "official": false
+    },
+    "ktm_0906": {
+      "label": "Kathmandu Post — power restored in much of Rasuwa and Nuwakot, pockets remain dark",
+      "url": "https://kathmandupost.com/national/2026/09/06/power-restored-in-much-of-flood-hit-rasuwa-and-nuwakot-but-pockets-remain-dark",
+      "date": "2026-09-06",
+      "official": false
+    },
+    "ktm_0908": {
+      "label": "Kathmandu Post — Dhunche has relief supplies, getting aid to villages is the problem",
+      "url": "https://kathmandupost.com/national/2026/09/08/",
+      "date": "2026-09-08",
+      "official": false
+    },
+    "mongabay": {
+      "label": "Mongabay — Nepal's hydropower-first strategy put to the test",
+      "url": "https://news.mongabay.com/2026/09/nepals-flood-disaster-puts-its-hydropower-first-strategy-exports-to-the-test/",
+      "date": "2026-09-05",
+      "official": false
+    },
+    "nepalnews_energy": {
+      "label": "Nepalnews — flood damages 6 major hydropower and transmission facilities",
+      "url": "https://english.nepalnews.com/s/business/rasuwa-flood-damages-6-major-hydropower-transmission-facilities-disrupts-power-supply/",
+      "date": "2026-09-01",
+      "official": false
+    },
+    "spotlight_0901": {
+      "label": "Spotlight Nepal — floods damage 12 hydropower projects",
+      "url": "https://www.spotlightnepal.com/2026/09/01/floods-bhotekoshi-damage-12-hydropower-projects/",
+      "date": "2026-09-01",
+      "official": false
+    },
+    "spotlight_0909": {
+      "label": "Spotlight Nepal — temporary road reaches the Chilime site",
+      "url": "https://www.spotlightnepal.com/2026/09/09/rasuwa-flood-temporary-road-rescue-site-chilime-hydropower-project-come-operation-today/",
+      "date": "2026-09-09",
+      "official": false
+    },
+    "bajarko_0901": {
+      "label": "Bajarko Chirfar — Chilime and Rasuwagadhi damage, missing employees",
+      "url": "https://eng.bajarkochirfar.com/2026/09/01/rasuwa-floods-damage-chilime-rasuwagadhi-hydropower-missing-employees/",
+      "date": "2026-09-01",
+      "official": false
+    },
+    "kjd": {
+      "label": "Korea JoongAng Daily — flood threatens the $647m Korea-led project",
+      "url": "https://www.koreajoongangdaily.com/business/deadly-flood-in-nepal-threatens-647-million-korealed-hydropower-project/12847739",
+      "date": "2026-09-02",
+      "official": false
+    },
+    "nef_83": {
+      "label": "Nepal Energy Forum — 83% restored in Rasuwa, 95% in Nuwakot",
+      "url": "http://www.nepalenergyforum.com/83-of-electricity-services-restored-in-rasuwa-95-in-nuwakot/",
+      "date": "2026-09-06",
+      "official": false
+    },
+    "radionepal_0907": {
+      "label": "Radio Nepal — electricity restored to 99.8% of households in Dhading",
+      "url": "https://radionepalonline.com/en/2026/09/07/435557.html",
+      "date": "2026-09-07",
+      "official": true
+    },
+    "radionepal_0902": {
+      "label": "Radio Nepal — Krishnabhir section to reopen this month, PM Shah",
+      "url": "https://radionepalonline.com/en/2026/09/02/435277.html",
+      "date": "2026-09-02",
+      "official": true
+    },
+    "onlinekhabar_bridges": {
+      "label": "OnlineKhabar — at least 19 bridges and 40 km of road damaged along the Trishuli",
+      "url": "https://english.onlinekhabar.com/flood-damage-19-bridges-trishuli.html",
+      "date": "2026-08-27",
+      "official": false
+    },
+    "onlinekhabar_detour": {
+      "label": "OnlineKhabar — alternative road opens to flood-hit areas across the Trishuli",
+      "url": "https://english.onlinekhabar.com/alternative-road-trishuli.html",
+      "date": "2026-09-02",
+      "official": false
+    },
+    "myrepublica_plh": {
+      "label": "myRepublica — obstructed Pasang Lhamu Highway resumes",
+      "url": "https://myrepublica.nagariknetwork.com/",
+      "date": "2026-09-06",
+      "official": false
+    },
+    "nepalpress_water": {
+      "label": "Nepal Press — 55 drinking-water projects damaged in four districts",
+      "url": "https://english.nepalpress.com/2026/09/06/",
+      "date": "2026-09-06",
+      "official": false
+    },
+    "unicef_0903": {
+      "label": "UNICEF — thousands of children still without safe water",
+      "url": "https://www.unicef.org/press-releases/",
+      "date": "2026-09-03",
+      "official": true
+    },
+    "ictframe_ncell": {
+      "label": "ICT Frame — Ncell restores 24 mobile towers",
+      "url": "https://ictframe.com/",
+      "date": "2026-09-07",
+      "official": false
+    },
+    "nepalitelecom": {
+      "label": "Nepali Telecom — Nepal Telecom restores network sites after the floods",
+      "url": "https://www.nepalitelecom.com/",
+      "date": "2026-09-01",
+      "official": false
+    },
+    "iom_dtm": {
+      "label": "IOM Displacement Tracking Matrix — Nepal",
+      "url": "https://dtm.iom.int/nepal",
+      "date": "2026-09-05",
+      "official": true
+    },
+    "businessstandard_0830": {
+      "label": "Business Standard — India to supply advance power to Nepal",
+      "url": "https://www.business-standard.com/india-news/india-to-supply-advance-power-to-nepal-to-cope-with-flash-flood-tragedy-126083000415_1.html",
+      "date": "2026-08-30",
+      "official": false
+    },
+    "peoplesreview_0908": {
+      "label": "Peoples' Review — Krishnabhir alternative two-way track under construction",
+      "url": "https://www.peoplesreview.com.np/",
+      "date": "2026-09-08",
+      "official": false
+    },
+    "wiki_npl": {
+      "label": "Wikipedia — 2026 Nepal floods (secondary aggregate)",
+      "url": "https://en.wikipedia.org/wiki/2026_Nepal_floods",
+      "date": "2026-09-09",
+      "official": false
+    },
+    "wiki_npl_tibet": {
+      "label": "Wikipedia — 2026 Nepal-Tibet floods (secondary aggregate)",
+      "url": "https://en.wikipedia.org/wiki/2026_Nepal-China_floods",
+      "date": "2026-09-09",
+      "official": false
+    },
+    "rasuwa_bulletin": {
+      "label": "Rasuwa Flood Bulletin (community-run, unofficial)",
+      "url": "https://nirajbhusal.github.io/rasuwa-flood-bulletin/",
+      "date": "2026-09-09",
+      "official": false
+    }
   },
-
   "casualties": {
     "headline": {
-      "bodies_recovered": { "value": 1358, "as_of": "2026-09-08", "src": "nepalnews_0908" },
-      "missing": { "value": 5326, "as_of": "2026-09-08", "src": "nepalnews_0908" },
-      "injured": { "value": 267, "as_of": "2026-08-31", "src": "ocha_fu4" },
-      "rescued": { "value": 13396, "as_of": "2026-09-07", "src": "mofa_0907" }
+      "bodies_recovered": {
+        "value": 1358,
+        "as_of": "2026-09-08",
+        "src": "nepalnews_0908"
+      },
+      "missing": {
+        "value": 5326,
+        "as_of": "2026-09-08",
+        "src": "nepalnews_0908"
+      },
+      "injured": {
+        "value": 279,
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      },
+      "rescued": {
+        "value": 13396,
+        "as_of": "2026-09-07",
+        "src": "mofa_0907"
+      }
     },
     "series": [
-      { "as_of": "2026-08-31", "bodies_recovered": 903, "missing": 4247, "injured": 267, "rescued": 10451, "src": "ocha_fu4",
-        "note": "Rescued includes 252 foreign nationals and 3,344 lifted by helicopter." },
-      { "as_of": "2026-09-01", "bodies_recovered": 1003, "missing": 3916, "injured": null, "rescued": 11814, "src": "ndrrma_sitrep1",
-        "note": "Missing reported across 62 districts and includes people displaced elsewhere. Rescued includes 253 foreign nationals." },
-      { "as_of": "2026-09-07", "bodies_recovered": 1355, "missing": 5000, "injured": null, "rescued": 13396, "src": "mofa_0907",
-        "note": "Missing stated as approximately 5,000, including about 600 foreign nationals from 35 countries. Rescued includes 300+ foreign nationals." },
-      { "as_of": "2026-09-08", "bodies_recovered": 1358, "missing": 5326, "injured": null, "rescued": null, "src": "nepalnews_0908",
-        "note": "As of 18:00. No injured or rescued figure restated in this update." }
+      {
+        "as_of": "2026-08-31",
+        "bodies_recovered": 903,
+        "missing": 4247,
+        "injured": 267,
+        "rescued": 10451,
+        "src": "ocha_fu4",
+        "note": "Rescued includes 252 foreign nationals and 3,344 lifted by helicopter."
+      },
+      {
+        "as_of": "2026-09-01",
+        "bodies_recovered": 987,
+        "missing": 3916,
+        "injured": 279,
+        "rescued": 11814,
+        "src": "ndrrma_sitrep1",
+        "note": "NDRRMA SitRep #01, 09:00 NPT. Bodies recovered from eight districts along the Bhote Koshi-Trishuli basin. Missing reported across 62 districts nationally. Rescued includes 253 foreign nationals and 3,702 lifted by helicopter. Injured is 279 treated across 16 facilities. OCHA Flash Update #5 and press reporting gave 1,003 dead for the same morning; the two are not reconciled."
+      },
+      {
+        "as_of": "2026-09-07",
+        "bodies_recovered": 1355,
+        "missing": 5000,
+        "injured": null,
+        "rescued": 13396,
+        "src": "mofa_0907",
+        "note": "Missing stated as approximately 5,000, including about 600 foreign nationals from 35 countries. Rescued includes 300+ foreign nationals."
+      },
+      {
+        "as_of": "2026-09-08",
+        "bodies_recovered": 1358,
+        "missing": 5326,
+        "injured": null,
+        "rescued": null,
+        "src": "nepalnews_0908",
+        "note": "As of 18:00. No injured or rescued figure restated in this update."
+      }
     ],
-    "china": { "deaths": 43, "missing": 519, "as_of": "2026-09-06", "src": "cnn_0906",
+    "china": {
+      "deaths": 43,
+      "missing": 519,
+      "as_of": "2026-09-06",
+      "src": "cnn_0906",
       "detail": "Gyirong (Kyirong) county, Tibet Autonomous Region. Missing includes about 261 foreign nationals. Xinhua reported 31 dead and 531 missing as of 4 September.",
-      "earlier": { "deaths": 31, "missing": 531, "as_of": "2026-09-04", "src": "tibetanreview" },
-      "note": "Tracked entirely separately from Nepal's national count. No NDRRMA or MoFA figure includes these people." },
-    "foreign_nationals": { "value": 600, "as_of": "2026-09-07", "src": "mofa_0907",
+      "earlier": {
+        "deaths": 31,
+        "missing": 531,
+        "as_of": "2026-09-04",
+        "src": "tibetanreview"
+      },
+      "note": "Tracked entirely separately from Nepal's national count. No NDRRMA or MoFA figure includes these people."
+    },
+    "foreign_nationals": {
+      "value": 600,
+      "as_of": "2026-09-07",
+      "src": "mofa_0907",
       "detail": "About 600 missing, from 35 countries.",
       "alternates": [
-        { "label": "Department of Tourism", "value": 587, "as_of": "2026-09-06", "src": "nepalnews_foreign" },
-        { "label": "Nepal Tourism Board", "value": 644, "as_of": "2026-09-06", "src": "nepalnews_foreign",
-          "detail": "644 travellers unaccounted for in total: 517 foreign nationals and 127 Nepalis." }
+        {
+          "label": "Department of Tourism",
+          "value": 587,
+          "as_of": "2026-09-06",
+          "src": "nepalnews_foreign"
+        },
+        {
+          "label": "Nepal Tourism Board",
+          "value": 644,
+          "as_of": "2026-09-06",
+          "src": "nepalnews_foreign",
+          "detail": "644 travellers unaccounted for in total: 517 foreign nationals and 127 Nepalis."
+        }
       ],
-      "note": "Three official counts taken on different dates by different agencies; they do not agree. India is the largest single nationality reported, revised upward from 178 to 288 across updates." },
+      "note": "Three official counts taken on different dates by different agencies; they do not agree. India is the largest single nationality reported, revised upward from 178 to 288 across updates."
+    },
     "notes": [
       "The headline figure is bodies recovered, not identified deaths. Only about 4% of the roughly 900 bodies found by 1 September had been formally identified; forensic teams from India, China, Japan, Singapore and South Korea were still working as of 7 September.",
       "Missing is a separate category and is not presumed dead. NDRRMA's own language treats these people as unlocated, and the count is not additive with bodies recovered without that caveat.",
       "District counts reflect where a body was found, not where the person lived or died. Bodies travelled up to 240 km downstream, which is why Chitwan (363) and the two Nawalparasi districts (445 combined) show higher recovered-body counts than the upstream epicentre districts of Rasuwa and Nuwakot.",
       "The often-quoted ~900 figure is the 31 August snapshot, not a competing method. It is the same count at an earlier date.",
-      "No consolidated official injured count was published after 31 August 2026, and no national displaced-household total was found on any primary government page."
+      "No consolidated official injured count was published after 31 August 2026, and no national displaced-household total was found on any primary government page.",
+      "NDRRMA issued later situation reports, including #7 dated 7 September 19:00 and an update on 8 September, but none of those PDFs could be retrieved. Figures dated after 1 September therefore come from MoFA daily updates and named press reporting rather than an NDRRMA document.",
+      "The SitRep #01 missing-persons breakdown by category is published as an infographic that could not be read back reliably, so no category split is shown here."
     ]
   },
-
   "municipalities": [
-    { "name": "Gosaikunda", "name_ne": "गोसाईकुण्ड", "aliases": ["Gosainkunda", "Gosaikunda RM"], "district": "Rasuwa",
+    {
+      "name": "Gosaikunda",
+      "name_ne": "गोसाईकुण्ड",
+      "aliases": [
+        "Gosainkunda",
+        "Gosaikunda RM"
+      ],
+      "district": "Rasuwa",
       "figures": {
-        "deaths_bodies": { "value": null, "as_of": null, "src": null },
-        "missing": { "value": null, "as_of": null, "src": null },
-        "injured": { "value": null, "as_of": null, "src": null },
-        "households_isolated": { "value": 3702, "as_of": "2026-09-01", "src": "ndrrma_sitrep1", "detail": "Combined figure for Gosaikunda and Aamachhodingmo together" },
-        "people_isolated": { "value": 14461, "as_of": "2026-09-01", "src": "ndrrma_sitrep1", "detail": "Combined figure for Gosaikunda and Aamachhodingmo together" }
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "missing": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "injured": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "households_isolated": {
+          "value": 3702,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1",
+          "detail": "Combined figure for Gosaikunda and Aamachhodingmo together"
+        },
+        "people_isolated": {
+          "value": 14461,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1",
+          "detail": "Combined figure for Gosaikunda and Aamachhodingmo together"
+        }
       },
-      "summary": { "text": "Named with Aamachhodingmo as one of the two most severely affected local levels: 3,702 households and 14,461 people isolated, with road, electricity and communications disrupted. Contains Timure, Syabrubesi and the destroyed Rasuwagadhi border post.", "src": "ndrrma_sitrep1" } },
-
-    { "name": "Aamachhodingmo", "name_ne": "आमाछोदिङमो", "aliases": ["Parbati Kunda", "Parbatikunda", "Amachhodingmo"], "district": "Rasuwa",
+      "summary": {
+        "text": "Ready-to-eat food delivered; rice, lentils and solar batteries still required. Named with Aamachhodingmo as one of the two most severely affected local levels: 3,702 households and 14,461 people isolated for up to six days, of them 3,650 children and 1,204 older people. Syafrubesi and Timure health posts and the Timure health desk were fully damaged.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "1, 2, 3, 5",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Aamachhodingmo",
+      "name_ne": "आमाछोदिङमो",
+      "aliases": [
+        "Parbati Kunda",
+        "Parbatikunda",
+        "Amachhodingmo"
+      ],
+      "district": "Rasuwa",
       "figures": {
-        "deaths_bodies": { "value": null, "as_of": null, "src": null },
-        "missing": { "value": null, "as_of": null, "src": null },
-        "households_isolated": { "value": 3702, "as_of": "2026-09-01", "src": "ndrrma_sitrep1", "detail": "Combined figure for Gosaikunda and Aamachhodingmo together" },
-        "people_isolated": { "value": 14461, "as_of": "2026-09-01", "src": "ndrrma_sitrep1", "detail": "Combined figure for Gosaikunda and Aamachhodingmo together" }
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "missing": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "households_isolated": {
+          "value": 3702,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1",
+          "detail": "Combined figure for Gosaikunda and Aamachhodingmo together"
+        },
+        "people_isolated": {
+          "value": 14461,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1",
+          "detail": "Combined figure for Gosaikunda and Aamachhodingmo together"
+        }
       },
-      "summary": { "text": "All wards reported inaccessible by road as of 1 September. Only ward 1 had grid power as of 6 September; four wards remained dark. Site of the Upper Trishuli-1 project.", "src": "ocha_fu5" } },
-
-    { "name": "Uttargaya", "name_ne": "उत्तरगया", "aliases": [], "district": "Rasuwa",
+      "summary": {
+        "text": "Ready-to-eat food delivered; rice, lentils and solar batteries still required. All wards were cut off from the road network and ward 1 was directly flood-hit. Only ward 1 had grid power by 6 September, with four wards still dark.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "All wards cut off from the road network; ward 1 directly flood-affected",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Uttargaya",
+      "name_ne": "उत्तरगया",
+      "aliases": [],
+      "district": "Rasuwa",
       "figures": {
-        "deaths_bodies": { "value": null, "as_of": null, "src": null },
-        "missing": { "value": null, "as_of": null, "src": null }
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "missing": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
       },
-      "summary": { "text": "Grid power restored on 7 September. Contains Mailung, reachable only by helicopter as of 8 September, and the Upper Trishuli 3A and 3B sites.", "src": "ktm_0906" } },
-
-    { "name": "Kalika", "name_ne": "कालिका", "aliases": [], "district": "Rasuwa",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Naukunda", "name_ne": "नौकुण्ड", "aliases": [], "district": "Rasuwa",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Bidur", "name_ne": "विदुर", "aliases": ["Bidur Municipality", "Bidur Nagarpalika"], "district": "Nuwakot",
+      "summary": {
+        "text": "Minimum food supplies had reached; a shortage of tents was causing shelter difficulties, with rice, lentils and solar batteries still required. The Mailung Community Health Unit was fully damaged, and the Trishuli-Mailung-Syabrubesi road at Khalte in ward 5 was completely and persistently obstructed.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "1, 2, 3, 4, 5",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Kalika",
+      "name_ne": "कालिका",
+      "aliases": [],
+      "district": "Rasuwa",
       "figures": {
-        "deaths_bodies": { "value": null, "as_of": null, "src": null },
-        "missing": { "value": null, "as_of": null, "src": null }
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
       },
-      "summary": { "text": "Twenty-four bodies were found in a single house at Betrawati (ward 10). Between Sole Bazar and Akkare Bazar in ward 7 houses were washed away, two concrete bridges destroyed and more than 200 residents were out of contact. Nearly all wards had grid power back by 6 September; the town water supply was running on a 100 kVA diesel generator.", "src": "deshsanchar" } },
-
-    { "name": "Belkotgadhi", "name_ne": "बेलकोटगढी", "aliases": [], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Site of the Trishuli Galchhi project. No municipality-level casualty or damage figure published.", "src": null } },
-
-    { "name": "Tarakeshwor", "name_ne": "तारकेश्वर", "aliases": ["Tarkeshwar", "Tarakeshwar"], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Parts of the municipality had received no humanitarian assistance as of 1 September.", "src": "ocha_fu5" } },
-
-    { "name": "Kispang", "name_ne": "किस्पाङ", "aliases": [], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Nepal Telecom restored its Kispang site by 1 September using helicopter-carried technicians. No municipality-level casualty figure published.", "src": "nepalitelecom" } },
-
-    { "name": "Dupcheshwor", "name_ne": "दुप्चेश्वर", "aliases": ["Dupcheshwar"], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Myagang", "name_ne": "म्यागङ", "aliases": ["Meghang"], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Suryagadhi", "name_ne": "सूर्यगढी", "aliases": [], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Tadi", "name_ne": "तादी", "aliases": [], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Two bridges on the Tadi Khola were destroyed.", "src": "onlinekhabar_bridges" } },
-
-    { "name": "Panchakanya", "name_ne": "पञ्चकन्या", "aliases": [], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Likhu", "name_ne": "लिखु", "aliases": [], "district": "Nuwakot",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Benighat Rorang", "name_ne": "बेनीघाट रोराङ", "aliases": ["Benighat"], "district": "Dhading",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "The Prithvi Highway is fully blocked at Krishnabhir where about 70 m of road foundation collapsed into the Trishuli. The Muglin-Kathmandu section is closed both directions; about half of a 300 m bypass track had opened by early September before new slope cracks were found above the worksite. The Phurke Khola bridge at Malekhu was also washed away.", "src": "ktm_0902" } },
-
-    { "name": "Galchhi", "name_ne": "गल्छी", "aliases": [], "district": "Dhading",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Hub of the reopened right-bank detour that restores a rough single-lane connection to Trishuli Bazar without crossing the destroyed river bridges.", "src": "onlinekhabar_detour" } },
-
-    { "name": "Gajuri", "name_ne": "गजुरी", "aliases": [], "district": "Dhading",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Dhunibenshi", "name_ne": "धुनीबेंशी", "aliases": ["Dhunibesi"], "district": "Dhading",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Thakre", "name_ne": "थाक्रे", "aliases": [], "district": "Dhading",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Nilkhantha", "name_ne": "निलकण्ठ", "aliases": ["Nilkantha"], "district": "Dhading",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": null },
-
-    { "name": "Ichchha Kamana", "name_ne": "इच्छाकामना", "aliases": ["Ichchhakamana"], "district": "Chitawan",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Downstream municipality on the Trishuli. No municipality-level figure published; Chitwan's 363 recovered bodies are a district total and reflect where remains were found, not local deaths.", "src": "nepalnews_districts" } },
-
-    { "name": "Bharatpur", "name_ne": "भरतपुर", "aliases": [], "district": "Chitawan",
-      "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "Downstream municipality on the Narayani. No municipality-level figure published.", "src": null } }
+      "summary": {
+        "text": "Ready-to-eat food delivered to all locations; rice, lentils and solar batteries still required.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "1",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Naukunda",
+      "name_ne": "नौकुण्ड",
+      "aliases": [],
+      "district": "Rasuwa",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Bidur",
+      "name_ne": "विदुर",
+      "aliases": [
+        "Bidur Municipality",
+        "Bidur Nagarpalika"
+      ],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "missing": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "holding_centres": {
+          "value": 13,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1"
+        }
+      },
+      "summary": {
+        "text": "Disinfectant and chemicals were needed to control the odour from dead animals and human remains. Twenty-four bodies were found in a single house at Betrawati in ward 10; between Sole Bazar and Akkare Bazar in ward 7 houses were washed away, two concrete bridges destroyed and more than 200 residents were out of contact. The Bidur water supply project lost 4.5 km of pipeline and three sump wells, affecting about 4,000 households, and a wastewater treatment plant was destroyed.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "1, 4, 5, 9, 10",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Belkotgadhi",
+      "name_ne": "बेलकोटगढी",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "holding_centres": {
+          "value": 4,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1"
+        }
+      },
+      "summary": {
+        "text": "Four holding centres were open. The Pasang Lhamu road at Simtar in ward 10 was completely obstructed. Site of the Trishuli Galchhi project. No municipality-level casualty figure was published.",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Tarakeshwor",
+      "name_ne": "तारकेश्वर",
+      "aliases": [
+        "Tarkeshwar",
+        "Tarakeshwar"
+      ],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "No shelter facilities and no relief had reached the municipality. Immediate relief was needed at Belkotgadhi, Mahadevsthan and Ratamate.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "4, 6",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Kispang",
+      "name_ne": "किस्पाङ",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        },
+        "holding_centres": {
+          "value": 2,
+          "as_of": "2026-09-01",
+          "src": "ndrrma_sitrep1"
+        }
+      },
+      "summary": {
+        "text": "Minimum essential supplies available, but road access and electricity were unresolved. The municipality requested 50 to 60 solar units, was procuring its own medical supplies, and asked for the rest by helicopter.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "5",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Dupcheshwor",
+      "name_ne": "दुप्चेश्वर",
+      "aliases": [
+        "Dupcheshwar"
+      ],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Myagang",
+      "name_ne": "म्यागङ",
+      "aliases": [
+        "Meghang"
+      ],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Suryagadhi",
+      "name_ne": "सूर्यगढी",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Tadi",
+      "name_ne": "तादी",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Two bridges on the Tadi Khola were destroyed.",
+        "src": "onlinekhabar_bridges"
+      }
+    },
+    {
+      "name": "Panchakanya",
+      "name_ne": "पञ्चकन्या",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Likhu",
+      "name_ne": "लिखु",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Benighat Rorang",
+      "name_ne": "बेनीघाट रोराङ",
+      "aliases": [
+        "Benighat"
+      ],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Drinking water needed. The Prithvi Highway is fully blocked at Krishnabhir, where about 70 m of road foundation collapsed into the Trishuli, and again at Parewabhir; the Mugling-Kathmandu section is closed both directions. About half of a 300 m bypass track had opened by early September before new slope cracks were found above the worksite. The Phurke Khola bridge at Malekhu was also washed away.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "5 wards",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Galchhi",
+      "name_ne": "गल्छी",
+      "aliases": [],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Three hundred metres of 50 mm pipe was needed to restore drinking water to about 100 households in ward 1. Baireni Hospital was partially damaged. The municipality is also the hub of the reopened right-bank detour to Trishuli Bazar.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "6 fully; 1, 2, 4, 8 partially",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Gajuri",
+      "name_ne": "गजुरी",
+      "aliases": [],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Drinking water needed.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "Not specified",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Dhunibenshi",
+      "name_ne": "धुनीबेंशी",
+      "aliases": [
+        "Dhunibesi"
+      ],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Thakre",
+      "name_ne": "थाक्रे",
+      "aliases": [],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Nilkhantha",
+      "name_ne": "निलकण्ठ",
+      "aliases": [
+        "Nilkantha"
+      ],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": null
+    },
+    {
+      "name": "Ichchha Kamana",
+      "name_ne": "इच्छाकामना",
+      "aliases": [
+        "Ichchhakamana"
+      ],
+      "district": "Chitawan",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Downstream municipality on the Trishuli. No municipality-level figure published; Chitwan's 363 recovered bodies are a district total and reflect where remains were found, not local deaths.",
+        "src": "nepalnews_districts"
+      }
+    },
+    {
+      "name": "Bharatpur",
+      "name_ne": "भरतपुर",
+      "aliases": [],
+      "district": "Chitawan",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Downstream municipality on the Narayani. No municipality-level figure published.",
+        "src": null
+      }
+    },
+    {
+      "name": "Siddhalek",
+      "name_ne": "सिद्धलेक",
+      "aliases": [],
+      "district": "Dhading",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "Drinking water needed.",
+        "src": "ndrrma_sitrep1"
+      },
+      "wards_official": {
+        "text": "Not specified",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
+    },
+    {
+      "name": "Shivapuri",
+      "name_ne": "शिवपुरी",
+      "aliases": [],
+      "district": "Nuwakot",
+      "figures": {
+        "deaths_bodies": {
+          "value": null,
+          "as_of": null,
+          "src": null
+        }
+      },
+      "summary": {
+        "text": "The Tokha-Chhahare road at Ghattekhola in ward 8 was placed under a 22:00 to 05:00 night restriction.",
+        "src": "ndrrma_sitrep1"
+      }
+    }
   ],
-
   "downstream_bodies": [
-    { "district": "Chitwan", "value": 363, "as_of": "2026-09-08", "src": "nepalnews_districts" },
-    { "district": "Nawalparasi (Bardaghat Susta East)", "value": 223, "as_of": "2026-09-08", "src": "nepalnews_districts" },
-    { "district": "Nawalparasi (Bardaghat Susta West)", "value": 222, "as_of": "2026-09-08", "src": "nepalnews_districts" },
-    { "district": "Nuwakot", "value": 197, "as_of": "2026-09-08", "src": "nepalnews_districts", "detail": "About 1,981 missing persons also reported in-district" },
-    { "district": "Rasuwa", "value": 161, "as_of": "2026-09-08", "src": "nepalnews_districts", "detail": "Reported as 161 to 170 depending on the article" },
-    { "district": "Gorkha", "value": 75, "as_of": "2026-09-08", "src": "nepalnews_districts" },
-    { "district": "Dhading", "value": 70, "as_of": "2026-09-08", "src": "nepalnews_districts" },
-    { "district": "Tanahun", "value": 38, "as_of": "2026-09-08", "src": "nepalnews_districts" }
+    {
+      "district": "Chitwan",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 321,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 363,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": "Also reported as Chitawan in the boundary data"
+    },
+    {
+      "district": "Nawalparasi East",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 216,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 223,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": "Bardaghat Susta East"
+    },
+    {
+      "district": "Nawalparasi West",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 170,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 222,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": "Bardaghat Susta West"
+    },
+    {
+      "district": "Nuwakot",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 95,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 197,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": "About 1,981 missing persons also reported in-district on 8 Sep"
+    },
+    {
+      "district": "Gorkha",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 65,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 75,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": null
+    },
+    {
+      "district": "Dhading",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 55,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 70,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": null
+    },
+    {
+      "district": "Tanahun",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 38,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 38,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": "Reported as Tanahu in the boundary data"
+    },
+    {
+      "district": "Rasuwa",
+      "series": [
+        {
+          "as_of": "2026-09-01",
+          "value": 27,
+          "src": "ndrrma_sitrep1"
+        },
+        {
+          "as_of": "2026-09-08",
+          "value": 161,
+          "src": "nepalnews_districts"
+        }
+      ],
+      "detail": "The 8 Sep figure is reported as 161 to 170 depending on the article"
+    }
   ],
-
   "energy": {
     "summary": {
-      "generation_offline": { "value": 300, "unit": "MW", "as_of": "2026-09-06", "src": "ktm_0906",
-        "sub": { "value": 431, "unit": "MW", "as_of": "2026-08-30", "src": "ktm_0830", "label": "initial estimate" },
-        "note": "Mongabay reports 281 MW for the same period; a 550 MW figure circulates but is uncorroborated." },
-      "under_construction": { "conflict": [
-          { "value": 394, "unit": "MW", "as_of": "2026-09-01", "src": "nepalnews_energy" },
-          { "value": 470, "unit": "MW", "as_of": "2026-08-30", "src": "ktm_0830" } ],
-        "note": "Combined operating plus under-construction capacity affected is cited as 748 MW: 9 operating projects at 354 MW plus 5 under construction at 394 MW." },
-      "projects_damaged": { "value": 13, "as_of": "2026-09-06", "src": "ktm_0906",
-        "note": "Counts vary from 12 to 14 across sources." }
+      "generation_offline": {
+        "value": 300,
+        "unit": "MW",
+        "as_of": "2026-09-06",
+        "src": "ktm_0906",
+        "sub": {
+          "value": 431,
+          "unit": "MW",
+          "as_of": "2026-08-30",
+          "src": "ktm_0830",
+          "label": "initial estimate"
+        },
+        "note": "Mongabay reports 281 MW for the same period; a 550 MW figure circulates but is uncorroborated."
+      },
+      "under_construction": {
+        "conflict": [
+          {
+            "value": 394,
+            "unit": "MW",
+            "as_of": "2026-09-01",
+            "src": "nepalnews_energy"
+          },
+          {
+            "value": 470,
+            "unit": "MW",
+            "as_of": "2026-08-30",
+            "src": "ktm_0830"
+          }
+        ],
+        "note": "Combined operating plus under-construction capacity affected is cited as 748 MW: 9 operating projects at 354 MW plus 5 under construction at 394 MW."
+      },
+      "projects_damaged": {
+        "value": 13,
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1",
+        "note": "NDRRMA names 13 facilities. Press counts vary from 12 to 14."
+      },
+      "capacity_affected": {
+        "value": 783.385,
+        "unit": "MW",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1",
+        "note": "NDRRMA SitRep #01, combined capacity of the 13 named damaged facilities. Press reporting gives 748 MW for a similar basis; the two are not reconciled."
+      }
     },
     "projects": [
-      { "name": "Upper Trishuli-1", "mw": 216, "owner": "Korea South-East Power (lead, 50%) with Doosan Enerbility; NWEDC",
-        "status_before": "Under construction, 84% complete", "damage": "severely damaged",
+      {
+        "name": "Upper Trishuli-1",
+        "mw": 216,
+        "owner": "Korea South-East Power (lead, 50%) with Doosan Enerbility; NWEDC",
+        "status_before": "Under construction, 84% complete",
+        "damage": "severely damaged",
         "what": "More than 90% of the upper dam destroyed; about 90% of base-camp housing destroyed.",
         "workers_missing": "576 reported missing at the site, about 300 believed trapped in the tunnel; 6 Doosan Enerbility staff and 3 of 7 Korea South-East Power construction-management staff unaccounted for.",
-        "loss": "Total project investment $647m.", "src": "kjd", "hdx_name": "Upper Trishuli-1" },
-      { "name": "Rasuwa Bhotekoshi", "mw": 120, "owner": "not reported", "status_before": "Under construction",
-        "damage": "damaged", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": "spotlight_0901", "hdx_name": "Rasuwa Bhotekoshi" },
-      { "name": "Rasuwagadhi", "mw": 111, "owner": "Nepal Electricity Authority", "status_before": "Operating",
-        "damage": "destroyed", "what": "Headworks and dam completely washed away, per the NEA spokesperson.",
-        "workers_missing": "Not itemised separately; folded into the aggregate counts.", "loss": null, "src": "ktm_0830", "hdx_name": "Rasuwagadhi" },
-      { "name": "Super Trishuli", "mw": 100, "owner": "not reported", "status_before": "Operating",
-        "damage": "unaffected", "what": "Survived with no major impact, about 100 km downstream of Betrawati Bazar.",
-        "workers_missing": null, "loss": null, "src": "spotlight_0901", "hdx_name": null },
-      { "name": "Trishuli Galchhi", "mw": 75, "owner": "not reported", "status_before": "Under construction",
-        "damage": "not reported", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": null, "hdx_name": "Trishuli Galchhi" },
-      { "name": "Upper Trishuli-3A", "mw": 60, "owner": "not reported", "status_before": "Operating",
-        "damage": "damaged", "what": "Tunnel flooded; workers trapped in the main tunnel, two pulled out alive on day nine.",
+        "loss": "Total project investment $647m.",
+        "src": "kjd",
+        "hdx_name": "Upper Trishuli-1"
+      },
+      {
+        "name": "Rasuwa Bhotekoshi",
+        "mw": 120,
+        "owner": "not reported",
+        "status_before": "Under construction",
+        "damage": "damaged",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "spotlight_0901",
+        "hdx_name": "Rasuwa Bhotekoshi"
+      },
+      {
+        "name": "Rasuwagadhi",
+        "mw": 111,
+        "owner": "Nepal Electricity Authority",
+        "status_before": "Operating",
+        "damage": "destroyed",
+        "what": "Headworks and dam completely washed away, per the NEA spokesperson.",
+        "workers_missing": "Not itemised separately; folded into the aggregate counts.",
+        "loss": null,
+        "src": "ktm_0830",
+        "hdx_name": "Rasuwagadhi"
+      },
+      {
+        "name": "Super Trishuli",
+        "mw": 100,
+        "owner": "not reported",
+        "status_before": "Operating",
+        "damage": "damaged",
+        "what": "Named by NDRRMA among the 13 damaged facilities. Spotlight Nepal reported it as unaffected, about 100 km downstream of Betrawati Bazar; the two accounts conflict and NDRRMA is taken as the official one here.",
+        "workers_missing": null,
+        "loss": null,
+        "src": "ndrrma_sitrep1",
+        "hdx_name": null,
+        "note": "Damage status conflicts between NDRRMA and press reporting."
+      },
+      {
+        "name": "Trishuli Galchhi",
+        "mw": 75,
+        "owner": "not reported",
+        "status_before": "Under construction",
+        "damage": "not reported",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": null,
+        "hdx_name": "Trishuli Galchhi"
+      },
+      {
+        "name": "Upper Trishuli-3A",
+        "mw": 60,
+        "owner": "not reported",
+        "status_before": "Operating",
+        "damage": "damaged",
+        "what": "Tunnel flooded; workers trapped in the main tunnel, two pulled out alive on day nine.",
         "workers_missing": "42 workers reported missing; about 557 unaccounted for at the wider Mailung site, 115 believed trapped in the main tunnel.",
-        "loss": null, "src": "npr_0904", "hdx_name": "Upper Trishuli 3A" },
-      { "name": "Sanjen", "mw": 42.5, "owner": "Sanjen Jalvidyut Company", "status_before": "Operating",
-        "damage": "damaged", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": "wiki_npl", "hdx_name": null,
-        "note": "Capacity reported as both 42.5 MW and 78 MW." },
-      { "name": "Upper Trishuli-3B", "mw": 37, "owner": "not reported", "status_before": "Under construction",
-        "damage": "severely damaged", "what": "The associated 220 kV Trishuli 3B hub substation was completely destroyed, buried under landslide debris.",
-        "workers_missing": "not reported", "loss": null, "src": "nepalnews_energy", "hdx_name": "Upper Trishuli 3B" },
-      { "name": "Bhotekoshi Khola", "mw": 33.5, "owner": "not reported", "status_before": "Survey",
-        "damage": "not reported", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": null, "hdx_name": "Bhotekoshi Khola Hydropower Project" },
-      { "name": "NEA solar plant", "mw": 25, "owner": "Nepal Electricity Authority", "status_before": "Operating",
-        "damage": "severely damaged", "what": "not reported", "workers_missing": null, "loss": null, "src": "spotlight_0901", "hdx_name": null },
-      { "name": "Upper Trishuli-I Cascade", "mw": 24.6, "owner": "not reported", "status_before": "Survey",
-        "damage": "not reported", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": null, "hdx_name": "Upper Trishuli-I Cascade HEP" },
-      { "name": "Trishuli", "mw": 24, "owner": "Nepal Electricity Authority", "status_before": "Operating",
-        "damage": "damaged", "what": "Riverbank transmission lines and substations destroyed.",
-        "workers_missing": "not reported", "loss": null, "src": "nepalnews_energy", "hdx_name": "Trishuli" },
-      { "name": "Chilime", "mw": 22.1, "owner": "Chilime Hydropower Company (NEA subsidiary)", "status_before": "Operating",
-        "damage": "severely damaged", "what": "Powerhouse fully damaged and buried.",
+        "loss": null,
+        "src": "npr_0904",
+        "hdx_name": "Upper Trishuli 3A"
+      },
+      {
+        "name": "Sanjen",
+        "mw": 42.5,
+        "owner": "Sanjen Jalvidyut Company",
+        "status_before": "Operating",
+        "damage": "damaged",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "wiki_npl",
+        "hdx_name": null,
+        "note": "Capacity reported as both 42.5 MW and 78 MW."
+      },
+      {
+        "name": "Upper Trishuli-3B",
+        "mw": 37,
+        "owner": "not reported",
+        "status_before": "Under construction",
+        "damage": "severely damaged",
+        "what": "The associated 220 kV Trishuli 3B hub substation was completely destroyed, buried under landslide debris.",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "nepalnews_energy",
+        "hdx_name": "Upper Trishuli 3B"
+      },
+      {
+        "name": "Bhotekoshi Khola",
+        "mw": 33.5,
+        "owner": "not reported",
+        "status_before": "Survey",
+        "damage": "not reported",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": null,
+        "hdx_name": "Bhotekoshi Khola Hydropower Project"
+      },
+      {
+        "name": "NEA solar plant",
+        "mw": 25,
+        "owner": "Nepal Electricity Authority",
+        "status_before": "Operating",
+        "damage": "severely damaged",
+        "what": "not reported",
+        "workers_missing": null,
+        "loss": null,
+        "src": "spotlight_0901",
+        "hdx_name": null
+      },
+      {
+        "name": "Upper Trishuli-I Cascade",
+        "mw": 24.6,
+        "owner": "not reported",
+        "status_before": "Survey",
+        "damage": "not reported",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": null,
+        "hdx_name": "Upper Trishuli-I Cascade HEP"
+      },
+      {
+        "name": "Trishuli",
+        "mw": 24,
+        "owner": "Nepal Electricity Authority",
+        "status_before": "Operating",
+        "damage": "damaged",
+        "what": "Riverbank transmission lines and substations destroyed.",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "nepalnews_energy",
+        "hdx_name": "Trishuli"
+      },
+      {
+        "name": "Chilime",
+        "mw": 22.1,
+        "owner": "Chilime Hydropower Company (NEA subsidiary)",
+        "status_before": "Operating",
+        "damage": "severely damaged",
+        "what": "Powerhouse fully damaged and buried.",
         "workers_missing": "133 employees reported missing on 1 September; a later update put 6 trapped in the tunnel. Counts were revised down as contact and rescue progressed.",
-        "loss": null, "src": "bajarko_0901", "hdx_name": null },
-      { "name": "Langtang Khola", "mw": 20, "owner": "not reported", "status_before": "Testing",
-        "damage": "severely damaged", "what": "Extensively damaged.", "workers_missing": "not reported", "loss": null, "src": "spotlight_0901", "hdx_name": null },
-      { "name": "Middle Trishuli Ganga", "mw": 15.6, "owner": "not reported", "status_before": "Under construction",
-        "damage": "damaged", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": "spotlight_0901", "hdx_name": null },
-      { "name": "Sanjen Upper", "mw": 14.8, "owner": "not reported", "status_before": "not reported",
-        "damage": "not reported", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": null, "hdx_name": null },
-      { "name": "Devighat", "mw": 14.1, "owner": "Nepal Electricity Authority", "status_before": "Operating, commissioned about 42 years earlier",
-        "damage": "destroyed", "what": "Completely wiped out; the furthest downstream plant damage cited.",
-        "workers_missing": "not reported", "loss": null, "src": "mongabay", "hdx_name": "Devighat" },
-      { "name": "Upper Mailung A", "mw": 6.42, "owner": "not reported", "status_before": "Operating",
-        "damage": "damaged", "what": "not reported", "workers_missing": "not reported", "loss": null, "src": "spotlight_0901", "hdx_name": null },
-      { "name": "Mailung Khola", "mw": 5, "owner": "not reported", "status_before": "Sources differ, operating or under construction",
-        "damage": "severely damaged", "what": "Lost both the powerhouse and the headworks.",
-        "workers_missing": "not reported", "loss": null, "src": "spotlight_0901", "hdx_name": null,
-        "note": "Capacity reported as both 5 MW and 14.8 MW." }
+        "loss": null,
+        "src": "bajarko_0901",
+        "hdx_name": null
+      },
+      {
+        "name": "Langtang Khola",
+        "mw": 20,
+        "owner": "not reported",
+        "status_before": "Testing",
+        "damage": "severely damaged",
+        "what": "Extensively damaged.",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "spotlight_0901",
+        "hdx_name": null
+      },
+      {
+        "name": "Middle Trishuli Ganga",
+        "mw": 15.6,
+        "owner": "not reported",
+        "status_before": "Under construction",
+        "damage": "damaged",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "spotlight_0901",
+        "hdx_name": null
+      },
+      {
+        "name": "Sanjen Upper",
+        "mw": 14.8,
+        "owner": "not reported",
+        "status_before": "not reported",
+        "damage": "not reported",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": null,
+        "hdx_name": null
+      },
+      {
+        "name": "Devighat",
+        "mw": 14.1,
+        "owner": "Nepal Electricity Authority",
+        "status_before": "Operating, commissioned about 42 years earlier",
+        "damage": "destroyed",
+        "what": "Completely wiped out; the furthest downstream plant damage cited.",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "mongabay",
+        "hdx_name": "Devighat"
+      },
+      {
+        "name": "Upper Mailung A",
+        "mw": 6.42,
+        "owner": "not reported",
+        "status_before": "Operating",
+        "damage": "damaged",
+        "what": "not reported",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "spotlight_0901",
+        "hdx_name": null
+      },
+      {
+        "name": "Mailung Khola",
+        "mw": 5,
+        "owner": "not reported",
+        "status_before": "Sources differ, operating or under construction",
+        "damage": "severely damaged",
+        "what": "Lost both the powerhouse and the headworks.",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "spotlight_0901",
+        "hdx_name": null,
+        "note": "Capacity reported as both 5 MW and 14.8 MW."
+      },
+      {
+        "name": "Upper Trishuli-2",
+        "mw": null,
+        "owner": "not reported",
+        "status_before": "not reported",
+        "damage": "damaged",
+        "what": "Named by NDRRMA among the 13 damaged facilities; no detail published.",
+        "workers_missing": "not reported",
+        "loss": null,
+        "src": "ndrrma_sitrep1",
+        "hdx_name": null
+      }
     ],
     "grid": [
-      { "element": "Trishuli 3B hub 220 kV substation, Mailung/Betrawati", "damage": "destroyed",
+      {
+        "element": "Trishuli 3B hub 220 kV substation, Mailung/Betrawati",
+        "damage": "destroyed",
         "detail": "Completely destroyed and buried under landslide debris. Not restored as of the latest reporting, and cited as a key evacuation bottleneck.",
-        "as_of": "2026-09-01", "src": "nepalnews_energy" },
-      { "element": "66 kV Chilime-Devighat line (old)", "damage": "restored",
+        "as_of": "2026-09-01",
+        "src": "nepalnews_energy"
+      },
+      {
+        "element": "66 kV Chilime-Devighat line (old)",
+        "damage": "restored",
         "detail": "Used by NEA to reroute power, stepped down to 11 kV for local feeders. Active and carrying emergency restoration load.",
-        "as_of": "2026-09-06", "src": "ktm_0906" },
-      { "element": "Chilime-Trishuli 220 kV line", "damage": "not reported",
+        "as_of": "2026-09-06",
+        "src": "ktm_0906"
+      },
+      {
+        "element": "Chilime-Trishuli 220 kV line",
+        "damage": "not reported",
         "detail": "Not detailed in the sources checked; damage is implied by the destruction of the Chilime powerhouse but no figure was published.",
-        "as_of": null, "src": null },
-      { "element": "Rasuwagadhi-Chilime 132 kV and Trishuli-Kathmandu 132 kV", "damage": "not reported",
-        "detail": "No specific reporting located.", "as_of": null, "src": null }
+        "as_of": null,
+        "src": null
+      },
+      {
+        "element": "Rasuwagadhi-Chilime 132 kV and Trishuli-Kathmandu 132 kV",
+        "damage": "not reported",
+        "detail": "No specific reporting located.",
+        "as_of": null,
+        "src": null
+      },
+      {
+        "element": "Named damaged facilities, NDRRMA list",
+        "damage": "destroyed",
+        "detail": "Rasuwagadhi, Rasuwa-Bhotekoshi, Chilime, Langtang Khola, Upper Trishuli 1, 2, 3A and 3B, Mailung Khola, Middle Trishuli Ganga, Trishuli, Devighat and Super Trishuli.",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
     ],
     "restoration": [
-      { "district": "Rasuwa", "pct": 78, "households": 14281, "as_of": "2026-09-06", "src": "ktm_0906",
-        "note": "Nepal Energy Forum gives 83% for the same date; the two are not reconciled." },
-      { "district": "Nuwakot", "pct": 96.7, "households": 68679, "as_of": "2026-09-06", "src": "ktm_0906",
-        "note": "OnlineKhabar separately reports about 90% for the same date." },
-      { "district": "Dhading", "pct": 99.8, "households": 83642, "as_of": "2026-09-07", "src": "radionepal_0907",
-        "note": "About 120 families still without power. The Kathmandu Post described this as nearly all households on 6 September." },
-      { "district": "Off-grid stopgap", "pct": null, "households": null, "as_of": "2026-09-06", "src": "ktm_0906",
-        "detail": "500 portable 2 kW household solar units and 13 institutional solar systems distributed through the Alternative Energy Promotion Centre; 1,268 vulnerable Rasuwa households flagged for solar." }
+      {
+        "district": "Rasuwa",
+        "pct": 78,
+        "households": 14281,
+        "as_of": "2026-09-06",
+        "src": "ktm_0906",
+        "note": "Nepal Energy Forum gives 83% for the same date; the two are not reconciled."
+      },
+      {
+        "district": "Nuwakot",
+        "pct": 96.7,
+        "households": 68679,
+        "as_of": "2026-09-06",
+        "src": "ktm_0906",
+        "note": "OnlineKhabar separately reports about 90% for the same date."
+      },
+      {
+        "district": "Dhading",
+        "pct": 99.8,
+        "households": 83642,
+        "as_of": "2026-09-07",
+        "src": "radionepal_0907",
+        "note": "About 120 families still without power. The Kathmandu Post described this as nearly all households on 6 September."
+      },
+      {
+        "district": "Off-grid stopgap",
+        "pct": null,
+        "households": null,
+        "as_of": "2026-09-06",
+        "src": "ktm_0906",
+        "detail": "500 portable 2 kW household solar units and 13 institutional solar systems distributed through the Alternative Energy Promotion Centre; 1,268 vulnerable Rasuwa households flagged for solar."
+      }
     ],
     "impact": [
-      { "text": "Nepal became a net electricity exporter for the first time in about a decade in the fiscal year ending mid-July 2026, earning Rs 18.75 bn from sales to India and Bangladesh. Officials expect that to reverse in the winter low-flow season and have sought advance import approvals from India effective September 2026.", "src": "mongabay" },
-      { "text": "India agreed to supply advance power to Nepal to cope with the flood, ahead of the normal schedule.", "src": "businessstandard_0830" },
-      { "text": "Loss estimates diverge sharply. IPPAN puts hydropower-sector losses at Rs 25-30 bn, roughly a quarter to a third of affected project costs; NEA's preliminary assessment says hundreds of billions of rupees; the Finance Minister attributed Rs 100 bn specifically to hydro infrastructure within a Rs 900 bn economy-wide rebuilding figure.", "src": "ktm_0830" },
-      { "text": "Missing-worker counts across the energy sector were revised sharply downward as rescue and contact efforts progressed: 933 (NDRRMA), 898 at 11 projects (IPPAN, 29 August), 983 out of contact against 639 officially counted missing, and by 7 September the Nepal Army believed 121 people were still trapped in hydropower tunnels.", "src": "mongabay" }
+      {
+        "text": "Nepal became a net electricity exporter for the first time in about a decade in the fiscal year ending mid-July 2026, earning Rs 18.75 bn from sales to India and Bangladesh. Officials expect that to reverse in the winter low-flow season and have sought advance import approvals from India effective September 2026.",
+        "src": "mongabay"
+      },
+      {
+        "text": "India agreed to supply advance power to Nepal to cope with the flood, ahead of the normal schedule.",
+        "src": "businessstandard_0830"
+      },
+      {
+        "text": "Loss estimates diverge sharply. IPPAN puts hydropower-sector losses at Rs 25-30 bn, roughly a quarter to a third of affected project costs; NEA's preliminary assessment says hundreds of billions of rupees; the Finance Minister attributed Rs 100 bn specifically to hydro infrastructure within a Rs 900 bn economy-wide rebuilding figure.",
+        "src": "ktm_0830"
+      },
+      {
+        "text": "Missing-worker counts across the energy sector were revised sharply downward as rescue and contact efforts progressed: 933 (NDRRMA), 898 at 11 projects (IPPAN, 29 August), 983 out of contact against 639 officially counted missing, and by 7 September the Nepal Army believed 121 people were still trapped in hydropower tunnels.",
+        "src": "mongabay"
+      }
     ]
   },
-
   "communities": {
     "settlements": [
-      { "name": "Timure", "municipality": "Gosaikunda", "district": "Rasuwa",
-        "road": { "status": "cut", "detail": "Betrawati-Rasuwagadhi road (42 km) destroyed at multiple points; no reopening date and authorities advise against travel.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "power": { "status": "cut", "detail": "No grid power.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "water": { "status": "not_reported" },
-        "telecom": { "status": "cut", "detail": "Ncell tower still down.", "as_of": "2026-09-07", "src": "ictframe_ncell" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Rasuwagadhi", "municipality": "Gosaikunda", "district": "Rasuwa",
-        "road": { "status": "cut", "detail": "Miteri Friendship Bridge and the border customs post destroyed on 26 August.", "as_of": "2026-08-26", "src": "ktm_0826" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Syabrubesi", "municipality": "Gosaikunda", "district": "Rasuwa",
-        "road": { "status": "cut", "detail": "16 km section toward the China border damaged; market area flood-hit on 26 August. A 75 m Bailey bridge span is needed here.", "as_of": "2026-09-06", "src": "ktm_0826" },
-        "power": { "status": "cut", "detail": "Gosaikunda settlements without grid power.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Dhunche", "municipality": "Gosaikunda", "district": "Rasuwa",
-        "road": { "status": "limited", "detail": "Bogatitar-Kalikasthan-Dhunche section reopened to light four-wheel-drive only; the Bidur-Dhunche road was limited to small 4WD vehicles.", "as_of": "2026-09-08", "src": "ktm_0908" },
-        "power": { "status": "limited", "detail": "About 90% of capacity restored.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "water": { "status": "not_reported" },
-        "displacement_site": { "status": "limited", "detail": "Relief supplies staged here; onward delivery to villages is the bottleneck.", "as_of": "2026-09-08", "src": "ktm_0908" } },
-
-      { "name": "Ghattekholagaun", "aliases": ["Ghattekhola"], "municipality": "Gosaikunda", "district": "Rasuwa",
-        "road": { "status": "limited", "detail": "Passable in daylight only, with a mandatory night closure enforced. (unofficial)", "as_of": "2026-09-09", "src": "rasuwa_bulletin", "unofficial": true },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "telecom": { "status": "cut", "detail": "Ncell tower still down.", "as_of": "2026-09-07", "src": "ictframe_ncell" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Mailung", "municipality": "Uttargaya", "district": "Rasuwa",
-        "road": { "status": "cut", "detail": "Trishuli-Mailung-Syabrubesi road washed away; helicopter access only for relief.", "as_of": "2026-09-08", "src": "ktm_0908" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Simle", "municipality": "Uttargaya", "district": "Rasuwa",
-        "road": { "status": "cut", "detail": "Roads to Simle and Shanti Bazaar wiped out; no access to shops, hospitals or government offices.", "as_of": "2026-09-05", "src": "theprint_simle" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Thulo Bharkhu", "municipality": "Gosaikunda", "district": "Rasuwa",
-        "road": { "status": "not_reported" }, "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Ramche", "municipality": "Kalika", "district": "Rasuwa",
-        "road": { "status": "not_reported" }, "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Grang", "municipality": "Kalika", "district": "Rasuwa",
-        "road": { "status": "not_reported" }, "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Betrawati", "municipality": "Bidur", "district": "Nuwakot",
-        "road": { "status": "planned", "detail": "Old and new Betrawati bridges swept away and the Trishuli-Betrawati road extensively damaged. A 48 m Bailey bridge is planned but not yet installed.", "as_of": "2026-09-06", "src": "myrepublica_plh" },
-        "power": { "status": "not_reported", "detail": "Not reported separately from the Nuwakot district figure." },
-        "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Trishuli Bazar", "aliases": ["Trisuli Bazar", "Trishuli Bazaar"], "municipality": "Bidur", "district": "Nuwakot",
-        "road": { "status": "planned", "detail": "Old and new Trishuli Bazar bridges swept away. A 48 m Bailey bridge is planned but not yet installed.", "as_of": "2026-09-06", "src": "myrepublica_plh" },
-        "power": { "status": "restored", "detail": "Market areas restored on 27 August.", "as_of": "2026-08-27", "src": "ktm_0906" },
-        "water": { "status": "not_reported" },
-        "telecom": { "status": "cut", "detail": "Ncell tower still down in the Trishuli/Bidur area.", "as_of": "2026-09-07", "src": "ictframe_ncell" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Bidur (Battar)", "aliases": ["Bidur", "Battar"], "municipality": "Bidur", "district": "Nuwakot",
-        "road": { "status": "limited", "detail": "Reachable via the reopened Galchhi detour; the direct Trishuli-Betrawati road is still damaged.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "power": { "status": "restored", "detail": "Nearly all wards fully restored.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "water": { "status": "limited", "detail": "Bidur Water Supply Project running on a 100 kVA diesel generator, distributing about 500,000 litres a day. A short-term measure, not a restoration.", "as_of": "2026-09-06", "src": "nepalpress_water" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Devighat", "municipality": "Bidur", "district": "Nuwakot",
-        "road": { "status": "planned", "detail": "Bridge near the Water Resources and Irrigation Division destroyed. The Nepal Army began installing a Bailey bridge; a temporary cable-pulley (tuen) crossing carries people and light goods.", "as_of": "2026-09-06", "src": "mofa_0906" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Phosretar", "municipality": "Galchhi", "district": "Dhading",
-        "road": { "status": "cut", "detail": "Bridge over the Trishuli destroyed.", "as_of": "2026-08-29", "src": "ktm_0829" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Gauribesi", "municipality": "Bidur", "district": "Nuwakot",
-        "road": { "status": "restored", "detail": "Terminus of the Galchhi detour route toward Trishuli Bazar; open as a narrow single-lane track.", "as_of": "2026-09-02", "src": "onlinekhabar_detour" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Galchhi", "municipality": "Galchhi", "district": "Dhading",
-        "road": { "status": "restored", "detail": "Hub of the reopened right-bank detour road, the alternative to the destroyed Trishuli-corridor bridges.", "as_of": "2026-09-02", "src": "onlinekhabar_detour" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Malekhu", "municipality": "Benighat Rorang", "district": "Dhading",
-        "road": { "status": "cut", "detail": "Phurke Khola bridge washed away, with local road damage.", "as_of": "2026-08-27", "src": "onlinekhabar_bridges" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Benighat", "municipality": "Benighat Rorang", "district": "Dhading",
-        "road": { "status": "cut", "detail": "Prithvi Highway fully blocked at Krishnabhir by a 70 m road-foundation collapse into the Trishuli; the Muglin-Kathmandu section is closed both ways. About 50 m of a 300 m bypass track had opened before new slope cracks were found above the worksite.", "as_of": "2026-09-08", "src": "ktm_0904" },
-        "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Aamachhodingmo", "aliases": ["Parbati Kunda"], "municipality": "Aamachhodingmo", "district": "Rasuwa",
-        "road": { "status": "cut", "detail": "All wards reported inaccessible by road.", "as_of": "2026-09-01", "src": "ocha_fu5" },
-        "power": { "status": "limited", "detail": "Only ward 1 has power; four wards remain dark.", "as_of": "2026-09-06", "src": "ktm_0906" },
-        "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } },
-
-      { "name": "Uttargaya", "municipality": "Uttargaya", "district": "Rasuwa",
-        "road": { "status": "not_reported" },
-        "power": { "status": "restored", "detail": "Grid power restored on 7 September.", "as_of": "2026-09-07", "src": "ktm_0906" },
-        "water": { "status": "not_reported" },
-        "displacement_site": { "status": "not_reported" } }
+      {
+        "name": "Timure",
+        "municipality": "Gosaikunda",
+        "district": "Rasuwa",
+        "road": {
+          "status": "cut",
+          "detail": "Betrawati-Rasuwagadhi road (42 km) destroyed at multiple points; no reopening date and authorities advise against travel.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "power": {
+          "status": "cut",
+          "detail": "No grid power.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "telecom": {
+          "status": "cut",
+          "detail": "Ncell tower still down.",
+          "as_of": "2026-09-07",
+          "src": "ictframe_ncell"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Rasuwagadhi",
+        "municipality": "Gosaikunda",
+        "district": "Rasuwa",
+        "road": {
+          "status": "cut",
+          "detail": "Miteri Friendship Bridge and the border customs post destroyed on 26 August.",
+          "as_of": "2026-08-26",
+          "src": "ktm_0826"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Syabrubesi",
+        "municipality": "Gosaikunda",
+        "district": "Rasuwa",
+        "road": {
+          "status": "cut",
+          "detail": "16 km section toward the China border damaged; market area flood-hit on 26 August. A 75 m Bailey bridge span is needed here.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0826"
+        },
+        "power": {
+          "status": "cut",
+          "detail": "Gosaikunda settlements without grid power.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Dhunche",
+        "municipality": "Gosaikunda",
+        "district": "Rasuwa",
+        "road": {
+          "status": "limited",
+          "detail": "Bogatitar-Kalikasthan-Dhunche section reopened to light four-wheel-drive only; the Bidur-Dhunche road was limited to small 4WD vehicles.",
+          "as_of": "2026-09-08",
+          "src": "ktm_0908"
+        },
+        "power": {
+          "status": "limited",
+          "detail": "About 90% of capacity restored.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "limited",
+          "detail": "Relief supplies staged here; onward delivery to villages is the bottleneck.",
+          "as_of": "2026-09-08",
+          "src": "ktm_0908"
+        }
+      },
+      {
+        "name": "Ghattekholagaun",
+        "aliases": [
+          "Ghattekhola"
+        ],
+        "municipality": "Gosaikunda",
+        "district": "Rasuwa",
+        "road": {
+          "status": "limited",
+          "detail": "Passable in daylight only, with a mandatory night closure enforced. (unofficial)",
+          "as_of": "2026-09-09",
+          "src": "rasuwa_bulletin",
+          "unofficial": true
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "telecom": {
+          "status": "cut",
+          "detail": "Ncell tower still down.",
+          "as_of": "2026-09-07",
+          "src": "ictframe_ncell"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Mailung",
+        "municipality": "Uttargaya",
+        "district": "Rasuwa",
+        "road": {
+          "status": "cut",
+          "detail": "Trishuli-Mailung-Syabrubesi road washed away; helicopter access only for relief.",
+          "as_of": "2026-09-08",
+          "src": "ktm_0908"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Simle",
+        "municipality": "Uttargaya",
+        "district": "Rasuwa",
+        "road": {
+          "status": "cut",
+          "detail": "Roads to Simle and Shanti Bazaar wiped out; no access to shops, hospitals or government offices.",
+          "as_of": "2026-09-05",
+          "src": "theprint_simle"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Thulo Bharkhu",
+        "municipality": "Gosaikunda",
+        "district": "Rasuwa",
+        "road": {
+          "status": "not_reported"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Ramche",
+        "municipality": "Kalika",
+        "district": "Rasuwa",
+        "road": {
+          "status": "not_reported"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Grang",
+        "municipality": "Kalika",
+        "district": "Rasuwa",
+        "road": {
+          "status": "not_reported"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Betrawati",
+        "municipality": "Bidur",
+        "district": "Nuwakot",
+        "road": {
+          "status": "planned",
+          "detail": "Old and new Betrawati bridges swept away and the Trishuli-Betrawati road extensively damaged. A 48 m Bailey bridge is planned but not yet installed.",
+          "as_of": "2026-09-06",
+          "src": "myrepublica_plh"
+        },
+        "power": {
+          "status": "not_reported",
+          "detail": "Not reported separately from the Nuwakot district figure."
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Trishuli Bazar",
+        "aliases": [
+          "Trisuli Bazar",
+          "Trishuli Bazaar"
+        ],
+        "municipality": "Bidur",
+        "district": "Nuwakot",
+        "road": {
+          "status": "planned",
+          "detail": "Old and new Trishuli Bazar bridges swept away. A 48 m Bailey bridge is planned but not yet installed.",
+          "as_of": "2026-09-06",
+          "src": "myrepublica_plh"
+        },
+        "power": {
+          "status": "restored",
+          "detail": "Market areas restored on 27 August.",
+          "as_of": "2026-08-27",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "telecom": {
+          "status": "cut",
+          "detail": "Ncell tower still down in the Trishuli/Bidur area.",
+          "as_of": "2026-09-07",
+          "src": "ictframe_ncell"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Bidur (Battar)",
+        "aliases": [
+          "Bidur",
+          "Battar"
+        ],
+        "municipality": "Bidur",
+        "district": "Nuwakot",
+        "road": {
+          "status": "limited",
+          "detail": "Reachable via the reopened Galchhi detour; the direct Trishuli-Betrawati road is still damaged.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "power": {
+          "status": "restored",
+          "detail": "Nearly all wards fully restored.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "limited",
+          "detail": "Bidur Water Supply Project running on a 100 kVA diesel generator, distributing about 500,000 litres a day. A short-term measure, not a restoration.",
+          "as_of": "2026-09-06",
+          "src": "nepalpress_water"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Devighat",
+        "municipality": "Bidur",
+        "district": "Nuwakot",
+        "road": {
+          "status": "planned",
+          "detail": "Bridge near the Water Resources and Irrigation Division destroyed. The Nepal Army began installing a Bailey bridge; a temporary cable-pulley (tuen) crossing carries people and light goods.",
+          "as_of": "2026-09-06",
+          "src": "mofa_0906"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Phosretar",
+        "municipality": "Galchhi",
+        "district": "Dhading",
+        "road": {
+          "status": "cut",
+          "detail": "Bridge over the Trishuli destroyed.",
+          "as_of": "2026-08-29",
+          "src": "ktm_0829"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Gauribesi",
+        "municipality": "Bidur",
+        "district": "Nuwakot",
+        "road": {
+          "status": "restored",
+          "detail": "Terminus of the Galchhi detour route toward Trishuli Bazar; open as a narrow single-lane track.",
+          "as_of": "2026-09-02",
+          "src": "onlinekhabar_detour"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Galchhi",
+        "municipality": "Galchhi",
+        "district": "Dhading",
+        "road": {
+          "status": "restored",
+          "detail": "Hub of the reopened right-bank detour road, the alternative to the destroyed Trishuli-corridor bridges.",
+          "as_of": "2026-09-02",
+          "src": "onlinekhabar_detour"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Malekhu",
+        "municipality": "Benighat Rorang",
+        "district": "Dhading",
+        "road": {
+          "status": "cut",
+          "detail": "Phurke Khola bridge washed away, with local road damage.",
+          "as_of": "2026-08-27",
+          "src": "onlinekhabar_bridges"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Benighat",
+        "municipality": "Benighat Rorang",
+        "district": "Dhading",
+        "road": {
+          "status": "cut",
+          "detail": "Prithvi Highway fully blocked at Krishnabhir by a 70 m road-foundation collapse into the Trishuli; the Muglin-Kathmandu section is closed both ways. About 50 m of a 300 m bypass track had opened before new slope cracks were found above the worksite.",
+          "as_of": "2026-09-08",
+          "src": "ktm_0904"
+        },
+        "power": {
+          "status": "not_reported"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Aamachhodingmo",
+        "aliases": [
+          "Parbati Kunda"
+        ],
+        "municipality": "Aamachhodingmo",
+        "district": "Rasuwa",
+        "road": {
+          "status": "cut",
+          "detail": "All wards reported inaccessible by road.",
+          "as_of": "2026-09-01",
+          "src": "ocha_fu5"
+        },
+        "power": {
+          "status": "limited",
+          "detail": "Only ward 1 has power; four wards remain dark.",
+          "as_of": "2026-09-06",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      },
+      {
+        "name": "Uttargaya",
+        "municipality": "Uttargaya",
+        "district": "Rasuwa",
+        "road": {
+          "status": "not_reported"
+        },
+        "power": {
+          "status": "restored",
+          "detail": "Grid power restored on 7 September.",
+          "as_of": "2026-09-07",
+          "src": "ktm_0906"
+        },
+        "water": {
+          "status": "not_reported"
+        },
+        "displacement_site": {
+          "status": "not_reported"
+        }
+      }
     ],
     "corridor": [
-      { "text": "Pasang Lhamu Highway (NH42), Betrawati to Rasuwagadhi: 42 km damaged at multiple points with several concrete bridges washed away, plus a further 16 km from Syabrubesi toward the China border. No confirmed reopening date; authorities advise against travel to Rasuwagadhi, Timure or Kerung until the route is reassessed.", "as_of": "2026-09-09", "src": "myrepublica_plh" },
-      { "text": "Prithvi Highway is closed both directions at Krishnabhir in Benighat Rorang, Dhading, where about 70 m of road foundation collapsed into the Trishuli. A 300 m bypass track is under construction, roughly half open, but seven cracks up to 15 m long were found in the slope above the worksite. The Prime Minister said the section would reopen within September.", "as_of": "2026-09-08", "src": "radionepal_0902" },
-      { "text": "Detour in use: Galchhi to Kalleritar, Koshikhola, Piplatar, Darshantar, Chhatrekhola and Gauribesi along the right bank of the Trishuli. It restores a rough single-lane connection from Dhading and Galchhi to Trishuli Bazar without crossing the destroyed river bridges, but is narrow, slow and hard for two-way traffic.", "as_of": "2026-09-02", "src": "onlinekhabar_detour" },
-      { "text": "Bailey bridges planned by the Department of Roads at four locations: Devighat in Bidur, where the Nepal Army has begun installation; Trishuli Bazaar and Betrawati, each needing about a 48 m span; and Syabrubesi, needing about 75 m. Moving the components is hampered because the lower road sections are still blocked. China has supplied Bailey components at the Korala border for possible use at Rasuwagadhi.", "as_of": "2026-09-06", "src": "myrepublica_plh" },
-      { "text": "Named bridges destroyed: Betrawati old and new; the Trishuli River bridge at Tupche; Trishuli Bazar old and new; Simchaur; the bridge near the Water Resources and Irrigation Division at Devighat; a Mid-Hill Highway bridge; two on the Tadi Khola; Shreekali, Budhsinghghat, Ratamate and Phosretar over the Trishuli; and in Dhading the Syaltar road bridge, Ghatbesi bridge, Phurke Khola bridge at Malekhu and two on the Kolpu Khola.", "as_of": "2026-09-01", "src": "onlinekhabar_bridges" },
-      { "text": "Bridge totals are not reconciled across sources. NDRRMA reported 41 motorable bridges washed away and 4 more damaged; OnlineKhabar counted at least 19 bridges and about 40 km of road along the Trishuli corridor; the Department of Roads early estimate was 68 suspension and 33 driveable bridges damaged, with an initial Rs 15 bn estimate for road and bridge infrastructure.", "as_of": "2026-09-01", "src": "ndrrma_sitrep1" },
-      { "text": "Electricity, district level: Rasuwa 78% of 14,281 affected households restored, Nuwakot 96.7% of 68,679, Dhading 99.8% of 83,642 with about 120 families still dark. Rasuwa floods affected roughly 10% of Nepal's total generation capacity.", "as_of": "2026-09-07", "src": "ktm_0906" },
-      { "text": "Water supply: 55 drinking-water projects damaged across Rasuwa, Nuwakot, Dhading and Gorkha, with Rs 640 m estimated damage; Nuwakot is worst hit with 22 projects affected. The Bidur Water Supply Project runs on a 100 kVA diesel generator distributing about 500,000 litres a day.", "as_of": "2026-09-06", "src": "nepalpress_water" },
-      { "text": "UNICEF reported at least 22,000 children in the flood-affected areas without safe drinking water, sanitation and hygiene support, and dispatched supplies for about 19,000 people in Rasuwa and Nuwakot.", "as_of": "2026-09-03", "src": "unicef_0903" },
-      { "text": "Telecommunications: Nepal Telecom restored 116 of 120 affected towers by 1 September using helicopter-carried crews. Ncell restored 24 of 27, leaving Ghattekhola and Timure in Rasuwa and Trishuli/Bidur in Nuwakot down; 60 km of fibre was damaged and total telecom infrastructure damage is put at Rs 450 m.", "as_of": "2026-09-07", "src": "ictframe_ncell" },
-      { "text": "Displacement: 3,458 people were living in 27 displacement sites in Nuwakot and Rasuwa, mostly in schools, as of 1 September. IOM's Displacement Tracking Matrix covers 15 sites in Dhading, Nuwakot and Rasuwa and estimates 4,288 households affected, of which 2,886 displaced.", "as_of": "2026-09-05", "src": "iom_dtm" },
-      { "text": "Cross-border: the Gyirong checkpoint on the Chinese side was destroyed, along with a 5 km stretch of China National Highway 216 toward Rasuwagadhi, and communications and power to the Gyirong Port area were cut. About 80 trucks and 170 containers were stranded in Gyirong town. On the Nepal side the Rasuwagadhi customs office was destroyed and more than 300 vehicles plus roughly 1,000 electric vehicles awaiting export were swept away.", "as_of": "2026-09-06", "src": "wiki_npl_tibet" }
+      {
+        "text": "Pasang Lhamu Highway (NH42), Betrawati to Rasuwagadhi: 42 km damaged at multiple points with several concrete bridges washed away, plus a further 16 km from Syabrubesi toward the China border. No confirmed reopening date; authorities advise against travel to Rasuwagadhi, Timure or Kerung until the route is reassessed.",
+        "as_of": "2026-09-09",
+        "src": "myrepublica_plh"
+      },
+      {
+        "text": "NDRRMA listed ten obstructed road sections on 1 September: the Prithvi Highway completely blocked at Krishnabhir and Parewabhir on the Mugling-Dhading section and blocked again on Mugling-Malekhu; Galchhi-Devighat and Devighat-Dhunge blocked; the Trishuli-Mailung-Syabrubesi road completely and persistently obstructed at Khalte in Uttargaya-5; all main highways in Rasuwa closed until further notice; the Pasang Lhamu road completely obstructed at Simtar in Belkotgadhi-10; night restrictions on the Tokha-Chhahare road at Ghattekhola in Shivapuri-8 and on the B.P. Highway in Kavre; and the Kanti Lokpath blocked by a landslide at Bhattedanda in Lalitpur.",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      },
+      {
+        "text": "Prithvi Highway is closed both directions at Krishnabhir in Benighat Rorang, Dhading, where about 70 m of road foundation collapsed into the Trishuli. A 300 m bypass track is under construction, roughly half open, but seven cracks up to 15 m long were found in the slope above the worksite. The Prime Minister said the section would reopen within September.",
+        "as_of": "2026-09-08",
+        "src": "radionepal_0902"
+      },
+      {
+        "text": "Detour in use: Galchhi to Kalleritar, Koshikhola, Piplatar, Darshantar, Chhatrekhola and Gauribesi along the right bank of the Trishuli. It restores a rough single-lane connection from Dhading and Galchhi to Trishuli Bazar without crossing the destroyed river bridges, but is narrow, slow and hard for two-way traffic.",
+        "as_of": "2026-09-02",
+        "src": "onlinekhabar_detour"
+      },
+      {
+        "text": "Bailey bridges planned by the Department of Roads at four locations: Devighat in Bidur, where the Nepal Army has begun installation; Trishuli Bazaar and Betrawati, each needing about a 48 m span; and Syabrubesi, needing about 75 m. Moving the components is hampered because the lower road sections are still blocked. China has supplied Bailey components at the Korala border for possible use at Rasuwagadhi.",
+        "as_of": "2026-09-06",
+        "src": "myrepublica_plh"
+      },
+      {
+        "text": "Named bridges destroyed: Betrawati old and new; the Trishuli River bridge at Tupche; Trishuli Bazar old and new; Simchaur; the bridge near the Water Resources and Irrigation Division at Devighat; a Mid-Hill Highway bridge; two on the Tadi Khola; Shreekali, Budhsinghghat, Ratamate and Phosretar over the Trishuli; and in Dhading the Syaltar road bridge, Ghatbesi bridge, Phurke Khola bridge at Malekhu and two on the Kolpu Khola.",
+        "as_of": "2026-09-01",
+        "src": "onlinekhabar_bridges"
+      },
+      {
+        "text": "Bridge totals are not reconciled across sources. NDRRMA reported 41 motorable bridges washed away and 4 more damaged; OnlineKhabar counted at least 19 bridges and about 40 km of road along the Trishuli corridor; the Department of Roads early estimate was 68 suspension and 33 driveable bridges damaged, with an initial Rs 15 bn estimate for road and bridge infrastructure.",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      },
+      {
+        "text": "Electricity, district level: Rasuwa 78% of 14,281 affected households restored, Nuwakot 96.7% of 68,679, Dhading 99.8% of 83,642 with about 120 families still dark. Rasuwa floods affected roughly 10% of Nepal's total generation capacity.",
+        "as_of": "2026-09-07",
+        "src": "ktm_0906"
+      },
+      {
+        "text": "Water supply: 55 drinking-water projects damaged across Rasuwa, Nuwakot, Dhading and Gorkha, with Rs 640 m estimated damage; Nuwakot is worst hit with 22 projects affected. The Bidur Water Supply Project runs on a 100 kVA diesel generator distributing about 500,000 litres a day.",
+        "as_of": "2026-09-06",
+        "src": "nepalpress_water"
+      },
+      {
+        "text": "UNICEF reported at least 22,000 children in the flood-affected areas without safe drinking water, sanitation and hygiene support, and dispatched supplies for about 19,000 people in Rasuwa and Nuwakot.",
+        "as_of": "2026-09-03",
+        "src": "unicef_0903"
+      },
+      {
+        "text": "Telecommunications: Nepal Telecom restored 116 of 120 affected towers by 1 September using helicopter-carried crews. Ncell restored 24 of 27, leaving Ghattekhola and Timure in Rasuwa and Trishuli/Bidur in Nuwakot down; 60 km of fibre was damaged and total telecom infrastructure damage is put at Rs 450 m.",
+        "as_of": "2026-09-07",
+        "src": "ictframe_ncell"
+      },
+      {
+        "text": "Displacement: 3,458 people were living in 27 displacement sites in Nuwakot and Rasuwa, mostly in schools, as of 1 September. IOM's Displacement Tracking Matrix covers 15 sites in Dhading, Nuwakot and Rasuwa and estimates 4,288 households affected, of which 2,886 displaced.",
+        "as_of": "2026-09-05",
+        "src": "iom_dtm"
+      },
+      {
+        "text": "Cross-border: the Gyirong checkpoint on the Chinese side was destroyed, along with a 5 km stretch of China National Highway 216 toward Rasuwagadhi, and communications and power to the Gyirong Port area were cut. About 80 trucks and 170 containers were stranded in Gyirong town. On the Nepal side the Rasuwagadhi customs office was destroyed and more than 300 vehicles plus roughly 1,000 electric vehicles awaiting export were swept away.",
+        "as_of": "2026-09-06",
+        "src": "wiki_npl_tibet"
+      },
+      {
+        "text": "Health facilities: Syafrubesi and Timure health posts, the Timure health desk and the Mailung community health unit were fully damaged; Baireni Hospital in Galchhi and the Charadhuli basic health service centre were partially damaged; access to Dhading and Trishuli hospitals was disrupted. Nineteen schools were surveyed across Rasuwa, Nuwakot and Dhading, covering 6,901 enrolled students: eight fully damaged, eight partially damaged, three safe.",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      },
+      {
+        "text": "Shelter: 30 holding centres held 3,930 people, 19 centres and 2,653 people in Nuwakot and 11 centres and 1,277 people in Rasuwa. In Nuwakot 1,267 houses were fully damaged and 1,253 partially damaged. Satellite mapping put 4,689 buildings inside the flood zone, an exposure estimate rather than verified damage.",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      },
+      {
+        "text": "Nuwakot agriculture, preliminary: 4,440 ropani of crops affected, 2,035 livestock and 16,500 birds lost. Two wastewater treatment plants were destroyed at Dhunge and Bidur, and 465 further households were affected across the Trishuli Colony, Devighat and Betrawati water schemes.",
+        "as_of": "2026-09-01",
+        "src": "ndrrma_sitrep1"
+      }
     ]
-  }
+  },
+  "district_figures": [
+    {
+      "district": "Nuwakot",
+      "label": "houses fully damaged",
+      "value": 1267,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1"
+    },
+    {
+      "district": "Nuwakot",
+      "label": "houses partially damaged",
+      "value": 1253,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1"
+    },
+    {
+      "district": "Nuwakot",
+      "label": "people in holding centres",
+      "value": 2653,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1",
+      "detail": "Across 19 centres"
+    },
+    {
+      "district": "Rasuwa",
+      "label": "people in holding centres",
+      "value": 1277,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1",
+      "detail": "Across 11 centres in Uttargaya, Kalika, Aamachhodingmo and Gosaikunda; not split per municipality in the report"
+    },
+    {
+      "district": "All affected",
+      "label": "people in holding centres",
+      "value": 3930,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1",
+      "detail": "30 centres in total"
+    },
+    {
+      "district": "All affected",
+      "label": "buildings inside the flood zone",
+      "value": 4689,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1",
+      "detail": "Satellite exposure estimate, not verified damage"
+    },
+    {
+      "district": "Rasuwa",
+      "label": "cash relief, NPR",
+      "value": 10000000,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1"
+    },
+    {
+      "district": "Nuwakot",
+      "label": "cash relief, NPR",
+      "value": 10000000,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1"
+    },
+    {
+      "district": "Dhading",
+      "label": "cash relief, NPR",
+      "value": 5000000,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1"
+    },
+    {
+      "district": "All affected",
+      "label": "cash relief, NPR",
+      "value": 67500000,
+      "as_of": "2026-09-01",
+      "src": "ndrrma_sitrep1",
+      "detail": "Across 15 affected municipalities; the remaining 12 shares are not broken out"
+    }
+  ]
 }
