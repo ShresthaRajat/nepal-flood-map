@@ -4,6 +4,8 @@ Purpose: a single inspectable inventory of every publicly discoverable satellite
 
 **Compiled:** 7 Sep 2026. All links below were verified to respond (not necessarily to serve a full download — see per-row notes) as of that date.
 
+**Update 9 Sep 2026:** the Vantor Nepal-Flooding-Aug-2026 STAC collection now has 30 items (was 23 on 7 Sep). Three of the new 8 Sep scenes — WV-2 `B030001100EF5210`, WV-2 `B030001100EF5110`, Legion `B14000110116A310` — failed `tools/imagery_watch.py`'s auto-build cloud/off-nadir gates and were left notify-only; the owner added them to the map by hand anyway (see the three rows below marked ON MAP, added 9 Sep 2026).
+
 **Status legend:**
 - **ON MAP** — this exact scene/date is already on the Nepal flood 2026 map.
 - **NEW – downloadable georeferenced** — not yet on the map; a real file (GeoTIFF/COG/shapefile/etc.) can be pulled directly.
@@ -71,9 +73,12 @@ Sorted by acquisition date.
 | 2026-09-07 03:07 UTC | WorldView Legion (LG02) | Vantor (Maxar) | ~0.58 m | Post-event | GeoTIFF (STAC item) | CC BY-NC 4.0 | NEW – downloadable georeferenced | https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B120001101250A10.json | Third additional 09-07 Legion strip beyond the map's two. |
 | 2026-09-07 03:59 UTC | WorldView Legion (LG06) | Vantor (Maxar) | ~0.43 m | Post-event | GeoTIFF (STAC item) | CC BY-NC 4.0 | NEW – downloadable georeferenced | https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B160001101DA4B10.json | Additional 09-07 Legion strip — map currently shows only 2 of 5 total 09-07 strips. |
 | 2026-09-07 06:01 UTC | WorldView Legion (LG04) | Vantor (Maxar) | ~0.44 m | Post-event | GeoTIFF (STAC item) | CC BY-NC 4.0 | NEW – downloadable georeferenced | https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B14000110114DC10.json | Additional 09-07 Legion strip. |
+| 2026-09-08 | WorldView-2 (WV02) | Vantor (Maxar) | ~0.71 m | Trisuli Bazar and Betrawati | GeoTIFF (STAC item) | CC BY-NC 4.0 | ON MAP | https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B030001100EF5210.json | Added to map 9 Sep 2026 as `post_wv02_20260908_ef5210`. Watcher logged it notify-only (cloud 40%, off-nadir 39.7° — over the 35° auto-build gate); owner override, highest value of the three 8 Sep override scenes. |
+| 2026-09-08 | WorldView-2 (WV02) | Vantor (Maxar) | ~0.68 m | South-west corridor edge | GeoTIFF (STAC item) | CC BY-NC 4.0 | ON MAP | https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B030001100EF5110.json | Added to map 9 Sep 2026 as `post_wv02_20260908_ef5110`. Watcher logged it notify-only (cloud 56% and off-nadir 37.3°, both over gate, and no FOCUS-window overlap); owner override. |
+| 2026-09-08 | WorldView Legion (LG04) | Vantor (Maxar) | ~0.52 m | Upper valley (Syabrubesi–Rasuwagadhi) | GeoTIFF (STAC item) | CC BY-NC 4.0 | ON MAP | https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/B14000110116A310.json | Added to map 9 Sep 2026 as `post_legion_20260908_16a310`. Watcher logged it notify-only (cloud 71%, off-nadir 41.2° — both over the auto-build gates); owner override. |
 
 **Key access points:**
-- Vantor Nepal event STAC collection root (23 items: 4 pre-event baselines + 19 post-event, GE01/WV02/WV03/Legion LG01/02/03/04/06): https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json
+- Vantor Nepal event STAC collection root (30 items as of 9 Sep 2026, was 23 on 7 Sep: 4 pre-event baselines + 26 post-event, GE01/WV02/WV03/Legion LG01/02/03/04/06): https://vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json
 - Vantor Open Data Program licence: https://vantor-opendata.s3.amazonaws.com/LICENSE.TXT
 - Vantor STAC browser mirror (moreGeo): https://browser.moregeo.it/external/vantor-opendata.s3.amazonaws.com/events/Nepal-Flooding-Aug-2026/collection.json
 - Vantor Open Data Program landing page: https://vantor.com/company/open-data-program/

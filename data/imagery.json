@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-08",
+ "generated": "2026-09-09",
  "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
  "layers": [
   {
@@ -470,8 +470,91 @@
    "source_ids": [
     "B030001100EF5910"
    ]
+  },
+  {
+   "id": "post_wv02_20260908_ef5210",
+   "label": "8 Sep 2026 · Vantor WorldView-2 0.5 m (cloud 40%, off-nadir 39.7°, owner override)",
+   "side": "post",
+   "date": "2026-09-08",
+   "sensor": "WorldView-2",
+   "provider": "Vantor",
+   "gsd_m": 0.5,
+   "bounds": [
+    85.06644,
+    27.68353,
+    85.29999,
+    27.96935
+   ],
+   "minzoom": 10,
+   "maxzoom": 17,
+   "tiles": "tiles/post_wv02_20260908_ef5210/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "trisuli_bazar",
+   "size_mb": 47.5,
+   "cloud_pct": 40,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "B030001100EF5210"
+   ]
+  },
+  {
+   "id": "post_wv02_20260908_ef5110",
+   "label": "8 Sep 2026 · Vantor WorldView-2 0.5 m (cloud 56%, off-nadir 37.2°, owner override)",
+   "side": "post",
+   "date": "2026-09-08",
+   "sensor": "WorldView-2",
+   "provider": "Vantor",
+   "gsd_m": 0.5,
+   "bounds": [
+    84.87831,
+    27.68353,
+    85.09814,
+    27.90381
+   ],
+   "minzoom": 10,
+   "maxzoom": 17,
+   "tiles": "tiles/post_wv02_20260908_ef5110/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "corridor",
+   "size_mb": 30.1,
+   "cloud_pct": 56,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "B030001100EF5110"
+   ]
+  },
+  {
+   "id": "post_legion_20260908_16a310",
+   "label": "8 Sep 2026 · Vantor Legion 0.4 m (cloud 71%, off-nadir 41.2°, owner override)",
+   "side": "post",
+   "date": "2026-09-08",
+   "sensor": "Legion",
+   "provider": "Vantor",
+   "gsd_m": 0.4,
+   "bounds": [
+    85.30167,
+    28.147,
+    85.44699,
+    28.41583
+   ],
+   "minzoom": 10,
+   "maxzoom": 17,
+   "tiles": "tiles/post_legion_20260908_16a310/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 17.2,
+   "cloud_pct": 71,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "B14000110116A310"
+   ]
   }
  ],
  "default_pre": "none",
- "default_post": ["post_s2_20260827", "post_pelican_20260901", "post_wv02_20260908_ef5510", "post_wv02_20260908_ef5910"]
+ "default_post": [
+  "post_s2_20260827",
+  "post_pelican_20260901",
+  "post_wv02_20260908_ef5510",
+  "post_wv02_20260908_ef5910"
+ ]
 }

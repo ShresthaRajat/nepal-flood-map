@@ -19,6 +19,7 @@ from unpkg.
 | `tools/build_places.py`, `build_collapse_origin.py` | derived | Settlement labels (OSM/Overpass); UNOSAT detachment zone, barrier lakes, upstream AOI. |
 | `tools/refresh_hdx.sh`, `update_hdx_counts.py` | data | Pull the latest HOT/HDX exports, retile, rebuild overlays, recompute counts and snapshot dates. |
 | `tools/imagery_watch.py`, `build_cog_tiles.sh` | imagery | 6-hourly scan for new scenes (launchd); generic COG-to-tiles builder. |
+| `tools/build_vantor_item.py` | imagery | Manual override: build one or more Vantor STAC item ids and add them to the catalogue, bypassing `imagery_watch.py`'s cloud/off-nadir/focus gates. Imports `imagery_watch` as a module and calls its `build_vantor`/`catalog_add` directly, so it reuses the same zoom range, CORRIDOR clip, and layer-id naming; run by hand, does not commit or push. |
 | `docs/ARCHITECTURE.md` | app | This file. |
 | `data/imagery.json` | retile agent | Imagery catalogue. |
 | `data/terrain.json` | contours agent | Contour and hillshade tile descriptions. |
