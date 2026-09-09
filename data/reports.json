@@ -166,7 +166,7 @@
 
     { "name": "Benighat Rorang", "name_ne": "बेनीघाट रोराङ", "aliases": ["Benighat"], "district": "Dhading",
       "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "The Prithvi Highway is fully blocked at Krishnabhir where about 70 m of road foundation collapsed into the Trishuli. The Muglin-Kathmandu section is closed both directions; about half of a 300 m bypass track had opened by early September before new slope cracks were found above the worksite.", "src": "ktm_0902" } },
+      "summary": { "text": "The Prithvi Highway is fully blocked at Krishnabhir where about 70 m of road foundation collapsed into the Trishuli. The Muglin-Kathmandu section is closed both directions; about half of a 300 m bypass track had opened by early September before new slope cracks were found above the worksite. The Phurke Khola bridge at Malekhu was also washed away.", "src": "ktm_0902" } },
 
     { "name": "Galchhi", "name_ne": "गल्छी", "aliases": [], "district": "Dhading",
       "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
@@ -178,7 +178,7 @@
 
     { "name": "Dhunibenshi", "name_ne": "धुनीबेंशी", "aliases": ["Dhunibesi"], "district": "Dhading",
       "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
-      "summary": { "text": "The Phurke Khola bridge at Malekhu was washed away, along with local road damage.", "src": "onlinekhabar_bridges" } },
+      "summary": null },
 
     { "name": "Thakre", "name_ne": "थाक्रे", "aliases": [], "district": "Dhading",
       "figures": { "deaths_bodies": { "value": null, "as_of": null, "src": null } },
@@ -332,7 +332,7 @@
         "water": { "status": "not_reported" },
         "displacement_site": { "status": "limited", "detail": "Relief supplies staged here; onward delivery to villages is the bottleneck.", "as_of": "2026-09-08", "src": "ktm_0908" } },
 
-      { "name": "Ghattekholagaun", "aliases": ["Ghattekhola"], "municipality": "Kalika", "district": "Rasuwa",
+      { "name": "Ghattekholagaun", "aliases": ["Ghattekhola"], "municipality": "Gosaikunda", "district": "Rasuwa",
         "road": { "status": "limited", "detail": "Passable in daylight only, with a mandatory night closure enforced. (unofficial)", "as_of": "2026-09-09", "src": "rasuwa_bulletin", "unofficial": true },
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "telecom": { "status": "cut", "detail": "Ncell tower still down.", "as_of": "2026-09-07", "src": "ictframe_ncell" },
@@ -348,7 +348,7 @@
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
-      { "name": "Thulo Bharkhu", "municipality": "Kalika", "district": "Rasuwa",
+      { "name": "Thulo Bharkhu", "municipality": "Gosaikunda", "district": "Rasuwa",
         "road": { "status": "not_reported" }, "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
@@ -356,7 +356,7 @@
         "road": { "status": "not_reported" }, "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
-      { "name": "Grang", "municipality": "Aamachhodingmo", "district": "Rasuwa",
+      { "name": "Grang", "municipality": "Kalika", "district": "Rasuwa",
         "road": { "status": "not_reported" }, "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
@@ -384,12 +384,12 @@
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
-      { "name": "Phosretar", "municipality": "Bidur", "district": "Nuwakot",
+      { "name": "Phosretar", "municipality": "Galchhi", "district": "Dhading",
         "road": { "status": "cut", "detail": "Bridge over the Trishuli destroyed.", "as_of": "2026-08-29", "src": "ktm_0829" },
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
-      { "name": "Gauribesi", "municipality": "Belkotgadhi", "district": "Nuwakot",
+      { "name": "Gauribesi", "municipality": "Bidur", "district": "Nuwakot",
         "road": { "status": "restored", "detail": "Terminus of the Galchhi detour route toward Trishuli Bazar; open as a narrow single-lane track.", "as_of": "2026-09-02", "src": "onlinekhabar_detour" },
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
@@ -399,7 +399,7 @@
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
 
-      { "name": "Malekhu", "municipality": "Dhunibenshi", "district": "Dhading",
+      { "name": "Malekhu", "municipality": "Benighat Rorang", "district": "Dhading",
         "road": { "status": "cut", "detail": "Phurke Khola bridge washed away, with local road damage.", "as_of": "2026-08-27", "src": "onlinekhabar_bridges" },
         "power": { "status": "not_reported" }, "water": { "status": "not_reported" },
         "displacement_site": { "status": "not_reported" } },
