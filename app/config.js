@@ -117,6 +117,28 @@ const NOTES_HTML = `
 triggered a flood down the Lhende, Bhote Koshi and Trishuli rivers, per ICIMOD and USGS reporting.
 This map covers the corridor from Rasuwagadhi and Syabrubesi in the north down through Betrawati,
 Trisuli Bazar and Bidur to Galchhi and Mugling.</p>
+<p>Per ICIMOD's working account, a rock mass carrying a hanging glacier detached from the north face of
+the Lirung massif (Langtang Himal) at about 5,200 m, fell roughly 1,200 m into the Lende (Lhende) Khola
+headwaters, and blocked the river for about 18–19 hours before the dam failed on the morning of 26 Aug
+2026 (<a href="https://www.icimod.org/kyirong-rasuwa-flood-2026-nepal-china-border/" target="_blank" rel="noopener">ICIMOD</a>).
+The July 2025 flood on the same corridor was a different mechanism — drainage of a supraglacial lake on
+the Purepu Glacier, about 35 km upstream. First scientific paper on this event:
+<a href="https://arxiv.org/abs/2609.04563" target="_blank" rel="noopener">"When a high-mountain slope failure
+cascades downstream: physical footprint and evolving exposure of the 2026 Gyirong mixed rock-ice cascade"</a>
+(arXiv 2609.04563).</p>
+<p>Casualty and damage figures change daily and are not reproduced on this map; for current, dated numbers
+see Nepal's Ministry of Foreign Affairs
+<a href="https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/" target="_blank" rel="noopener">Situation
+Update on Bhote Koshi River Floods</a> (7 Sep 2026 14:00 NPT edition) and NDRRMA. Flood-front arrival times
+cited elsewhere on this site come from the Flood Forecasting Division's (DHM) technical report of 27 Aug
+2026, as summarised in
+<a href="https://en.wikipedia.org/wiki/Timeline_of_the_2026_Nepal%E2%80%93Tibet_floods" target="_blank" rel="noopener">Wikipedia's
+timeline</a>; treat those times as approximate until the DHM report itself is obtained.</p>
+<p>Related open reconstructions: Geopera's
+<a href="https://geopera.com/blog/bhote-koshi-flood-2026-satellite-analysis" target="_blank" rel="noopener">satellite
+analysis</a> (<a href="https://github.com/geo-pera/bhotekoshi-2026-reconstruction" target="_blank" rel="noopener">code
+and data</a>, CC BY-NC 4.0) and <a href="https://rasuwaflood.org" target="_blank" rel="noopener">rasuwaflood.org</a>
+(Apil K.C., University of Michigan).</p>
 
 <h3>Imagery</h3>
 <p>Before/after scenes are registered to a common frame and served as 256&nbsp;px Web Mercator WebP
