@@ -615,7 +615,7 @@ function buildDefs() {
   // Flood extent goes under the HOT features so the dark red damage outlines stay crisp on top.
   push(
     { id: 'flood_extent-fill', type: 'fill', source: 'flood_extent', layout: { visibility: 'none' },
-      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.2 } },
+      paint: { 'fill-color': '#7f1d1d', 'fill-opacity': 0.14 } },
     { id: 'flood_extent-line', type: 'line', source: 'flood_extent', layout: { visibility: 'none' },
       paint: { 'line-color': '#991b1b', 'line-width': 1.2 } },
   );
