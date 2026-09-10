@@ -288,6 +288,7 @@ const DMG_CLASS = {
   'unaffected': 'unaffected', 'not reported': 'nr',
 };
 const dmgColor = v => DMG_COLOR[String(v || '').toLowerCase()] || DMG_COLOR['not reported'];
+const dmgClass = v => DMG_CLASS[String(v || '').toLowerCase()] || DMG_CLASS['not reported'];
 
 /* HDX spells a few projects differently from the reports ("Upper Trishuli 3A"
  * vs "Upper Trishuli-3A", "Bhotekoshi Khola Hydropower Project" vs "Bhotekoshi
@@ -299,45 +300,84 @@ const hydroKey = n => String(n || '').toLowerCase()
   .replace(/\b(project|projects|hep|hpp|hydro)\b/g, ' ')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
-// ------------------------------------------------------------ SDF shape icons
-/* Hydropower plants draw as squares and bridges as a semicircle (the flat
- * edge sits on the point, reading like a bridge arch over the river) rather
- * than the default circle dot -- owner direction, 10 Sep 2026.  Both are
- * generated at runtime on a canvas rather than shipped as image assets, then
- * registered per-map as SDF images so icon-color / icon-opacity / icon-halo-*
- * stay data-driven expressions exactly like the circle layers they replace.
- * Canvas antialiasing on the filled shape gives the renderer a usable (if
- * short-range) distance field -- no separate SDF-generation step needed.
- * Drawn at 64 px nominal size on a 2x canvas (128 px) with padding so the
- * SDF edge has room and does not clip. */
-const SHAPE_ICON_PX = 64, SHAPE_ICON_RATIO = 2, SHAPE_ICON_PAD = 8;
-function shapeIconData(draw) {
+// ------------------------------------------------------------ shape icons
+/* Hydropower plants draw as squares and bridges as an outlined semicircle
+ * (the flat edge sits on the point, reading like a bridge arch over the
+ * river) rather than the default circle dot -- owner direction, 10 Sep 2026.
+ * Rewritten 10 Sep 2026: the first version registered a plain anti-aliased
+ * canvas shape with sdf:true, so MapLibre treated every non-zero-alpha pixel
+ * as "inside the shape" and filled the whole image box with a solid white
+ * halo square.  Non-SDF RGBA images fix it -- one correctly-coloured image
+ * per colour needed (colour can't be a paint expression on a non-SDF icon),
+ * picked with a match/case expression on icon-image.  icon-image is a layout
+ * property, not paint, so the "colour by status" toggle (PAINT_TARGETS,
+ * applyColorBy()) sets it with setLayoutProperty for these entries -- see the
+ * 'icon-image' branch there.  icon-opacity keeps working as a paint
+ * expression on non-SDF icons (used for the approximate-location hydro
+ * plants).  icon-halo-* only affects SDF icons, so contrast strokes/haloes
+ * are baked into the images themselves instead.
+ * Drawn at 64 px nominal size on a 2x canvas (128 px) with transparent
+ * padding so the stroke/halo has room and does not clip. */
+const SHAPE_ICON_PX = 64, SHAPE_ICON_RATIO = 2, SHAPE_ICON_PAD = 10;
+function iconCanvas(draw) {
   const sz = SHAPE_ICON_PX * SHAPE_ICON_RATIO;
   const c = document.createElement('canvas');
   c.width = sz; c.height = sz;
   const ctx = c.getContext('2d');
-  ctx.fillStyle = '#000';
   draw(ctx, sz, SHAPE_ICON_PAD * SHAPE_ICON_RATIO);
   return ctx.getImageData(0, 0, sz, sz);
 }
-const SHAPE_ICONS = {
-  'shape-square': () => shapeIconData((ctx, sz, pad) => {
-    ctx.fillRect(pad, pad, sz - 2 * pad, sz - 2 * pad);
-  }),
-  // Flat edge at the bottom, dome on top -- icon-anchor 'bottom' puts the flat
-  // edge on the point itself.
-  'shape-semicircle': () => shapeIconData((ctx, sz, pad) => {
+// Filled square with a 1 px (device: SHAPE_ICON_RATIO px) dark stroke baked in
+// for contrast against imagery.
+function squareIcon(fill) {
+  return iconCanvas((ctx, sz, pad) => {
+    const x = pad, y = pad, w = sz - 2 * pad, h = sz - 2 * pad;
+    ctx.fillStyle = fill;
+    ctx.fillRect(x, y, w, h);
+    ctx.lineJoin = 'miter';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = SHAPE_ICON_RATIO;
+    ctx.strokeRect(x, y, w, h);
+  });
+}
+// Outlined semicircle: fully transparent interior, 2 px stroke in `stroke`,
+// flat edge at the bottom (icon-anchor 'bottom' puts it on the point) --
+// owner direction, 10 Sep 2026 ("transparent... outline with no fill").  A
+// 1 px white halo is drawn wider, behind the coloured stroke, for contrast
+// against dark imagery.
+function semicircleIcon(stroke) {
+  return iconCanvas((ctx, sz, pad) => {
     const r = (sz - 2 * pad) / 2, cx = sz / 2, cy = sz - pad - r;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, Math.PI, 0, false);
-    ctx.closePath();
-    ctx.fill();
-  }),
-};
+    const path = rr => { ctx.beginPath(); ctx.arc(cx, cy, rr, Math.PI, 0, false); ctx.closePath(); };
+    ctx.lineJoin = 'round';
+    path(r); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 6 * SHAPE_ICON_RATIO; ctx.stroke();
+    path(r); ctx.strokeStyle = stroke;    ctx.lineWidth = 2 * SHAPE_ICON_RATIO; ctx.stroke();
+  });
+}
+/* icon name -> pixel factory.  Hydro square colours come from DMG_COLOR/DMG_CLASS
+ * (defined below hydroKey); bridge colours are the two ground-report statuses
+ * that are actually shown (Standing/Intact is filtered out, see BRIDGE_SHOWN)
+ * plus the fixed HOT "Bridges (OSM)" category colour and a grey "standing" icon
+ * used only while the colour-by-status toggle is on for that HOT layer, which
+ * carries no status field and previously fell back to CFG.STATUS.standing. */
+const SHAPE_ICONS = {};
 function ensureShapeIcons(m) {
   for (const [name, make] of Object.entries(SHAPE_ICONS))
-    if (!m.hasImage(name)) m.addImage(name, make(), { sdf: true, pixelRatio: SHAPE_ICON_RATIO });
+    if (!m.hasImage(name)) m.addImage(name, make(), { pixelRatio: SHAPE_ICON_RATIO });
 }
+// One filled square per distinct damage colour hydroIconExpr() can pick between:
+// destroyed, severely damaged, damaged, unaffected, not reported (default).
+for (const k of Object.keys(DMG_COLOR)) SHAPE_ICONS['hydro-' + DMG_CLASS[k]] = () => squareIcon(DMG_COLOR[k]);
+const hydroIconOf = v => 'hydro-' + dmgClass(v);
+// Outlined semicircles: the two ground-report statuses actually shown (Standing/Intact
+// is filtered out of bridge_damage-point, see BRIDGE_SHOWN), the fixed HOT "Bridges
+// (OSM)" category colour, and a grey "standing" variant for that layer's colour-by-status
+// toggle (its source carries no status field, so it always fell back to CFG.STATUS.standing).
+const HOT_BRIDGE_COLOR = (CFG.CATS.find(c => c[0] === 'bridges') || [])[3] || '#e6194B';
+SHAPE_ICONS['bridge-damaged'] = () => semicircleIcon(CFG.STATUS.damaged);
+SHAPE_ICONS['bridge-destroyed'] = () => semicircleIcon(CFG.STATUS.destroyed);
+SHAPE_ICONS['bridge-standing'] = () => semicircleIcon(CFG.STATUS.standing);
+SHAPE_ICONS['bridge-hot'] = () => semicircleIcon(HOT_BRIDGE_COLOR);
 
 /* Circle radius from installed capacity: a 14 MW plant still reads as a dot,
  * a 216 MW one is unmistakable, and the scale is square-root-ish so the big
@@ -347,30 +387,32 @@ const HYDRO_RADIUS = ['interpolate', ['linear'],
   0, 4, 25, 6, 60, 8, 120, 11, 216, 14];
 /* Square icon side = the old circle's diameter, so drawn as a square instead
  * of a circle (owner direction, 10 Sep 2026) it reads at the same size: the
- * 64 px SDF image (SHAPE_ICON_PX) scaled down to that many pixels. */
+ * 64 px icon image (SHAPE_ICON_PX) scaled down to that many pixels. */
 const HYDRO_ICON_SIZE = ['/', ['*', 2, HYDRO_RADIUS], SHAPE_ICON_PX];
 
 /* A match expression over the merged layer's `name` values, built once from
- * reports.json.  Both sides use the same spellings, so the join needs no
- * normalising here; hydroKey() still covers lookups from the sidebar, where a
- * stale HDX spelling can arrive.  Falls back to the original yellow when
- * reports.json is absent or a plant has no reported status. */
-function hydroColorExpr() {
+ * reports.json, picking one of the pre-rendered 'hydro-*' icon images (see
+ * SHAPE_ICONS above) rather than a colour -- icon-image can't take a colour
+ * expression on a non-SDF icon.  Both sides use the same spellings, so the
+ * join needs no normalising here; hydroKey() still covers lookups from the
+ * sidebar, where a stale HDX spelling can arrive.  Falls back to the
+ * "not reported" yellow icon when reports.json is absent or a plant has no
+ * reported status. */
+function hydroIconExpr() {
   const pairs = [];
   for (const pr of ((reports && reports.energy && reports.energy.projects) || [])) {
     if (!pr.damage) continue;
-    pairs.push(pr.name, dmgColor(pr.damage));
+    pairs.push(pr.name, hydroIconOf(pr.damage));
   }
-  if (!pairs.length) return DMG_COLOR['not reported'];
-  return ['match', ['to-string', ['get', 'name']], ...pairs, DMG_COLOR['not reported']];
+  if (!pairs.length) return hydroIconOf();
+  return ['match', ['to-string', ['get', 'name']], ...pairs, hydroIconOf()];
 }
 
 /* Positions the extra plants got by hand are worth less than the surveyed ones,
- * so anything but `precision: exact` draws translucent inside a pale ring. */
+ * so anything but `precision: exact` draws translucent (icon-opacity still
+ * works as a paint expression on a non-SDF icon). */
 const HYDRO_EXACT = ['==', ['to-string', ['get', 'precision']], 'exact'];
 const HYDRO_OPACITY = ['case', HYDRO_EXACT, 1, 0.45];
-const HYDRO_STROKE_W = ['case', HYDRO_EXACT, 1.5, 2];
-const HYDRO_STROKE_C = ['case', HYDRO_EXACT, '#000000', '#f1f5f9'];
 
 /* name -> project row, for both the map paint expression and the sidebar. */
 function hydroProjects() {
@@ -641,15 +683,17 @@ function buildDefs() {
                    'text-halo-color': 'rgba(8,12,18,.6)', 'text-halo-width': 1.6, 'text-halo-blur': 0.4 } });
         ids.push(id + '-name');
       } else if (cat === 'bridges') {
-        // Semicircle icon, same idea as bridge_damage-point above: flat edge
-        // anchored on the point.  Same size/stroke as the plain circle it replaces.
+        // Outlined semicircle icon, same idea as bridge_damage-point below: flat edge
+        // anchored on the point, transparent interior.  This source carries no status
+        // field (see statusExpr's comment), so icon-image is a fixed 'bridge-hot' --
+        // the "colour by status" toggle swaps in the grey 'bridge-standing' icon,
+        // reproducing what the old fallback-to-standing colour used to look like.
         points.push({ id: id + '-point', type: 'symbol', source: r.source, 'source-layer': r.sl,
-          layout: { visibility: 'none', 'icon-image': 'shape-semicircle', 'icon-size': 6 / SHAPE_ICON_PX,
+          layout: { visibility: 'none', 'icon-image': 'bridge-hot', 'icon-size': 6 / SHAPE_ICON_PX,
             'icon-anchor': 'bottom', 'icon-allow-overlap': true, 'icon-ignore-placement': true },
-          filter: andF(gt('Point'), r.filter),
-          paint: { 'icon-color': color, 'icon-halo-width': 0.5, 'icon-halo-color': '#fff' } });
+          filter: andF(gt('Point'), r.filter) });
         ids.push(id + '-point');
-        PAINT_TARGETS.push({ id: id + '-point', prop: 'icon-color', def: color, status: statusExprFor(cat) });
+        PAINT_TARGETS.push({ id: id + '-point', prop: 'icon-image', def: 'bridge-hot', status: 'bridge-standing' });
       } else {
         points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),
@@ -717,8 +761,15 @@ function buildDefs() {
   const fairColor = ['match', ['get', 'damage'],
     'destroyed', CFG.FAIR['destroyed'], 'major-damage', CFG.FAIR['major-damage'],
     'minor-damage', CFG.FAIR['minor-damage'], 'no-damage', CFG.FAIR['no-damage'], CFG.FAIR['no-data']];
-  const bridgeColor = ['match', ['get', 'status'],
-    ['Destroyed', 'Washed out'], CFG.STATUS.destroyed, 'Damaged', CFG.STATUS.damaged, '#2ca25f'];
+  // Only Damaged/Destroyed bridges are shown at all (BRIDGE_SHOWN below) -- Standing/Intact
+  // spans are untouched and not worth a map marker (owner direction, 10 Sep 2026) -- so the
+  // icon expression only needs to choose between the two 'bridge-*' images that exist for them.
+  // Case-insensitive and covers the "Washed out" HDX spelling of Destroyed, same as statusExpr().
+  const bridgeIcon = ['match', ['to-string', ['get', 'status']],
+    ['Destroyed', 'destroyed', 'Washed out', 'washed out'], 'bridge-destroyed',
+    ['Damaged', 'damaged'], 'bridge-damaged', 'bridge-destroyed'];
+  const BRIDGE_SHOWN = ['match', ['to-string', ['get', 'status']],
+    ['Damaged', 'damaged', 'Destroyed', 'destroyed', 'Washed out', 'washed out'], true, false];
 
   push(
     { id: 'waterways_np-fill', type: 'fill', source: 'waterways_np', 'source-layer': 'waterways', layout: { visibility: 'none' },
@@ -750,12 +801,12 @@ function buildDefs() {
     // Sized by installed capacity, coloured by the damage status reported in
     // data/reports.json (joined on name through hydroKey(); unmatched points
     // keep the original yellow).  Labelled from zoom 11.  Square icon rather
-    // than a circle dot (owner direction, 10 Sep 2026): see SHAPE_ICONS.
+    // than a circle dot (owner direction, 10 Sep 2026): see SHAPE_ICONS.  Not a
+    // PAINT_TARGETS entry -- the colour-by-status toggle never covered hydro.
     { id: 'hydro-point', type: 'symbol', source: 'hydro', layout: { visibility: 'none',
-        'icon-image': 'shape-square', 'icon-size': HYDRO_ICON_SIZE,
+        'icon-image': hydroIconExpr(), 'icon-size': HYDRO_ICON_SIZE,
         'icon-allow-overlap': true, 'icon-ignore-placement': true },
-      paint: { 'icon-color': hydroColorExpr(), 'icon-opacity': HYDRO_OPACITY,
-               'icon-halo-width': HYDRO_STROKE_W, 'icon-halo-color': HYDRO_STROKE_C } },
+      paint: { 'icon-opacity': HYDRO_OPACITY } },
     { id: 'hydro-label', type: 'symbol', source: 'hydro', minzoom: 11,
       layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-font': FONT, 'text-size': 11,
         // A square's corners reach further from centre than a circle of the same
@@ -763,14 +814,22 @@ function buildDefs() {
         // clear them at the largest icon sizes.
         'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true },
       paint: { 'text-color': '#fef9c3', 'text-halo-color': 'rgba(0,0,0,.85)', 'text-halo-width': 1.6 } },
-    // Semicircle icon rather than a circle dot (owner direction, 10 Sep 2026):
-    // flat edge anchored on the point reads like a bridge arch over the river.
-    { id: 'bridge_damage-point', type: 'symbol', source: 'bridge_damage', layout: { visibility: 'none',
-        'icon-image': 'shape-semicircle', 'icon-size': 12 / SHAPE_ICON_PX, 'icon-anchor': 'bottom',
-        'icon-allow-overlap': true, 'icon-ignore-placement': true },
-      paint: { 'icon-color': bridgeColor, 'icon-halo-width': 1.5, 'icon-halo-color': '#fff' } },
+    // Outlined semicircle icon rather than a filled circle dot (owner direction, 10 Sep
+    // 2026): flat edge anchored on the point reads like a bridge arch over the river, and
+    // a transparent interior with just a status-coloured stroke reads as "outline, not a
+    // filled dot" against the imagery.  Only Damaged/Destroyed render -- BRIDGE_SHOWN drops
+    // Standing/Intact spans entirely (owner direction, 10 Sep 2026: "should not be on the
+    // map at all").
+    { id: 'bridge_damage-point', type: 'symbol', source: 'bridge_damage', filter: BRIDGE_SHOWN,
+      layout: { visibility: 'none',
+        'icon-image': bridgeIcon, 'icon-size': 12 / SHAPE_ICON_PX, 'icon-anchor': 'bottom',
+        'icon-allow-overlap': true, 'icon-ignore-placement': true } },
   );
-  PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'icon-color', def: bridgeColor });
+  // def === status: bridgeIcon is already status-driven (there is no separate "default"
+  // colouring), so the toggle is a correctness no-op here, not a visual change -- but it
+  // must still resolve to a valid 'bridge-*' icon name (never STATUS_EXPR, a colour) or
+  // MapLibre would fire styleimagemissing.
+  PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'icon-image', def: bridgeIcon, status: bridgeIcon });
 
   // Roads that lie inside the mapped water, computed by clipping the HOT roads to the flood
   // extent polygon: red with the road casing, on top of the roads so the affected stretches
@@ -851,7 +910,11 @@ function buildDefs() {
     // hot: ids resolved by applyHot(); follows the Extent switch, always the OSM source.
     { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
-    { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58, shape: 'semicircle' },
+    // 58 ground reports total; 15 Standing/Intact spans are not drawn at all (owner
+    // direction, 10 Sep 2026), so only the 43 Damaged/Destroyed bridges are on the map --
+    // see BRIDGE_SHOWN.  Swatch drawn hollow (outline, no fill) to match the map icon.
+    { key: 'bridge_damage', label: 'Bridge damage (ground reports, damaged & destroyed only)',
+      color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 43, shape: 'semicircle', outline: true },
     { key: 'hydro', label: 'Hydropower plants', color: '#facc15', ids: ['hydro-point', 'hydro-label'],
       on: true, count: 19, shape: 'square',
       title: 'Sized by installed capacity and coloured by the damage status in data/reports.json. '
@@ -1027,6 +1090,10 @@ function makeMap(container, defs, side) {
   // (m.setStyle) drops the images -- there is none today, but the hook costs nothing to keep.
   ensureShapeIcons(m);
   m.on('styledata', () => ensureShapeIcons(m));
+  // A layer asking for an icon name with no registered image (a typo, a race before
+  // ensureShapeIcons runs) renders nothing rather than throwing -- warn so a headless
+  // test harness can catch it.
+  m.on('styleimagemissing', e => console.warn('styleimagemissing', e.id));
   // MapLibre opens the compact attribution expanded the first time it has text; start it collapsed to its
   // (i) button so the bottom strip does not obstruct a first look at the map (owner direction, 7 Sep 2026).
   // Watch the class list rather than the load event: the auto-open can come later than 'load'. One click expands it.
@@ -1209,7 +1276,15 @@ function applyColorBy() {
   eachMap(m => {
     for (const t of PAINT_TARGETS) {
       if (!m.getLayer(t.id)) continue;
-      try { m.setPaintProperty(t.id, t.prop, useStatus ? (t.status || STATUS_EXPR) : t.def); } catch (e) { /* ignore */ }
+      const val = useStatus ? (t.status || STATUS_EXPR) : t.def;
+      // icon-image is a layout property, not paint -- setPaintProperty is a no-op on it (and
+      // on non-SDF icon layers STATUS_EXPR, a colour string, is never a valid icon name
+      // anyway).  Every icon-image PAINT_TARGETS entry supplies its own `status` icon-name
+      // expression, so this branch never falls through to STATUS_EXPR.
+      try {
+        if (t.prop === 'icon-image') m.setLayoutProperty(t.id, t.prop, val);
+        else m.setPaintProperty(t.id, t.prop, val);
+      } catch (e) { /* ignore */ }
     }
   });
 }
