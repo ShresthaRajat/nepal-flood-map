@@ -8,6 +8,7 @@ hand:
 
     python3 tools/imagery_watch.py --dry-run     scan and notify, change nothing
     python3 tools/imagery_watch.py               scan, build, commit, push
+    python3 tools/imagery_watch.py --no-push     scan, build, commit, but skip the git push
     python3 tools/imagery_watch.py --init        mark everything currently listed as seen
 
 Sources scanned
@@ -207,11 +208,15 @@ def build_vantor(item):
     return layer
 
 
-def commit_and_push(layers):
+def commit_and_push(layers, no_push=False):
     paths = ["data/imagery.json"] + [f"tiles/{l['id']}" for l in layers]
     run(['git', 'add', '--', *paths])
     msg = 'imagery watch: add ' + ', '.join(l['label'] for l in layers)
     run(['git', 'commit', '-q', '-m', msg, '-m', 'Added automatically by tools/imagery_watch.py.', '--', *paths])
+    if no_push:
+        log('--no-push: commit made, skipping git push')
+        notify('Nepal flood map: not pushed', 'New imagery committed locally (--no-push); push by hand when ready.')
+        return False
     run(['git', 'fetch', '-q', 'origin', 'main'])
     ff = subprocess.run(['git', 'merge-base', '--is-ancestor', 'origin/main', 'HEAD'], cwd=ROOT).returncode == 0
     if not ff:
@@ -226,6 +231,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true', help='scan and notify only')
     ap.add_argument('--init', action='store_true', help='record everything currently listed as seen, build nothing')
+    ap.add_argument('--no-push', action='store_true', help='commit built layers locally but skip the git push step')
     args = ap.parse_args()
 
     os.makedirs(WORK, exist_ok=True)
@@ -307,7 +313,7 @@ def main():
 
         if not built:
             log('nothing passed the build gates'); return
-        pushed = commit_and_push(built)
+        pushed = commit_and_push(built, no_push=args.no_push)
         notify('Nepal flood map: imagery ' + ('pushed' if pushed else 'committed'),
                ' · '.join(f'{l["label"]} ({l["size_mb"]} MB)' for l in built)[:230])
     except Exception as e:

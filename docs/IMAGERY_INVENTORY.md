@@ -6,6 +6,21 @@ Purpose: a single inspectable inventory of every publicly discoverable satellite
 
 **Update 9 Sep 2026:** the Vantor Nepal-Flooding-Aug-2026 STAC collection now has 30 items (was 23 on 7 Sep). Three of the new 8 Sep scenes — WV-2 `B030001100EF5210`, WV-2 `B030001100EF5110`, Legion `B14000110116A310` — failed `tools/imagery_watch.py`'s auto-build cloud/off-nadir gates and were left notify-only; the owner added them to the map by hand anyway (see the three rows below marked ON MAP, added 9 Sep 2026).
 
+## Update 10 Sep 2026
+
+Ran `tools/imagery_watch.py --no-push` (new `--no-push` flag, see below — repo owner has ~20 unpushed local commits already, so this run committed locally only). Watcher log: `work/imagery_watch/watch.log`.
+
+**Gate-skips confirmed (notify-only, correctly not built):**
+- **Vantor WV-3 `B0400011009ECD10`** — acquired 9 Sep 2026, cloud 84%, off-nadir 23.7°, covers the upper valley + Mailung gorge (`focus_hits`: `upper_valley`, `mailung_gorge`). Logged by the watcher on 2026-09-09 13:05:59Z: `Vantor B0400011009ECD10: notify only (cloud 84, off-nadir 23.7, focus ['upper_valley', 'mailung_gorge'])`. 84% is over `VANTOR_MAX_CLOUD=50`, so the gate is working as intended; left skipped, no override taken. Also surfaced via OpenAerialMap the same day (see OAM findings below) — same scene, no new information.
+- **Sentinel-2 tiles `45RUL` and `45RUM`, 8 Sep 2026** — cloud 57% and 63% respectively, both over `S2_MAX_CLOUD=40`. Logged as new on 2026-09-08 16:28:42Z; no `post_s2_20260908` layer or `tiles/post_s2_20260908/` directory exists, confirming neither was built.
+
+**New Sentinel-1 (Microsoft Planetary Computer, `sentinel-1-rtc`) found and built:**
+- STAC search of the corridor bbox `(84.375, 27.683528, 85.78125, 28.613459)` for `datetime` after 2026-08-28 returned 8 items; two are dated 2026-09-09 (ascending, relative orbit 85 — same track as the existing 28 Aug layer): `S1D_IW_GRDH_1SDV_20260909T122141_20260909T122206_004501_0085C5_rtc` (bbox fully contains the corridor) and an adjacent southern frame `...20260909T122116...` with only marginal corridor overlap. `tools/imagery_watch.py`'s `scan_s1` is notify-only (no builder function), so both were logged as new scenes and nothing was auto-built by the watcher itself.
+- Built by hand, replicating the recipe that produced `post_s1_20260828` / `pre_s1_20260816` (a VV/VH-from-Planetary-Computer pipeline outside `build_cog_tiles.sh`, recovered from the leftover scripts in `work/cog/pre_s1_20260816/compose_gray.py`): fetch a SAS token, `gdalwarp` the `vv` and `vh` RTC COGs (`/vsicurl`) to EPSG:3857 clipped to the same bounds as `post_s1_20260828` (`84.50684, 27.68353, 85.60547, 28.45903`) at the z14 pixel size, then a single-channel (R=G=B) VV dB backscatter composite with a 2/98 percentile stretch (`-16.14` .. `-0.57` dB for this scene) and alpha-masked nodata — the same style `pre_s1_20260816`'s `compose_gray.py` used (the exact original stretch/formula for `post_s1_20260828` was not recoverable, so this reproduces the *style*, not a byte-identical re-derivation). Tiled z8-14 WEBP with `gdal2tiles.py`, matching `post_s1_20260828`'s zoom range.
+- Result: **`post_s1_20260909`**, 2,565 tiles, 47.0 MB, added to `data/imagery.json` (`added_by: imagery_watch`, `coverage: corridor`) but deliberately **not** added to `default_post` — available as an optional layer only, per instruction.
+
+**OpenAerialMap** (`acquisition_from=2026-09-08`, corridor bbox): 6 results, all Vantor scenes already tracked — `B0400011009ECD10` (WV-3, the gate-skipped 84%-cloud scene above), `B14000110116A310`, `B030001100EF5510`, `B030001100EF5910`, `B030001100EF5110`, `B030001100EF5210`. The latter five are already ON MAP (`post_wv02_20260908_*` / `post_legion_20260908_16a310`, added 9 Sep). No new OAM-only drone or provider content found beyond these known Vantor mirrors.
+
 **Status legend:**
 - **ON MAP** — this exact scene/date is already on the Nepal flood 2026 map.
 - **NEW – downloadable georeferenced** — not yet on the map; a real file (GeoTIFF/COG/shapefile/etc.) can be pulled directly.

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-09",
+ "generated": "2026-09-10",
  "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
  "layers": [
   {
@@ -547,6 +547,31 @@
    "added_by": "imagery_watch",
    "source_ids": [
     "B14000110116A310"
+   ]
+  },
+  {
+   "id": "post_s1_20260909",
+   "label": "9 Sep 2026 · Sentinel-1 radar 10 m",
+   "side": "post",
+   "date": "2026-09-09",
+   "sensor": "Sentinel-1 RTC",
+   "provider": "ESA Copernicus / Microsoft Planetary Computer",
+   "gsd_m": 10,
+   "bounds": [
+    84.50684,
+    27.68353,
+    85.60547,
+    28.45903
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s1_20260909/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "corridor",
+   "size_mb": 47.0,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "S1D_IW_GRDH_1SDV_20260909T122141_20260909T122206_004501_0085C5_rtc"
    ]
   }
  ],
