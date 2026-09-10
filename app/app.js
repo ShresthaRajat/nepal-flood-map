@@ -35,7 +35,8 @@ const state = {
   // pre / post are ordered lists of catalogue layer ids — any number of scenes
   // can be on per side; [] means "basemap only" (carried as `none` in the hash).
   mode: 'swipe', pre: [], post: [], swipe: 50,
-  base: 'esri', hillshade: false, contours: false, placeNames: true, colorBy: 'layer',
+  base: 'esri', hillshade: false, contours: false, placeNames: true,
+  colorBy: 'status',  // default since 10 Sep 2026 (owner direction); cb=layer in the hash restores the palette
   footprintOutline: false,  // dashed outline of the selected scenes; off, reachable only via #fo=1
   hotExtent: 'flood',       // 'flood' | 'corridor' — which HOT dataset the category list shows
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
@@ -1400,7 +1401,7 @@ function writeHash() {
   if (state.hillshade) p.set('hs', '1');
   if (state.contours) p.set('ct', '1');   // off by default; ct=0 in old links still parses
   if (!state.placeNames) p.set('pn', '0');
-  if (state.colorBy !== 'layer') p.set('cb', state.colorBy);
+  if (state.colorBy !== 'status') p.set('cb', state.colorBy);   // status is the default; old cb=status links still parse
   if (state.footprintOutline) p.set('fo', '1');
   if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
   if (state.ovOpacity < 1) p.set('oo', Math.round(state.ovOpacity * 100));
@@ -1783,7 +1784,9 @@ function renderSidebar() {
     cbSeg.appendChild(b);
   }
   cbRow.appendChild(cbSeg);
-  oBlock.appendChild(cbRow);
+  // Hidden by default since 10 Sep 2026 (owner direction): status colouring is
+  // the default and the switch is an owner tool; ?tools=1 shows it again.
+  if (OWNER_TOOLS) oBlock.appendChild(cbRow);
 
   const segField = (label, key, opts, onPick) => {
     const f = el('div', 'field hotseg');
