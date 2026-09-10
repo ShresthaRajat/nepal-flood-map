@@ -11,7 +11,7 @@
   --pre: #9fd5a9;
   --post: #ffb64d;
   --panel-w: 356px;
-  --ctrl-w: 330px;
+  --ctrl-w: 340px;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden;
@@ -153,6 +153,20 @@ kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; background: var
 .seg button:first-child { border-radius: 5px 0 0 5px; }
 .seg button:last-child { border-radius: 0 5px 5px 0; border-right-width: 1px; }
 .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #08121e; font-weight: 600; }
+/* Three basemap names on one row at the rail's 340 px. */
+.seg.segsm button { font-size: 11px; padding: 4px 2px; min-width: 0; }
+
+/* Basemap toggle chips: a real checkbox in a pill, so the control keeps checkbox
+   semantics (tab order, screen-reader role, the same hs / ct / pn state) while
+   reading as one compact row. */
+.togs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.tog { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; font-size: 11.5px;
+  padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg3); }
+.tog input { width: 11px; height: 11px; }
+.tog:hover { border-color: #48566a; }
+.tog.on { border-color: var(--accent); background: rgba(94,176,255,.14); color: #dbeafe; }
+.tog.off { opacity: .5; cursor: not-allowed; }
+.tog:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .field { margin: 0 0 8px; }
 .field label { display: block; font-size: 11px; color: var(--fg-dim); margin-bottom: 3px; }
@@ -174,13 +188,28 @@ details > summary::-webkit-details-marker { display: none; }
 details > summary::before { content: "▸"; color: var(--fg-dim); font-size: 10px; transition: transform .12s; }
 details[open] > summary::before { transform: rotate(90deg); }
 summary .n { color: var(--fg-dim); font-weight: 400; font-size: 11px; margin-left: auto; }
-.grp { display: flex; gap: 6px; margin: 2px 0 5px 16px; }
-.grp button { font-size: 10.5px; padding: 1px 6px; }
 
+/* Overlay group header: title, count badge, and the all / none pair, all on the
+   summary line.  `.gt` takes the slack so `.n`'s margin-left:auto pushes the
+   badge and the buttons to the right edge together. */
+.gsum .gt { flex: 1 1 auto; min-width: 0; }
+.gsum .allnone { display: inline-flex; gap: 4px; margin-left: 8px; flex: none; }
+.gsum .allnone button { font-size: 10px; line-height: 1.3; padding: 1px 6px; font-weight: 400;
+  color: var(--fg-dim); background: transparent; }
+.gsum .allnone button:hover { color: var(--fg); background: var(--bg3); border-color: #48566a; }
+
+/* Rows wrap instead of ellipsising: at 340 px no overlay label should be cut off
+   (owner direction, 10 Sep 2026). */
 label.row { display: flex; align-items: center; gap: 7px; padding: 2px 4px; cursor: pointer;
-  border-radius: 4px; white-space: nowrap; }
+  border-radius: 4px; }
 label.row:hover { background: var(--bg2); }
-label.row > span.t { overflow: hidden; text-overflow: ellipsis; }
+label.row > span.t { min-width: 0; }
+label.row.has-sub { align-items: flex-start; }
+label.row.has-sub > input, label.row.has-sub > .sw, label.row.has-sub > .cnt { margin-top: 2px; }
+label.row > span.t > .sub { display: block; font-size: 10px; line-height: 1.35; color: var(--fg-dim); }
+/* The semicircle swatch sits on the text baseline (align-self: flex-end); in a
+   two-line row that baseline is the sub-caption's, so pin it to the first line. */
+label.row.has-sub > .sw.semicircle { align-self: flex-start; margin-top: 8px; }
 .sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; flex: none; }
 .sw.outline { background: transparent !important; border: 2px solid; }
 /* Match the map icons: hydropower plants as a square, bridges as a semicircle
@@ -342,11 +371,12 @@ button.mini { font-size: 10.5px; padding: 1px 6px; line-height: 1.4; }
   font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical; }
 #imgAl code { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: #cfd8e3; }
 
-/* Master transparency for the damage / ground-report overlay group. */
-.field.ovop { margin: 2px 0 6px 16px; }
-.field.ovop label { display: flex; align-items: center; gap: 6px; }
-.field.ovop .ovop-n { margin-left: auto; font-variant-numeric: tabular-nums; }
-.field.ovop input[type=range] { width: 100%; accent-color: var(--accent); margin: 1px 0 0; }
+/* Master transparency for an overlay group: one compact row, "Opacity <slider> 100%". */
+.field.ovop { display: flex; align-items: center; gap: 8px; margin: 2px 0 6px 16px; }
+.field.ovop .ovop-l { display: block; font-size: 11px; color: var(--fg-dim); margin: 0; flex: none; }
+.field.ovop .ovop-n { font-size: 11px; color: var(--fg-dim); font-variant-numeric: tabular-nums;
+  flex: none; min-width: 34px; text-align: right; }
+.field.ovop input[type=range] { flex: 1 1 auto; min-width: 0; width: auto; accent-color: var(--accent); margin: 0; }
 
 /* ------------------------------------------------------- report sections */
 /* Casualties, municipality reports, hydropower & grid, communities.  Fed by

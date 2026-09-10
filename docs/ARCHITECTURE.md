@@ -396,8 +396,8 @@ note), in stacking order, refreshed by `updateMeta()`.
 There are two rails. `#panel` on the left holds information: the title, search,
 zoom-to chips, bridge ground reports, damage table, legend, notes and, at the
 bottom, imagery metadata for the selected scenes. `#controls` on the right holds
-everything that changes what the map shows: view mode, basemap (with hillshade
-and contours) and the overlay groups. Scenes are still chosen with the tags at
+everything that changes what the map shows: basemap (with hillshade and
+contours) and the overlay groups. Scenes are still chosen with the tags at
 the top of the map, so the left rail describes them without controlling them. Both
 collapse on desktop as well as mobile, by the same mechanism: the rail slides
 out on `transform` and `#stage` reflows its `left` or `right`. On mobile an
@@ -406,19 +406,69 @@ open rail floats over the stage instead of pushing it. State lives in
 precedence when it carries `sb` or `sc`. Maps are resized after the CSS
 transition finishes.
 
-The "Flood extent, damage & ground reports" group carries a master opacity
-slider under its all on / all off row, so the whole damage and ground-report
-stack can be faded back to read the imagery through it without unticking
-thirteen rows. `OV_BASE` snapshots every layer's own opacity as `buildDefs()`
+### Right rail layout
+
+Restructured on 10 Sep 2026 (owner direction: "overhaul the right ui and make it
+much more user friendly"). Basemap is two rows — a segmented control for the base
+image (OpenStreetMap / Esri imagery / None) and a row of toggle chips for
+hillshade, contours and place names. The chips are real checkboxes inside styled
+`<label>`s, so they keep checkbox semantics and the same `hs` / `ct` / `pn` state
+and hash keys; hillshade and contours still render disabled and marked
+"(not built)" when `data/terrain.json` has no such layer.
+
+Overlays then run in this order, each an ordinary `<details>`:
+
+| Group | `gid` | Open | Rows |
+| --- | --- | --- | --- |
+| Administrative boundaries | `admin` | yes | 4 |
+| Flood & damage | `flood` | yes | 10 |
+| Infrastructure & rivers | `infra` | yes | 3 |
+| Mapped features, HOT / OpenStreetMap | `hot` | no | 8 |
+| Overture Maps, pre-flood | `overture` | no | 3 |
+
+The order is applied by sorting `groups` against `GROUP_ORDER` at the end of
+`buildDefs()`, not by moving the `groups.push()` calls: those calls are
+interleaved with the `push()` calls that build the style layer array, and *that*
+order is the map's draw order. Sidebar order is cosmetic; layer order is not.
+
+Each group header carries its title, a count badge and a compact `all` / `none`
+pair inside the `<summary>` itself (a click on those cancels the summary's own
+activation so the group does not open and close under the pointer). Rows are a
+checkbox, a colour swatch, a label that wraps rather than truncating, an optional
+muted sub-caption where the shortened label dropped something worth keeping, and
+a right-aligned tabular count. Full provenance lives in each row's `title`
+tooltip and in the Sources & notes drawer.
+
+"Infrastructure & rivers" was split out of the flood group in the same pass and
+holds hydropower, the national highways and the waterways: context, not damage.
+No entry key, default or hash token changed, so `ov=` links written before the
+split resolve identically.
+
+### Group opacity
+
+The "Flood & damage" and "Infrastructure & rivers" groups carry a master opacity
+slider, one compact row under the group header, so the whole damage and
+ground-report stack can be faded back to read the imagery through it without
+unticking thirteen rows. Administrative boundaries carry their own, independent
+one. `OV_BASE` snapshots every layer's own opacity as `buildDefs()`
 writes it, and `applyOverlayOpacity()` sets `base * slider` on both maps, so a
 0.35 fill stays a wash under a 1.0 outline instead of the two flattening
 together. A data-driven base (the roads' damaged/undamaged case expression) is
 scaled inside the expression as `['*', base, k]`; at 100% the original value
-goes back verbatim, so nothing is left wrapped. The group is marked
-`opacity: true` in its `groups.push()` entry, and the two `hot` rows in it —
-destroyed features and the AOI outline — have their layer ids resolved the same
-way `applyHot()` resolves them. The value lives in `localStorage` under
+goes back verbatim, so nothing is left wrapped. A group is marked
+`opacity: true` in its `groups.push()` entry, and the two `hot` rows in the flood
+group — destroyed features and the AOI outline — have their layer ids resolved
+the same way `applyHot()` resolves them. The value lives in `localStorage` under
 `nf26.ov_opacity` and in the hash as `oo=<percent>`, omitted at 100%.
+
+**Opacity-key decision.** "Flood & damage" and "Infrastructure & rivers"
+deliberately share `opacityKey: 'flood'` rather than the new group taking a key
+of its own, so `oo=` and `nf26.ov_opacity` still fade exactly the set of style
+layers they faded when the two were one group — an old link fades an old link's
+worth of map, and no new hash key was added. `opacityGroupIds()` therefore
+collects every group carrying the key (a filter, not a find), both groups show a
+slider bound to the one `state.ovOpacity`, and `syncGroupOpacityUI()` keeps the
+two sliders reading the same number when either is moved.
 
 ### Local editing tools
 
@@ -532,7 +582,9 @@ HOT category list's extent switch (`flood` | `corridor`), omitted at its default
 `oo` is the damage group's opacity as a percentage, omitted at 100 and taking
 precedence over the `nf26.ov_opacity` fallback the same way `sb` and `sc` do.
 OSM categories are keyed `hot_<cat>` and Overture ones `ovt_<cat>`; the two are
-separate overlay groups. Older links carrying `ho=overture` (from when source
+separate overlay groups. Entry keys and defaults survived the 10 Sep 2026 rail
+reorder untouched — moving a row between groups changes neither — so every `ov=`
+link written before it still resolves to the same layers. Older links carrying `ho=overture` (from when source
 was a switch) are read and their `hot_` keys remapped to `ovt_`.
 
 ## Keyboard

@@ -759,12 +759,14 @@ function buildDefs() {
   // and the entry's source.  OSM and Overture are separate sections (owner direction,
   // 6 Sep 2026): Overture predates the flood and carries no damage status.
   const swatch = (cat, color) => (cat === 'roads' || cat === 'bridges') ? ROAD_WHITE : cat === 'populated_places' ? '#f1f5f9' : color;
-  groups.push({ title: 'Mapped features (HOT / OpenStreetMap)', hot: true, extent: true, open: true, entries: [
+  // Collapsed by default since 10 Sep 2026 (owner direction): the raw OSM and Overture
+  // catalogues are the least-used part of the rail, so they sit last and closed.
+  groups.push({ gid: 'hot', title: 'Mapped features, HOT / OpenStreetMap', hot: true, extent: true, open: false, entries: [
     ...HOT_CATS.filter(c => !damageCat(c.cat)).map(c => ({ key: 'hot_' + c.cat, cat: c.cat, src: 'osm', label: c.label, hot: true, ids: [],
       color: swatch(c.cat, c.color), on: HOT_DEFAULT_ON.includes(c.cat), shape: c.cat === 'bridges' ? 'semicircle' : undefined })),
   ] });
   // What Overture is and why it has no damage status is explained in the Sources & notes drawer.
-  groups.push({ title: 'Overture Maps (pre-flood)', hot: true, open: false,
+  groups.push({ gid: 'overture', title: 'Overture Maps, pre-flood', hot: true, open: false,
     noAll: true,
     // Only categories with data in the flood area; police, roads and settlement names are corridor-only (owner direction).
     entries: hotCats.filter(([cat, s]) => s === 'overture' && ['buildings', 'education_facilities', 'points_of_interest'].includes(cat)).map(([cat, , , color]) => ({
@@ -916,37 +918,74 @@ function buildDefs() {
 
   // `opacity: true` gives this group the master transparency slider; the damage
   // and ground-report layers are the ones an analyst reads the imagery through.
-  groups.push({ title: 'Flood extent, damage & ground reports', opacity: true, opacityKey: 'flood', entries: [
-    { key: 'flood_extent', label: 'Flood extent, observed 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1 },
-    { key: 'collapse', label: 'Glacier collapse origin & barrier lakes (UNOSAT)', color: '#c084fc',
+  // Labels are kept short enough to sit on one line at the rail's 340 px (owner
+  // direction, 10 Sep 2026: "much more user friendly" -- nothing in the rail
+  // should truncate).  The long provenance moved to each row's `title` tooltip
+  // and is still spelled out in the Sources & notes drawer; `sub` carries a
+  // one-line muted caption only where it says something the label cannot.
+  // Hydropower, the national highways and the waterways moved to the separate
+  // "Infrastructure & rivers" group below -- same keys, same defaults, same
+  // opacityKey, so `ov=` and `oo=` links written before the split still resolve
+  // identically.
+  groups.push({ gid: 'flood', title: 'Flood & damage', open: true, opacity: true, opacityKey: 'flood', entries: [
+    { key: 'flood_extent', label: 'Flood extent, 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1,
+      title: 'Flood extent, observed 27 Aug 2026 (HOT / HDX)' },
+    { key: 'collapse', label: 'Collapse origin & barrier lakes', color: '#c084fc',
       ids: ['collapse-zone-fill', 'collapse-zone-line', 'collapse-lake-fill', 'collapse-lake-line', 'collapse-origin-point', 'collapse-origin-label'],
-      on: true, count: 3 },
+      on: true, count: 3, title: 'Glacier collapse origin and barrier lakes (UNOSAT)' },
     // hot: ids resolved by applyHot(); follows the Extent switch, always the OSM source.
-    { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
+    { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed & damaged features',
+      sub: 'OSM volunteers \u00b7 colour = status',
+      title: 'Destroyed and damaged features, volunteer-recorded in OpenStreetMap',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
     // 58 ground reports total; 15 Standing/Intact spans are not drawn at all (owner
     // direction, 10 Sep 2026), so only the 43 Damaged/Destroyed bridges are on the map --
     // see BRIDGE_SHOWN.  Swatch drawn hollow (outline, no fill) to match the map icon.
-    { key: 'bridge_damage', label: 'Bridge damage (ground reports, damaged & destroyed only)',
+    { key: 'bridge_damage', label: 'Bridge damage', sub: 'ground reports \u00b7 damaged & destroyed only',
+      title: 'Bridge damage from ground reports; only the damaged and destroyed spans are drawn',
       color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 43, shape: 'semicircle', outline: true },
+    { key: 'fair', label: 'Building damage, fAIr AI', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053,
+      title: 'Building damage classified by the fAIr AI model' },
+    { key: 'fair_aoi', label: 'fAIr analysed tiles', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true,
+      title: 'Outline of the area the fAIr model analysed' },
+    // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
+    // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
+    { key: 'damage_edits', label: 'Building damage, analyst grading', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: true, count: 65,
+      title: 'Building damage graded by hand in the Damage editor' },
+    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', color: DAMAGE_ROAD_RED,
+      ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548,
+      title: 'Road damage grading, Copernicus EMS, 27\u201331 Aug 2026' },
+    { key: 'flooded_roads', label: 'Roads inside flood extent', color: DAMAGE_ROAD_RED,
+      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879,
+      title: 'Roads inside the flood extent (computed by clipping the HOT roads to the extent polygon)' },
+    // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
+    { key: 'hot_aoi', label: 'Area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true,
+      title: 'Area of interest outline (HOT + upstream to the glacier)' },
+  ] });
+
+  // 5b. Infrastructure & rivers ---------------------------------------------
+  // Split out of the flood/damage group on 10 Sep 2026 (owner direction: the rail
+  // should read administrative -> flood -> infrastructure -> the raw OSM/Overture
+  // catalogues).  These three are context, not damage: they are what the water ran
+  // through, not what it did.
+  //
+  // OPACITY-KEY DECISION: this group deliberately reuses `opacityKey: 'flood'`
+  // rather than taking a key of its own.  `oo=` in the hash and `nf26.ov_opacity`
+  // in localStorage therefore still fade exactly the same set of style layers they
+  // faded before the split, so an old link fades an old link's worth of map.
+  // `opacityGroupIds()` collects every group carrying the key (a filter, not a
+  // find), and both groups show a slider bound to the one `state.ovOpacity`;
+  // `syncGroupOpacityUI()` keeps the two sliders reading the same number.
+  groups.push({ gid: 'infra', title: 'Infrastructure & rivers', open: true, opacity: true, opacityKey: 'flood', entries: [
     { key: 'hydro', label: 'Hydropower plants', color: '#facc15', ids: ['hydro-point', 'hydro-label'],
       on: true, count: 19, shape: 'square',
       title: 'Sized by installed capacity and coloured by the damage status in data/reports.json. '
         + 'Ten positions are HOT survey; the nine added by hand draw hollow, and the popup names the source.' },
-    { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
-    { key: 'fair_aoi', label: 'fAIr analysed tile', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true },
-    // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
-    // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
-    { key: 'damage_edits', label: 'Building damage grading (analyst edits)', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: true, count: 65 },
-    { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false },
-    { key: 'roads_np', label: 'Highways and main roads (OSM, national)', color: HW_YELLOW,
-      ids: ['roads_np-other-casing', 'roads_np-other', 'roads_np-hw-casing', 'roads_np-hw', 'roads_np-label'], on: true },
-    { key: 'ems_roads', label: 'Road damage grading (Copernicus EMS, 27–31 Aug)', color: DAMAGE_ROAD_RED,
-      ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548 },
-    { key: 'flooded_roads', label: 'Roads inside the flood extent (computed)', color: DAMAGE_ROAD_RED,
-      ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879 },
-    // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
-    { key: 'hot_aoi', label: 'Area of interest outline (HOT + upstream to the glacier)', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true },
+    { key: 'roads_np', label: 'Highways & main roads (OSM)', color: HW_YELLOW,
+      ids: ['roads_np-other-casing', 'roads_np-other', 'roads_np-hw-casing', 'roads_np-hw', 'roads_np-label'], on: true,
+      title: 'Highways and main roads, OpenStreetMap, national coverage' },
+    { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false,
+      title: 'Rivers and streams of Nepal, OpenStreetMap' },
   ] });
 
   // 5a. Administrative boundaries (province/district/municipality/ward) ----
@@ -991,14 +1030,20 @@ function buildDefs() {
     ...adminLayers('municipality', ['get', 'adm3_name'], 10),
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12, ['==', ['get', 'flood_affected'], 1]),
   );
-  groups.push({ title: 'Administrative boundaries', opacity: true, opacityKey: 'admin', entries: [
+  // First group in the rail since 10 Sep 2026 (owner direction): "move the
+  // administrative option to the top of overlays".  Open by default even though
+  // all four rows start off -- it is the group people reach for first.
+  groups.push({ gid: 'admin', title: 'Administrative boundaries', open: true, opacity: true, opacityKey: 'admin', entries: [
     { key: 'admin_province', label: 'Province', color: ADMIN_COLOR.province,
       ids: ['admin_province-line', 'admin_province-label'], on: false, count: 6 },
     { key: 'admin_district', label: 'District', color: ADMIN_COLOR.district,
       ids: ['admin_district-line', 'admin_district-label'], on: false, count: 42 },
-    { key: 'admin_municipality', label: 'Municipality / local level', color: ADMIN_COLOR.municipality,
-      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399 },
-    { key: 'admin_ward', label: 'Ward (Rasuwa & Nuwakot only, 2018 reference; orange fill highlights the 31 flood-affected wards)', color: WARD_FILL,
+    { key: 'admin_municipality', label: 'Municipality', color: ADMIN_COLOR.municipality,
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399,
+      title: 'Municipality / local level (OCHA COD-AB, 2024)' },
+    { key: 'admin_ward', label: 'Wards, flood-affected', color: WARD_FILL,
+      sub: 'Rasuwa & Nuwakot, orange = flood-touching',
+      title: 'Ward (Rasuwa & Nuwakot only, 2018 reference; orange fill highlights the 31 flood-affected wards)',
       ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
   ] });
 
@@ -1050,6 +1095,16 @@ function buildDefs() {
       } },
   );
 
+
+  // Rail order (owner direction, 10 Sep 2026): administrative first, then flood
+  // and damage, then the infrastructure context, with the raw OSM and Overture
+  // catalogues last and collapsed.  Sorted here rather than by moving the
+  // groups.push() calls, because those are interleaved with the push() calls that
+  // build the style layer array -- and *that* order is the map's draw order.
+  // Sidebar order is cosmetic; layer order is not.  A group with no gid sorts last.
+  const GROUP_ORDER = ['admin', 'flood', 'infra', 'hot', 'overture'];
+  const groupRank = g => { const i = GROUP_ORDER.indexOf(g.gid); return i < 0 ? GROUP_ORDER.length : i; };
+  groups.sort((a, b) => groupRank(a) - groupRank(b));
 
   // registry ---------------------------------------------------------------
   for (const g of groups) for (const e of g.entries) {
@@ -1228,15 +1283,21 @@ const OV_OPACITY_PROPS = {
 /* Every style layer behind one opacity-slider group, found by its `opacityKey`
  * (so more than one group can carry its own independent slider). The two `hot`
  * rows in the flood group carry no ids of their own — applyHot() resolves them
- * — so expand them the same way. */
+ * — so expand them the same way.
+ *
+ * A filter, not a find: since the rail was reordered on 10 Sep 2026 the flood and
+ * "Infrastructure & rivers" groups share `opacityKey: 'flood'`, so one slider
+ * value covers the same layers it covered when the two were a single group and an
+ * old `oo=` link fades exactly what it used to. */
 function opacityGroupIds(key) {
-  const g = (GROUPS || []).find(x => x.opacity && (x.opacityKey || 'flood') === key);
-  if (!g) return [];
   const out = [];
-  for (const e of g.entries) {
-    if (!e.hot) { out.push(...e.ids); continue; }
-    if (e.cat) { for (const h of HOT_LAYERS) if (h.cat === e.cat && h.s === e.src) out.push(...h.ids); }
-    else out.push('aoi_flood-line', 'aoi_corridor-line', 'aoi_upstream-line');
+  for (const g of (GROUPS || [])) {
+    if (!g.opacity || (g.opacityKey || 'flood') !== key) continue;
+    for (const e of g.entries) {
+      if (!e.hot) { out.push(...e.ids); continue; }
+      if (e.cat) { for (const h of HOT_LAYERS) if (h.cat === e.cat && h.s === e.src) out.push(...h.ids); }
+      else out.push('aoi_flood-line', 'aoi_corridor-line', 'aoi_upstream-line');
+    }
   }
   return out;
 }
@@ -1636,28 +1697,43 @@ function describe(l) {
   return bits.join('<br>');
 }
 
-/* The group transparency slider, sitting under that group's all on / all off
- * row.  Live on input so the fade can be judged against the imagery, and only
- * persisted on release so a sweep does not write eighty hash entries. */
+/* The group transparency slider, one compact row in the group's body: the word
+ * "Opacity", the range, the percentage.  Live on input so the fade can be judged
+ * against the imagery, and only persisted on release so a sweep does not write
+ * eighty hash entries. */
 const OPACITY_GROUP_UI = {
-  flood: { get: () => state.ovOpacity, set: setOverlayOpacity, aria: 'Opacity of the flood extent, damage and ground report layers' },
+  flood: { get: () => state.ovOpacity, set: setOverlayOpacity, aria: 'Opacity of the flood, damage and infrastructure layers' },
   admin: { get: () => state.adminOpacity, set: setAdminOpacity, aria: 'Opacity of the administrative boundary layers' },
 };
+/* Two groups share the 'flood' key (see the Infrastructure & rivers comment in
+ * buildDefs), so a slider is not the sole owner of its value: every slider on a
+ * key is registered here and the others are re-read when one of them moves. */
+const OPACITY_SLIDERS = {};
+function syncGroupOpacityUI(key, except) {
+  for (const s of (OPACITY_SLIDERS[key] || [])) {
+    if (s.sl === except) continue;
+    s.sl.value = String(Math.round(s.get() * 100));
+    s.show();
+  }
+}
 function buildGroupOpacity(opacityKey) {
-  const cfg = OPACITY_GROUP_UI[opacityKey || 'flood'];
+  const key = opacityKey || 'flood';
+  const cfg = OPACITY_GROUP_UI[key];
   const f = el('div', 'field ovop');
-  const lab = el('label', null, 'Layer opacity, whole group <span class="ovop-n"></span>');
-  const n = lab.querySelector('.ovop-n');
+  const lab = el('label', 'ovop-l', 'Opacity');
+  const n = el('span', 'ovop-n');
   const sl = el('input');
   sl.type = 'range'; sl.min = '0'; sl.max = '100'; sl.step = '1';
   sl.value = String(Math.round(cfg.get() * 100));
   sl.title = 'Fade every layer in this group together, keeping their relative styling';
   sl.setAttribute('aria-label', cfg.aria);
+  lab.htmlFor = sl.id = 'ovop_' + key + '_' + ((OPACITY_SLIDERS[key] || []).length);
   const show = () => { n.textContent = sl.value + '%'; };
   show();
-  sl.addEventListener('input', () => { show(); cfg.set(+sl.value / 100, false); });
-  sl.addEventListener('change', () => { show(); cfg.set(+sl.value / 100); });
-  f.append(lab, sl);
+  sl.addEventListener('input', () => { show(); cfg.set(+sl.value / 100, false); syncGroupOpacityUI(key, sl); });
+  sl.addEventListener('change', () => { show(); cfg.set(+sl.value / 100); syncGroupOpacityUI(key, sl); });
+  (OPACITY_SLIDERS[key] = OPACITY_SLIDERS[key] || []).push({ sl, show, get: cfg.get });
+  f.append(lab, sl, n);
   return f;
 }
 
@@ -1702,33 +1778,54 @@ function renderSidebar() {
   // appended to the left rail last, after the notes (see below)
 
   // basemap ---------------------------------------------------------------
+  // Two rows since 10 Sep 2026 (owner direction) instead of six stacked rows: a
+  // segmented control picks the base image, then three toggle chips for the
+  // things drawn over it.  The chips keep checkbox semantics -- each one is a
+  // <label> around a real checkbox, so it is tabbable, announced as a checkbox
+  // and driven by the same state and hash keys (hs / ct / pn) as the old rows.
   const bmBlock = el('div', 'block', '<h2>Basemap</h2>');
-  for (const [v, t] of [['osm', 'OpenStreetMap'], ['esri', 'Esri World Imagery'], ['none', 'None (black)']]) {
-    const r = el('label', 'row');
-    const i = el('input'); i.type = 'radio'; i.name = 'bm'; i.value = v; i.checked = state.base === v;
-    i.addEventListener('change', () => { state.base = v; applyBase(); writeHash(); });
-    r.append(i, el('span', 't', t));
-    bmBlock.appendChild(r);
+  const bmSeg = el('div', 'seg segsm');
+  for (const [v, t, title] of [
+    ['osm', 'OpenStreetMap', 'OpenStreetMap standard raster tiles'],
+    ['esri', 'Esri imagery', 'Esri World Imagery'],
+    ['none', 'None', 'No basemap: black under the overlays'],
+  ]) {
+    const b = el('button', null, t);
+    b.dataset.bm = v; b.title = title;
+    b.setAttribute('aria-pressed', String(state.base === v));
+    b.addEventListener('click', () => {
+      state.base = v; applyBase(); writeHash();
+      for (const x of bmSeg.children) x.setAttribute('aria-pressed', String(x.dataset.bm === v));
+    });
+    bmSeg.appendChild(b);
   }
-  const hs = el('label', 'row');
-  const hsCb = el('input'); hsCb.type = 'checkbox'; hsCb.checked = state.hillshade;
-  hsCb.disabled = !(terrain && terrain.hillshade);
-  hsCb.addEventListener('change', () => { state.hillshade = hsCb.checked; applyBase(); writeHash(); });
-  hs.append(hsCb, el('span', 't', 'Hillshade' + (hsCb.disabled ? ' (not built)' : '')));
-  bmBlock.appendChild(hs);
-  const ct = el('label', 'row');
-  const ctCb = el('input'); ctCb.type = 'checkbox'; ctCb.checked = state.contours;
-  ctCb.disabled = !CONTOUR_IDS.length;
-  ctCb.addEventListener('change', () => { state.contours = ctCb.checked; applyBase(); writeHash(); });
-  ct.append(ctCb, el('span', 't', ctCb.disabled ? 'Contours (not built)' : 'Contours'));
-  ct.title = 'Copernicus GLO-30: 10–50 m intervals in the flood area, 100 m to 2 km beyond it, 500 m and 1000 m to 10 km';
-  bmBlock.appendChild(ct);
-  const pn = el('label', 'row');
-  const pnCb = el('input'); pnCb.type = 'checkbox'; pnCb.checked = state.placeNames;
-  pnCb.addEventListener('change', () => { state.placeNames = pnCb.checked; applyBase(); writeHash(); });
-  pn.append(pnCb, el('span', 't', 'Place names'));
-  pn.title = 'Settlements from OpenStreetMap: district headquarters and towns from zoom 8, villages from 11, hamlets from 13';
-  bmBlock.appendChild(pn);
+  bmBlock.appendChild(bmSeg);
+  const togs = el('div', 'togs');
+  /* One toggle chip: a checkbox that looks like a pill.  `.on` mirrors :checked
+   * for the fill (a bare :checked sibling selector would work too, but the class
+   * also survives the disabled "(not built)" case cleanly). */
+  const togChip = (text, checked, disabled, title, onChange) => {
+    const lab = el('label', 'tog' + (checked && !disabled ? ' on' : '') + (disabled ? ' off' : ''));
+    const cb = el('input'); cb.type = 'checkbox'; cb.checked = checked && !disabled; cb.disabled = disabled;
+    cb.addEventListener('change', () => { lab.classList.toggle('on', cb.checked); onChange(cb.checked); });
+    lab.append(cb, el('span', null, text));
+    if (title) lab.title = title;
+    togs.appendChild(lab);
+    return cb;
+  };
+  const hsOff = !(terrain && terrain.hillshade);
+  togChip('Hillshade' + (hsOff ? ' (not built)' : ''), state.hillshade, hsOff,
+    hsOff ? 'data/terrain.json has no hillshade: run the terrain build first' : 'Shaded relief from Copernicus GLO-30',
+    on => { state.hillshade = on; applyBase(); writeHash(); });
+  const ctOff = !CONTOUR_IDS.length;
+  togChip('Contours' + (ctOff ? ' (not built)' : ''), state.contours, ctOff,
+    ctOff ? 'data/terrain.json has no contours: run the terrain build first'
+          : 'Copernicus GLO-30: 10–50 m intervals in the flood area, 100 m to 2 km beyond it, 500 m and 1000 m to 10 km',
+    on => { state.contours = on; applyBase(); writeHash(); });
+  togChip('Place names', state.placeNames, false,
+    'Settlements from OpenStreetMap: district headquarters and towns from zoom 8, villages from 11, hamlets from 13',
+    on => { state.placeNames = on; applyBase(); writeHash(); });
+  bmBlock.appendChild(togs);
   cpad.appendChild(bmBlock);
 
   // zoom to ---------------------------------------------------------------
@@ -1791,8 +1888,9 @@ function renderSidebar() {
   }
   cbRow.appendChild(cbSeg);
   // Hidden by default since 10 Sep 2026 (owner direction): status colouring is
-  // the default and the switch is an owner tool; ?tools=1 shows it again.
-  if (OWNER_TOOLS) oBlock.appendChild(cbRow);
+  // the default and the switch is an owner tool; ?tools=1 shows it again.  When
+  // it is shown it goes inside the HOT group with the Extent switch (the rail
+  // reorder moved that group to the bottom), not at the top of Overlays.
 
   const segField = (label, key, opts, onPick) => {
     const f = el('div', 'field hotseg');
@@ -1815,26 +1913,40 @@ function renderSidebar() {
   for (const g of GROUPS) {
     const det = el('details');
     det.open = g.open !== undefined ? g.open : (g.entries.some(e => state.overlays.has(e.key)) && g.entries.length < 12);
-    const sum = el('summary', null, g.title + (g.entries.length > 1 ? ' <span class="n">' + g.entries.length + '</span>' : ''));
+    // Group header: title, count badge, and the all / none pair as small text
+    // buttons in the summary line itself (they replaced the separate "all on /
+    // all off" row on 10 Sep 2026).  A button inside a <summary> would open and
+    // close the group as well as fire its own handler, so the handler cancels the
+    // summary's default activation.
+    const sum = el('summary', 'gsum');
+    sum.appendChild(el('span', 'gt', g.title));
+    if (g.entries.length > 1) sum.appendChild(el('span', 'n', String(g.entries.length)));
+    const ctl = el('span', 'allnone', '<button type="button" data-all="1">all</button>'
+      + '<button type="button" data-all="0">none</button>');
+    if (g.entries.length > 1 && !g.noAll) sum.appendChild(ctl);
     det.appendChild(sum);
     // Extent switch hidden by default since 10 Sep 2026 (owner direction): the
     // flood area (+200 m) is the default and hx=corridor in the hash still works;
-    // ?tools=1 shows the switch again.
+    // ?tools=1 shows the switch again.  Colour-by rides along with it.
     if (g.extent && OWNER_TOOLS) {
+      det.appendChild(cbRow);
       det.appendChild(segField('Extent', 'hotExtent',
         [['flood', 'Flood area (+200 m)'], ['corridor', 'River corridor (1 km)']], () => { applyHot(); writeHash(); }));
     }
-    const ctl = el('div', 'grp', '<button data-all="1">all on</button><button data-all="0">all off</button>');
-    if (g.entries.length > 1 && !g.noAll) det.appendChild(ctl);
     if (g.opacity) det.appendChild(buildGroupOpacity(g.opacityKey));
     const boxes = [], rows = [];
     for (const e of g.entries) {
-      const row = el('label', 'row');
+      const row = el('label', 'row' + (e.sub ? ' has-sub' : ''));
       const cb = el('input'); cb.type = 'checkbox'; cb.checked = state.overlays.has(e.key);
       cb.dataset.ovkey = e.key;      // so a report row can switch its own layer on
       const sw = el('span', 'sw' + (e.outline ? ' outline' : '') + (e.shape ? ' ' + e.shape : ''));
       sw.style.background = e.color; sw.style.borderColor = e.color;
-      row.append(cb, sw, el('span', 't', e.label));
+      // The label wraps rather than ellipsising (owner direction, 10 Sep 2026: no
+      // truncated rows at the rail's width); `sub` is the muted second line, used
+      // only where it carries something the shortened label dropped.
+      const t = el('span', 't', e.label);
+      if (e.sub) t.appendChild(el('span', 'sub', e.sub));
+      row.append(cb, sw, t);
       const cnt = el('span', 'cnt', e.count !== undefined ? fmtCount(e.count) : '');
       row.appendChild(cnt);
       cb.addEventListener('change', () => {
@@ -1851,7 +1963,9 @@ function renderSidebar() {
       if (e.hot) hotRows.push({ e, row, cb, cnt, minz });
       det.appendChild(row);
     }
-    ctl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    ctl.querySelectorAll('button').forEach(b => b.addEventListener('click', ev => {
+      ev.preventDefault();       // a click inside <summary> would toggle the group
+      ev.stopPropagation();
       const on = b.dataset.all === '1';
       for (const [cb, e] of boxes) {
         if (cb.disabled) continue;
