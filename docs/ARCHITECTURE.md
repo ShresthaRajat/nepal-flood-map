@@ -470,8 +470,15 @@ collects alongside the entry ids, and `admin_district-line` is excluded from
 `QUERY_IDS` so an always-on line does not win popups from the damage features
 under it. Municipality stays an ordinary toggle, off by default.
 
-Its weight was raised on 10 Sep 2026 (owner direction: "make the district
-boundary more apparent ... so it's easier to view and not disappear"). The flat
+It is also the **last** admin level pushed, so it draws over the municipality
+outline, the ward outlines and the ward damage fill. The three levels share long
+stretches of border, and whichever is pushed last wins those pixels; before
+10 Sep 2026 the district went in first and the ward outlines broke it up
+(owner direction: "still district boundary gets hidden, maybe make it appear on
+top of the municipality and ward boundary").
+
+Its weight was raised in the same pass ("make the district boundary more
+apparent ... so it's easier to view and not disappear"). The flat
 1.5 px became a zoom ramp — 2.2 px at z6, 3.2 at z10, 4.2 at z14 — at full
 opacity, over a new `admin_district-casing` line in `rgba(8,12,18,.5)` 2.6 px
 wider, so the outline holds up over the light OSM basemap, dark imagery and the

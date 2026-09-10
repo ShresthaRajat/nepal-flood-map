@@ -1209,14 +1209,20 @@ function buildDefs() {
         paint: { 'text-color': color, 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.5, 'text-halo-blur': 0.3 } });
     return out;
   }
+  // Order matters: the district goes in LAST so it draws over the municipality
+  // outline, the ward outlines and the ward damage fill (owner direction,
+  // 10 Sep 2026 -- "still district boundary gets hidden, maybe make it appear on
+  // top of the municipality and ward boundary").  It shares long stretches of
+  // its border with a municipality and a ward edge, so whichever is drawn last
+  // wins those pixels; the district is the always-on reference line, so it wins.
   push(
-    ...adminLayers('district', ['get', 'adm2_name'], 8,
-      { filter: DISTRICT_FILTER, visible: true, casing: DISTRICT_CASING,
-        linePaint: { 'line-opacity': 1 } }),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: MUNI_FILTER }),   // flood-affected local levels only
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
       { filter: WARD_MUNI_FILTER, fillFilter: WARD_FILLED, fillPaint: WARD_PAINT,
         linePaint: WARD_LINE_PAINT }),
+    ...adminLayers('district', ['get', 'adm2_name'], 8,
+      { filter: DISTRICT_FILTER, visible: true, casing: DISTRICT_CASING,
+        linePaint: { 'line-opacity': 1 } }),
   );
   // First group in the rail since 10 Sep 2026 (owner direction): "move the
   // administrative option to the top of overlays".  Two rows now -- the district
