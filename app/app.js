@@ -103,6 +103,54 @@ async function loadReports() {
   } catch (e) { return null; }
 }
 
+/* The ward numbers NDRRMA lists as affected, read out of reports.json's
+ * `municipalities[*].wards_official.text` (SitRep 01, 1 Sep 2026).  That field is
+ * prose, not a clean list, so the parser has to be careful:
+ *
+ *   "1, 2, 3, 5"                                       -> 1 2 3 5
+ *   "6 fully; 1, 2, 4, 8 partially"                    -> 1 2 4 6 8
+ *   "All wards cut off ...; ward 1 directly flood-..." -> 1
+ *   "5 wards"                                          -> nothing: a count, not a number
+ *   "Not specified"                                    -> nothing
+ *
+ * The rule that does the work is the third one: a number immediately followed by
+ * the word "ward(s)" is a count of wards, while a number followed by anything
+ * else (or nothing) is a ward number.  Values outside 1-40 are ignored, so a year
+ * or a household figure that wanders into the sentence cannot become a ward. */
+function parseWardNumbers(text) {
+  const t = String(text || '').toLowerCase();
+  if (/^\s*not specified/.test(t)) return [];
+  const out = new Set();
+  const re = /(\d+)\s*([a-z]*)/g;
+  let m;
+  while ((m = re.exec(t))) {
+    if (/^wards?/.test(m[2])) continue;      // "5 wards": a count, not a ward number
+    const n = +m[1];
+    if (n >= 1 && n <= 40) out.add(n);
+  }
+  return [...out];
+}
+/* "<local level name>|<ward number>" keys for every ward NDRRMA lists, one per
+ * name the local level goes by.  The ward polygons carry the 2018 HRRP spelling
+ * (`GaPa_NaPa`) and reports.json carries the current COD-AB one, so the aliases
+ * are what bridges them: Aamachhodingmo/Parbati Kunda, Tarakeshwor/Tarkeshwar,
+ * Dupcheshwor/Dupcheshwar, Myagang/Meghang.  Lower-cased both sides. */
+function ndrrmaWardKeys(rep) {
+  const keys = new Set();
+  const list = (rep && Array.isArray(rep.municipalities)) ? rep.municipalities : [];
+  for (const m of list) {
+    const wo = m && m.wards_official;
+    if (!wo || !wo.text) continue;
+    const nums = parseWardNumbers(wo.text);
+    if (!nums.length) continue;
+    for (const nm of [m.name, ...(m.aliases || [])]) {
+      if (!nm) continue;
+      for (const n of nums) keys.add(String(nm).trim().toLowerCase() + '|' + n);
+    }
+  }
+  return [...keys];
+}
+
 /* Attribute-complete per-layer vector tiles, if the data agent has built them.
  * metadata.json shape is not pinned down, so accept the usual spellings. */
 function metaLayerNames(j) {
@@ -467,7 +515,6 @@ function buildDefs() {
       attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
     // Administrative boundaries (province/district/municipality/ward), clipped to roughly the map's
     // max pan extent -- see data/admin/README.md for sources, licenses and the ward-data caveat.
-    admin_province: { type: 'geojson', data: ADMIN + 'admin_province.geojson', attribution: ATTR_ADMIN_COD },
     admin_district: { type: 'geojson', data: ADMIN + 'admin_district.geojson', attribution: ATTR_ADMIN_COD },
     admin_municipality: { type: 'geojson', data: ADMIN + 'admin_municipality.geojson', attribution: ATTR_ADMIN_COD },
     admin_ward: { type: 'geojson', data: ADMIN + 'admin_ward.geojson', attribution: ATTR_ADMIN_WARD },
@@ -992,58 +1039,103 @@ function buildDefs() {
   // Reference layers for government coordination: line + name label per level (ward also
   // gets a light fill so the ward area itself reads, not just its edge), off by default so
   // they don't clutter the imagery until asked for. All four in shades of green, darkest
-  // and thickest for province down to lightest and thinnest for ward -- a shared hue keeps
+  // and thickest for district down to lightest and thinnest for ward -- a shared hue keeps
   // them reading as one "administrative" family, distinct from the reds/oranges/yellows used
   // for damage and roads. `opacity: true` on the group below gives it its own fade slider,
-  // separate from the flood/damage group's. Province/district/municipality come from OCHA
-  // COD-AB (current, 2024); ward is a 2018 source limited to Rasuwa and Nuwakot -- see
-  // data/admin/README.md for provenance, licenses and caveats. Every flood-touching ward
-  // (`flood_affected`, 31 of 117, precomputed -- see data/admin/README.md) gets an orange
-  // fill with a darker orange fill-outline; the ordinary green ward outline still applies to
-  // every ward regardless (owner direction, 8 Sep 2026: a single orange tier, no severity split).
-  const ADMIN_COLOR = { province: '#14532d', district: '#15803d', municipality: '#22c55e', ward: '#86efac' };
-  const ADMIN_DASH  = { province: [4, 2], district: [3, 2], municipality: [2, 1.5], ward: [1, 1.5] };
-  const ADMIN_WIDTH = { province: 2.6, district: 1.9, municipality: 1.4, ward: 1.1 };
+  // separate from the flood/damage group's. District/municipality come from OCHA COD-AB
+  // (current, 2024); ward is a 2018 source limited to Rasuwa and Nuwakot -- see
+  // data/admin/README.md for provenance, licenses and caveats.
+  //
+  // Owner direction, 10 Sep 2026, after seeing the rail:
+  //   * Province is gone entirely -- no source, no layers, no row, no key. The event
+  //     touches three districts; a province outline said nothing.
+  //   * District is a fixed reference outline, not a toggle: bright green, always on,
+  //     both maps, filtered to the three districts the flood ran through. It has no
+  //     overlay key, so `ov=` cannot switch it off; only the group opacity slider
+  //     reaches it (via the group's `fixed` list, see opacityGroupIds()).
+  //   * The ward fill is two tiers again, but built at runtime from official data
+  //     rather than from a `severity` field in the GeoJSON (that field was stripped
+  //     on 8 Sep): dark brownish orange for the wards NDRRMA lists as affected in
+  //     SitRep 01, lighter and more transparent for the other wards the flood extent
+  //     touches. Without reports.json it falls back to the single orange tier.
+  const ADMIN_COLOR = { district: '#4ade80', municipality: '#22c55e', ward: '#86efac' };
+  const ADMIN_DASH  = { district: [3, 2], municipality: [2, 1.5], ward: [1, 1.5] };
+  const ADMIN_WIDTH = { district: 1.5, municipality: 1.4, ward: 1.1 };
   const WARD_FILL = '#ff8c1a', WARD_FILL_OUTLINE = '#b45309';
-  function adminLayers(level, nameExpr, minLabelZoom, fillFilter) {
+  const WARD_DEEP = '#c2410c', WARD_LIGHT = '#f97316';
+  // COD-AB v02 adm2_name spellings, checked against data/admin/admin_district.geojson.
+  const DISTRICTS_SHOWN = ['Rasuwa', 'Nuwakot', 'Dhading'];
+  const DISTRICT_FILTER = ['in', ['get', 'adm2_name'], ['literal', DISTRICTS_SHOWN]];
+
+  // reports.json is awaited alongside the imagery catalogue in main(), so it has
+  // already resolved by the time buildDefs() runs -- the tier can be baked into the
+  // style rather than patched in later.  The join key is the ward's own HRRP name
+  // and number, lower-cased on both sides; a name the alias list does not bridge
+  // simply falls through to the lighter tier rather than throwing.
+  const NDRRMA_WARDS = ndrrmaWardKeys(reports);
+  const WARD_KEY = ['downcase', ['concat', ['to-string', ['get', 'GaPa_NaPa']], '|', ['to-string', ['get', 'NEW_WARD_N']]]];
+  const WARD_DEEP_EXPR = NDRRMA_WARDS.length ? ['in', WARD_KEY, ['literal', NDRRMA_WARDS]] : null;
+  const WARD_FILLED = WARD_DEEP_EXPR
+    // Two of the NDRRMA wards do not intersect the mapped extent (the SitRep counts
+    // isolation and road closure, not just inundation), so the fill is the union of
+    // the two tiers, not a subset of `flood_affected`.
+    ? ['any', ['==', ['get', 'flood_affected'], 1], WARD_DEEP_EXPR]
+    : ['==', ['get', 'flood_affected'], 1];
+  const WARD_PAINT = WARD_DEEP_EXPR
+    ? { 'fill-color': ['case', WARD_DEEP_EXPR, WARD_DEEP, WARD_LIGHT],
+        'fill-opacity': ['case', WARD_DEEP_EXPR, 0.55, 0.18],
+        'fill-outline-color': WARD_FILL_OUTLINE }
+    : { 'fill-color': WARD_FILL, 'fill-opacity': 0.4, 'fill-outline-color': WARD_FILL_OUTLINE };
+
+  /* opts: { filter } narrows every layer of the level, { fillFilter, fillPaint }
+   * add and style the fill, { visible } builds the level shown rather than hidden
+   * (for a fixed reference layer that no checkbox owns). */
+  function adminLayers(level, nameExpr, minLabelZoom, opts) {
+    const o = opts || {};
     const color = ADMIN_COLOR[level];
+    const vis = o.visible ? {} : { visibility: 'none' };
+    const flt = o.filter ? { filter: o.filter } : {};
     const out = [];
-    if (fillFilter) out.push({ id: 'admin_' + level + '-fill', type: 'fill', source: 'admin_' + level,
-      filter: fillFilter, layout: { visibility: 'none' },
-      paint: level === 'ward'
-        ? { 'fill-color': WARD_FILL, 'fill-opacity': 0.4, 'fill-outline-color': WARD_FILL_OUTLINE }
-        : { 'fill-color': color, 'fill-opacity': 0.35 } });
+    if (o.fillFilter) out.push({ id: 'admin_' + level + '-fill', type: 'fill', source: 'admin_' + level,
+      filter: o.fillFilter, layout: { ...vis },
+      paint: o.fillPaint || { 'fill-color': color, 'fill-opacity': 0.35 } });
     out.push(
-      { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level,
-        layout: { visibility: 'none', 'line-join': 'round' },
+      { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level, ...flt,
+        layout: { ...vis, 'line-join': 'round' },
         paint: { 'line-color': color, 'line-width': ADMIN_WIDTH[level], 'line-opacity': 0.85, 'line-dasharray': ADMIN_DASH[level] } },
-      { id: 'admin_' + level + '-label', type: 'symbol', source: 'admin_' + level, minzoom: minLabelZoom,
-        layout: { visibility: 'none', 'text-field': nameExpr, 'text-font': FONT,
+      { id: 'admin_' + level + '-label', type: 'symbol', source: 'admin_' + level, minzoom: minLabelZoom, ...flt,
+        layout: { ...vis, 'text-field': nameExpr, 'text-font': FONT,
           'text-size': ['interpolate', ['linear'], ['zoom'], minLabelZoom, 10, minLabelZoom + 4, 12.5],
           'text-max-width': 8, 'text-padding': 3 },
         paint: { 'text-color': color, 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.5, 'text-halo-blur': 0.3 } });
     return out;
   }
   push(
-    ...adminLayers('province', ['get', 'adm1_name'], 6),
-    ...adminLayers('district', ['get', 'adm2_name'], 8),
+    ...adminLayers('district', ['get', 'adm2_name'], 8, { filter: DISTRICT_FILTER, visible: true }),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10),
-    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12, ['==', ['get', 'flood_affected'], 1]),
+    ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
+      { fillFilter: WARD_FILLED, fillPaint: WARD_PAINT }),
   );
   // First group in the rail since 10 Sep 2026 (owner direction): "move the
-  // administrative option to the top of overlays".  Open by default even though
-  // all four rows start off -- it is the group people reach for first.
-  groups.push({ gid: 'admin', title: 'Administrative boundaries', open: true, opacity: true, opacityKey: 'admin', entries: [
-    { key: 'admin_province', label: 'Province', color: ADMIN_COLOR.province,
-      ids: ['admin_province-line', 'admin_province-label'], on: false, count: 6 },
-    { key: 'admin_district', label: 'District', color: ADMIN_COLOR.district,
-      ids: ['admin_district-line', 'admin_district-label'], on: false, count: 42 },
+  // administrative option to the top of overlays".  Two rows now -- the district
+  // outline above them is fixed and the province is gone.
+  groups.push({ gid: 'admin', title: 'Administrative boundaries', open: true, opacity: true, opacityKey: 'admin',
+    caption: 'District outline: Rasuwa, Nuwakot, Dhading (fixed)',
+    // Always-on reference layers: no row and no overlay key, but still faded by the
+    // group's opacity slider and still labelled if a click ever reaches them.
+    fixed: [{ label: 'District (OCHA COD-AB, 2024)', ids: ['admin_district-line', 'admin_district-label'] }],
+    entries: [
     { key: 'admin_municipality', label: 'Municipality', color: ADMIN_COLOR.municipality,
       ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399,
       title: 'Municipality / local level (OCHA COD-AB, 2024)' },
-    { key: 'admin_ward', label: 'Wards, flood-affected', color: WARD_FILL,
-      sub: 'Rasuwa & Nuwakot, orange = flood-touching',
-      title: 'Ward (Rasuwa & Nuwakot only, 2018 reference; orange fill highlights the 31 flood-affected wards)',
+    { key: 'admin_ward', label: 'Wards, flood-affected',
+      color: WARD_DEEP_EXPR ? WARD_DEEP : WARD_FILL,
+      colors: WARD_DEEP_EXPR ? [WARD_DEEP, WARD_LIGHT] : null,
+      sub: WARD_DEEP_EXPR
+        ? 'dark = wards NDRRMA lists as affected (SitRep 01, 1 Sep); light = other wards touching the flood extent'
+        : 'Rasuwa & Nuwakot, orange = flood-touching',
+      title: 'Ward (Rasuwa & Nuwakot only, 2018 HRRP reference geometry; the fill is graded from '
+        + 'NDRRMA SitRep 01 via data/reports.json)',
       ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
   ] });
 
@@ -1107,12 +1199,20 @@ function buildDefs() {
   groups.sort((a, b) => groupRank(a) - groupRank(b));
 
   // registry ---------------------------------------------------------------
-  for (const g of groups) for (const e of g.entries) {
-    ENTRY[e.key] = e;
-    for (const id of e.ids) LABEL_OF[id] = e.label;
+  for (const g of groups) {
+    for (const e of g.entries) {
+      ENTRY[e.key] = e;
+      for (const id of e.ids) LABEL_OF[id] = e.label;
+    }
+    // A group's `fixed` layers are always on and have no checkbox, so they get a
+    // label but no ENTRY -- nothing can toggle or serialise them.
+    for (const f of (g.fixed || [])) for (const id of f.ids) LABEL_OF[id] = f.label;
   }
   QUERY_IDS = Object.keys(LABEL_OF).filter(id =>
-    !id.startsWith('aoi_') && !id.startsWith('contour-') && !id.endsWith('-label') && !id.endsWith('-casing'));
+    !id.startsWith('aoi_') && !id.startsWith('contour-') && !id.endsWith('-label') && !id.endsWith('-casing')
+    // The district outline is drawn at all times; letting it answer clicks would
+    // have it win popups from the damage features underneath it.
+    && id !== 'admin_district-line');
 
   IMAGERY_BEFORE = (sources.hillshade ? 'hillshade' : null)
     || (CONTOUR_IDS.length ? CONTOUR_IDS[0] : null)
@@ -1298,6 +1398,8 @@ function opacityGroupIds(key) {
       if (e.cat) { for (const h of HOT_LAYERS) if (h.cat === e.cat && h.s === e.src) out.push(...h.ids); }
       else out.push('aoi_flood-line', 'aoi_corridor-line', 'aoi_upstream-line');
     }
+    // Always-on reference layers with no row of their own still fade with the group.
+    for (const f of (g.fixed || [])) out.push(...f.ids);
   }
   return out;
 }
@@ -1529,6 +1631,11 @@ function applyOverlayDiff(ov) {
     const old = /^(flood|corridor)-(.+)-(osm|overture)$/.exec(k);
     if (old) { k = (old[3] === 'overture' ? 'ovt_' : 'hot_') + old[2]; if (tok[0] === '+') state.hotExtent = old[1]; }
     if (k === 'aoi_flood' || k === 'aoi_corridor') k = 'hot_aoi';   // older per-extent keys
+    // Retired 10 Sep 2026: the province layer is gone and the district outline is
+    // fixed, so a link that carries either token loads without them rather than
+    // failing.  `!ENTRY[k]` below would already skip these; named here so the
+    // silence is deliberate rather than incidental.
+    if (k === 'admin_province' || k === 'admin_district') continue;
     if (k.startsWith('ct_') || k === 'contours') { if (tok[0] === '-') state.contours = false; continue; }
     if (!ENTRY[k]) continue;
     if (tok[0] === '+') state.overlays.add(k); else state.overlays.delete(k);
@@ -1933,14 +2040,22 @@ function renderSidebar() {
       det.appendChild(segField('Extent', 'hotExtent',
         [['flood', 'Flood area (+200 m)'], ['corridor', 'River corridor (1 km)']], () => { applyHot(); writeHash(); }));
     }
+    if (g.caption) det.appendChild(el('p', 'gcap', g.caption));
     if (g.opacity) det.appendChild(buildGroupOpacity(g.opacityKey));
     const boxes = [], rows = [];
     for (const e of g.entries) {
       const row = el('label', 'row' + (e.sub ? ' has-sub' : ''));
       const cb = el('input'); cb.type = 'checkbox'; cb.checked = state.overlays.has(e.key);
       cb.dataset.ovkey = e.key;      // so a report row can switch its own layer on
-      const sw = el('span', 'sw' + (e.outline ? ' outline' : '') + (e.shape ? ' ' + e.shape : ''));
-      sw.style.background = e.color; sw.style.borderColor = e.color;
+      // `colors` draws one swatch per tier (the ward row's dark / light pair);
+      // `color` alone draws the usual single swatch.
+      const swWrap = el('span', 'swset');
+      for (const c of (e.colors && e.colors.length ? e.colors : [e.color])) {
+        const one = el('span', 'sw' + (e.outline ? ' outline' : '') + (e.shape ? ' ' + e.shape : ''));
+        one.style.background = c; one.style.borderColor = c;
+        swWrap.appendChild(one);
+      }
+      const sw = swWrap;
       // The label wraps rather than ellipsising (owner direction, 10 Sep 2026: no
       // truncated rows at the rail's width); `sub` is the muted second line, used
       // only where it carries something the shortened label dropped.
@@ -2024,6 +2139,18 @@ function renderSidebar() {
   add('#c084fc', 'Glacier / rock detachment zone and collapse origin (UNOSAT, Landsat-9 26 Aug)');
   add('#7dd3fc', 'Barrier lakes formed by the collapse (UNOSAT, Cartosat-3 28 Aug)');
   add('#f87171', 'Settlement name inside the flood-affected area (others white)');
+  // Administrative: the fixed district outline and the two ward tiers.  The tier
+  // colours come from the built entry, so the fallback single-tier build (no
+  // reports.json) shows one ward swatch here rather than two that do not exist.
+  lg.appendChild(el('div', 'hd', 'Administrative'));
+  add('#4ade80', 'District outline: Rasuwa, Nuwakot, Dhading (always shown)', true);
+  const wardEntry = ENTRY['admin_ward'];
+  if (wardEntry && wardEntry.colors && wardEntry.colors.length === 2) {
+    add(wardEntry.colors[0], 'Ward NDRRMA lists as affected (SitRep 01, 1 Sep 2026)');
+    add(wardEntry.colors[1], 'Other ward touching the mapped flood extent');
+  } else if (wardEntry) {
+    add(wardEntry.color, 'Ward touching the mapped flood extent');
+  }
   lBlock.appendChild(lg);
 
   const roadLg = el('div', 'roadlg');

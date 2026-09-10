@@ -148,6 +148,11 @@ documented in `data/admin/README.md`:
   flood-affected ward count (Rasuwa and Nuwakot only; elsewhere "n/a"), and
   against `adm3_name` in `destroyed_features_osm.geojson` for the OSM-mapped
   sub-line.
+- `municipalities[].wards_official.text` + `aliases`, joined the same way, to
+  grade the ward fill into two tiers — see "Administrative layers" below.
+  `parseWardNumbers()` does the reading: that field is prose, so a number
+  immediately followed by "ward(s)" is a count ("5 wards") and never a ward
+  number, "Not specified" yields nothing, and values outside 1–40 are ignored.
 - `energy.projects[].name` against `name` in
   `data/hdx/derived/hydropower_points.geojson`, which the build script already
   writes with the reports.json spellings, so the join is exact. `hydroKey()`
@@ -420,7 +425,7 @@ Overlays then run in this order, each an ordinary `<details>`:
 
 | Group | `gid` | Open | Rows |
 | --- | --- | --- | --- |
-| Administrative boundaries | `admin` | yes | 4 |
+| Administrative boundaries | `admin` | yes | 2 |
 | Flood & damage | `flood` | yes | 10 |
 | Infrastructure & rivers | `infra` | yes | 3 |
 | Mapped features, HOT / OpenStreetMap | `hot` | no | 8 |
@@ -443,6 +448,50 @@ tooltip and in the Sources & notes drawer.
 holds hydropower, the national highways and the waterways: context, not damage.
 No entry key, default or hash token changed, so `ov=` links written before the
 split resolve identically.
+
+### Administrative layers
+
+Rewritten 10 Sep 2026 (owner direction). There is **no province layer** — no
+source, no style layers, no overlay key; the event touches three districts, so a
+province outline said nothing. Old `ov=` links carrying `+admin_province` or
+`-admin_district` load without them: `applyOverlayDiff()` names both keys and
+skips them.
+
+The **district outline** is a fixed reference layer rather than a toggle: bright
+green `#4ade80` at 1.5 px, drawn on both maps at all times, filtered to
+`adm2_name in ['Rasuwa', 'Nuwakot', 'Dhading']` (COD-AB v02 spellings). It has no
+row and no `ENTRY` key, so nothing can switch it off; it reaches the group
+opacity slider through the group's `fixed` list, which `opacityGroupIds()`
+collects alongside the entry ids, and `admin_district-line` is excluded from
+`QUERY_IDS` so an always-on line does not win popups from the damage features
+under it. Municipality stays an ordinary toggle, off by default.
+
+The **ward fill is two tiers**, built at runtime rather than from the data. The
+`severity` field was stripped from `admin_ward.geojson` on 8 Sep 2026, so the
+tier now comes from official reporting instead: `ndrrmaWardKeys()` reads
+`municipalities[*].wards_official` out of `data/reports.json` (NDRRMA SitRep 01,
+1 Sep 2026), expands each local level's names and aliases, and returns
+`"<name>|<ward number>"` keys. `buildDefs()` turns that list into an `in`
+expression against a lower-cased `GaPa_NaPa|NEW_WARD_N` key and uses it for both
+the fill colour and the fill opacity:
+
+| Tier | Test | Colour | Opacity |
+| --- | --- | --- | --- |
+| NDRRMA-listed | key in the list | `#c2410c` | 0.55 |
+| Other flood-touching | `flood_affected = 1` | `#f97316` | 0.18 |
+
+Nineteen ward polygons land in the first tier and fourteen in the second. The
+fill filter is the **union** of the two tests, not `flood_affected = 1`: two
+NDRRMA-listed wards (Uttargaya 3, Tarkeshwar 6) do not intersect the mapped
+extent, because the situation report counts isolation and road closure as well
+as inundation. `reports.json` is optional, so with no list the layer falls back
+to the single `#ff8c1a` tier at 0.4 it had before. Both tiers are data-driven
+expressions, which the group opacity slider scales as `['*', base, k]` like any
+other expression base.
+
+`buildDefs()` runs after the `Promise.all` in `main()` that awaits
+`loadReports()`, so the tier can be baked into the style at build time and needs
+no patching once the maps exist.
 
 ### Group opacity
 

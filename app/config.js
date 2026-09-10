@@ -281,18 +281,28 @@ upper-valley tile; it is not a validated damage assessment. Bridge conditions in
 layer come from volunteer field reports of varying age. Coordinates shown are approximate.</p>
 
 <h3>Administrative boundaries</h3>
-<p>Province, district and municipality (local level) boundaries are from OCHA's Common Operational
+<p>District and municipality (local level) boundaries are from OCHA's Common Operational
 Dataset for Nepal (COD-AB), version v02 valid 14 March 2024 — the current federal structure. Survey
 Department of Nepal / UN Resident Coordinator's Office in Nepal, CC BY-IGO. Ward boundaries are the
 only ward-level (admin4) source found for Nepal: a 2018 Housing Recovery and Reconstruction Platform
 (HRRP) dataset covering the 31 districts affected by the 2015 earthquake, filtered here to Rasuwa and
 Nuwakot. CC0, but treat ward shapes and numbers as reference-only, not authoritative — see
-<code>data/admin/README.md</code> for the full provenance and caveats. All four layers are clipped to
-roughly the map's maximum pan extent and simplified for basemap display, off by default. The whole
+<code>data/admin/README.md</code> for the full provenance and caveats. The layers are clipped to
+roughly the map's maximum pan extent and simplified for basemap display. The whole
 group has its own opacity slider.</p>
-<p>An orange fill (with a darker orange edge) marks the 31 (of 117) wards that intersect the observed
-flood extent; every ward, affected or not, still gets the ordinary green outline. Full method, data
-sources and the ward list: <code>data/admin/README.md</code>.</p>
+<p>The district outline is drawn at all times in bright green, limited to the three districts the flood
+ran through — Rasuwa, Nuwakot and Dhading. There is no province layer: the event touches too few
+districts for one to say anything. Municipality and ward are toggles, both off by default.</p>
+<p>The ward fill is graded in two tiers. Dark brownish orange marks the wards NDRRMA lists as affected in
+its Rasuwa–Bhotekoshi Flood Situation Report #01 of 1 September 2026, read from the
+<code>wards_official</code> entries in <code>data/reports.json</code> and matched to the 2018 ward
+polygons by local-level name (via the alias list, which bridges spellings such as
+Aamachhodingmo/Parbati Kunda) and ward number; a lighter, more transparent orange marks the remaining
+wards that intersect the observed flood extent. Two NDRRMA-listed wards do not intersect that extent —
+the situation report counts isolation and road closure as well as inundation — so the shaded set is the
+union of the two tiers, not a subset of the flood-touching ones. Every ward, affected or not, still gets
+the ordinary green outline, and without <code>data/reports.json</code> the layer falls back to a single
+orange tier. Full method, data sources and the ward list: <code>data/admin/README.md</code>.</p>
 
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery

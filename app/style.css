@@ -205,11 +205,16 @@ label.row { display: flex; align-items: center; gap: 7px; padding: 2px 4px; curs
 label.row:hover { background: var(--bg2); }
 label.row > span.t { min-width: 0; }
 label.row.has-sub { align-items: flex-start; }
-label.row.has-sub > input, label.row.has-sub > .sw, label.row.has-sub > .cnt { margin-top: 2px; }
+label.row.has-sub > input, label.row.has-sub > .swset, label.row.has-sub > .cnt { margin-top: 2px; }
 label.row > span.t > .sub { display: block; font-size: 10px; line-height: 1.35; color: var(--fg-dim); }
-/* The semicircle swatch sits on the text baseline (align-self: flex-end); in a
-   two-line row that baseline is the sub-caption's, so pin it to the first line. */
-label.row.has-sub > .sw.semicircle { align-self: flex-start; margin-top: 8px; }
+/* A row's swatches live in a fixed-height box so a two-line row aligns them with
+   its first line, and so a row can show more than one (the ward tiers).  The box
+   is bottom-aligned because the semicircle swatch is a half-height shape that
+   should sit on the same line the square ones sit on. */
+.swset { display: inline-flex; align-items: flex-end; gap: 3px; height: 11px; flex: none; }
+
+/* A group's one-line caption, for what the group shows that no row owns. */
+.gcap { font-size: 10.5px; color: var(--fg-dim); margin: 2px 0 4px 16px; }
 .sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; flex: none; }
 .sw.outline { background: transparent !important; border: 2px solid; }
 /* Match the map icons: hydropower plants as a square, bridges as a semicircle
