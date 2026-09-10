@@ -76,11 +76,12 @@ places (~0.1 m).
   fall in the ward. Points are counted by containment, lines and polygons by
   intersection; a feature spanning several wards counts once in each and never
   twice in the same one. `dmg_total` is the sum of the two, and drives the
-  white-to-brown fill ramp. 35 wards carry any damage at all; the distribution
+  transparent-to-brown fill ramp. 35 wards carry any damage at all; the distribution
   over those is min 1, p50 41, p85 344, max 534, which is where the ramp's
-  0 / 40 / 340 / 534 breakpoints come from. Gorkha's wards all score 0 — the HOT
+  40 / 340 / 534 breakpoints come from (a 5-feature stop below them keeps a
+  lightly-hit ward visible). Gorkha's wards all score 0 — the HOT
   corridor layer records no destroyed or damaged feature in Gandaki or Sahid
-  Lakhan — so those wards render at the near-white end of the ramp.
+  Lakhan — so those wards take no fill at all, only the ward outline.
 - **`dmg_fair` field:** the same join against
   `data/hdx/hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage.geojson`,
   counting only buildings the fAIr model classed `destroyed` or `major-damage`

@@ -298,13 +298,15 @@ Bhote Koshi and Trishuli, ward outlines the 108 wards inside those same fourteen
 highways and waterways are clipped to the same four districts. There is no province layer: the
 event touches too few districts for one to say anything. Municipality is a toggle, off by default;
 the flood-affected wards are on by default.</p>
-<p>The ward fill is a white-to-brown ramp on mapped damage. Each shaded ward is shaded by
+<p>The ward fill is a transparent-to-brown ramp on mapped damage. Each shaded ward is shaded by
 <code>dmg_total</code>: the number of features recorded as Destroyed or Damaged in the HOT
 <code>destroyed_features_osm</code> corridor layer that fall inside it, joined to the ward polygons by
 <code>tools/build_admin_ward.py</code> (points by containment, lines and polygons by intersection, each
-feature counted once per ward). The ramp runs near-white at zero through tan and sienna to deep brown,
-with breakpoints at 0, 40, 340 and 534 — the median, 85th percentile and maximum of the counts over the
-35 wards that carry any mapped damage at all. <strong>No official source publishes casualties at ward
+feature counted once per ward). Opacity carries the low end of the ramp rather than colour: a ward with
+nothing mapped in it takes no fill at all, and the shading climbs from a faint tan through sienna to deep
+brown, with breakpoints at 0, 5, 40, 340 and 534 — the last three the median, 85th percentile and maximum
+of the counts over the 35 wards that carry any mapped damage at all. Filling those empty wards near-white
+made them read as a white haze over the basemap, so they are simply left clear. <strong>No official source publishes casualties at ward
 level</strong> — NDRRMA reports bodies recovered by district — so the ramp reflects mapped damage, never
 a casualty count, and the wards with the deepest brown are the ones volunteers have mapped most, which
 is not the same thing as the ones hit hardest.</p>

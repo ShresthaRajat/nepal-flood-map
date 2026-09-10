@@ -493,24 +493,33 @@ four of which differ from the COD-AB names in `EXTENT_MUNIS`: Parbati Kunda =
 Aamachhodingmo, Tarkeshwar = Tarakeshwor, Galchi = Galchhi, Sahid Lakhan =
 Shahid Lakhan.
 
-The **ward fill is a white-to-brown damage ramp** (owner direction, 10 Sep 2026),
+The **ward fill is a transparent-to-brown damage ramp** (owner direction, 10 Sep 2026),
 replacing the two flat tiers. `build_admin_ward.py` spatially joins the HOT
 corridor layer `destroyed_features_osm.geojson` (4,430 features) to each ward —
 points by containment, lines and polygons by intersection, each feature counted
 once per ward it touches — and writes `dmg_destroyed`, `dmg_damaged`, `dmg_total`
 and `dmg_fair` (fAIr buildings classed destroyed or major-damage) onto every ward.
-`WARD_PAINT` interpolates linearly on `dmg_total` at a constant 0.6 opacity:
+`WARD_PAINT` interpolates linearly on `dmg_total` for both colour and opacity,
+from one `WARD_RAMP` table of `[value, colour, opacity]` stops:
 
-| `dmg_total` | Colour |
-| --- | --- |
-| 0 | `#f5f0ea` (near white) |
-| 40 (p50) | `#d9a066` |
-| 340 (p85) | `#a0522d` |
-| 534 (max) | `#5c2e0e` (deep brown) |
+| `dmg_total` | Colour | Opacity |
+| --- | --- | --- |
+| 0 | `#eeddc4` | 0 (no fill) |
+| 5 | `#e6c9a0` | 0.18 |
+| 40 (p50) | `#d9a066` | 0.42 |
+| 340 (p85) | `#a0522d` | 0.6 |
+| 534 (max) | `#5c2e0e` | 0.7 |
 
-The breakpoints are quantiles of `dmg_total` over the 35 wards that carry any
-mapped damage, printed by `python3 tools/build_admin_ward.py --dry-run`; recheck
-them after an HDX refresh. **The ramp is mapped damage, not casualties** — no
+Opacity carries the low end rather than colour (owner direction, 10 Sep 2026:
+"make the less affected wards transparent instead of white"). The first cut ran
+from near-white, which read as a white haze over the basemap on wards that had
+barely been touched; a ward with nothing mapped in it now takes no fill at all
+and the ramp stays in the brown family throughout. The 5-feature stop is what
+keeps a lightly-hit ward from vanishing along with the empty ones. The value
+breakpoints are quantiles of `dmg_total` over the 35 wards that carry any mapped
+damage, printed by `python3 tools/build_admin_ward.py --dry-run`; recheck them
+after an HDX refresh. `applyGroupOpacity()` scales the opacity expression as
+`['*', base, k]`, the same path the roads' case expression takes. **The ramp is mapped damage, not casualties** — no
 official source publishes casualty figures at ward level, NDRRMA reports bodies
 recovered by district — so a deep-brown ward is one volunteers have mapped
 heavily, which is not the same as the worst hit.
@@ -526,8 +535,9 @@ turns that into an `in` expression against a lower-cased `GaPa_NaPa|NEW_WARD_N`
 key and feeds it to a `case` on `admin_ward-line`'s colour, width and opacity
 (`#7c2d12` at 1.6 px against the ordinary `#86efac` at 1.1 px), via the new
 `linePaint` option on `adminLayers()`. The same expression floors the ramp input
-at 1 for an NDRRMA ward with no mapped damage, so such a ward can never drop off
-the bottom of the scale — five do (Galchi 2, Tarkeshwar 6, Uttargaya 2/3/4).
+at the first visible stop (5) for an NDRRMA ward with no mapped damage, so the
+official tier never reads as "nothing here" now that zero means no fill — five
+are in that position (Galchi 2, Tarkeshwar 6, Uttargaya 2/3/4).
 Twenty-four of the 108 drawn wards carry the outline: 11 Rasuwa, 8 Nuwakot,
 5 Dhading; Gorkha has none, as SitRep 01 lists no wards there.
 

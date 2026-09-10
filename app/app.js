@@ -1068,7 +1068,7 @@ function buildDefs() {
   //     both maps, filtered to the three districts the flood ran through. It has no
   //     overlay key, so `ov=` cannot switch it off; only the group opacity slider
   //     reaches it (via the group's `fixed` list, see opacityGroupIds()).
-  //   * The ward fill is a white-to-brown ramp on mapped damage (owner direction,
+  //   * The ward fill is a transparent-to-brown ramp on mapped damage (owner direction,
   //     10 Sep 2026), replacing the two flat tiers: each ward is shaded by how many
   //     OSM-recorded destroyed/damaged features fall inside it (`dmg_total`, joined
   //     into the GeoJSON by tools/build_admin_ward.py). The NDRRMA tier survives as
@@ -1093,13 +1093,26 @@ function buildDefs() {
   const DISTRICT_CASING = { 'line-color': 'rgba(8,12,18,.5)', 'line-width': districtWidth(2.6),
                             'line-opacity': 0.75 };
   const WARD_FILL = '#ff8c1a', WARD_FILL_OUTLINE = '#b45309';
-  // White-to-brown damage ramp. Breakpoints are quantiles of `dmg_total` over the
-  // 35 wards that have any mapped damage at all (min 1, p50 41, p85 344, max 534 --
-  // printed by `python3 tools/build_admin_ward.py --dry-run`), rounded: 0 / 40 /
-  // 340 / 534. Recheck them after an HDX refresh moves the counts.
-  const WARD_RAMP = [[0, '#f5f0ea'], [40, '#d9a066'], [340, '#a0522d'], [534, '#5c2e0e']];
+  // Transparent-to-brown damage ramp: `[dmg_total, colour, opacity]` per stop.
+  // The breakpoints are quantiles of `dmg_total` over the 35 wards that have any
+  // mapped damage at all (min 1, p50 41, p85 344, max 534 -- printed by
+  // `python3 tools/build_admin_ward.py --dry-run`), rounded to 40 / 340 / 534.
+  // Recheck them after an HDX refresh moves the counts.
+  //
+  // Opacity carries the low end, not colour (owner direction, 10 Sep 2026: "make
+  // the less affected wards transparent instead of white").  A near-white fill
+  // over the basemap read as a white haze on wards that had barely been touched;
+  // a ward with nothing mapped in it now shows no fill at all, and the whole ramp
+  // stays in the brown family instead of starting off it.  The 5-feature stop is
+  // what keeps a lightly-hit ward from vanishing along with the empty ones.
+  const WARD_RAMP = [[0, '#eeddc4', 0], [5, '#e6c9a0', 0.18], [40, '#d9a066', 0.42],
+                     [340, '#a0522d', 0.6], [534, '#5c2e0e', 0.7]];
+  const WARD_RAMP_MAX = WARD_RAMP[WARD_RAMP.length - 1][0];
+  // The rail/legend swatch shows the transparency too, so a viewer can tell the
+  // pale end from "no fill" -- the rail background shows through the left of it.
+  const rgba = (hex, a) => 'rgba(' + [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(',') + ',' + a + ')';
   const WARD_RAMP_CSS = 'linear-gradient(90deg,' + WARD_RAMP.map(
-    ([v, c]) => c + ' ' + Math.round(100 * v / WARD_RAMP[WARD_RAMP.length - 1][0]) + '%').join(',') + ')';
+    ([v, c, a]) => rgba(c, a) + ' ' + Math.round(100 * v / WARD_RAMP_MAX) + '%').join(',') + ')';
   // The NDRRMA tier is an outline now, not a fill colour: the ramp owns the fill.
   const WARD_NDRRMA_LINE = '#7c2d12';
   // COD-AB v02 adm2_name spellings, checked against data/admin/admin_district.geojson.
@@ -1141,17 +1154,20 @@ function buildDefs() {
     ? ['any', ['==', ['get', 'flood_affected'], 1], WARD_DEEP_EXPR]
     : ['==', ['get', 'flood_affected'], 1];
   // The ramp input. A ward NDRRMA lists but that no mapper has recorded damage in
-  // is floored at 1 rather than 0, so it never falls off the bottom of the ramp if
-  // the first stop is ever moved off near-white; its darker outline is what marks
-  // it out either way.  `to-number` keeps the input typed for `interpolate` when a
-  // ward predates the dmg_* fields.
+  // is floored at the first visible stop rather than 0, so the official tier never
+  // reads as "nothing here" now that zero means no fill at all; its darker outline
+  // marks it out as well.  `to-number` keeps the input typed for `interpolate`
+  // when a ward predates the dmg_* fields.
   const WARD_DMG = ['to-number', ['coalesce', ['get', 'dmg_total'], 0]];
+  const WARD_FLOOR = WARD_RAMP[1][0];
   const WARD_RAMP_IN = WARD_DEEP_EXPR
-    ? ['case', ['all', WARD_DEEP_EXPR, ['<', WARD_DMG, 1]], 1, WARD_DMG]
+    ? ['case', ['all', WARD_DEEP_EXPR, ['<', WARD_DMG, WARD_FLOOR]], WARD_FLOOR, WARD_DMG]
     : WARD_DMG;
+  const rampStops = i => [].concat(...WARD_RAMP.map(st => [st[0], st[i]]));
   const WARD_PAINT = {
-    'fill-color': ['interpolate', ['linear'], WARD_RAMP_IN, ...[].concat(...WARD_RAMP)],
-    'fill-opacity': 0.6,
+    'fill-color': ['interpolate', ['linear'], WARD_RAMP_IN, ...rampStops(1)],
+    // Transparent at the bottom of the scale rather than near-white.
+    'fill-opacity': ['interpolate', ['linear'], WARD_RAMP_IN, ...rampStops(2)],
     'fill-outline-color': WARD_FILL_OUTLINE };
   // Ward outlines: ordinary pale green, except the wards NDRRMA lists as affected,
   // which keep a thin dark-brown edge so the official tier stays readable over the
@@ -1223,9 +1239,10 @@ function buildDefs() {
         + 'darker outline = wards NDRRMA lists as affected (SitRep 01). '
         + 'No official ward-level casualty figures exist.',
       title: 'Ward outlines within the 14 local levels the flood extent touches, across Rasuwa, '
-        + 'Nuwakot, Dhading and Gorkha (2018 HRRP reference geometry). The white-to-brown fill is '
+        + 'Nuwakot, Dhading and Gorkha (2018 HRRP reference geometry). The transparent-to-brown fill is '
         + 'the count of OSM destroyed/damaged features falling in the ward (dmg_total, joined by '
-        + 'tools/build_admin_ward.py); breakpoints 0 / 40 / 340 / 534. Casualties are not published '
+        + 'tools/build_admin_ward.py); breakpoints 0 / 5 / 40 / 340 / 534, with a ward that has nothing '
+        + 'mapped in it left unfilled rather than washed white. Casualties are not published '
         + 'at ward level by any official source, so the ramp is mapped damage only.',
       ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 108 },   // on by default (owner direction, 10 Sep 2026); 108 = wards drawn in the 14 local levels
   ] });
@@ -2237,7 +2254,7 @@ function renderSidebar() {
   add('#4ade80', 'District outline: Rasuwa, Nuwakot, Dhading, Gorkha (always shown)', true);
   const wardEntry = ENTRY['admin_ward'];
   if (wardEntry) {
-    add(wardEntry.color, 'Ward fill: OSM-mapped destroyed and damaged features, none to most (0-534)',
+    add(wardEntry.color, 'Ward fill: OSM-mapped destroyed and damaged features, unfilled at none to brown at most (534)',
         false, wardEntry.shape);
     add('#7c2d12', 'Ward NDRRMA lists as affected (SitRep 01, 1 Sep 2026)', true);
   }
