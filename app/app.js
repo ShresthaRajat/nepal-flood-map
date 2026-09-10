@@ -1569,8 +1569,10 @@ function refreshTags() {
     t.only.textContent = (state.mode === side ? '\u2713 ' : '') + (side === 'pre' ? 'Pre only' : 'Post only');
     t.none.textContent = (ids.length ? '' : '\u2713 ') + 'None \u00b7 basemap only';
     const one = ids.length === 1 ? byId(ids[0]) : null;
-    t.btn.textContent = !ids.length ? 'None \u00b7 basemap only'
-      : one ? sceneText(one) : ids.length + ' scenes';
+    // Keep the side name on the tag (owner direction, 10 Sep 2026) so the two
+    // corner controls read as "Pre \u00b7 \u2026" and "Post \u00b7 \u2026" even with scenes chosen.
+    t.btn.textContent = (side === 'pre' ? 'Pre \u00b7 ' : 'Post \u00b7 ') + (!ids.length ? 'None \u00b7 basemap only'
+      : one ? sceneText(one) : ids.length + ' scenes');
     t.btn.title = ids.length > 1 ? selectedLayers(side).map(sceneText).join('\n') : '';
     for (const b of t.boxes) b.cb.checked = isSel(side, b.id);
     t.btn.classList.toggle('only', state.mode === side);
@@ -1678,7 +1680,11 @@ function renderSidebar() {
     seg.appendChild(b);
   }
   modeBlock.appendChild(seg);
-  cpad.appendChild(modeBlock);
+  // Hidden by default since 10 Sep 2026 (owner direction): the view is set from
+  // the Pre/Post corner tags ("Pre only" / "Post only" / "Both"); ?tools=1 shows
+  // the segment again. The block is still built so setMode()'s aria-pressed sync
+  // has nothing to trip over.
+  if (OWNER_TOOLS) cpad.appendChild(modeBlock);
 
   // imagery selectors -----------------------------------------------------
   const imgBlock = el('div', 'block', '<h2>Imagery</h2>');
@@ -1811,7 +1817,10 @@ function renderSidebar() {
     det.open = g.open !== undefined ? g.open : (g.entries.some(e => state.overlays.has(e.key)) && g.entries.length < 12);
     const sum = el('summary', null, g.title + (g.entries.length > 1 ? ' <span class="n">' + g.entries.length + '</span>' : ''));
     det.appendChild(sum);
-    if (g.extent) {
+    // Extent switch hidden by default since 10 Sep 2026 (owner direction): the
+    // flood area (+200 m) is the default and hx=corridor in the hash still works;
+    // ?tools=1 shows the switch again.
+    if (g.extent && OWNER_TOOLS) {
       det.appendChild(segField('Extent', 'hotExtent',
         [['flood', 'Flood area (+200 m)'], ['corridor', 'River corridor (1 km)']], () => { applyHot(); writeHash(); }));
     }
