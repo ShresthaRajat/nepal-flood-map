@@ -285,28 +285,39 @@ layer come from volunteer field reports of varying age. Coordinates shown are ap
 Dataset for Nepal (COD-AB), version v02 valid 14 March 2024 — the current federal structure. Survey
 Department of Nepal / UN Resident Coordinator's Office in Nepal, CC BY-IGO. Ward boundaries are the
 only ward-level (admin4) source found for Nepal: a 2018 Housing Recovery and Reconstruction Platform
-(HRRP) dataset covering the 31 districts affected by the 2015 earthquake, filtered here to Rasuwa and
-Nuwakot. CC0, but treat ward shapes and numbers as reference-only, not authoritative — see
+(HRRP) dataset covering the 31 districts affected by the 2015 earthquake, filtered here to Rasuwa,
+Nuwakot, Dhading and Gorkha (315 wards). CC0, but treat ward shapes and numbers as reference-only, not authoritative — see
 <code>data/admin/README.md</code> for the full provenance and caveats. The layers are clipped to
 roughly the map's maximum pan extent and simplified for basemap display. The whole
 group has its own opacity slider.</p>
 <p>The district outline is drawn at all times as a solid bright green line, limited to the four districts
 the flood ran through — Rasuwa, Nuwakot, Dhading and Gorkha. Municipality boundaries (thin solid dark
 green) show only the fourteen local levels whose polygon touches the observed flood extent along the
-Bhote Koshi and Trishuli, ward outlines only the eight of those in Rasuwa and Nuwakot, and the national
+Bhote Koshi and Trishuli, ward outlines the 108 wards inside those same fourteen, and the national
 highways and waterways are clipped to the same four districts. There is no province layer: the
 event touches too few districts for one to say anything. Municipality is a toggle, off by default;
 the flood-affected wards are on by default.</p>
-<p>The ward fill is graded in two tiers. Dark brownish orange marks the wards NDRRMA lists as affected in
-its Rasuwa–Bhotekoshi Flood Situation Report #01 of 1 September 2026, read from the
-<code>wards_official</code> entries in <code>data/reports.json</code> and matched to the 2018 ward
-polygons by local-level name (via the alias list, which bridges spellings such as
-Aamachhodingmo/Parbati Kunda) and ward number; a lighter, more transparent orange marks the remaining
-wards that intersect the observed flood extent. Two NDRRMA-listed wards do not intersect that extent —
-the situation report counts isolation and road closure as well as inundation — so the shaded set is the
-union of the two tiers, not a subset of the flood-touching ones. Every ward, affected or not, still gets
-the ordinary green outline, and without <code>data/reports.json</code> the layer falls back to a single
-orange tier. Full method, data sources and the ward list: <code>data/admin/README.md</code>.</p>
+<p>The ward fill is a white-to-brown ramp on mapped damage. Each shaded ward is shaded by
+<code>dmg_total</code>: the number of features recorded as Destroyed or Damaged in the HOT
+<code>destroyed_features_osm</code> corridor layer that fall inside it, joined to the ward polygons by
+<code>tools/build_admin_ward.py</code> (points by containment, lines and polygons by intersection, each
+feature counted once per ward). The ramp runs near-white at zero through tan and sienna to deep brown,
+with breakpoints at 0, 40, 340 and 534 — the median, 85th percentile and maximum of the counts over the
+35 wards that carry any mapped damage at all. <strong>No official source publishes casualties at ward
+level</strong> — NDRRMA reports bodies recovered by district — so the ramp reflects mapped damage, never
+a casualty count, and the wards with the deepest brown are the ones volunteers have mapped most, which
+is not the same thing as the ones hit hardest.</p>
+<p>The wards NDRRMA lists as affected in its Rasuwa–Bhotekoshi Flood Situation Report #01 of 1 September
+2026 keep a thin dark-brown outline instead of a fill colour of their own, so that official tier stays
+readable over the ramp. They are read from the <code>wards_official</code> entries in
+<code>data/reports.json</code> and matched to the 2018 ward polygons by local-level name (via the alias
+list, which bridges spellings such as Aamachhodingmo/Parbati Kunda, plus the <code>HRRP_ALIAS</code>
+table in <code>app/app.js</code> for Galchhi/Galchi and Shahid Lakhan/Sahid Lakhan) and ward number.
+Twenty-four of the 108 drawn wards carry that outline: 11 in Rasuwa, 8 in Nuwakot, 5 in Dhading. Two NDRRMA-listed wards do not intersect the observed flood extent — the situation report
+counts isolation and road closure as well as inundation — so the shaded set is the union of the
+flood-touching wards and the NDRRMA ones, not a subset of either. Every ward inside the fourteen local
+levels, shaded or not, still gets the ordinary dashed green outline. Full method, data sources and
+field definitions: <code>data/admin/README.md</code>.</p>
 
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery

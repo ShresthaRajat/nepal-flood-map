@@ -130,11 +130,21 @@ function parseWardNumbers(text) {
   }
   return [...out];
 }
+/* COD-AB local-level name -> the 2018 HRRP `GaPa_NaPa` spelling, for the levels
+ * where reports.json does not already carry the HRRP form in its own `aliases`.
+ * Rasuwa and Nuwakot are covered by those aliases (Aamachhodingmo/Parbati Kunda,
+ * Tarakeshwor/Tarkeshwar, Dupcheshwor/Dupcheshwar, Myagang/Meghang); the two
+ * Dhading and Gorkha levels added on 10 Sep 2026 are not, and reports.json is
+ * hand-maintained, so the bridge lives here instead.  Lower-cased on both sides. */
+const HRRP_ALIAS = { 'galchhi': 'Galchi', 'shahid lakhan': 'Sahid Lakhan',
+  // Not on the flooded river, but its reports row was showing "n/a" for the ward
+  // count purely on the spelling once Dhading's wards arrived.
+  'nilkhantha': 'Nilakantha' };
+
 /* "<local level name>|<ward number>" keys for every ward NDRRMA lists, one per
  * name the local level goes by.  The ward polygons carry the 2018 HRRP spelling
  * (`GaPa_NaPa`) and reports.json carries the current COD-AB one, so the aliases
- * are what bridges them: Aamachhodingmo/Parbati Kunda, Tarakeshwor/Tarkeshwar,
- * Dupcheshwor/Dupcheshwar, Myagang/Meghang.  Lower-cased both sides. */
+ * plus HRRP_ALIAS are what bridge them.  Lower-cased both sides. */
 function ndrrmaWardKeys(rep) {
   const keys = new Set();
   const list = (rep && Array.isArray(rep.municipalities)) ? rep.municipalities : [];
@@ -143,7 +153,12 @@ function ndrrmaWardKeys(rep) {
     if (!wo || !wo.text) continue;
     const nums = parseWardNumbers(wo.text);
     if (!nums.length) continue;
-    for (const nm of [m.name, ...(m.aliases || [])]) {
+    const names = [m.name, ...(m.aliases || [])];
+    for (const nm of names.slice()) {
+      const hrrp = nm && HRRP_ALIAS[String(nm).trim().toLowerCase()];
+      if (hrrp) names.push(hrrp);
+    }
+    for (const nm of names) {
       if (!nm) continue;
       for (const n of nums) keys.add(String(nm).trim().toLowerCase() + '|' + n);
     }
@@ -1053,17 +1068,29 @@ function buildDefs() {
   //     both maps, filtered to the three districts the flood ran through. It has no
   //     overlay key, so `ov=` cannot switch it off; only the group opacity slider
   //     reaches it (via the group's `fixed` list, see opacityGroupIds()).
-  //   * The ward fill is two tiers again, but built at runtime from official data
-  //     rather than from a `severity` field in the GeoJSON (that field was stripped
-  //     on 8 Sep): dark brownish orange for the wards NDRRMA lists as affected in
-  //     SitRep 01, lighter and more transparent for the other wards the flood extent
-  //     touches. Without reports.json it falls back to the single orange tier.
+  //   * The ward fill is a white-to-brown ramp on mapped damage (owner direction,
+  //     10 Sep 2026), replacing the two flat tiers: each ward is shaded by how many
+  //     OSM-recorded destroyed/damaged features fall inside it (`dmg_total`, joined
+  //     into the GeoJSON by tools/build_admin_ward.py). The NDRRMA tier survives as
+  //     a darker ward outline rather than a second fill colour, so the official list
+  //     stays legible on top of the ramp. No official source publishes casualties at
+  //     ward level -- NDRRMA reports bodies recovered by district -- so the ramp is
+  //     mapped damage, never a casualty count. Without reports.json the outline
+  //     falls back to the ordinary green and only the ramp remains.
   const ADMIN_COLOR = { district: '#4ade80', municipality: '#15803d', ward: '#86efac' };
   // District and municipality outlines are solid (owner direction, 10 Sep 2026); wards stay dashed.
   const ADMIN_DASH  = { ward: [1, 1.5] };
   const ADMIN_WIDTH = { district: 1.5, municipality: 0.9, ward: 1.1 };
   const WARD_FILL = '#ff8c1a', WARD_FILL_OUTLINE = '#b45309';
-  const WARD_DEEP = '#c2410c', WARD_LIGHT = '#f97316';
+  // White-to-brown damage ramp. Breakpoints are quantiles of `dmg_total` over the
+  // 35 wards that have any mapped damage at all (min 1, p50 41, p85 344, max 534 --
+  // printed by `python3 tools/build_admin_ward.py --dry-run`), rounded: 0 / 40 /
+  // 340 / 534. Recheck them after an HDX refresh moves the counts.
+  const WARD_RAMP = [[0, '#f5f0ea'], [40, '#d9a066'], [340, '#a0522d'], [534, '#5c2e0e']];
+  const WARD_RAMP_CSS = 'linear-gradient(90deg,' + WARD_RAMP.map(
+    ([v, c]) => c + ' ' + Math.round(100 * v / WARD_RAMP[WARD_RAMP.length - 1][0]) + '%').join(',') + ')';
+  // The NDRRMA tier is an outline now, not a fill colour: the ramp owns the fill.
+  const WARD_NDRRMA_LINE = '#7c2d12';
   // COD-AB v02 adm2_name spellings, checked against data/admin/admin_district.geojson.
   const DISTRICTS_SHOWN = ['Rasuwa', 'Nuwakot', 'Dhading', 'Gorkha'];
   const DISTRICT_FILTER = ['in', ['get', 'adm2_name'], ['literal', DISTRICTS_SHOWN]];
@@ -1076,13 +1103,16 @@ function buildDefs() {
     'Gosaikunda', 'Kalika', 'Kispang', 'Shahid Lakhan', 'Siddhalek', 'Tarakeshwor', 'Uttargaya'];
   const MUNI_FILTER = ['all', DISTRICT_FILTER, ['in', ['get', 'adm3_name'], ['literal', EXTENT_MUNIS]]];
   // Ward outlines and labels only inside the local levels the flood actually
-  // reached (owner direction, 10 Sep 2026): those with a flood-touching ward in
-  // data/admin/admin_ward.geojson (flood_affected = 1). HRRP spellings, listed
-  // here because that file is fetched by MapLibre, not by the app; the same
-  // eight local levels as EXTENT_MUNIS within Rasuwa and Nuwakot
-  // (Parbati Kunda = Aamachhodingmo, Tarkeshwar = Tarakeshwor). Regenerate with:
+  // reached (owner direction, 10 Sep 2026): all 14 EXTENT_MUNIS, now that the ward
+  // file covers Dhading and Gorkha too. These are the 2018 HRRP `GaPa_NaPa`
+  // spellings, listed here because that file is fetched by MapLibre, not by the
+  // app, and four of them differ from the COD-AB names in EXTENT_MUNIS:
+  //   Parbati Kunda = Aamachhodingmo, Tarkeshwar = Tarakeshwor,
+  //   Galchi = Galchhi, Sahid Lakhan = Shahid Lakhan.
+  // The other ten match. Regenerate with:
   //   python3 -c "import json;w=json.load(open('data/admin/admin_ward.geojson'));print(sorted({f['properties']['GaPa_NaPa'] for f in w['features'] if f['properties'].get('flood_affected')==1}))"
-  const FLOOD_WARD_MUNIS = ['Belkotgadhi', 'Bidur', 'Gosaikunda', 'Kalika', 'Kispang', 'Parbati Kunda', 'Tarkeshwar', 'Uttargaya'];
+  const FLOOD_WARD_MUNIS = ['Belkotgadhi', 'Benighat Rorang', 'Bidur', 'Gajuri', 'Galchi', 'Gandaki',
+    'Gosaikunda', 'Kalika', 'Kispang', 'Parbati Kunda', 'Sahid Lakhan', 'Siddhalek', 'Tarkeshwar', 'Uttargaya'];
   const WARD_MUNI_FILTER = ['in', ['get', 'GaPa_NaPa'], ['literal', FLOOD_WARD_MUNIS]];
 
   // reports.json is awaited alongside the imagery catalogue in main(), so it has
@@ -1099,15 +1129,33 @@ function buildDefs() {
     // the two tiers, not a subset of `flood_affected`.
     ? ['any', ['==', ['get', 'flood_affected'], 1], WARD_DEEP_EXPR]
     : ['==', ['get', 'flood_affected'], 1];
-  const WARD_PAINT = WARD_DEEP_EXPR
-    ? { 'fill-color': ['case', WARD_DEEP_EXPR, WARD_DEEP, WARD_LIGHT],
-        'fill-opacity': ['case', WARD_DEEP_EXPR, 0.55, 0.18],
-        'fill-outline-color': WARD_FILL_OUTLINE }
-    : { 'fill-color': WARD_FILL, 'fill-opacity': 0.4, 'fill-outline-color': WARD_FILL_OUTLINE };
+  // The ramp input. A ward NDRRMA lists but that no mapper has recorded damage in
+  // is floored at 1 rather than 0, so it never falls off the bottom of the ramp if
+  // the first stop is ever moved off near-white; its darker outline is what marks
+  // it out either way.  `to-number` keeps the input typed for `interpolate` when a
+  // ward predates the dmg_* fields.
+  const WARD_DMG = ['to-number', ['coalesce', ['get', 'dmg_total'], 0]];
+  const WARD_RAMP_IN = WARD_DEEP_EXPR
+    ? ['case', ['all', WARD_DEEP_EXPR, ['<', WARD_DMG, 1]], 1, WARD_DMG]
+    : WARD_DMG;
+  const WARD_PAINT = {
+    'fill-color': ['interpolate', ['linear'], WARD_RAMP_IN, ...[].concat(...WARD_RAMP)],
+    'fill-opacity': 0.6,
+    'fill-outline-color': WARD_FILL_OUTLINE };
+  // Ward outlines: ordinary pale green, except the wards NDRRMA lists as affected,
+  // which keep a thin dark-brown edge so the official tier stays readable over the
+  // damage ramp.
+  const WARD_LINE_PAINT = WARD_DEEP_EXPR
+    ? { 'line-color': ['case', WARD_DEEP_EXPR, WARD_NDRRMA_LINE, ADMIN_COLOR.ward],
+        'line-width': ['case', WARD_DEEP_EXPR, 1.6, ADMIN_WIDTH.ward],
+        'line-opacity': ['case', WARD_DEEP_EXPR, 1, 0.85] }
+    : null;
 
   /* opts: { filter } narrows every layer of the level, { fillFilter, fillPaint }
-   * add and style the fill, { visible } builds the level shown rather than hidden
-   * (for a fixed reference layer that no checkbox owns). */
+   * add and style the fill, { linePaint } overrides the outline's paint keys (the
+   * ward level uses it for the data-driven NDRRMA edge), { visible } builds the
+   * level shown rather than hidden (for a fixed reference layer that no checkbox
+   * owns). */
   function adminLayers(level, nameExpr, minLabelZoom, opts) {
     const o = opts || {};
     const color = ADMIN_COLOR[level];
@@ -1121,7 +1169,8 @@ function buildDefs() {
       { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level, ...flt,
         layout: { ...vis, 'line-join': 'round' },
         paint: { 'line-color': color, 'line-width': ADMIN_WIDTH[level], 'line-opacity': 0.85,
-                 ...(ADMIN_DASH[level] ? { 'line-dasharray': ADMIN_DASH[level] } : {}) } },
+                 ...(ADMIN_DASH[level] ? { 'line-dasharray': ADMIN_DASH[level] } : {}),
+                 ...(o.linePaint || {}) } },
       { id: 'admin_' + level + '-label', type: 'symbol', source: 'admin_' + level, minzoom: minLabelZoom, ...flt,
         layout: { ...vis, 'text-field': nameExpr, 'text-font': FONT,
           'text-size': ['interpolate', ['linear'], ['zoom'], minLabelZoom, 10, minLabelZoom + 4, 12.5],
@@ -1133,7 +1182,8 @@ function buildDefs() {
     ...adminLayers('district', ['get', 'adm2_name'], 8, { filter: DISTRICT_FILTER, visible: true }),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: MUNI_FILTER }),   // flood-affected local levels only
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
-      { filter: WARD_MUNI_FILTER, fillFilter: WARD_FILLED, fillPaint: WARD_PAINT }),
+      { filter: WARD_MUNI_FILTER, fillFilter: WARD_FILLED, fillPaint: WARD_PAINT,
+        linePaint: WARD_LINE_PAINT }),
   );
   // First group in the rail since 10 Sep 2026 (owner direction): "move the
   // administrative option to the top of overlays".  Two rows now -- the district
@@ -1149,15 +1199,17 @@ function buildDefs() {
       sub: 'local levels touching the observed flood extent (HOT, 27 Aug)',
       title: 'Municipality / local level boundaries (OCHA COD-AB, 2024), limited to the 14 local levels whose '
         + 'polygon intersects the observed flood extent (tools/list_flood_municipalities.py)' },
-    { key: 'admin_ward', label: 'Wards, flood-affected',
-      color: WARD_DEEP_EXPR ? WARD_DEEP : WARD_FILL,
-      colors: WARD_DEEP_EXPR ? [WARD_DEEP, WARD_LIGHT] : null,
-      sub: WARD_DEEP_EXPR
-        ? 'outlines within the 8 local levels on the flooded river in Rasuwa & Nuwakot; dark = wards NDRRMA lists as affected (SitRep 01, 1 Sep); light = other wards touching the flood extent'
-        : 'Rasuwa & Nuwakot, orange = flood-touching',
-      title: 'Ward (Rasuwa & Nuwakot only, 2018 HRRP reference geometry; the fill is graded from '
-        + 'NDRRMA SitRep 01 via data/reports.json)',
-      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 58 },   // on by default (owner direction, 10 Sep 2026)
+    { key: 'admin_ward', label: 'Wards on the flooded river',
+      color: WARD_RAMP_CSS, shape: 'ramp',
+      sub: 'fill = OSM-mapped destroyed & damaged features per ward (HOT, 10 Sep); '
+        + 'darker outline = wards NDRRMA lists as affected (SitRep 01). '
+        + 'No official ward-level casualty figures exist.',
+      title: 'Ward outlines within the 14 local levels the flood extent touches, across Rasuwa, '
+        + 'Nuwakot, Dhading and Gorkha (2018 HRRP reference geometry). The white-to-brown fill is '
+        + 'the count of OSM destroyed/damaged features falling in the ward (dmg_total, joined by '
+        + 'tools/build_admin_ward.py); breakpoints 0 / 40 / 340 / 534. Casualties are not published '
+        + 'at ward level by any official source, so the ramp is mapped damage only.',
+      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 108 },   // on by default (owner direction, 10 Sep 2026); 108 = wards drawn in the 14 local levels
   ] });
 
   // 6. search pin + selected-scene outline + report highlight ----------------
@@ -2138,8 +2190,8 @@ function renderSidebar() {
   // legend ----------------------------------------------------------------
   const lBlock = el('div', 'block', '<h2>Legend</h2>');
   const lg = el('div', 'legend');
-  const add = (color, text, outline) => {
-    const sw = el('span', 'sw' + (outline ? ' outline' : ''));
+  const add = (color, text, outline, cls) => {
+    const sw = el('span', 'sw' + (outline ? ' outline' : '') + (cls ? ' ' + cls : ''));
     sw.style.background = color; sw.style.borderColor = color;
     lg.append(sw, el('span', null, text));
   };
@@ -2160,17 +2212,16 @@ function renderSidebar() {
   add('#c084fc', 'Glacier / rock detachment zone and collapse origin (UNOSAT, Landsat-9 26 Aug)');
   add('#7dd3fc', 'Barrier lakes formed by the collapse (UNOSAT, Cartosat-3 28 Aug)');
   add('#f87171', 'Settlement name inside the flood-affected area (others white)');
-  // Administrative: the fixed district outline and the two ward tiers.  The tier
-  // colours come from the built entry, so the fallback single-tier build (no
-  // reports.json) shows one ward swatch here rather than two that do not exist.
+  // Administrative: the fixed district outline, the ward damage ramp and the
+  // NDRRMA outline.  The ramp gradient comes from the built entry, so this stays
+  // in step with WARD_RAMP rather than repeating its colours.
   lg.appendChild(el('div', 'hd', 'Administrative'));
   add('#4ade80', 'District outline: Rasuwa, Nuwakot, Dhading, Gorkha (always shown)', true);
   const wardEntry = ENTRY['admin_ward'];
-  if (wardEntry && wardEntry.colors && wardEntry.colors.length === 2) {
-    add(wardEntry.colors[0], 'Ward NDRRMA lists as affected (SitRep 01, 1 Sep 2026)');
-    add(wardEntry.colors[1], 'Other ward touching the mapped flood extent');
-  } else if (wardEntry) {
-    add(wardEntry.color, 'Ward touching the mapped flood extent');
+  if (wardEntry) {
+    add(wardEntry.color, 'Ward fill: OSM-mapped destroyed and damaged features, none to most (0-534)',
+        false, wardEntry.shape);
+    add('#7c2d12', 'Ward NDRRMA lists as affected (SitRep 01, 1 Sep 2026)', true);
   }
   lBlock.appendChild(lg);
 
@@ -2593,7 +2644,9 @@ async function loadDamageByMuni() {
   return by;
 }
 
-/* Flood-affected ward counts per municipality, Rasuwa and Nuwakot only. */
+/* Flood-affected ward counts per municipality, across all four districts the
+ * ward file covers (Rasuwa, Nuwakot, Dhading, Gorkha) -- the Municipality
+ * reports rows read this, so Dhading and Gorkha rows now show ward counts too. */
 async function loadWardCounts() {
   const g = await cachedJSON(ADMIN + 'admin_ward.geojson');
   const out = {};
@@ -2656,7 +2709,13 @@ async function renderMunicipalities(det, body) {
   if (!reports || !(reports.municipalities || []).length) { body.innerHTML = REP_MISSING; return; }
   const [byDamage, wards, shapes] = await Promise.all([loadDamageByMuni(), loadWardCounts(), loadMuniShapes()]);
   const rows = reports.municipalities.map(m => {
+    // HRRP_ALIAS is folded in so the ward counts, which key off the 2018
+    // `GaPa_NaPa` spelling, still find Dhading's Galchhi (Galchi) and Gorkha's
+    // Shahid Lakhan (Sahid Lakhan) -- reports.json carries no alias for either.
     const keys = [muniKey(m.name), ...(m.aliases || []).map(muniKey)];
+    for (const [cod, hrrp] of Object.entries(HRRP_ALIAS)) {
+      if (keys.includes(muniKey(cod))) keys.push(muniKey(hrrp));
+    }
     const dmg = keys.map(k => byDamage[k]).find(Boolean) || null;
     const wc = wards ? keys.map(k => wards[k]).find(Boolean) || null : null;
     const shape = shapes[muniKey(m.name) + '|' + distKey(m.district)] || null;

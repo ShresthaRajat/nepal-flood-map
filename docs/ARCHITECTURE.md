@@ -145,11 +145,13 @@ documented in `data/admin/README.md`:
   flashed `report_hl` outline. `aliases` covers Parbati Kunda ↔ Aamachhodingmo,
   Dupcheshwar → Dupcheshwor, Meghang → Myagang and Tarkeshwar → Tarakeshwor.
 - the same key against `GaPa_NaPa` in `admin_ward.geojson` for the
-  flood-affected ward count (Rasuwa and Nuwakot only; elsewhere "n/a"), and
+  flood-affected ward count (Rasuwa, Nuwakot, Dhading and Gorkha since 10 Sep
+  2026; elsewhere "n/a"), and
   against `adm3_name` in `destroyed_features_osm.geojson` for the OSM-mapped
   sub-line.
 - `municipalities[].wards_official.text` + `aliases`, joined the same way, to
-  grade the ward fill into two tiers — see "Administrative layers" below.
+  outline the officially-listed wards over the damage ramp — see "Administrative
+  layers" below.
   `parseWardNumbers()` does the reading: that field is prose, so a number
   immediately followed by "ward(s)" is a count ("5 wards") and never a ward
   number, "Not specified" yields nothing, and values outside 1–40 are ignored.
@@ -461,35 +463,72 @@ skips them.
 
 The **district outline** is a fixed reference layer rather than a toggle: bright
 green `#4ade80` at 1.5 px, drawn on both maps at all times, filtered to
-`adm2_name in ['Rasuwa', 'Nuwakot', 'Dhading']` (COD-AB v02 spellings). It has no
+`adm2_name in ['Rasuwa', 'Nuwakot', 'Dhading', 'Gorkha']` (COD-AB v02 spellings). It has no
 row and no `ENTRY` key, so nothing can switch it off; it reaches the group
 opacity slider through the group's `fixed` list, which `opacityGroupIds()`
 collects alongside the entry ids, and `admin_district-line` is excluded from
 `QUERY_IDS` so an always-on line does not win popups from the damage features
 under it. Municipality stays an ordinary toggle, off by default.
 
-The **ward fill is two tiers**, built at runtime rather than from the data. The
-`severity` field was stripped from `admin_ward.geojson` on 8 Sep 2026, so the
-tier now comes from official reporting instead: `ndrrmaWardKeys()` reads
-`municipalities[*].wards_official` out of `data/reports.json` (NDRRMA SitRep 01,
-1 Sep 2026), expands each local level's names and aliases, and returns
-`"<name>|<ward number>"` keys. `buildDefs()` turns that list into an `in`
-expression against a lower-cased `GaPa_NaPa|NEW_WARD_N` key and uses it for both
-the fill colour and the fill opacity:
+**Ward coverage.** `data/admin/admin_ward.geojson` was extended on 10 Sep 2026
+from Rasuwa and Nuwakot to all four corridor districts — 315 wards, of which 108
+fall inside the fourteen local levels the flood extent touches and are therefore
+drawn. `tools/build_admin_ward.py` is the reproducible build: it pulls the 2018
+HRRP ward shapefile from HDX into `work/hrrp_wards/`, reprojects to WGS84,
+simplifies at 0.0003° with coordinates at 6 dp (the parameters that reproduce the
+earlier 117 polygons vertex for vertex), and joins `flood_affected` plus the
+`dmg_*` counts. `WARD_MUNI_FILTER` lists the 2018 HRRP `GaPa_NaPa` spellings,
+four of which differ from the COD-AB names in `EXTENT_MUNIS`: Parbati Kunda =
+Aamachhodingmo, Tarkeshwar = Tarakeshwor, Galchi = Galchhi, Sahid Lakhan =
+Shahid Lakhan.
 
-| Tier | Test | Colour | Opacity |
-| --- | --- | --- | --- |
-| NDRRMA-listed | key in the list | `#c2410c` | 0.55 |
-| Other flood-touching | `flood_affected = 1` | `#f97316` | 0.18 |
+The **ward fill is a white-to-brown damage ramp** (owner direction, 10 Sep 2026),
+replacing the two flat tiers. `build_admin_ward.py` spatially joins the HOT
+corridor layer `destroyed_features_osm.geojson` (4,430 features) to each ward —
+points by containment, lines and polygons by intersection, each feature counted
+once per ward it touches — and writes `dmg_destroyed`, `dmg_damaged`, `dmg_total`
+and `dmg_fair` (fAIr buildings classed destroyed or major-damage) onto every ward.
+`WARD_PAINT` interpolates linearly on `dmg_total` at a constant 0.6 opacity:
 
-Nineteen ward polygons land in the first tier and fourteen in the second. The
-fill filter is the **union** of the two tests, not `flood_affected = 1`: two
-NDRRMA-listed wards (Uttargaya 3, Tarkeshwar 6) do not intersect the mapped
-extent, because the situation report counts isolation and road closure as well
-as inundation. `reports.json` is optional, so with no list the layer falls back
-to the single `#ff8c1a` tier at 0.4 it had before. Both tiers are data-driven
+| `dmg_total` | Colour |
+| --- | --- |
+| 0 | `#f5f0ea` (near white) |
+| 40 (p50) | `#d9a066` |
+| 340 (p85) | `#a0522d` |
+| 534 (max) | `#5c2e0e` (deep brown) |
+
+The breakpoints are quantiles of `dmg_total` over the 35 wards that carry any
+mapped damage, printed by `python3 tools/build_admin_ward.py --dry-run`; recheck
+them after an HDX refresh. **The ramp is mapped damage, not casualties** — no
+official source publishes casualty figures at ward level, NDRRMA reports bodies
+recovered by district — so a deep-brown ward is one volunteers have mapped
+heavily, which is not the same as the worst hit.
+
+The NDRRMA tier survives as an **outline**, not a second fill colour, so it stays
+legible over the ramp. `ndrrmaWardKeys()` reads `municipalities[*].wards_official`
+out of `data/reports.json` (NDRRMA SitRep 01, 1 Sep 2026), expands each local
+level's names and aliases — plus the `HRRP_ALIAS` table, which bridges the two
+Dhading/Gorkha spellings `reports.json` does not carry itself (Galchhi → Galchi,
+Shahid Lakhan → Sahid Lakhan), since that file is hand-maintained — and returns
+`"<name>|<ward number>"` keys; `buildDefs()`
+turns that into an `in` expression against a lower-cased `GaPa_NaPa|NEW_WARD_N`
+key and feeds it to a `case` on `admin_ward-line`'s colour, width and opacity
+(`#7c2d12` at 1.6 px against the ordinary `#86efac` at 1.1 px), via the new
+`linePaint` option on `adminLayers()`. The same expression floors the ramp input
+at 1 for an NDRRMA ward with no mapped damage, so such a ward can never drop off
+the bottom of the scale — five do (Galchi 2, Tarkeshwar 6, Uttargaya 2/3/4).
+Twenty-four of the 108 drawn wards carry the outline: 11 Rasuwa, 8 Nuwakot,
+5 Dhading; Gorkha has none, as SitRep 01 lists no wards there.
+
+The fill filter is still the **union** of the two tests, not `flood_affected = 1`:
+two NDRRMA-listed wards (Uttargaya 3, Tarkeshwar 6) do not intersect the mapped
+extent, because the situation report counts isolation and road closure as well as
+inundation. `reports.json` is optional, so with no list the ramp stands alone and
+the outline falls back to the ordinary green. Fill and outline are data-driven
 expressions, which the group opacity slider scales as `['*', base, k]` like any
-other expression base.
+other expression base. The rail row and the legend both show the ramp as a
+horizontal gradient swatch (`.sw.ramp` in `app/style.css`), its gradient built
+inline from `WARD_RAMP` so the two cannot drift apart.
 
 `buildDefs()` runs after the `Promise.all` in `main()` that awaits
 `loadReports()`, so the tier can be baked into the style at build time and needs

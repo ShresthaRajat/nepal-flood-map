@@ -221,6 +221,12 @@ label.row > span.t > .sub { display: block; font-size: 10px; line-height: 1.35; 
    (flat edge down, like the arch icon on the map) -- owner direction, 10 Sep 2026. */
 .sw.square { border-radius: 0; }
 .sw.semicircle { height: 5.5px; align-self: flex-end; border-radius: 50% 50% 0 0; }
+/* A continuous scale rather than a category: the ward row's white-to-brown damage
+   ramp. Wider than a plain swatch so the gradient reads, with a hairline border
+   because the low end is near-white on a dark rail. The gradient itself is set
+   inline from WARD_RAMP in app.js, so the two never drift apart. */
+.sw.ramp { width: 34px; border: 1px solid rgba(255,255,255,.28); }
+.legend .sw.ramp { width: 40px; }
 .cnt { color: var(--fg-dim); font-size: 10.5px; margin-left: auto; padding-left: 6px; font-variant-numeric: tabular-nums; }
 input[type=checkbox], input[type=radio] { accent-color: var(--accent); margin: 0; flex: none; }
 
