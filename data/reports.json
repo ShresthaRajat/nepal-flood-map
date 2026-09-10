@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-09",
+  "as_of": "2026-09-10",
   "sources": {
     "rw_0828": {
       "label": "ReliefWeb — flash flood leaves 18 missing",
@@ -270,26 +270,68 @@
       "url": "https://nirajbhusal.github.io/rasuwa-flood-bulletin/",
       "date": "2026-09-09",
       "official": false
+    },
+    "mofa_0908": {
+      "label": "MoFA daily situation update, 8 September",
+      "url": "https://mofa.gov.np/content/1881/daily-update-8-september-bhote-koshi-flood/",
+      "date": "2026-09-08",
+      "official": true
+    },
+    "ndrrma_khabarhub_0909": {
+      "label": "NDRRMA (spokesperson Shanti Mahat) via Khabarhub, 9 September",
+      "url": "https://english.khabarhub.com/2026/09/567098/",
+      "date": "2026-09-09",
+      "official": false
+    },
+    "iom_0908": {
+      "label": "IOM — Nepal flood death toll rises as aid needs soar",
+      "url": "https://www.iom.int/news/nepal-flood-death-toll-rises-aid-needs-soar",
+      "date": "2026-09-08",
+      "official": true
+    },
+    "meroauto_0910": {
+      "label": "Meroauto — Tadi bridge construction complete, traffic to resume tomorrow",
+      "url": "https://www.en.meroauto.com/tadi-bridge-construction-complete-traffic-to-resume-tomorrow/",
+      "date": "2026-09-10",
+      "official": false
+    },
+    "kathmandupost_betrawati_0908": {
+      "label": "Kathmandu Post — Nepal races to rebuild roads and bridges washed away by floods",
+      "url": "https://kathmandupost.com/national/2026/09/08/nepal-races-to-rebuild-roads-and-bridges-washed-away-by-floods",
+      "date": "2026-09-08",
+      "official": false
+    },
+    "kathmandupost_krishnabhir_0909": {
+      "label": "Kathmandu Post — Tunnels and bridges emerge as options to bypass treacherous Krishnabhir",
+      "url": "https://kathmandupost.com/national/2026/09/09/tunnels-and-bridges-emerge-as-options-to-bypass-treacherous-krishnabhir",
+      "date": "2026-09-09",
+      "official": false
+    },
+    "khabarhub_nea_0909": {
+      "label": "Khabarhub — Electricity restoration efforts in flood-hit areas accelerated, Energy Ministry",
+      "url": "https://english.khabarhub.com/2026/09/567073/",
+      "date": "2026-09-09",
+      "official": false
     }
   },
   "casualties": {
     "headline": {
       "bodies_recovered": {
-        "value": 1355,
-        "as_of": "2026-09-07",
-        "src": "mofa_0907",
+        "value": 1357,
+        "as_of": "2026-09-08",
+        "src": "mofa_0908",
         "alt": {
-          "text": "1,358 as of 8 Sep, NDRRMA via Nepalnews",
-          "src": "nepalnews_0908"
+          "text": "1,367 recovered, NDRRMA via Khabarhub, 9 Sep",
+          "src": "ndrrma_khabarhub_0909"
         }
       },
       "missing": {
-        "value": 5326,
+        "value": 5300,
         "as_of": "2026-09-08",
-        "src": "nepalnews_0908",
+        "src": "mofa_0908",
         "alt": {
-          "text": "MoFA says about 5,000 as of 7 Sep",
-          "src": "mofa_0907"
+          "text": "5,132 as of 9 Sep, NDRRMA via Khabarhub",
+          "src": "ndrrma_khabarhub_0909"
         }
       },
       "injured": {
@@ -298,9 +340,13 @@
         "src": "ndrrma_sitrep1"
       },
       "rescued": {
-        "value": 13396,
-        "as_of": "2026-09-07",
-        "src": "mofa_0907"
+        "value": 13583,
+        "as_of": "2026-09-08",
+        "src": "mofa_0908",
+        "alt": {
+          "text": "13,646 as of 9 Sep, NDRRMA via Khabarhub",
+          "src": "ndrrma_khabarhub_0909"
+        }
       }
     },
     "series": [
@@ -333,12 +379,30 @@
       },
       {
         "as_of": "2026-09-08",
+        "bodies_recovered": 1357,
+        "missing": 5300,
+        "injured": null,
+        "rescued": 13583,
+        "src": "mofa_0908",
+        "note": "MoFA daily update, 14:00 NPT. Missing approximately 5,300 including about 600 foreign nationals from 35 countries; rescued includes 300+ foreign nationals. Confirms two Nepali tunnel survivors from Upper Trishuli 3A (4 Sep) and one Chinese national from Upper Trishuli 1 (5 Sep); SAR teams from India, China, South Korea, UAE, Malaysia and Australia active in tunnel rescue."
+      },
+      {
+        "as_of": "2026-09-08",
         "bodies_recovered": 1358,
         "missing": 5326,
         "injured": null,
         "rescued": null,
         "src": "nepalnews_0908",
         "note": "As of 18:00. No injured or rescued figure restated in this update."
+      },
+      {
+        "as_of": "2026-09-09",
+        "bodies_recovered": 1367,
+        "missing": 5132,
+        "injured": null,
+        "rescued": 13646,
+        "src": "ndrrma_khabarhub_0909",
+        "note": "NDRRMA spokesperson Shanti Mahat, 14:52 NPT, via Khabarhub. Missing decreased from the 8 Sep figure, consistent with reclassification from missing to recovered rather than a data error. 102 bodies identified and returned to families; 3,628 people in holding centres across Nuwakot, Dhading, Rasuwa and Kathmandu; 7,151 people received medical treatment, a broader/cumulative figure not the same category as the 279 injured figure from 1 Sep."
       }
     ],
     "china": {
@@ -384,7 +448,10 @@
       "The often-quoted ~900 figure is the 31 August snapshot, not a competing method. It is the same count at an earlier date.",
       "No consolidated official injured count was published after 31 August 2026, and no national displaced-household total was found on any primary government page.",
       "NDRRMA issued later situation reports, including #7 dated 7 September 19:00 and an update on 8 September, but none of those PDFs could be retrieved. Figures dated after 1 September therefore come from MoFA daily updates and named press reporting rather than an NDRRMA document.",
-      "The SitRep #01 missing-persons breakdown by category is published as an infographic that could not be read back reliably, so no category split is shown here."
+      "The SitRep #01 missing-persons breakdown by category is published as an infographic that could not be read back reliably, so no category split is shown here.",
+      "NDRRMA's 9 September update (14:52 NPT, spokesperson Shanti Mahat, via Khabarhub) broke the missing down by category: 45 Nepali Army personnel, 25 Nepal Police personnel, 12 Armed Police Force personnel, 73 government employees, 26 bank/financial institution employees and about 589 foreign tourists. The same update reported 102 bodies identified and returned to families, and 3,628 people in holding centres across Nuwakot, Dhading, Rasuwa and Kathmandu.",
+      "NDRRMA's 9 September figure of 7,151 people who received medical treatment is a broader, likely cumulative count. It is not the same category as the 279 injured figure from 1 September and does not replace it.",
+      "IOM appealed on 8 September for USD 20.5 million to assist 43,000 of an estimated 84,000 people affected by the floods, as part of the Government of Nepal-led response."
     ]
   },
   "municipalities": [
@@ -960,6 +1027,11 @@
           "as_of": "2026-09-08",
           "value": 223,
           "src": "nepalnews_districts"
+        },
+        {
+          "as_of": "2026-09-09",
+          "value": 226,
+          "src": "ndrrma_khabarhub_0909"
         }
       ],
       "detail": "Bardaghat Susta East"
@@ -1056,6 +1128,11 @@
           "as_of": "2026-09-08",
           "value": 161,
           "src": "nepalnews_districts"
+        },
+        {
+          "as_of": "2026-09-09",
+          "value": 174,
+          "src": "ndrrma_khabarhub_0909"
         }
       ],
       "detail": "The 8 Sep figure is reported as 161 to 170 depending on the article"
@@ -1422,6 +1499,22 @@
         "as_of": "2026-09-06",
         "src": "ktm_0906",
         "detail": "500 portable 2 kW household solar units and 13 institutional solar systems distributed through the Alternative Energy Promotion Centre; 1,268 vulnerable Rasuwa households flagged for solar."
+      },
+      {
+        "district": "Rasuwa",
+        "pct": 83,
+        "households": null,
+        "as_of": "2026-09-09",
+        "src": "khabarhub_nea_0909",
+        "note": "Ministry of Energy figure, confirming Nepal Energy Forum's earlier 83% reading (vs Kathmandu Post's 78% for 6 September, also in this table)."
+      },
+      {
+        "district": "Nuwakot",
+        "pct": 95,
+        "households": null,
+        "as_of": "2026-09-09",
+        "src": "khabarhub_nea_0909",
+        "note": "Ministry of Energy figure. Lower than the 96.7% reported for 6 September; likely a denominator or rounding difference between agencies rather than a real regression — not reconciled."
       }
     ],
     "impact": [
@@ -1670,9 +1763,9 @@
         "district": "Nuwakot",
         "road": {
           "status": "planned",
-          "detail": "Old and new Betrawati bridges swept away and the Trishuli-Betrawati road extensively damaged. A 48 m Bailey bridge is planned but not yet installed.",
-          "as_of": "2026-09-06",
-          "src": "myrepublica_plh"
+          "detail": "Bailey bridge not yet started as of 8-9 Sep; the Nepal Army bridging team is due to move to Betrawati immediately after finishing Devighat. About 1.5 km of track remains to be opened between Dhunge Bazar and Betrawati before installation can begin.",
+          "as_of": "2026-09-08",
+          "src": "kathmandupost_betrawati_0908"
         },
         "power": {
           "status": "not_reported",
@@ -1753,10 +1846,10 @@
         "municipality": "Bidur",
         "district": "Nuwakot",
         "road": {
-          "status": "planned",
-          "detail": "Bridge near the Water Resources and Irrigation Division destroyed. The Nepal Army began installing a Bailey bridge; a temporary cable-pulley (tuen) crossing carries people and light goods.",
-          "as_of": "2026-09-06",
-          "src": "mofa_0906"
+          "status": "limited",
+          "detail": "Nepal Army-built 60 m Acrow bridge over the Tadi river (5.5 m wide, 50-tonne capacity, built in five days by a 55-member Bridging Unit team) opened to pedestrians from 10 Sep; vehicle traffic due to resume from 11 Sep.",
+          "as_of": "2026-09-10",
+          "src": "meroauto_0910"
         },
         "power": {
           "status": "not_reported"
@@ -1995,6 +2088,11 @@
         "text": "Nuwakot agriculture, preliminary: 4,440 ropani of crops affected, 2,035 livestock and 16,500 birds lost. Two wastewater treatment plants were destroyed at Dhunge and Bidur, and 465 further households were affected across the Trishuli Colony, Devighat and Betrawati water schemes.",
         "as_of": "2026-09-01",
         "src": "ndrrma_sitrep1"
+      },
+      {
+        "text": "Krishnabhir remains fully closed on the Prithvi Highway (about 300 m of road collapsed on 30 August). Department of Roads Director General Bijaya Jaisi said a decision on whether vehicles can pass through will come within a week. Two long-term bypass options are under study: twin 500 m tunnels, or two permanent bridges rerouting the highway across the Trishuli River and back, with repairing the existing road the first priority. Two detours are in use: a Galchhi route via a bridge near \"Hamlet Restaurant\" along the opposite riverbank (about 20 km, to Parewatar), and a Chitwan-side route via the Fishling and Benighat bridges (about 17.5 km, with a 1.5 km stretch still under repair).",
+        "as_of": "2026-09-09",
+        "src": "kathmandupost_krishnabhir_0909"
       }
     ]
   },
