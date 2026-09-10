@@ -694,6 +694,15 @@ function buildDefs() {
           filter: andF(gt('Point'), r.filter) });
         ids.push(id + '-point');
         PAINT_TARGETS.push({ id: id + '-point', prop: 'icon-image', def: 'bridge-hot', status: 'bridge-standing' });
+      } else if (cat === 'destroyed_features') {
+        // Node-mapped destroyed/damaged features (413 of 4,409: 340 destroyed buildings
+        // plus assorted tourism/amenity/power/man_made/barrier/shop/natural nodes) drew as
+        // hundreds of red dots clustered along the river banks -- owner direction, 10 Sep
+        // 2026: drop the point variant of this layer entirely.  No '-point' layer is built,
+        // so its id never enters `ids` / LABEL_OF / QUERY_IDS / PAINT_TARGETS and nothing
+        // downstream can toggle or query a layer that doesn't exist.  The LineString and
+        // Polygon variants above are unaffected, and the point features are still counted
+        // -- renderMunicipality/loadDamageByMuni read the GeoJSON directly, not this layer.
       } else {
         points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),

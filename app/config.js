@@ -242,8 +242,10 @@ dataset on HDX, snapshot of 10 September 2026. ${HDX_CREDIT}.</p>
       interest outline is extended from Rasuwagadhi up the Lende Khola to the detachment zone using UNOSAT's
       multi-sensor flood extent buffered by 200 m, matching how HOT built its own AOI. CC BY-SA.</li>
   <li><b>Flood extent</b>, <b>destroyed and damaged features</b> (volunteer-recorded in OSM, drawn
-      in dark red; road stretches with a damaged or destroyed status draw bright red in the roads layer),
-      <b>bridge ground reports</b> and <b>exposed hydropowers</b>.</li>
+      in dark red; road stretches with a damaged or destroyed status draw bright red in the roads layer;
+      413 of the 4,409 features are individual OSM nodes rather than building or road outlines and are
+      counted in the totals but not drawn as map markers), <b>bridge ground reports</b> and
+      <b>exposed hydropowers</b>.</li>
   <li><b>Road damage grading</b> — the Copernicus Emergency Management Service rapid-mapping activation
       EMSR927 graded every road and bridge segment in four areas from 0.3–0.7 m post-event imagery: Timure
       and Syapru Besi (27 Aug), Bidur / Trisuli Bazar to Betrawati (27–28 Aug, monitoring update) and
