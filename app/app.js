@@ -299,12 +299,56 @@ const hydroKey = n => String(n || '').toLowerCase()
   .replace(/\b(project|projects|hep|hpp|hydro)\b/g, ' ')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
+// ------------------------------------------------------------ SDF shape icons
+/* Hydropower plants draw as squares and bridges as a semicircle (the flat
+ * edge sits on the point, reading like a bridge arch over the river) rather
+ * than the default circle dot -- owner direction, 10 Sep 2026.  Both are
+ * generated at runtime on a canvas rather than shipped as image assets, then
+ * registered per-map as SDF images so icon-color / icon-opacity / icon-halo-*
+ * stay data-driven expressions exactly like the circle layers they replace.
+ * Canvas antialiasing on the filled shape gives the renderer a usable (if
+ * short-range) distance field -- no separate SDF-generation step needed.
+ * Drawn at 64 px nominal size on a 2x canvas (128 px) with padding so the
+ * SDF edge has room and does not clip. */
+const SHAPE_ICON_PX = 64, SHAPE_ICON_RATIO = 2, SHAPE_ICON_PAD = 8;
+function shapeIconData(draw) {
+  const sz = SHAPE_ICON_PX * SHAPE_ICON_RATIO;
+  const c = document.createElement('canvas');
+  c.width = sz; c.height = sz;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#000';
+  draw(ctx, sz, SHAPE_ICON_PAD * SHAPE_ICON_RATIO);
+  return ctx.getImageData(0, 0, sz, sz);
+}
+const SHAPE_ICONS = {
+  'shape-square': () => shapeIconData((ctx, sz, pad) => {
+    ctx.fillRect(pad, pad, sz - 2 * pad, sz - 2 * pad);
+  }),
+  // Flat edge at the bottom, dome on top -- icon-anchor 'bottom' puts the flat
+  // edge on the point itself.
+  'shape-semicircle': () => shapeIconData((ctx, sz, pad) => {
+    const r = (sz - 2 * pad) / 2, cx = sz / 2, cy = sz - pad - r;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, Math.PI, 0, false);
+    ctx.closePath();
+    ctx.fill();
+  }),
+};
+function ensureShapeIcons(m) {
+  for (const [name, make] of Object.entries(SHAPE_ICONS))
+    if (!m.hasImage(name)) m.addImage(name, make(), { sdf: true, pixelRatio: SHAPE_ICON_RATIO });
+}
+
 /* Circle radius from installed capacity: a 14 MW plant still reads as a dot,
  * a 216 MW one is unmistakable, and the scale is square-root-ish so the big
  * projects do not swamp the corridor. */
 const HYDRO_RADIUS = ['interpolate', ['linear'],
   ['coalesce', ['to-number', ['get', 'capacity_mw']], 0],
   0, 4, 25, 6, 60, 8, 120, 11, 216, 14];
+/* Square icon side = the old circle's diameter, so drawn as a square instead
+ * of a circle (owner direction, 10 Sep 2026) it reads at the same size: the
+ * 64 px SDF image (SHAPE_ICON_PX) scaled down to that many pixels. */
+const HYDRO_ICON_SIZE = ['/', ['*', 2, HYDRO_RADIUS], SHAPE_ICON_PX];
 
 /* A match expression over the merged layer's `name` values, built once from
  * reports.json.  Both sides use the same spellings, so the join needs no
@@ -596,6 +640,16 @@ function buildDefs() {
           paint: { 'text-color': ['case', inAoi, SETTLEMENT_RED, '#f1f5f9'], 'text-opacity': 0.85,
                    'text-halo-color': 'rgba(8,12,18,.6)', 'text-halo-width': 1.6, 'text-halo-blur': 0.4 } });
         ids.push(id + '-name');
+      } else if (cat === 'bridges') {
+        // Semicircle icon, same idea as bridge_damage-point above: flat edge
+        // anchored on the point.  Same size/stroke as the plain circle it replaces.
+        points.push({ id: id + '-point', type: 'symbol', source: r.source, 'source-layer': r.sl,
+          layout: { visibility: 'none', 'icon-image': 'shape-semicircle', 'icon-size': 6 / SHAPE_ICON_PX,
+            'icon-anchor': 'bottom', 'icon-allow-overlap': true, 'icon-ignore-placement': true },
+          filter: andF(gt('Point'), r.filter),
+          paint: { 'icon-color': color, 'icon-halo-width': 0.5, 'icon-halo-color': '#fff' } });
+        ids.push(id + '-point');
+        PAINT_TARGETS.push({ id: id + '-point', prop: 'icon-color', def: color, status: statusExprFor(cat) });
       } else {
         points.push({ id: id + '-point', type: 'circle', source: r.source, 'source-layer': r.sl,
           layout: { visibility: 'none' }, filter: andF(gt('Point'), r.filter),
@@ -649,7 +703,7 @@ function buildDefs() {
   const swatch = (cat, color) => (cat === 'roads' || cat === 'bridges') ? ROAD_WHITE : cat === 'populated_places' ? '#f1f5f9' : color;
   groups.push({ title: 'Mapped features (HOT / OpenStreetMap)', hot: true, extent: true, open: true, entries: [
     ...HOT_CATS.filter(c => !damageCat(c.cat)).map(c => ({ key: 'hot_' + c.cat, cat: c.cat, src: 'osm', label: c.label, hot: true, ids: [],
-      color: swatch(c.cat, c.color), on: HOT_DEFAULT_ON.includes(c.cat) })),
+      color: swatch(c.cat, c.color), on: HOT_DEFAULT_ON.includes(c.cat), shape: c.cat === 'bridges' ? 'semicircle' : undefined })),
   ] });
   // What Overture is and why it has no damage status is explained in the Sources & notes drawer.
   groups.push({ title: 'Overture Maps (pre-flood)', hot: true, open: false,
@@ -695,19 +749,28 @@ function buildDefs() {
       paint: { 'text-color': '#f5f3ff', 'text-halo-color': 'rgba(30,27,75,.9)', 'text-halo-width': 1.6 } },
     // Sized by installed capacity, coloured by the damage status reported in
     // data/reports.json (joined on name through hydroKey(); unmatched points
-    // keep the original yellow).  Labelled from zoom 11.
-    { id: 'hydro-point', type: 'circle', source: 'hydro', layout: { visibility: 'none' },
-      paint: { 'circle-color': hydroColorExpr(), 'circle-radius': HYDRO_RADIUS,
-               'circle-opacity': HYDRO_OPACITY, 'circle-stroke-width': HYDRO_STROKE_W,
-               'circle-stroke-color': HYDRO_STROKE_C } },
+    // keep the original yellow).  Labelled from zoom 11.  Square icon rather
+    // than a circle dot (owner direction, 10 Sep 2026): see SHAPE_ICONS.
+    { id: 'hydro-point', type: 'symbol', source: 'hydro', layout: { visibility: 'none',
+        'icon-image': 'shape-square', 'icon-size': HYDRO_ICON_SIZE,
+        'icon-allow-overlap': true, 'icon-ignore-placement': true },
+      paint: { 'icon-color': hydroColorExpr(), 'icon-opacity': HYDRO_OPACITY,
+               'icon-halo-width': HYDRO_STROKE_W, 'icon-halo-color': HYDRO_STROKE_C } },
     { id: 'hydro-label', type: 'symbol', source: 'hydro', minzoom: 11,
       layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-font': FONT, 'text-size': 11,
-        'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true },
+        // A square's corners reach further from centre than a circle of the same
+        // nominal radius (half-diagonal vs. radius); offset bumped from 1.1 to
+        // clear them at the largest icon sizes.
+        'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true },
       paint: { 'text-color': '#fef9c3', 'text-halo-color': 'rgba(0,0,0,.85)', 'text-halo-width': 1.6 } },
-    { id: 'bridge_damage-point', type: 'circle', source: 'bridge_damage', layout: { visibility: 'none' },
-      paint: { 'circle-color': bridgeColor, 'circle-radius': 6, 'circle-stroke-width': 1.5, 'circle-stroke-color': '#fff' } },
+    // Semicircle icon rather than a circle dot (owner direction, 10 Sep 2026):
+    // flat edge anchored on the point reads like a bridge arch over the river.
+    { id: 'bridge_damage-point', type: 'symbol', source: 'bridge_damage', layout: { visibility: 'none',
+        'icon-image': 'shape-semicircle', 'icon-size': 12 / SHAPE_ICON_PX, 'icon-anchor': 'bottom',
+        'icon-allow-overlap': true, 'icon-ignore-placement': true },
+      paint: { 'icon-color': bridgeColor, 'icon-halo-width': 1.5, 'icon-halo-color': '#fff' } },
   );
-  PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'circle-color', def: bridgeColor });
+  PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'icon-color', def: bridgeColor });
 
   // Roads that lie inside the mapped water, computed by clipping the HOT roads to the flood
   // extent polygon: red with the road casing, on top of the roads so the affected stretches
@@ -788,9 +851,9 @@ function buildDefs() {
     // hot: ids resolved by applyHot(); follows the Extent switch, always the OSM source.
     { key: 'hot_destroyed_features', cat: 'destroyed_features', src: 'osm', label: 'Destroyed and damaged features (volunteer-recorded)',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
-    { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58 },
+    { key: 'bridge_damage', label: 'Bridge damage (ground reports)', color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 58, shape: 'semicircle' },
     { key: 'hydro', label: 'Hydropower plants', color: '#facc15', ids: ['hydro-point', 'hydro-label'],
-      on: true, count: 19,
+      on: true, count: 19, shape: 'square',
       title: 'Sized by installed capacity and coloured by the damage status in data/reports.json. '
         + 'Ten positions are HOT survey; the nine added by hand draw hollow, and the popup names the source.' },
     { key: 'fair', label: 'fAIr building damage (AI)', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053 },
@@ -959,6 +1022,11 @@ function makeMap(container, defs, side) {
     center: state.center || [85.15, 27.99], zoom: state.zoom != null ? state.zoom : 9,
   });
   m.__side = side;
+  // Registered synchronously (the style JSON above is processed asynchronously, so this
+  // beats the first render pass) with a 'styledata' fallback in case a future style reload
+  // (m.setStyle) drops the images -- there is none today, but the hook costs nothing to keep.
+  ensureShapeIcons(m);
+  m.on('styledata', () => ensureShapeIcons(m));
   // MapLibre opens the compact attribution expanded the first time it has text; start it collapsed to its
   // (i) button so the bottom strip does not obstruct a first look at the map (owner direction, 7 Sep 2026).
   // Watch the class list rather than the load event: the auto-open can come later than 'load'. One click expands it.
@@ -1664,7 +1732,7 @@ function renderSidebar() {
       const row = el('label', 'row');
       const cb = el('input'); cb.type = 'checkbox'; cb.checked = state.overlays.has(e.key);
       cb.dataset.ovkey = e.key;      // so a report row can switch its own layer on
-      const sw = el('span', 'sw' + (e.outline ? ' outline' : ''));
+      const sw = el('span', 'sw' + (e.outline ? ' outline' : '') + (e.shape ? ' ' + e.shape : ''));
       sw.style.background = e.color; sw.style.borderColor = e.color;
       row.append(cb, sw, el('span', 't', e.label));
       const cnt = el('span', 'cnt', e.count !== undefined ? fmtCount(e.count) : '');

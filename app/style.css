@@ -183,6 +183,10 @@ label.row:hover { background: var(--bg2); }
 label.row > span.t { overflow: hidden; text-overflow: ellipsis; }
 .sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; flex: none; }
 .sw.outline { background: transparent !important; border: 2px solid; }
+/* Match the map icons: hydropower plants as a square, bridges as a semicircle
+   (flat edge down, like the arch icon on the map) -- owner direction, 10 Sep 2026. */
+.sw.square { border-radius: 0; }
+.sw.semicircle { height: 5.5px; align-self: flex-end; border-radius: 50% 50% 0 0; }
 .cnt { color: var(--fg-dim); font-size: 10.5px; margin-left: auto; padding-left: 6px; font-variant-numeric: tabular-nums; }
 input[type=checkbox], input[type=radio] { accent-color: var(--accent); margin: 0; flex: none; }
 
