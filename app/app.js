@@ -1076,6 +1076,21 @@ function buildDefs() {
   const MUNI_FILTER = MUNI_NAMES.length
     ? ['all', DISTRICT_FILTER, ['in', ['downcase', ['get', 'adm3_name']], ['literal', MUNI_NAMES]]]
     : DISTRICT_FILTER;
+  // Ward outlines and labels only inside the local levels the flood actually
+  // reached (owner direction, 10 Sep 2026): those with a flood-touching ward in
+  // data/admin/admin_ward.geojson (flood_affected = 1; HRRP spellings, listed
+  // here because that file is fetched by MapLibre, not by the app) plus every
+  // local level NDRRMA lists wards for (names + aliases from reports.json).
+  // Regenerate the static part with:
+  //   python3 -c "import json;w=json.load(open('data/admin/admin_ward.geojson'));print(sorted({f['properties']['GaPa_NaPa'] for f in w['features'] if f['properties'].get('flood_affected')==1}))"
+  const FLOOD_WARD_MUNIS = ['Belkotgadhi', 'Bidur', 'Gosaikunda', 'Kalika', 'Kispang', 'Parbati Kunda', 'Tarkeshwar', 'Uttargaya'];
+  const WARD_MUNI_KEYS = [...new Set([
+    ...FLOOD_WARD_MUNIS.map(s => s.toLowerCase()),
+    ...((reports && reports.municipalities) || [])
+      .filter(m => m && m.wards_official && m.wards_official.text)
+      .flatMap(m => [m.name, ...(m.aliases || [])]).filter(Boolean).map(s => String(s).trim().toLowerCase()),
+  ])];
+  const WARD_MUNI_FILTER = ['in', ['downcase', ['to-string', ['get', 'GaPa_NaPa']]], ['literal', WARD_MUNI_KEYS]];
 
   // reports.json is awaited alongside the imagery catalogue in main(), so it has
   // already resolved by the time buildDefs() runs -- the tier can be baked into the
@@ -1125,7 +1140,7 @@ function buildDefs() {
     ...adminLayers('district', ['get', 'adm2_name'], 8, { filter: DISTRICT_FILTER, visible: true }),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: MUNI_FILTER }),   // flood-affected local levels only
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
-      { fillFilter: WARD_FILLED, fillPaint: WARD_PAINT }),
+      { filter: WARD_MUNI_FILTER, fillFilter: WARD_FILLED, fillPaint: WARD_PAINT }),
   );
   // First group in the rail since 10 Sep 2026 (owner direction): "move the
   // administrative option to the top of overlays".  Two rows now -- the district
@@ -1145,11 +1160,11 @@ function buildDefs() {
       color: WARD_DEEP_EXPR ? WARD_DEEP : WARD_FILL,
       colors: WARD_DEEP_EXPR ? [WARD_DEEP, WARD_LIGHT] : null,
       sub: WARD_DEEP_EXPR
-        ? 'dark = wards NDRRMA lists as affected (SitRep 01, 1 Sep); light = other wards touching the flood extent'
+        ? 'outlines within the 8 flood-affected local levels of Rasuwa & Nuwakot; dark = wards NDRRMA lists as affected (SitRep 01, 1 Sep); light = other wards touching the flood extent'
         : 'Rasuwa & Nuwakot, orange = flood-touching',
       title: 'Ward (Rasuwa & Nuwakot only, 2018 HRRP reference geometry; the fill is graded from '
         + 'NDRRMA SitRep 01 via data/reports.json)',
-      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 117 },   // on by default (owner direction, 10 Sep 2026)
+      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 58 },   // on by default (owner direction, 10 Sep 2026)
   ] });
 
   // 6. search pin + selected-scene outline + report highlight ----------------
