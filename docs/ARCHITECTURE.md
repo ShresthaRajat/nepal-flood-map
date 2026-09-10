@@ -426,8 +426,11 @@ Two owner-only tools live at the bottom of the right rail. Neither talks to a
 server and neither writes a committed file; both keep their working state in
 `localStorage` and export it for you to commit by hand.
 
-The **Damage editor** (`#dmgEd`, `EDIT_KEY = nf26.damage_edits`) builds an
-analyst's own damage layer: pick an OSM or Overture building footprint off the
+The **Damage editor** (`#dmgEd`, `EDIT_KEY = nf26.damage_edits`) is hidden
+from the right rail by default since 10 Sep 2026 (owner direction: the
+volunteer edits are done); `?edit=1` or `?tools=1` shows it. The editor is
+still constructed so its keyboard handlers and working-copy layer keep working;
+only the sidebar block is withheld. It builds an analyst's own damage layer: pick an OSM or Overture building footprint off the
 map or draw a polygon freehand, grade it Destroyed / Damaged / Possibly damaged,
 and export the lot as GeoJSON. The working copy is layered over the committed
 file at `CFG.DAMAGE_EDITS_URL` by feature id; a 404 there just means nothing has
@@ -461,9 +464,10 @@ walks it back.
 
 **Image align** (`#imgAl`, `IMGALIGN_KEY = nf26.imgalign`) hand-fits an
 ungeoreferenced photograph over the imagery. It is a fitting aid rather than
-part of the published map, but it is built by default (owner direction, 7 Sep
-2026); `?align=0` hides it, in which case the section is not built and the
-overlay never draws, since there would be no control to turn it off. A saved fit in
+part of the published map, and since 10 Sep 2026 it is hidden by default
+(owner direction); `?align=1` or `?tools=1` builds it. Without the flag the
+section is not built and the overlay never draws, since there would be no
+control to turn it off. A saved fit in
 `localStorage` is left alone either way, so the tool comes back exactly as it
 was left. It adds a MapLibre `image` source
 to both maps at `IMAGERY_BEFORE`, just above the whole imagery stack, so the photo can be checked against

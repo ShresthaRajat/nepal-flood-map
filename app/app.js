@@ -7,10 +7,14 @@
 
 const CFG = window.CFG;
 const QS = new URLSearchParams(location.search);
-// The Image align tool (owner fitting aid) is always built; ?align=0 hides it.
-// A saved fit in localStorage is untouched either way, so the tool comes back
-// exactly as it was left.
-const ALIGN_TOOL = QS.get('align') !== '0';
+// Owner tools (Damage editor, Image align) are hidden from the right rail by
+// default (owner direction, 10 Sep 2026). ?tools=1 shows both; ?edit=1 or
+// ?align=1 shows one. The editor is still built so its keyboard handlers and
+// working copy keep functioning; only the sidebar block is withheld. A saved
+// align fit in localStorage is untouched either way.
+const OWNER_TOOLS = QS.get('tools') === '1';
+const ALIGN_TOOL = OWNER_TOOLS || QS.get('align') === '1';
+const EDITOR_TOOL = OWNER_TOOLS || QS.get('edit') === '1';
 const BASE = location.origin + location.pathname.replace(/[^/]*$/, '');
 const GLYPHS = 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf';
 const FONT = ['Noto Sans Regular'];
@@ -1862,10 +1866,11 @@ function renderSidebar() {
   hotRefresh();
   cpad.appendChild(oBlock);
 
-  // damage editor ---------------------------------------------------------
-  cpad.appendChild(buildDamageEditor());
+  // damage editor (owner tool, ?edit=1 or ?tools=1) ------------------------
+  const dmgEditor = buildDamageEditor();
+  if (EDITOR_TOOL) cpad.appendChild(dmgEditor);
 
-  // image align (local owner tool, ?align=1 only) ---------------------------
+  // image align (owner tool, ?align=1 or ?tools=1) --------------------------
   if (ALIGN_TOOL) cpad.appendChild(buildImageAlign());
 
   // legend ----------------------------------------------------------------
