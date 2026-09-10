@@ -1067,30 +1067,23 @@ function buildDefs() {
   // COD-AB v02 adm2_name spellings, checked against data/admin/admin_district.geojson.
   const DISTRICTS_SHOWN = ['Rasuwa', 'Nuwakot', 'Dhading', 'Gorkha'];
   const DISTRICT_FILTER = ['in', ['get', 'adm2_name'], ['literal', DISTRICTS_SHOWN]];
-  // Municipalities: only the local levels the official reports name as affected
-  // (data/reports.json municipalities, names + aliases, lower-cased against the
-  // COD-AB adm3_name), within the same four districts. Falls back to the four
-  // districts alone when reports.json is missing.
-  const MUNI_NAMES = [...new Set(((reports && reports.municipalities) || [])
-    .flatMap(m => [m.name, ...(m.aliases || [])]).filter(Boolean).map(s => String(s).trim().toLowerCase()))];
-  const MUNI_FILTER = MUNI_NAMES.length
-    ? ['all', DISTRICT_FILTER, ['in', ['downcase', ['get', 'adm3_name']], ['literal', MUNI_NAMES]]]
-    : DISTRICT_FILTER;
+  // Municipalities: only the local levels whose polygon touches the observed
+  // flood extent along the Trishuli / Bhote Koshi (owner direction, 10 Sep 2026),
+  // within the same four districts. COD-AB adm3_name spellings, produced by
+  // tools/list_flood_municipalities.py from the HOT flood extent; re-run it after
+  // an HDX refresh.
+  const EXTENT_MUNIS = ['Aamachhodingmo', 'Belkotgadhi', 'Benighat Rorang', 'Bidur', 'Gajuri', 'Galchhi', 'Gandaki',
+    'Gosaikunda', 'Kalika', 'Kispang', 'Shahid Lakhan', 'Siddhalek', 'Tarakeshwor', 'Uttargaya'];
+  const MUNI_FILTER = ['all', DISTRICT_FILTER, ['in', ['get', 'adm3_name'], ['literal', EXTENT_MUNIS]]];
   // Ward outlines and labels only inside the local levels the flood actually
   // reached (owner direction, 10 Sep 2026): those with a flood-touching ward in
-  // data/admin/admin_ward.geojson (flood_affected = 1; HRRP spellings, listed
-  // here because that file is fetched by MapLibre, not by the app) plus every
-  // local level NDRRMA lists wards for (names + aliases from reports.json).
-  // Regenerate the static part with:
+  // data/admin/admin_ward.geojson (flood_affected = 1). HRRP spellings, listed
+  // here because that file is fetched by MapLibre, not by the app; the same
+  // eight local levels as EXTENT_MUNIS within Rasuwa and Nuwakot
+  // (Parbati Kunda = Aamachhodingmo, Tarkeshwar = Tarakeshwor). Regenerate with:
   //   python3 -c "import json;w=json.load(open('data/admin/admin_ward.geojson'));print(sorted({f['properties']['GaPa_NaPa'] for f in w['features'] if f['properties'].get('flood_affected')==1}))"
   const FLOOD_WARD_MUNIS = ['Belkotgadhi', 'Bidur', 'Gosaikunda', 'Kalika', 'Kispang', 'Parbati Kunda', 'Tarkeshwar', 'Uttargaya'];
-  const WARD_MUNI_KEYS = [...new Set([
-    ...FLOOD_WARD_MUNIS.map(s => s.toLowerCase()),
-    ...((reports && reports.municipalities) || [])
-      .filter(m => m && m.wards_official && m.wards_official.text)
-      .flatMap(m => [m.name, ...(m.aliases || [])]).filter(Boolean).map(s => String(s).trim().toLowerCase()),
-  ])];
-  const WARD_MUNI_FILTER = ['in', ['downcase', ['to-string', ['get', 'GaPa_NaPa']]], ['literal', WARD_MUNI_KEYS]];
+  const WARD_MUNI_FILTER = ['in', ['get', 'GaPa_NaPa'], ['literal', FLOOD_WARD_MUNIS]];
 
   // reports.json is awaited alongside the imagery catalogue in main(), so it has
   // already resolved by the time buildDefs() runs -- the tier can be baked into the
@@ -1151,16 +1144,16 @@ function buildDefs() {
     // group's opacity slider and still labelled if a click ever reaches them.
     fixed: [{ label: 'District (OCHA COD-AB, 2024)', ids: ['admin_district-line', 'admin_district-label'] }],
     entries: [
-    { key: 'admin_municipality', label: 'Municipalities, flood-affected', color: ADMIN_COLOR.municipality,
-      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 26,   // local levels named in the official reports or touched by the observed flood extent
-      sub: 'local levels named in the official reports (NDRRMA / HOT)',
-      title: 'Municipality / local level boundaries (OCHA COD-AB, 2024), limited to the local levels '
-        + 'listed in data/reports.json (NDRRMA SitRep 01 and HOT damage data)' },
+    { key: 'admin_municipality', label: 'Municipalities on the flooded river', color: ADMIN_COLOR.municipality,
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 14,   // local levels touching the observed flood extent
+      sub: 'local levels touching the observed flood extent (HOT, 27 Aug)',
+      title: 'Municipality / local level boundaries (OCHA COD-AB, 2024), limited to the 14 local levels whose '
+        + 'polygon intersects the observed flood extent (tools/list_flood_municipalities.py)' },
     { key: 'admin_ward', label: 'Wards, flood-affected',
       color: WARD_DEEP_EXPR ? WARD_DEEP : WARD_FILL,
       colors: WARD_DEEP_EXPR ? [WARD_DEEP, WARD_LIGHT] : null,
       sub: WARD_DEEP_EXPR
-        ? 'outlines within the 8 flood-affected local levels of Rasuwa & Nuwakot; dark = wards NDRRMA lists as affected (SitRep 01, 1 Sep); light = other wards touching the flood extent'
+        ? 'outlines within the 8 local levels on the flooded river in Rasuwa & Nuwakot; dark = wards NDRRMA lists as affected (SitRep 01, 1 Sep); light = other wards touching the flood extent'
         : 'Rasuwa & Nuwakot, orange = flood-touching',
       title: 'Ward (Rasuwa & Nuwakot only, 2018 HRRP reference geometry; the fill is graded from '
         + 'NDRRMA SitRep 01 via data/reports.json)',

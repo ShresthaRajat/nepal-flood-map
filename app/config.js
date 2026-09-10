@@ -292,8 +292,9 @@ roughly the map's maximum pan extent and simplified for basemap display. The who
 group has its own opacity slider.</p>
 <p>The district outline is drawn at all times as a solid bright green line, limited to the four districts
 the flood ran through — Rasuwa, Nuwakot, Dhading and Gorkha. Municipality boundaries (thin solid dark
-green) show only the local levels the official reports name as affected, and the national highways and
-waterways are clipped to the same four districts. There is no province layer: the
+green) show only the fourteen local levels whose polygon touches the observed flood extent along the
+Bhote Koshi and Trishuli, ward outlines only the eight of those in Rasuwa and Nuwakot, and the national
+highways and waterways are clipped to the same four districts. There is no province layer: the
 event touches too few districts for one to say anything. Municipality is a toggle, off by default;
 the flood-affected wards are on by default.</p>
 <p>The ward fill is graded in two tiers. Dark brownish orange marks the wards NDRRMA lists as affected in
