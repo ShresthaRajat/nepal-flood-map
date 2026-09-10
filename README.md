@@ -23,7 +23,7 @@ Layout:
 - `index.html` — the map (MapLibre GL, swipe compare)
 - `tiles/<layer>/{z}/{x}/{y}.webp` — Web Mercator imagery pyramids; `tiles/contours/` vector tiles
 - `data/imagery.json` — imagery catalogue read by the app
-- `data/hdx/` — HDX downloads (GeoJSON + PMTiles), 9 Sep 2026 snapshot
+- `data/hdx/` — HDX downloads (GeoJSON + PMTiles), 10 Sep 2026 snapshot
 - `tools/` — reproducible build scripts, including `imagery_watch.py` (6-hourly scan for new scenes; see
   docs/ARCHITECTURE.md)
 
@@ -41,7 +41,7 @@ breakdown and what it means for reuse.
 This is an independent volunteer visualisation, not an official government or
 humanitarian source. Damage statuses (Standing / Damaged / Destroyed), fAIr
 AI damage detections, and bridge ground reports are provisional remote and
-crowd assessments as of the 9 September 2026 HDX snapshot, and may be wrong,
+crowd assessments as of the 10 September 2026 HDX snapshot, and may be wrong,
 incomplete, or outdated. Do not use this map for navigation or operational
 decision-making without independent verification. Imagery layers are
 registered approximately; positions may be offset by tens of metres.

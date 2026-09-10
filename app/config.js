@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (9 Sep 2026).
+// overview page (10 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -34,17 +34,17 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':171,'buildings|osm':20001,'buildings|overture':19913,'destroyed_features|osm':2841,
+  flood: { 'bridges|osm':159,'buildings|osm':20356,'buildings|overture':19913,'destroyed_features|osm':4409,
     'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
     'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':404,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':537,
-    'roads|osm':2285,'waterways|osm':400 },
-  corridor: { 'bridges|osm':224,'buildings|osm':51914,'buildings|overture':52646,'destroyed_features|osm':2878,
+    'roads|osm':2280,'waterways|osm':400 },
+  corridor: { 'bridges|osm':213,'buildings|osm':52271,'buildings|overture':52646,'destroyed_features|osm':4430,
     'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':97,
     'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':22,'open_spaces|osm':93,
     'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
     'police_stations|overture':2,'populated_places|osm':150,'populated_places|overture':43,'residential_areas|osm':1476,
-    'roads|osm':5341,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
+    'roads|osm':5336,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.
@@ -226,7 +226,7 @@ with distance from the valley floor instead of stopping abruptly.</p>
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 9 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 10 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>
