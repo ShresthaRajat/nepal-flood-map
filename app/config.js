@@ -290,9 +290,11 @@ Nuwakot. CC0, but treat ward shapes and numbers as reference-only, not authorita
 <code>data/admin/README.md</code> for the full provenance and caveats. The layers are clipped to
 roughly the map's maximum pan extent and simplified for basemap display. The whole
 group has its own opacity slider.</p>
-<p>The district outline is drawn at all times in bright green, limited to the three districts the flood
-ran through — Rasuwa, Nuwakot and Dhading. There is no province layer: the event touches too few
-districts for one to say anything. Municipality and ward are toggles, both off by default.</p>
+<p>The district outline is drawn at all times as a solid bright green line, limited to the four districts
+the flood ran through — Rasuwa, Nuwakot, Dhading and Gorkha. Municipality boundaries, the national
+highways and the waterways are clipped to the same four districts. There is no province layer: the
+event touches too few districts for one to say anything. Municipality is a toggle, off by default;
+the flood-affected wards are on by default.</p>
 <p>The ward fill is graded in two tiers. Dark brownish orange marks the wards NDRRMA lists as affected in
 its Rasuwa–Bhotekoshi Flood Situation Report #01 of 1 September 2026, read from the
 <code>wards_official</code> entries in <code>data/reports.json</code> and matched to the 2018 ward

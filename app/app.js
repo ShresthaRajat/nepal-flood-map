@@ -1059,12 +1059,13 @@ function buildDefs() {
   //     SitRep 01, lighter and more transparent for the other wards the flood extent
   //     touches. Without reports.json it falls back to the single orange tier.
   const ADMIN_COLOR = { district: '#4ade80', municipality: '#22c55e', ward: '#86efac' };
-  const ADMIN_DASH  = { district: [3, 2], municipality: [2, 1.5], ward: [1, 1.5] };
+  // District outline is solid (owner direction, 10 Sep 2026); the toggleable levels stay dashed.
+  const ADMIN_DASH  = { municipality: [2, 1.5], ward: [1, 1.5] };
   const ADMIN_WIDTH = { district: 1.5, municipality: 1.4, ward: 1.1 };
   const WARD_FILL = '#ff8c1a', WARD_FILL_OUTLINE = '#b45309';
   const WARD_DEEP = '#c2410c', WARD_LIGHT = '#f97316';
   // COD-AB v02 adm2_name spellings, checked against data/admin/admin_district.geojson.
-  const DISTRICTS_SHOWN = ['Rasuwa', 'Nuwakot', 'Dhading'];
+  const DISTRICTS_SHOWN = ['Rasuwa', 'Nuwakot', 'Dhading', 'Gorkha'];
   const DISTRICT_FILTER = ['in', ['get', 'adm2_name'], ['literal', DISTRICTS_SHOWN]];
 
   // reports.json is awaited alongside the imagery catalogue in main(), so it has
@@ -1102,7 +1103,8 @@ function buildDefs() {
     out.push(
       { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level, ...flt,
         layout: { ...vis, 'line-join': 'round' },
-        paint: { 'line-color': color, 'line-width': ADMIN_WIDTH[level], 'line-opacity': 0.85, 'line-dasharray': ADMIN_DASH[level] } },
+        paint: { 'line-color': color, 'line-width': ADMIN_WIDTH[level], 'line-opacity': 0.85,
+                 ...(ADMIN_DASH[level] ? { 'line-dasharray': ADMIN_DASH[level] } : {}) } },
       { id: 'admin_' + level + '-label', type: 'symbol', source: 'admin_' + level, minzoom: minLabelZoom, ...flt,
         layout: { ...vis, 'text-field': nameExpr, 'text-font': FONT,
           'text-size': ['interpolate', ['linear'], ['zoom'], minLabelZoom, 10, minLabelZoom + 4, 12.5],
@@ -1112,7 +1114,7 @@ function buildDefs() {
   }
   push(
     ...adminLayers('district', ['get', 'adm2_name'], 8, { filter: DISTRICT_FILTER, visible: true }),
-    ...adminLayers('municipality', ['get', 'adm3_name'], 10),
+    ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: DISTRICT_FILTER }),   // same four districts
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
       { fillFilter: WARD_FILLED, fillPaint: WARD_PAINT }),
   );
@@ -1120,13 +1122,13 @@ function buildDefs() {
   // administrative option to the top of overlays".  Two rows now -- the district
   // outline above them is fixed and the province is gone.
   groups.push({ gid: 'admin', title: 'Administrative boundaries', open: true, opacity: true, opacityKey: 'admin',
-    caption: 'District outline: Rasuwa, Nuwakot, Dhading (fixed)',
+    caption: 'District outline: Rasuwa, Nuwakot, Dhading, Gorkha (fixed)',
     // Always-on reference layers: no row and no overlay key, but still faded by the
     // group's opacity slider and still labelled if a click ever reaches them.
     fixed: [{ label: 'District (OCHA COD-AB, 2024)', ids: ['admin_district-line', 'admin_district-label'] }],
     entries: [
     { key: 'admin_municipality', label: 'Municipality', color: ADMIN_COLOR.municipality,
-      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 399,
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 43,   // within the four districts
       title: 'Municipality / local level (OCHA COD-AB, 2024)' },
     { key: 'admin_ward', label: 'Wards, flood-affected',
       color: WARD_DEEP_EXPR ? WARD_DEEP : WARD_FILL,
@@ -1136,7 +1138,7 @@ function buildDefs() {
         : 'Rasuwa & Nuwakot, orange = flood-touching',
       title: 'Ward (Rasuwa & Nuwakot only, 2018 HRRP reference geometry; the fill is graded from '
         + 'NDRRMA SitRep 01 via data/reports.json)',
-      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: false, count: 117 },
+      ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 117 },   // on by default (owner direction, 10 Sep 2026)
   ] });
 
   // 6. search pin + selected-scene outline + report highlight ----------------
@@ -2143,7 +2145,7 @@ function renderSidebar() {
   // colours come from the built entry, so the fallback single-tier build (no
   // reports.json) shows one ward swatch here rather than two that do not exist.
   lg.appendChild(el('div', 'hd', 'Administrative'));
-  add('#4ade80', 'District outline: Rasuwa, Nuwakot, Dhading (always shown)', true);
+  add('#4ade80', 'District outline: Rasuwa, Nuwakot, Dhading, Gorkha (always shown)', true);
   const wardEntry = ENTRY['admin_ward'];
   if (wardEntry && wardEntry.colors && wardEntry.colors.length === 2) {
     add(wardEntry.colors[0], 'Ward NDRRMA lists as affected (SitRep 01, 1 Sep 2026)');
