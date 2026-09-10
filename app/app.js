@@ -1137,7 +1137,7 @@ function buildDefs() {
     fixed: [{ label: 'District (OCHA COD-AB, 2024)', ids: ['admin_district-line', 'admin_district-label'] }],
     entries: [
     { key: 'admin_municipality', label: 'Municipalities, flood-affected', color: ADMIN_COLOR.municipality,
-      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 24,   // local levels named in the official reports
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 26,   // local levels named in the official reports or touched by the observed flood extent
       sub: 'local levels named in the official reports (NDRRMA / HOT)',
       title: 'Municipality / local level boundaries (OCHA COD-AB, 2024), limited to the local levels '
         + 'listed in data/reports.json (NDRRMA SitRep 01 and HOT damage data)' },
