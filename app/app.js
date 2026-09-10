@@ -1058,15 +1058,24 @@ function buildDefs() {
   //     on 8 Sep): dark brownish orange for the wards NDRRMA lists as affected in
   //     SitRep 01, lighter and more transparent for the other wards the flood extent
   //     touches. Without reports.json it falls back to the single orange tier.
-  const ADMIN_COLOR = { district: '#4ade80', municipality: '#22c55e', ward: '#86efac' };
-  // District outline is solid (owner direction, 10 Sep 2026); the toggleable levels stay dashed.
-  const ADMIN_DASH  = { municipality: [2, 1.5], ward: [1, 1.5] };
-  const ADMIN_WIDTH = { district: 1.5, municipality: 1.4, ward: 1.1 };
+  const ADMIN_COLOR = { district: '#4ade80', municipality: '#15803d', ward: '#86efac' };
+  // District and municipality outlines are solid (owner direction, 10 Sep 2026); wards stay dashed.
+  const ADMIN_DASH  = { ward: [1, 1.5] };
+  const ADMIN_WIDTH = { district: 1.5, municipality: 0.9, ward: 1.1 };
   const WARD_FILL = '#ff8c1a', WARD_FILL_OUTLINE = '#b45309';
   const WARD_DEEP = '#c2410c', WARD_LIGHT = '#f97316';
   // COD-AB v02 adm2_name spellings, checked against data/admin/admin_district.geojson.
   const DISTRICTS_SHOWN = ['Rasuwa', 'Nuwakot', 'Dhading', 'Gorkha'];
   const DISTRICT_FILTER = ['in', ['get', 'adm2_name'], ['literal', DISTRICTS_SHOWN]];
+  // Municipalities: only the local levels the official reports name as affected
+  // (data/reports.json municipalities, names + aliases, lower-cased against the
+  // COD-AB adm3_name), within the same four districts. Falls back to the four
+  // districts alone when reports.json is missing.
+  const MUNI_NAMES = [...new Set(((reports && reports.municipalities) || [])
+    .flatMap(m => [m.name, ...(m.aliases || [])]).filter(Boolean).map(s => String(s).trim().toLowerCase()))];
+  const MUNI_FILTER = MUNI_NAMES.length
+    ? ['all', DISTRICT_FILTER, ['in', ['downcase', ['get', 'adm3_name']], ['literal', MUNI_NAMES]]]
+    : DISTRICT_FILTER;
 
   // reports.json is awaited alongside the imagery catalogue in main(), so it has
   // already resolved by the time buildDefs() runs -- the tier can be baked into the
@@ -1114,7 +1123,7 @@ function buildDefs() {
   }
   push(
     ...adminLayers('district', ['get', 'adm2_name'], 8, { filter: DISTRICT_FILTER, visible: true }),
-    ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: DISTRICT_FILTER }),   // same four districts
+    ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: MUNI_FILTER }),   // flood-affected local levels only
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
       { fillFilter: WARD_FILLED, fillPaint: WARD_PAINT }),
   );
@@ -1127,9 +1136,11 @@ function buildDefs() {
     // group's opacity slider and still labelled if a click ever reaches them.
     fixed: [{ label: 'District (OCHA COD-AB, 2024)', ids: ['admin_district-line', 'admin_district-label'] }],
     entries: [
-    { key: 'admin_municipality', label: 'Municipality', color: ADMIN_COLOR.municipality,
-      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 43,   // within the four districts
-      title: 'Municipality / local level (OCHA COD-AB, 2024)' },
+    { key: 'admin_municipality', label: 'Municipalities, flood-affected', color: ADMIN_COLOR.municipality,
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 24,   // local levels named in the official reports
+      sub: 'local levels named in the official reports (NDRRMA / HOT)',
+      title: 'Municipality / local level boundaries (OCHA COD-AB, 2024), limited to the local levels '
+        + 'listed in data/reports.json (NDRRMA SitRep 01 and HOT damage data)' },
     { key: 'admin_ward', label: 'Wards, flood-affected',
       color: WARD_DEEP_EXPR ? WARD_DEEP : WARD_FILL,
       colors: WARD_DEEP_EXPR ? [WARD_DEEP, WARD_LIGHT] : null,
