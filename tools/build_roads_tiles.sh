@@ -7,14 +7,16 @@
 # layer shows the approach roads beyond it.
 #
 # Pipeline: download the 220 MB GeoPackage zip to work/ (gitignored) ->
-#           clip to the corridor bbox and keep highway IN (motorway, trunk,
-#           primary, secondary, tertiary) plus unclassified/construction ways
-#           whose name says Highway / Rajmarg / Lokmarg / Rajpath (Nepal's
-#           highways are under-tagged in OSM: stretches of the Pasang Lhamu and
-#           Mid-Hill highways are tertiary or unclassified) -> one MVT tileset,
-#           source-layer `roads`,
+#           clip to the corridor bbox (fast pre-filter) then to the
+#           Rasuwa/Nuwakot/Dhading/Gorkha district union and keep highway IN
+#           (motorway, trunk, primary, secondary, tertiary) plus
+#           unclassified/construction ways whose name says Highway / Rajmarg /
+#           Lokmarg / Rajpath (Nepal's highways are under-tagged in OSM:
+#           stretches of the Pasang Lhamu and Mid-Hill highways are tertiary
+#           or unclassified) -> one MVT tileset, source-layer `roads`,
 #           z7-13 (the app overzooms above 13).
 # Output:   data/hdx/tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf + metadata.json (tracked)
+#           Covers Rasuwa, Nuwakot, Dhading and Gorkha districts only.
 #
 # Requires curl, unzip, GDAL 3.x ogr2ogr with the MVT driver (override with
 # OGR2OGR=...).  Tiles are uncompressed (COMPRESS=NO) for static hosts.
@@ -32,6 +34,8 @@ CLIP="$WORK/roads_corridor.gpkg"
 OUT="data/hdx/tiles/hotosm_npl_roads"
 # Same window as the waterways layer: corridor plus the Kathmandu / Dhading approaches.
 BBOX=(84.27 27.43 86.08 28.52)
+# Rasuwa, Nuwakot, Dhading, Gorkha district union -- the actual clip boundary.
+DISTRICTS="data/admin/districts_shown.geojson"
 
 mkdir -p "$WORK"
 if [ ! -s "$ZIP" ]; then
@@ -48,7 +52,8 @@ SRC="$(find_src)"
 echo "==> clipping and filtering $SRC"
 rm -f "$CLIP"
 "$OGR2OGR" -f GPKG "$CLIP" "$SRC" \
-  -clipsrc "${BBOX[@]}" \
+  -spat "${BBOX[@]}" \
+  -clipsrc "$DISTRICTS" \
   -where "highway IN ('motorway','trunk','primary','secondary','tertiary') OR (highway IN ('unclassified','construction') AND (COALESCE(name_en,name_latin,name,'') LIKE '%ighway%' OR COALESCE(name_en,name_latin,name,'') LIKE '%Rajmarg%' OR COALESCE(name_en,name_latin,name,'') LIKE '%Lokmarg%' OR COALESCE(name_en,name_latin,name,'') LIKE '%Rajpath%' OR name LIKE '%राजमार्ग%' OR name LIKE '%लोकमार्ग%'))" \
   -nln roads -nlt PROMOTE_TO_MULTI
 
@@ -60,6 +65,6 @@ rm -rf "$OUT"
   -dsco FORMAT=DIRECTORY -dsco COMPRESS=NO \
   -dsco MINZOOM=7 -dsco MAXZOOM=13 \
   -dsco NAME=hotosm_npl_roads \
-  -dsco DESCRIPTION="OSM motorway/trunk/primary/secondary/tertiary roads and named highways (HDX hotosm_npl_roads) clipped to the Bhote Koshi-Trishuli corridor and approaches"
+  -dsco DESCRIPTION="OSM motorway/trunk/primary/secondary/tertiary roads and named highways (HDX hotosm_npl_roads) clipped to Rasuwa, Nuwakot, Dhading and Gorkha districts"
 
 echo "==> $(find "$OUT" -name '*.pbf' | wc -l | tr -d ' ') tiles, $(du -sh "$OUT" | cut -f1)"

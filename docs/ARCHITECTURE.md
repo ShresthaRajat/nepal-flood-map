@@ -233,14 +233,16 @@ file shape, for the day the register is backfilled.
 - **Waterways of Nepal.** `data/hdx/tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf`, z8–13,
   one source-layer `waterways` with `name`, `waterway`, `natural_class`, `water`
   and `width`. Built from the national HDX `hotosm_npl_waterways` export by
-  `tools/build_waterways_tiles.sh`; not part of the two HOT flood datasets, so
-  it ignores the Extent switch.
+  `tools/build_waterways_tiles.sh`, clipped to Rasuwa, Nuwakot, Dhading and
+  Gorkha districts; not part of the two HOT flood datasets, so it ignores the
+  Extent switch.
 - **Highways and main roads.** `data/hdx/tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf`, z7–13,
   source-layer `roads` (`highway`, `name`, `name_en`, `name_latin`, `surface`,
   `bridge`; the export has no `ref`), motorway/trunk/primary/secondary/tertiary
   plus unclassified ways named Highway/Rajmarg/Lokmarg/Rajpath. Built from the
   national HDX `hotosm_npl_roads` export by `tools/build_roads_tiles.sh`, which
-  downloads the 220 MB GeoPackage into `work/`. Shows the approach roads beyond
+  downloads the 220 MB GeoPackage into `work/`, clipped to Rasuwa, Nuwakot,
+  Dhading and Gorkha districts. Shows the approach roads beyond
   the 1 km corridor, drawn *under* the HOT roads with the same casing and
   widths (tapered below z14), trunk/primary yellow and the rest white; highways
   and anything named "Highway" are labelled by name from a symbol layer placed

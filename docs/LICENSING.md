@@ -61,7 +61,8 @@ re-projection do not change the underlying license.
   - `data/hdx/hot_flood_npl_corridor/` — same catalogue over a wider 1 km
     river-corridor buffer, snapshot generated 2026-09-10 03:02 UTC
   - `data/hdx/hotosm_npl_waterways/` — country-wide OSM waterways, snapshot
-    2026-09-10
+    2026-09-10, clipped to Rasuwa, Nuwakot, Dhading and Gorkha districts,
+    shipped as vector tiles only
   - `data/hdx/derived/places.geojson` — settlement names and positions from
     OpenStreetMap via the Overpass API (several featured points positioned
     from Nominatim or GeoNames where OSM has no place node). ODbL, © OpenStreetMap
@@ -82,9 +83,9 @@ re-projection do not change the underlying license.
     flood-area roads and flood extent (both ODbL); as a derivative database it is
     ODbL too.
   - `data/hdx/tiles/hotosm_npl_roads/` — country-wide OSM roads (HDX
-    `hotosm_npl_roads`, snapshot 10 Sep 2026), clipped to the corridor and filtered
-    to motorway/trunk/primary/secondary/tertiary and named highways, shipped as
-    vector tiles only. ODbL.
+    `hotosm_npl_roads`, snapshot 10 Sep 2026), clipped to Rasuwa, Nuwakot,
+    Dhading and Gorkha districts and filtered to motorway/trunk/primary/
+    secondary/tertiary and named highways, shipped as vector tiles only. ODbL.
   - `data/hdx/hot_flood_npl_buildings_damage/` — fAIr AI building-damage
     detections (see below); no separate `README.txt` ships with this export,
     so its exact license line is unconfirmed — treat as ODbL/HOT terms
