@@ -60,6 +60,6 @@ rm -rf "$OUT"
   -dsco FORMAT=DIRECTORY -dsco COMPRESS=NO \
   -dsco MINZOOM=7 -dsco MAXZOOM=13 \
   -dsco NAME=hotosm_npl_roads \
-  -dsco DESCRIPTION="OSM motorway/trunk/primary/secondary/tertiary roads and named highways (HDX hotosm_npl_roads, 9 Aug 2026 snapshot) clipped to the Bhote Koshi-Trishuli corridor and approaches"
+  -dsco DESCRIPTION="OSM motorway/trunk/primary/secondary/tertiary roads and named highways (HDX hotosm_npl_roads) clipped to the Bhote Koshi-Trishuli corridor and approaches"
 
 echo "==> $(find "$OUT" -name '*.pbf' | wc -l | tr -d ' ') tiles, $(du -sh "$OUT" | cut -f1)"
