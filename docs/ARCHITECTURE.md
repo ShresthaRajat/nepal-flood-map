@@ -462,13 +462,24 @@ province outline said nothing. Old `ov=` links carrying `+admin_province` or
 skips them.
 
 The **district outline** is a fixed reference layer rather than a toggle: bright
-green `#4ade80` at 1.5 px, drawn on both maps at all times, filtered to
+green `#4ade80`, drawn on both maps at all times, filtered to
 `adm2_name in ['Rasuwa', 'Nuwakot', 'Dhading', 'Gorkha']` (COD-AB v02 spellings). It has no
 row and no `ENTRY` key, so nothing can switch it off; it reaches the group
 opacity slider through the group's `fixed` list, which `opacityGroupIds()`
 collects alongside the entry ids, and `admin_district-line` is excluded from
 `QUERY_IDS` so an always-on line does not win popups from the damage features
 under it. Municipality stays an ordinary toggle, off by default.
+
+Its weight was raised on 10 Sep 2026 (owner direction: "make the district
+boundary more apparent ... so it's easier to view and not disappear"). The flat
+1.5 px became a zoom ramp — 2.2 px at z6, 3.2 at z10, 4.2 at z14 — at full
+opacity, over a new `admin_district-casing` line in `rgba(8,12,18,.5)` 2.6 px
+wider, so the outline holds up over the light OSM basemap, dark imagery and the
+ward damage ramp alike. Both widths come from one `districtWidth(delta)` helper
+and so cannot drift apart. `adminLayers()` gained a `casing` option that emits
+the layer *before* the line; `-casing` ids are already filtered out of
+`QUERY_IDS`, so it never wins a click, and the casing id is listed in the
+group's `fixed` entry so the opacity slider still reaches it.
 
 **Ward coverage.** `data/admin/admin_ward.geojson` was extended on 10 Sep 2026
 from Rasuwa and Nuwakot to all four corridor districts — 315 wards, of which 108

@@ -1080,7 +1080,18 @@ function buildDefs() {
   const ADMIN_COLOR = { district: '#4ade80', municipality: '#15803d', ward: '#86efac' };
   // District and municipality outlines are solid (owner direction, 10 Sep 2026); wards stay dashed.
   const ADMIN_DASH  = { ward: [1, 1.5] };
-  const ADMIN_WIDTH = { district: 1.5, municipality: 0.9, ward: 1.1 };
+  // The district outline is the one always-on reference line, so it has to stay
+  // readable over a light OSM basemap, dark imagery and the ward ramp alike
+  // (owner direction, 10 Sep 2026: "make the district boundary more apparent...
+  // so it's easier to view and not disappear").  It gets a zoom ramp rather than
+  // the flat 1.5 px it had -- thin lines vanish at corridor zooms -- plus a dark
+  // casing underneath.  `d` offsets the same ramp for the casing so the two can
+  // never drift apart.
+  const districtWidth = d => ['interpolate', ['linear'], ['zoom'],
+    6, +(2.2 + d).toFixed(2), 10, +(3.2 + d).toFixed(2), 14, +(4.2 + d).toFixed(2)];
+  const ADMIN_WIDTH = { district: districtWidth(0), municipality: 0.9, ward: 1.1 };
+  const DISTRICT_CASING = { 'line-color': 'rgba(8,12,18,.5)', 'line-width': districtWidth(2.6),
+                            'line-opacity': 0.75 };
   const WARD_FILL = '#ff8c1a', WARD_FILL_OUTLINE = '#b45309';
   // White-to-brown damage ramp. Breakpoints are quantiles of `dmg_total` over the
   // 35 wards that have any mapped damage at all (min 1, p50 41, p85 344, max 534 --
@@ -1165,6 +1176,10 @@ function buildDefs() {
     if (o.fillFilter) out.push({ id: 'admin_' + level + '-fill', type: 'fill', source: 'admin_' + level,
       filter: o.fillFilter, layout: { ...vis },
       paint: o.fillPaint || { 'fill-color': color, 'fill-opacity': 0.35 } });
+    // A casing goes under the line, not over it.  `-casing` ids are already
+    // excluded from QUERY_IDS, so it never wins a popup.
+    if (o.casing) out.push({ id: 'admin_' + level + '-casing', type: 'line', source: 'admin_' + level, ...flt,
+      layout: { ...vis, 'line-join': 'round', 'line-cap': 'round' }, paint: o.casing });
     out.push(
       { id: 'admin_' + level + '-line', type: 'line', source: 'admin_' + level, ...flt,
         layout: { ...vis, 'line-join': 'round' },
@@ -1179,7 +1194,9 @@ function buildDefs() {
     return out;
   }
   push(
-    ...adminLayers('district', ['get', 'adm2_name'], 8, { filter: DISTRICT_FILTER, visible: true }),
+    ...adminLayers('district', ['get', 'adm2_name'], 8,
+      { filter: DISTRICT_FILTER, visible: true, casing: DISTRICT_CASING,
+        linePaint: { 'line-opacity': 1 } }),
     ...adminLayers('municipality', ['get', 'adm3_name'], 10, { filter: MUNI_FILTER }),   // flood-affected local levels only
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
       { filter: WARD_MUNI_FILTER, fillFilter: WARD_FILLED, fillPaint: WARD_PAINT,
@@ -1192,7 +1209,8 @@ function buildDefs() {
     caption: 'District outline: Rasuwa, Nuwakot, Dhading, Gorkha (fixed)',
     // Always-on reference layers: no row and no overlay key, but still faded by the
     // group's opacity slider and still labelled if a click ever reaches them.
-    fixed: [{ label: 'District (OCHA COD-AB, 2024)', ids: ['admin_district-line', 'admin_district-label'] }],
+    fixed: [{ label: 'District (OCHA COD-AB, 2024)',
+              ids: ['admin_district-casing', 'admin_district-line', 'admin_district-label'] }],
     entries: [
     { key: 'admin_municipality', label: 'Municipalities on the flooded river', color: ADMIN_COLOR.municipality,
       ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 14,   // local levels touching the observed flood extent

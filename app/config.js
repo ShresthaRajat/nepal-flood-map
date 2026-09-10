@@ -290,8 +290,9 @@ Nuwakot, Dhading and Gorkha (315 wards). CC0, but treat ward shapes and numbers 
 <code>data/admin/README.md</code> for the full provenance and caveats. The layers are clipped to
 roughly the map's maximum pan extent and simplified for basemap display. The whole
 group has its own opacity slider.</p>
-<p>The district outline is drawn at all times as a solid bright green line, limited to the four districts
-the flood ran through — Rasuwa, Nuwakot, Dhading and Gorkha. Municipality boundaries (thin solid dark
+<p>The district outline is drawn at all times as a solid bright green line over a dark casing, limited to
+the four districts the flood ran through — Rasuwa, Nuwakot, Dhading and Gorkha. It thickens with zoom so
+it stays readable over the light basemap, the imagery and the ward fill alike. Municipality boundaries (thin solid dark
 green) show only the fourteen local levels whose polygon touches the observed flood extent along the
 Bhote Koshi and Trishuli, ward outlines the 108 wards inside those same fourteen, and the national
 highways and waterways are clipped to the same four districts. There is no province layer: the
