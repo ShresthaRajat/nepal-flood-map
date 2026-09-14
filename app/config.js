@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (10 Sep 2026).
+// overview page (13 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -34,17 +34,17 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':159,'buildings|osm':20356,'buildings|overture':19913,'destroyed_features|osm':4409,
+  flood: { 'bridges|osm':162,'buildings|osm':20372,'buildings|overture':19913,'destroyed_features|osm':3993,
     'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
-    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':404,
+    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':63,'points_of_interest|osm':405,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':537,
-    'roads|osm':2280,'waterways|osm':400 },
-  corridor: { 'bridges|osm':213,'buildings|osm':52271,'buildings|overture':52646,'destroyed_features|osm':4430,
-    'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':97,
-    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':22,'open_spaces|osm':93,
+    'roads|osm':2287,'waterways|osm':400 },
+  corridor: { 'bridges|osm':219,'buildings|osm':52267,'buildings|overture':52646,'destroyed_features|osm':4018,
+    'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':96,
+    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':96,
     'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
-    'police_stations|overture':2,'populated_places|osm':150,'populated_places|overture':43,'residential_areas|osm':1476,
-    'roads|osm':5336,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
+    'police_stations|overture':2,'populated_places|osm':150,'populated_places|overture':43,'residential_areas|osm':1474,
+    'roads|osm':5355,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.
@@ -54,11 +54,12 @@ const STATUS = {
   destroyed: '#dc2626',
 };
 const FAIR = {
-  'destroyed':    '#d7191c',
-  'major-damage': '#fdae61',
-  'minor-damage': '#ffff66',
-  'no-damage':    '#9e9e9e',
-  'no-data':      '#bdbdbd',
+  'destroyed':         '#d7191c',
+  'major-damage':      '#fdae61',
+  'minor-damage':      '#ffff66',
+  'no-visible-damage': '#9e9e9e',
+  'no-damage':         '#9e9e9e', // alias: former HDX schema's value for the same class
+  'no-data':           '#bdbdbd', // no longer occurs in the 11 Sep HDX export; kept as a fallback colour
 };
 
 // Zoom-to targets, [[w,s],[e,n]].
@@ -149,13 +150,18 @@ source, in blue for an official one and amber for anything that is not. Where no
 level the cell reads "not reported" — nothing on this map is estimated, interpolated or carried across from a
 neighbouring place.</p>
 <p>Two labelling points worth keeping in mind. The headline casualty number is <b>bodies recovered</b>, not
-identified deaths: only about 4% of the roughly 900 bodies found by 1 September had been formally identified.
+identified deaths: NDRRMA situation report #23 of 13 September puts formally identified bodies at 104 of the
+1,388 recovered, and deducts exactly those 104 from the missing total.
 And the district figures record <b>where remains were found</b>, not where people lived, which is why Chitwan and
 the two Nawalparasi districts exceed Rasuwa and Nuwakot — bodies travelled up to 240 km downstream. "Missing" is
 a separate category that Nepal's authorities do not treat as presumed dead.</p>
 <p>Official and inter-governmental sources used:
-<a href="https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf" target="_blank" rel="noopener">NDRRMA
-Rasuwa-Bhotekoshi Flood Situation Report #1</a> (1 Sep 2026);
+<a href="https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_23_NEP_13092026.pdf" target="_blank" rel="noopener">NDRRMA
+Rasuwa-Bhote Koshi Flood Situation Report #23</a> (Nepali, 13 Sep 2026) and the rest of the
+<a href="https://ndrrma.gov.np/rasuwa/situation" target="_blank" rel="noopener">SitRep series</a>, back through
+the English #02–#09 (2–9 Sep 2026) to
+<a href="https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf" target="_blank" rel="noopener">#01</a>
+(1 Sep 2026);
 <a href="https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/" target="_blank" rel="noopener">MoFA
 daily situation updates</a> (6 and 7 Sep 2026);
 <a href="https://www.unocha.org/publications/report/nepal/nepal-rasuwa-flood-flash-update-4-31-august-2026" target="_blank" rel="noopener">OCHA
@@ -178,9 +184,11 @@ copied from the source, because the HDX export's own <code>municipality</code> f
 <p>Municipality-level detail comes from the "needs and priority" table in NDRRMA's situation report #01 of
 1 September 2026, which names the affected wards for eleven local levels in Rasuwa, Nuwakot and Dhading and says
 what relief had reached each. That report publishes no casualty count below district level, so the municipality
-rows show official casualty figures nowhere and say "not reported" instead. NDRRMA issued later reports, including
-#7 dated 7 September, but none of those PDFs could be retrieved, so anything dated after 1 September on this map
-comes from MoFA daily updates or named press reporting rather than an NDRRMA document.</p>
+rows show official casualty figures nowhere and say "not reported" instead. NDRRMA has gone on publishing a
+situation report every day in Nepali — #23 is dated 13 September 2026, 19:00 NPT — and those supply the headline
+counts, the district table and the holding-centre rows here, but none of them restates the ward lists or adds a
+figure below district level, so the municipality columns stay dated 1 September. The English series stopped at
+#09 on 9 September; Nepali #20 and #21 were never posted, so the run is #18, #19, then #22 and #23.</p>
 <p>A note on BIPAD, since it is the obvious place to look for municipality-level figures. As of 9 September 2026
 its incident register does not contain this event: across the eight corridor districts for 26 Aug to 9 Sep it
 holds 45 incidents totalling 2 deaths, and Rasuwa has two unrelated high-altitude reports and nothing about the
@@ -226,7 +234,7 @@ with distance from the valley floor instead of stopping abruptly.</p>
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 10 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 13 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>
@@ -269,8 +277,8 @@ dataset on HDX, snapshot of 10 September 2026. ${HDX_CREDIT}.</p>
       highways (trunk and primary) yellow, everything else white. Nepal's highways are under-tagged in
       OSM, so stretches of the Pasang Lhamu and Mid-Hill highways appear as ordinary roads. Labels use
       the English or transliterated name.</li>
-  <li><b>fAIr building damage</b> — 1,053 buildings AI-scored as destroyed (677), major damage (105),
-      minor damage (155), no damage (113) or no data (3).</li>
+  <li><b>fAIr building damage</b> — 8,421 buildings AI-scored as destroyed (2,276), major damage (594),
+      minor damage (1,049) or no visible damage (4,502).</li>
 </ul>
 <p class="warn">Caveats. The flood extent is one analyst's interpretation of a single date of imagery
 (27 Aug 2026), not a field survey, and it breaks where every post-event scene is clouded. OSM

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-10",
+ "generated": "2026-09-13",
  "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
  "layers": [
   {
@@ -572,6 +572,57 @@
    "added_by": "imagery_watch",
    "source_ids": [
     "S1D_IW_GRDH_1SDV_20260909T122141_20260909T122206_004501_0085C5_rtc"
+   ]
+  },
+  {
+   "id": "post_legion_20260912_2b2a10",
+   "label": "12 Sep 2026 · Vantor Legion 0.4 m (cloud 59%, off-nadir 20.4°, owner override)",
+   "side": "post",
+   "date": "2026-09-12",
+   "sensor": "Legion",
+   "provider": "Vantor",
+   "gsd_m": 0.4,
+   "bounds": [
+    85.27959,
+    28.09502,
+    85.40107,
+    28.22504
+   ],
+   "minzoom": 10,
+   "maxzoom": 17,
+   "tiles": "tiles/post_legion_20260912_2b2a10/{z}/{x}/{y}.webp",
+   "attribution": "© 2026 Vantor, CC-BY-NC 4.0",
+   "coverage": "upper_valley",
+   "size_mb": 13.2,
+   "cloud_pct": 59,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "B1200011012B2A10"
+   ]
+  },
+  {
+   "id": "post_s1_20260912",
+   "label": "12 Sep 2026 · Sentinel-1 radar 10 m",
+   "side": "post",
+   "date": "2026-09-12",
+   "sensor": "Sentinel-1 RTC",
+   "provider": "ESA Copernicus / Microsoft Planetary Computer",
+   "gsd_m": 10,
+   "bounds": [
+    85.31322,
+    27.68353,
+    85.60547,
+    28.45903
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s1_20260912/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "corridor",
+   "size_mb": 9.1,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "S1D_IW_GRDH_1SDV_20260912T001038_20260912T001103_004537_008704_rtc"
    ]
   }
  ],

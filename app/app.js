@@ -836,9 +836,15 @@ function buildDefs() {
       color: swatch(cat, color), on: false })),
   });
 
+  // 11 Sep 2026 HDX refresh dropped the numeric `damage_class` field entirely and
+  // renamed the no-damage string value to `no-visible-damage`; `no-damage` stays
+  // matched as an alias for any older cached export, `no-data` no longer occurs
+  // but its colour is kept as the trailing fallback.
   const fairColor = ['match', ['get', 'damage'],
     'destroyed', CFG.FAIR['destroyed'], 'major-damage', CFG.FAIR['major-damage'],
-    'minor-damage', CFG.FAIR['minor-damage'], 'no-damage', CFG.FAIR['no-damage'], CFG.FAIR['no-data']];
+    'minor-damage', CFG.FAIR['minor-damage'],
+    'no-visible-damage', CFG.FAIR['no-visible-damage'], 'no-damage', CFG.FAIR['no-damage'],
+    CFG.FAIR['no-data']];
   // Only Damaged/Destroyed bridges are shown at all (BRIDGE_SHOWN below) -- Standing/Intact
   // spans are untouched and not worth a map marker (owner direction, 10 Sep 2026) -- so the
   // icon expression only needs to choose between the two 'bridge-*' images that exist for them.
@@ -856,8 +862,19 @@ function buildDefs() {
       filter: ['==', ['geometry-type'], 'LineString'], paint: { 'line-color': '#0ea5e9', 'line-width': 0.8 } },
     { id: 'fair_aoi-line', type: 'line', source: 'fair_aoi', layout: { visibility: 'none' },
       paint: { 'line-color': '#f8fafc', 'line-width': 1.5, 'line-dasharray': [2, 2] } },
+    // 11 Sep 2026 HDX refresh mixed in LineString and Point geometries alongside the
+    // Polygon buildings (previously all MultiPolygon); fill only ever draws polygons so
+    // no filter is needed there, but the point features need their own circle layer.
     { id: 'fair-fill', type: 'fill', source: 'fair', layout: { visibility: 'none' }, paint: { 'fill-color': fairColor, 'fill-opacity': 0.35 } },
-    { id: 'fair-line', type: 'line', source: 'fair', layout: { visibility: 'none' }, paint: { 'line-color': '#333', 'line-width': 0.4 } },
+    // 3,286 of the 8,421 features are closed-ring LineStrings (buildings the export did not
+    // close into polygons); fill cannot draw them, so the line layer colours those by damage
+    // class at a readable width while polygon outlines stay the thin neutral #333.
+    { id: 'fair-line', type: 'line', source: 'fair', layout: { visibility: 'none' },
+      paint: { 'line-color': ['case', ['==', ['geometry-type'], 'LineString'], fairColor, '#333'],
+               'line-width': ['case', ['==', ['geometry-type'], 'LineString'], 1.4, 0.4] } },
+    { id: 'fair-point', type: 'circle', source: 'fair', layout: { visibility: 'none' },
+      filter: ['==', ['geometry-type'], 'Point'],
+      paint: { 'circle-color': fairColor, 'circle-radius': 4, 'circle-stroke-width': 0.4, 'circle-stroke-color': '#333' } },
     // Glacier collapse: detachment zone (violet), barrier lakes (ice blue), origin point with a label.
     { id: 'collapse-zone-fill', type: 'fill', source: 'collapse', layout: { visibility: 'none' },
       filter: ['==', ['get', 'kind'], 'detachment_zone'], paint: { 'fill-color': '#c084fc', 'fill-opacity': 0.3 } },
@@ -1006,7 +1023,7 @@ function buildDefs() {
     { key: 'bridge_damage', label: 'Bridge damage', sub: 'ground reports \u00b7 damaged & destroyed only',
       title: 'Bridge damage from ground reports; only the damaged and destroyed spans are drawn',
       color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 43, shape: 'semicircle', outline: true },
-    { key: 'fair', label: 'Building damage, fAIr AI', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line'], on: true, count: 1053,
+    { key: 'fair', label: 'Building damage, fAIr AI', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line', 'fair-point'], on: true, count: 8421,
       title: 'Building damage classified by the fAIr AI model' },
     { key: 'fair_aoi', label: 'fAIr analysed tiles', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true,
       title: 'Outline of the area the fAIr model analysed' },
@@ -2244,8 +2261,7 @@ function renderSidebar() {
   add(CFG.FAIR['destroyed'], 'Destroyed');
   add(CFG.FAIR['major-damage'], 'Major damage');
   add(CFG.FAIR['minor-damage'], 'Minor damage');
-  add(CFG.FAIR['no-damage'], 'No damage');
-  add(CFG.FAIR['no-data'], 'No data');
+  add(CFG.FAIR['no-visible-damage'], 'No visible damage');
   lg.appendChild(el('div', 'hd', 'Areas'));
   add('#7f1d1d', 'Flood extent, 27 Aug 2026');
   add(CFG.CATS.find(([cat]) => cat === 'destroyed_features')[3], 'Destroyed and damaged features (volunteer-recorded, OSM)');
@@ -2641,8 +2657,9 @@ function renderCasualties(pad) {
     const alt = (f.alternates || []).map(a => esc(a.label) + ' ' + repNum(a.value) + srcLink(a.src)).join(', ');
     const r = el('div', 'reprow');
     r.innerHTML = '<b>Foreign nationals missing</b>' + srcLink(f.src) +
-      '<span class="sub">MoFA about ' + repNum(f.value) + ' from 35 countries as of ' +
-      esc(shortDate(f.as_of)) + (alt ? '. Other agencies: ' + alt : '') + '. ' + esc(f.note || '') + '</span>';
+      '<span class="sub">' + repNum(f.value) + ' as of ' + esc(shortDate(f.as_of)) +
+      (f.detail ? '. ' + esc(f.detail) : '') +
+      (alt ? ' Other counts: ' + alt : '') + ' ' + esc(f.note || '') + '</span>';
     body.appendChild(r);
   }
 
@@ -2847,9 +2864,10 @@ async function renderMunicipalities(det, body) {
   body.appendChild(el('p', 'note',
     'Municipality-level detail comes from the "needs and priority" table in NDRRMA situation report #01 of ' +
     '1 September, which names the affected wards and what had reached each local level but publishes no ' +
-    'casualty counts below district level. NDRRMA issued later reports, including #7 on 7 September, but none ' +
-    'of those PDFs could be retrieved, so nothing here is dated after 1 September except the second column of ' +
-    'the district table and the figures that carry a later source.'));
+    'casualty counts below district level. NDRRMA has kept reporting daily in Nepali since - #23 is dated ' +
+    '13 September, 19:00 NPT - but no report after #01 restates the ward lists or adds a municipality-level ' +
+    'figure, so those columns stay dated 1 September while the district table, the holding-centre rows and ' +
+    'the headline counts carry the newer source.'));
   body.appendChild(el('p', 'inview', ''));
   body.querySelector('.inview').id = 'dmgInView';
   body.appendChild(el('p', 'note', 'OSM-mapped counts are volunteer-recorded in OpenStreetMap and not field-verified.'));

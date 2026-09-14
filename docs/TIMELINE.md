@@ -52,19 +52,27 @@ Notes on the table:
   and hydropower damage, IFRC funding, etc.) from the same "26 August" section
   are omitted here since this doc is scoped to the gauge/flood-front sequence.
 
-## Casualty figures (Wikipedia infobox, as of 8–9 September 2026)
+## Casualty figures (NDRRMA SitRep #23, as of 13 September 2026, 19:00 NPT)
 
-**Provisional — Wikipedia-sourced, changes daily.** Do not treat as current;
-check Nepal's Ministry of Foreign Affairs (MOFA) daily situation updates and
-NDRRMA bulletins for the latest official figures before using these anywhere
-public-facing.
+**Not wired into the map** — the live panels read `data/reports.json`, which
+carries the same figures with per-figure sourcing. This table is a snapshot for
+the timeline narrative and changes daily; NDRRMA publishes a Nepali situation
+report every day at <https://ndrrma.gov.np/rasuwa/situation>.
 
-| Metric | Total | Breakdown | Source (per infobox) |
+| Metric | Nepal | Breakdown | Source |
 | --- | --- | --- | --- |
-| Deaths | 1,400+ | 1,357 Nepal, 43 China | Setopati, 8 Sep 2026 (Nepal); Reuters, 6–8 Sep 2026 (China) |
-| Missing | 5,845+ | 5,326 Nepal, 519 China | Setopati, 8 Sep 2026 (Nepal); Reuters, 6–8 Sep 2026 (China) |
-| Injured | 6,827+ | — | Setopati, 8 Sep 2026 |
-| Property damage (Nepal) | NPR 400 billion+ (~US$2.64 billion+) | — | Kathmandu Post (grants coverage) |
+| Bodies recovered (मृत्यु) | 1,388 | 542 male, 334 female, 512 partial remains; 104 formally identified. By district: Chitwan 364, Nawalparasi East 230, Nawalparasi West 222, Nuwakot 199, Rasuwa 185, Gorkha 77, Dhading 71, Tanahun 38, Kathmandu (in treatment) 2 | NDRRMA SitRep #23, 13 Sep 2026 |
+| Missing (बेपत्ता) | 5,130 | 5,234 on the chart less the 104 identified bodies: Rasuwa 2,860, Nuwakot 1,787, foreign nationals 587 | NDRRMA SitRep #23, 13 Sep 2026 |
+| Rescued (उद्धार) | 13,728 | 1,516 Nepal Army flights, 320 Armed Police Force flights | NDRRMA SitRep #23, 13 Sep 2026 |
+| Treated | 339 across 19 health facilities | 271 discharged, 32 under treatment, 32 referred, 4 died in treatment; a further 9,314 treated by the security agencies | NDRRMA SitRep #23, 13 Sep 2026 |
+| Injured | 279 | Last consolidated injured count, 1 Sep 2026; no NDRRMA report since restates it | NDRRMA SitRep #01, 1 Sep 2026 |
+| In holding centres | 2,532 in 33 centres | Nuwakot 1,613 in 22, Rasuwa 825 in 9, Dhading 94 in 2 | NDRRMA SitRep #23, 13 Sep 2026 |
+| China (Gyirong) | 43 dead, 519 missing | Tracked separately; no NDRRMA or MoFA figure includes these people | CNN, 6 Sep 2026 |
+| Total disaster effect (Nepal) | NPR 408 billion | Recovery needs NPR 723 billion, of which NPR 8.73 billion immediate | NDRRMA SitRep #22 initial assessment, 12 Sep 2026 |
+
+Earlier Wikipedia-infobox figures (1,357 dead / 5,326 missing / 6,827 injured,
+Setopati 8 Sep 2026) are superseded. The 6,827 "injured" there is a cumulative
+treatment count, not the same category as NDRRMA's 279 injured.
 
 ## Sources
 
@@ -80,8 +88,16 @@ public-facing.
   unfolded over 10 hours"), Onlinekhabar ("Technical report details
   Bhotekoshi flood's journey from Tibet to Devghat"), The Week, ReliefWeb and
   disasterscharter.org for the individual entries above.
-- Casualty figures transcribed from the infobox of Wikipedia, *2026
-  Nepal–Tibet floods* —
-  <https://en.wikipedia.org/wiki/2026_Nepal%E2%80%93Tibet_floods> (same fetch
-  date), citing Setopati (8 Sep 2026) for Nepal figures and Reuters (6–8 Sep
-  2026) for China figures.
+- Casualty figures read off **NDRRMA Rasuwa–Bhote Koshi Flood Situation Report
+  #23** (Nepali, 13 Sep 2026, 19:00 NPT) —
+  <https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_23_NEP_13092026.pdf> — with
+  the damage totals from **#22** (12 Sep 2026) —
+  <https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_22_NEP_12092026.pdf>. The
+  dashboard page of each is an infographic; the numbers above were transcribed
+  from a 400 dpi render of it and cross-checked against the report text. Index
+  of the whole series: <https://ndrrma.gov.np/rasuwa/situation>. The English
+  series stopped at #09 (9 Sep 2026); Nepali #20 and #21 were never published.
+- The superseded Wikipedia infobox is at
+  <https://en.wikipedia.org/wiki/2026_Nepal%E2%80%93Tibet_floods> (fetched 9
+  Sep 2026), citing Setopati (8 Sep 2026) for Nepal figures and Reuters (6–8
+  Sep 2026) for China figures.

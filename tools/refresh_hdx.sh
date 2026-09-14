@@ -54,6 +54,35 @@ for ds in datasets:
         elif fmt in ('GeoJSON', 'JSON') and '/combined/' in url:
             subprocess.run(['curl', '-sS', '-f', '-L', '-o', os.path.join(out, name if fmt == 'GeoJSON' else 'metadata_' + name.split('_')[-2] + '.json'), url], check=True)
             n_combined += 1
+        elif fmt == 'GeoJSON' and name.startswith(ds + '_') and name.endswith('.geojson'):
+            # HDX now ships per-layer files unzipped, no README/config/metadata bundle:
+            # <ds>_<layer>_<src>.geojson -> <layer>_<src>.geojson.  A handful of singular,
+            # non-category resources (e.g. tasking_manager/<ds>_tm_projects.geojson) don't
+            # follow the category|source split and keep their full ds-prefixed name instead,
+            # matching how the app and other combined files reference them.
+            stem = name[len(ds) + 1:-len('.geojson')]              # e.g. bridges_osm
+            fname = stem + '.geojson' if stem.endswith(('_osm', '_overture')) else name
+            subprocess.run(['curl', '-sS', '-f', '-L', '-o', os.path.join(out, fname), url], check=True)
+            n_layers += 1
+    # HDX no longer ships a companion README.txt with the per-layer bundle (that format is
+    # gone); refresh its Generated/Snapshot lines from metadata_osm.json instead, which HOT
+    # does regenerate every export and which update_hdx_counts.py's snapshot_dates() reads.
+    meta_path = os.path.join(out, 'metadata_osm.json')
+    readme_path = os.path.join(out, 'README.txt')
+    if os.path.exists(meta_path):
+        layers = json.load(open(meta_path)).get('layers') or []
+        gens = [l['generated_utc'] for l in layers if l.get('generated_utc')]
+        snaps = [l['snapshot_label'] for l in layers if l.get('snapshot_label')]
+        if gens:
+            gen_dt = max(gens)[:10] + ' ' + max(gens)[11:16] + ' UTC'
+            snap = max(snaps) if snaps else max(gens)
+            if os.path.exists(readme_path):
+                s = open(readme_path).read()
+                s2 = re.sub(r'^Generated:\s+\S+ \S+ UTC', f'Generated:        {gen_dt}', s, flags=re.M)
+                s2 = re.sub(r'^Snapshot:\s+\S+', f'Snapshot:         {snap}', s2, flags=re.M)
+                open(readme_path, 'w').write(s2)
+            else:
+                open(readme_path, 'w').write(f'Generated:        {gen_dt}\nSnapshot:         {snap}\n')
     print(f'   {ds}: {n_layers} layer files, {n_combined} combined files, PMTiles refreshed')
 PYEOF
 

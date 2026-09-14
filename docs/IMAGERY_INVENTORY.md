@@ -32,6 +32,20 @@ The map already has: Sentinel-2 2026-06-03, 2026-08-27; Sentinel-1 2026-08-16, 2
 
 ---
 
+## Update 13 Sep 2026
+
+Ran `tools/imagery_watch.py --no-push` (2026-09-13 20:16Z, `work/imagery_watch/watch.log`). 9 new scenes logged; none passed the automatic build gates.
+
+**Vantor Legion `B1200011012B2A10`, 12 Sep 2026** — scene cloud 59% (over `VANTOR_MAX_CLOUD=50`), off-nadir 20.4°, focus hits `upper_valley`/`mailung_gorge`; notify-only per the gate. The Vantor STAC collection now has 31 items (was 30 on 9 Sep). Checked by hand before overriding: fetched the STAC item, pulled a low-res overview of the visual COG, and confirmed the cloud sits mostly over ridgelines while the Bhote Koshi/Trishuli river corridor itself is largely visible. Built with `tools/build_vantor_item.py B1200011012B2A10` (bypasses the gate the same way the 8-9 Sep overrides did) → **`post_legion_20260912_2b2a10`**, 3,187 tiles, 13.2 MB, `added_by: imagery_watch`, label carries the cloud/off-nadir/override note. A z13 spot-check tile confirms the corridor is clear with scattered cloud on the surrounding slopes, matching the pre-build judgement.
+
+**Sentinel-2 L2A, 13 Sep 2026** — six new MGRS granules, all over `S2_MAX_CLOUD=40`: `45RTL` 42%, `45RUL` 63% and 72% (two granules), `45RTM` 76%, `45RUM` 83% and 87%. Only `45RTL` (closest to the gate) was investigated further, since the rest are 63-87% and not worth a bespoke check. Found the item (`S2A_45RTL_20260913_0_L2A`) via Earth Search STAC; its footprint only overlaps the southern/downstream part of the map corridor (up to ~28.01°N — it never reaches the upper Rasuwa/Syabrubesi source area). Within that overlap, the SCL cloud+shadow fraction is **57.1%** — worse than the 42% whole-scene figure, i.e. cloud is concentrated over the corridor, not away from it — confirmed visually on a TCI quicklook (large cloud blobs over the valley/ridgelines, only intermittent clear glimpses of the river). **Not built.** No `tiles/post_s2_20260913*` directory exists.
+
+**Sentinel-1, 12 Sep 2026, descending, relative orbit 121** — no automatic builder (same as always for S1). Reproduced the manual Microsoft Planetary Computer RTC method used for `post_s1_20260828`/`post_s1_20260909`: fetched a SAS token from `https://planetarycomputer.microsoft.com/api/sas/v1/token/sentinel-1-rtc`, found the matching item (`S1D_IW_GRDH_1SDV_20260912T001038_20260912T001103_004537_008704_rtc`), `gdalwarp`'d to the same EPSG:3857 corridor clip window as the prior S1 layers (`84.50684, 27.68353, 85.60547, 28.45903`) and tiled z8-14 WEBP the same way. **Result: `post_s1_20260912`, 660 tiles (z8-14), 9.1 MB, added to `data/imagery.json` (`added_by: imagery_watch`, not added to `default_post`, matching sibling policy).** Unlike the 28 Aug/9 Sep passes, this descending orbit-121 frame only clips the corridor's *eastern* ~20.7% by area — its real western edge sits at ~85.313°E, well east of the clip window's 84.50684°E edge, so roughly the western four-fifths of the canvas is transparent nodata. Because the catalogue `bounds` field also drives the on-map footprint outline and MapLibre's tile-request bounds, this layer's `bounds` is set to the **real data footprint** `[85.31322, 27.68353, 85.60547, 28.45903]`, not copied from `post_s1_20260909`'s full-corridor bounds — do not read that as full-corridor coverage. Spot-checked z12/z13 tiles: legitimate SAR speckle imagery, not black/broken. `gdal2tiles`'s default `leaflet.html`/`openlayers.html`/`mapml.mapml`/`stacta.json` side files (not present in any other `tiles/` layer) were removed after tiling.
+
+**Status legend:** as above (ON MAP / NEW / PRESS IMAGE ONLY / NOTHING FOUND).
+
+---
+
 ## Priority additions
 
 Ordered by value (downloadable, georeferenced, new date/sensor/area, clear licence first):

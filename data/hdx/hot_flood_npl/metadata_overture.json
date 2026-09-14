@@ -6,8 +6,8 @@
       "source_name": "overture",
       "snapshot_label": "2026-08-19.0",
       "dataset_source": "OvertureMap 2026-08-19.0",
-      "generated_utc": "2026-09-01T05:17:17Z",
-      "oex_version": "0.4.11",
+      "generated_utc": "2026-09-10T16:24:28Z",
+      "oex_version": "0.4.14",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
@@ -44,19 +44,19 @@
                 "count": 2
               },
               {
-                "value": "Rice Mill",
-                "count": 2
-              },
-              {
                 "value": "Samudayik Bidhya Mandir",
                 "count": 2
               },
               {
-                "value": "Benighat Rorang Gaunpalika Office",
+                "value": "Rice Mill",
+                "count": 2
+              },
+              {
+                "value": "Uposhna Pradeshiya Bagbani Bikas Kendra, Trishuli, Nuwakot",
                 "count": 1
               },
               {
-                "value": "Teacher Cantine",
+                "value": "Gas Factory",
                 "count": 1
               }
             ]
@@ -432,7 +432,7 @@
                 "count": 1
               },
               {
-                "value": "Ram Mandir",
+                "value": "Gas Factory",
                 "count": 1
               }
             ]
@@ -447,8 +447,8 @@
       "source_name": "overture",
       "snapshot_label": "2026-08-19.0",
       "dataset_source": "OvertureMap 2026-08-19.0",
-      "generated_utc": "2026-09-01T05:17:50Z",
-      "oex_version": "0.4.11",
+      "generated_utc": "2026-09-10T16:25:05Z",
+      "oex_version": "0.4.14",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
@@ -477,19 +477,19 @@
                 "count": 1
               },
               {
+                "value": "b9a42dd5-dd79-41a0-8152-5ef9ec05fa73",
+                "count": 1
+              },
+              {
+                "value": "82f94f09-5bad-401f-9597-a998f951b4c2",
+                "count": 1
+              },
+              {
                 "value": "71410af7-420b-4af0-adbe-85ab07ad1f5a",
                 "count": 1
               },
               {
                 "value": "36812e0c-2f2f-43c2-ae14-a92be33dd4d7",
-                "count": 1
-              },
-              {
-                "value": "fa56064e-8acc-457f-8e30-4a3589c5c23e",
-                "count": 1
-              },
-              {
-                "value": "ef947f87-3205-4be7-b994-7817868039a5",
                 "count": 1
               }
             ]
@@ -502,6 +502,14 @@
             "distinct_count": 13,
             "top_values": [
               {
+                "value": "Bageshworee Secondary School",
+                "count": 1
+              },
+              {
+                "value": "Trishuli Samudayik Boarding School",
+                "count": 1
+              },
+              {
                 "value": "Bright Future English Boarding School",
                 "count": 1
               },
@@ -510,15 +518,7 @@
                 "count": 1
               },
               {
-                "value": "Atniranjana Higher Secondary School",
-                "count": 1
-              },
-              {
                 "value": "\u091a\u0928\u094d\u0926\u094d\u0930\u094b\u0926\u092f \u0936\u0948\u0915\u094d\u0937\u093f\u0915 \u0938\u0939\u093e\u092f\u0924\u093e \u0915\u094b\u0937",
-                "count": 1
-              },
-              {
-                "value": "Kolputar,nuwakot",
                 "count": 1
               }
             ]
@@ -572,19 +572,19 @@
                 "count": 1
               },
               {
+                "value": "Richoktar, Benighat Rorang-3",
+                "count": 1
+              },
+              {
                 "value": "Kolputar",
                 "count": 1
               },
               {
-                "value": "Malekhu,",
+                "value": "Benighat",
                 "count": 1
               },
               {
-                "value": "Benighat, Dhading",
-                "count": 1
-              },
-              {
-                "value": "Belkotgadhi-7, Ratmate ",
+                "value": "Belkotgadhi-5,Kolputar,Nuwakot",
                 "count": 1
               }
             ]
@@ -597,11 +597,7 @@
             "distinct_count": 7,
             "top_values": [
               {
-                "value": "+9779808699487",
-                "count": 1
-              },
-              {
-                "value": "+9779860082460",
+                "value": "+9779810203435",
                 "count": 1
               },
               {
@@ -615,6 +611,10 @@
               {
                 "value": "+442076368636",
                 "count": 1
+              },
+              {
+                "value": "+97710560975",
+                "count": 1
               }
             ]
           },
@@ -626,15 +626,15 @@
             "distinct_count": 5,
             "top_values": [
               {
+                "value": "http://www.satyamacademy.org/",
+                "count": 1
+              },
+              {
                 "value": "https://himaaus.com/",
                 "count": 1
               },
               {
                 "value": "http://gmail.com/",
-                "count": 1
-              },
-              {
-                "value": "http://www.satyamacademy.org/",
                 "count": 1
               },
               {
@@ -655,6 +655,14 @@
             "distinct_count": 13,
             "top_values": [
               {
+                "value": 0.8908340930938721,
+                "count": 1
+              },
+              {
+                "value": 0.9146190881729126,
+                "count": 1
+              },
+              {
                 "value": 0.9762985706329346,
                 "count": 1
               },
@@ -663,15 +671,7 @@
                 "count": 1
               },
               {
-                "value": 0.6420058012008667,
-                "count": 1
-              },
-              {
-                "value": 0.8241285681724548,
-                "count": 1
-              },
-              {
-                "value": 0.8262099623680115,
+                "value": 0.9499520063400269,
                 "count": 1
               }
             ]
@@ -836,11 +836,11 @@
                 "count": 3
               },
               {
-                "value": "Benighat Rorang",
+                "value": "Siddhalek",
                 "count": 2
               },
               {
-                "value": "Siddhalek",
+                "value": "Benighat Rorang",
                 "count": 2
               },
               {
@@ -873,23 +873,23 @@
             "distinct_count": 13,
             "top_values": [
               {
-                "value": "shilaadebii maa.bi -praabidhik shikssaa",
-                "count": 1
-              },
-              {
                 "value": "shrii mhaadev maa.vi. kolputtaar,nuvaakott",
                 "count": 1
               },
               {
-                "value": "Bageshworee Secondary School",
+                "value": "Shree Sulakshana Secondary School",
+                "count": 1
+              },
+              {
+                "value": "Trishuli Samudayik Boarding School",
+                "count": 1
+              },
+              {
+                "value": "Kolputar,nuwakot",
                 "count": 1
               },
               {
                 "value": "Atniranjana Higher Secondary School",
-                "count": 1
-              },
-              {
-                "value": "Bright Future English Boarding School",
                 "count": 1
               }
             ]
@@ -904,8 +904,8 @@
       "source_name": "overture",
       "snapshot_label": "2026-08-19.0",
       "dataset_source": "OvertureMap 2026-08-19.0",
-      "generated_utc": "2026-09-01T05:18:19Z",
-      "oex_version": "0.4.11",
+      "generated_utc": "2026-09-10T16:25:36Z",
+      "oex_version": "0.4.14",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
@@ -934,11 +934,11 @@
                 "count": 1
               },
               {
-                "value": "92b07aae-f649-4236-bc2d-2a5f10189cf2",
+                "value": "c13e24d4-8769-41c8-b6a0-a35b6d06e187",
                 "count": 1
               },
               {
-                "value": "c13e24d4-8769-41c8-b6a0-a35b6d06e187",
+                "value": "92b07aae-f649-4236-bc2d-2a5f10189cf2",
                 "count": 1
               }
             ]
@@ -951,11 +951,11 @@
             "distinct_count": 3,
             "top_values": [
               {
-                "value": "Malekhu Teaching Hospital/\u092e\u0932\u0947\u0916\u0941 \u091f\u093f\u091a\u093f\u0919 \u0939\u0938\u094d\u092a\u093f\u091f\u0932 & Trauma Centre/\u091f\u094d\u0930\u092e\u093e \u0938\u0947\u0928\u094d\u091f\u0930",
+                "value": "Trishuli Dental Care",
                 "count": 1
               },
               {
-                "value": "Trishuli Dental Care",
+                "value": "Malekhu Teaching Hospital/\u092e\u0932\u0947\u0916\u0941 \u091f\u093f\u091a\u093f\u0919 \u0939\u0938\u094d\u092a\u093f\u091f\u0932 & Trauma Centre/\u091f\u094d\u0930\u092e\u093e \u0938\u0947\u0928\u094d\u091f\u0930",
                 "count": 1
               },
               {
@@ -984,11 +984,11 @@
                 "count": 1
               },
               {
-                "value": "hospital",
+                "value": "pharmacy",
                 "count": 1
               },
               {
-                "value": "pharmacy",
+                "value": "hospital",
                 "count": 1
               }
             ]
@@ -1005,11 +1005,11 @@
                 "count": 1
               },
               {
-                "value": "Mahendra Marg",
+                "value": "Gajuri-02, Malekhu",
                 "count": 1
               },
               {
-                "value": "Gajuri-02, Malekhu",
+                "value": "Mahendra Marg",
                 "count": 1
               }
             ]
@@ -1039,11 +1039,11 @@
             "distinct_count": 2,
             "top_values": [
               {
-                "value": "https://linktr.ee/shreeharibogati",
+                "value": "http://malekhuhospital.com/",
                 "count": 1
               },
               {
-                "value": "http://malekhuhospital.com/",
+                "value": "https://linktr.ee/shreeharibogati",
                 "count": 1
               }
             ]
@@ -1056,15 +1056,15 @@
             "distinct_count": 3,
             "top_values": [
               {
+                "value": 0.5751896500587463,
+                "count": 1
+              },
+              {
                 "value": 0.9001533389091492,
                 "count": 1
               },
               {
                 "value": 0.8328066468238831,
-                "count": 1
-              },
-              {
-                "value": 0.5751896500587463,
                 "count": 1
               }
             ]
@@ -1226,7 +1226,7 @@
             "distinct_count": 3,
             "top_values": [
               {
-                "value": "Malekhu Teaching Hospital/mlekhu tticing hspittl & Trauma Centre/ttrmaa senttr",
+                "value": "Trishuli Dental Care",
                 "count": 1
               },
               {
@@ -1234,7 +1234,7 @@
                 "count": 1
               },
               {
-                "value": "Trishuli Dental Care",
+                "value": "Malekhu Teaching Hospital/mlekhu tticing hspittl & Trauma Centre/ttrmaa senttr",
                 "count": 1
               }
             ]
@@ -1249,8 +1249,8 @@
       "source_name": "overture",
       "snapshot_label": "2026-08-19.0",
       "dataset_source": "OvertureMap 2026-08-19.0",
-      "generated_utc": "2026-09-01T05:18:46Z",
-      "oex_version": "0.4.11",
+      "generated_utc": "2026-09-10T16:26:11Z",
+      "oex_version": "0.4.14",
       "license_label": "Open Database License (ODC-ODbL)",
       "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
       "pcode_source_date": "2025-07-29",
@@ -1275,23 +1275,23 @@
             "distinct_count": 170,
             "top_values": [
               {
-                "value": "0853e48b-5a82-432b-952f-4f60212c7b90",
+                "value": "59fdd341-ef7e-4693-becc-103dc808e4ac",
                 "count": 1
               },
               {
-                "value": "30b83af5-843d-46a8-84e8-c0d2d547c2a0",
+                "value": "7fb86401-610a-4984-b119-b100c1510a20",
                 "count": 1
               },
               {
-                "value": "ecfe07db-0823-4161-8a3b-7ddfccad5132",
+                "value": "d8da1958-304f-4f5b-8fd6-a87a02558fe9",
                 "count": 1
               },
               {
-                "value": "93dcd1c3-87cb-48d3-9e14-1074342c882e",
+                "value": "1c3d9269-d3e6-4342-9a8a-e26ab69473f2",
                 "count": 1
               },
               {
-                "value": "80d49b8d-cd76-4df6-b66a-db9a935a9f8c",
+                "value": "7474e6d0-6986-4ba6-ac2a-03abc38d9476",
                 "count": 1
               }
             ]
@@ -1378,7 +1378,7 @@
                 "count": 4
               },
               {
-                "value": "Dhading",
+                "value": "Malekhu",
                 "count": 3
               },
               {
@@ -1386,7 +1386,7 @@
                 "count": 3
               },
               {
-                "value": "Malekhu",
+                "value": "Dhading",
                 "count": 3
               }
             ]
@@ -1407,15 +1407,15 @@
                 "count": 2
               },
               {
-                "value": "+9779849156491",
+                "value": "+979851172861",
                 "count": 1
               },
               {
-                "value": "+9779841208054",
+                "value": "+9779818015111",
                 "count": 1
               },
               {
-                "value": "+9779808413898",
+                "value": "+9779823638989",
                 "count": 1
               }
             ]
@@ -1436,15 +1436,15 @@
                 "count": 2
               },
               {
-                "value": "http://www.mdm.com.np/",
+                "value": "http://www.hamletrestaurant.com.np/",
                 "count": 1
               },
               {
-                "value": "http://gmicomputerfishling.weebly.com/contact.html",
+                "value": "http://www.nepalriveradventure.com/",
                 "count": 1
               },
               {
-                "value": "http://www.satyamacademy.org/",
+                "value": "rimsnepal.org.np",
                 "count": 1
               }
             ]

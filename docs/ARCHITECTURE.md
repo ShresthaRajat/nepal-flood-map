@@ -85,10 +85,10 @@ toggle disappear.
 `data/reports.json`
 
 ```json
-{ "as_of": "2026-09-09",
+{ "as_of": "2026-09-13",
   "sources": { "<id>": { "label": "…", "url": "…", "date": "YYYY-MM-DD", "official": true } },
   "casualties": {
-    "headline": { "bodies_recovered": {"value":1358,"as_of":"2026-09-08","src":"<id>"},
+    "headline": { "bodies_recovered": {"value":1388,"as_of":"2026-09-13","src":"<id>"},
                   "missing": {…}, "injured": {…}, "rescued": {…} },
     "series": [ {"as_of":"…","bodies_recovered":…,"missing":…,"injured":…,"rescued":…,"src":"<id>","note":"…"} ],
     "china": {"deaths":…,"missing":…,"as_of":"…","src":"<id>","earlier":{…},"detail":"…","note":"…"},
