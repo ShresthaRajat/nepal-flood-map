@@ -49239,7 +49239,7 @@
     "project_id": 63564,
     "name": "Nepal Flood 2026 Response - Lower Trishuli and Bhote Koshi Corridor - Final Parts [Buildings and Roads]",
     "campaign": "2026 Nepal Floods",
-    "status": "PUBLISHED",
+    "status": "ARCHIVED",
     "priority": "URGENT",
     "organisation": "MapBuds",
     "mapping_types": [
@@ -49255,7 +49255,7 @@
      "Nepal"
     ],
     "created": "2026-09-03T11:27:29.130000Z",
-    "last_updated": "2026-09-04T07:41:38.246000Z",
+    "last_updated": "2026-09-05T05:24:13.337000Z",
     "difficulty": "MODERATE",
     "changeset_comment": "#hotosm-project-63564 #nepal-flood-2026-trisuli-bhotekoshi Added/updated roads and buildings ",
     "due_date": "2026-09-08T18:15:00Z",

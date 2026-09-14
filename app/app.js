@@ -2864,8 +2864,8 @@ async function renderMunicipalities(det, body) {
   body.appendChild(el('p', 'note',
     'Municipality-level detail comes from the "needs and priority" table in NDRRMA situation report #01 of ' +
     '1 September, which names the affected wards and what had reached each local level but publishes no ' +
-    'casualty counts below district level. NDRRMA has kept reporting daily in Nepali since - #23 is dated ' +
-    '13 September, 19:00 NPT - but no report after #01 restates the ward lists or adds a municipality-level ' +
+    'casualty counts below district level. NDRRMA has kept reporting daily in Nepali since - #24 is dated ' +
+    '14 September, 19:00 NPT - but no report after #01 restates the ward lists or adds a municipality-level ' +
     'figure, so those columns stay dated 1 September while the district table, the holding-centre rows and ' +
     'the headline counts carry the newer source.'));
   body.appendChild(el('p', 'inview', ''));

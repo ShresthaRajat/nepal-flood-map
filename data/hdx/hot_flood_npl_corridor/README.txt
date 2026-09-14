@@ -1,7 +1,7 @@
 oex export
 ==========
 
-Generated:        2026-09-13 07:48 UTC
+Generated:        2026-09-14 03:02 UTC
 oex version:      0.4.13
 Project:          https://github.com/osgeonepal/oex
 
@@ -15,7 +15,7 @@ Features:         570
 
 Source:           OpenStreetMap contributors
 Source URL:       https://www.openstreetmap.org/
-Snapshot:         2026-09-13T07:41:50Z
+Snapshot:         2026-09-14T02:57:16Z
 License:          hdx-odc-odbl
 License URL:      https://opendatacommons.org/licenses/odbl/1-0/
 

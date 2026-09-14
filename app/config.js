@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (13 Sep 2026).
+// overview page (14 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -34,11 +34,11 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':162,'buildings|osm':20372,'buildings|overture':19913,'destroyed_features|osm':3993,
+  flood: { 'bridges|osm':163,'buildings|osm':20370,'buildings|overture':19913,'destroyed_features|osm':3993,
     'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
-    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':63,'points_of_interest|osm':405,
+    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':405,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':537,
-    'roads|osm':2287,'waterways|osm':400 },
+    'roads|osm':2289,'waterways|osm':400 },
   corridor: { 'bridges|osm':219,'buildings|osm':52267,'buildings|overture':52646,'destroyed_features|osm':4018,
     'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':96,
     'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':96,
@@ -150,16 +150,20 @@ source, in blue for an official one and amber for anything that is not. Where no
 level the cell reads "not reported" — nothing on this map is estimated, interpolated or carried across from a
 neighbouring place.</p>
 <p>Two labelling points worth keeping in mind. The headline casualty number is <b>bodies recovered</b>, not
-identified deaths: NDRRMA situation report #23 of 13 September puts formally identified bodies at 104 of the
-1,388 recovered, and deducts exactly those 104 from the missing total.
+identified deaths: NDRRMA situation report #24 of 14 September puts formally identified bodies at 104 of the
+1,395 recovered, and deducts exactly those 104 from the missing total.
 And the district figures record <b>where remains were found</b>, not where people lived, which is why Chitwan and
 the two Nawalparasi districts exceed Rasuwa and Nuwakot — bodies travelled up to 240 km downstream. "Missing" is
 a separate category that Nepal's authorities do not treat as presumed dead.</p>
 <p>Official and inter-governmental sources used:
-<a href="https://ndrrma.gov.np/mediafiles/rasuwa/SitRep_23_NEP_13092026.pdf" target="_blank" rel="noopener">NDRRMA
-Rasuwa-Bhote Koshi Flood Situation Report #23</a> (Nepali, 13 Sep 2026) and the rest of the
+<a href="https://ndrrma.gov.np/mediafiles/publications/SitRep_24_NEP_14092026_rVK6Zae.pdf" target="_blank" rel="noopener">NDRRMA
+Rasuwa-Bhote Koshi Flood Situation Report #24</a> (Nepali, 14 Sep 2026), its
+<a href="https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_13_14092026.pdf" target="_blank" rel="noopener">English
+edition #13</a> and the rest of the
 <a href="https://ndrrma.gov.np/rasuwa/situation" target="_blank" rel="noopener">SitRep series</a>, back through
-the English #02–#09 (2–9 Sep 2026) to
+the English #02–#13 (2–14 Sep 2026), including the
+<a href="https://ndrrma.gov.np/mediafiles/publications/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026_compressed_Sp3BwkM.pdf" target="_blank" rel="noopener">Rapid
+Damage and Needs Assessment</a> (11 Sep 2026), to
 <a href="https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf" target="_blank" rel="noopener">#01</a>
 (1 Sep 2026);
 <a href="https://mofa.gov.np/content/1879/daily-update-07-september-bhote-koshi-flood/" target="_blank" rel="noopener">MoFA
@@ -185,10 +189,15 @@ copied from the source, because the HDX export's own <code>municipality</code> f
 1 September 2026, which names the affected wards for eleven local levels in Rasuwa, Nuwakot and Dhading and says
 what relief had reached each. That report publishes no casualty count below district level, so the municipality
 rows show official casualty figures nowhere and say "not reported" instead. NDRRMA has gone on publishing a
-situation report every day in Nepali — #23 is dated 13 September 2026, 19:00 NPT — and those supply the headline
+situation report every day in Nepali — #24 is dated 14 September 2026, 19:00 NPT — and those supply the headline
 counts, the district table and the holding-centre rows here, but none of them restates the ward lists or adds a
-figure below district level, so the municipality columns stay dated 1 September. The English series stopped at
-#09 on 9 September; Nepali #20 and #21 were never posted, so the run is #18, #19, then #22 and #23.</p>
+figure below district level, so the municipality columns stay dated 1 September. The English series has resumed and
+now runs to #13 (14 September), matching the Nepali #24 line for line. Nepali #20 (10 September) and #21
+(11 September) and English #10 and #11 were published too, along with a Rapid Damage and Needs Assessment on
+11 September whose figures are not yet read into this map. Note that the two numbering runs are
+separate and that NDRRMA publishes the later editions under <code>/mediafiles/publications/</code> rather than the
+<code>/mediafiles/rasuwa/</code> path the first fortnight used; the <code>rasuwa-sitrep</code> index on the site
+does not list them, so anything after Nepali #23 has to be found through the full publications index.</p>
 <p>A note on BIPAD, since it is the obvious place to look for municipality-level figures. As of 9 September 2026
 its incident register does not contain this event: across the eight corridor districts for 26 Aug to 9 Sep it
 holds 45 incidents totalling 2 deaths, and Rasuwa has two unrelated high-altitude reports and nothing about the
@@ -234,7 +243,7 @@ with distance from the valley floor instead of stopping abruptly.</p>
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 13 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 14 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>
