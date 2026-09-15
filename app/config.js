@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (14 Sep 2026).
+// overview page (15 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -34,17 +34,17 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':163,'buildings|osm':20370,'buildings|overture':19913,'destroyed_features|osm':3993,
+  flood: { 'bridges|osm':163,'buildings|osm':20369,'buildings|overture':19913,'destroyed_features|osm':3992,
     'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
     'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':405,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':537,
-    'roads|osm':2289,'waterways|osm':400 },
-  corridor: { 'bridges|osm':219,'buildings|osm':52267,'buildings|overture':52646,'destroyed_features|osm':4018,
+    'roads|osm':2289,'waterways|osm':411 },
+  corridor: { 'bridges|osm':220,'buildings|osm':52264,'buildings|overture':52646,'destroyed_features|osm':4017,
     'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':96,
-    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':96,
+    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':98,
     'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
     'police_stations|overture':2,'populated_places|osm':150,'populated_places|overture':43,'residential_areas|osm':1474,
-    'roads|osm':5355,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
+    'roads|osm':5356,'roads|overture':3451,'waterways|osm':584,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.
@@ -95,6 +95,8 @@ const SCENES = {
   post_legion_20260901: 'Vantor Legion, two frames, 1 Sep 2026 ~08:43 NPT, 0.37–0.46 m, hazy but largely cloud-free — the clearest post-flood view of the upper valley. © 2026 Vantor, CC-BY-NC-4.0.',
   post_drone_trisuli_202609: 'Two post-flood drone photographs of Trisuli Bazar mosaicked into one layer, ~0.65 m, cloud-free: the old bazaar between the hydropower canal and the river, and the Trishuli bend to the south with the highway settlement on the left bank. Screenshots of a social-media post; capture date and photographer not yet confirmed (early September 2026, after the 26 Aug flood). Each frame was placed by hand in the Image align tool against the 28 Aug WorldView-2 and 5 Feb Legion scenes and baked verbatim; single nadir frames with no terrain correction, so expect a few metres of drift on the slopes and a visible seam where the frames meet. Rights reserved by the photographer; shown for situational awareness only.',
   post_pelican_20260901:'Planet Pelican, three scenes, 1 Sep 2026 ~10:51 NPT, 0.56 m, 47–84 % cloud, Syabrubesi to Rasuwagadhi, re-imaging the 27 Aug Pelican footprint. Rendered ~0.73 m. Planet open disaster data, CC-BY-NC-4.0.',
+  post_s2_20260913:     'Sentinel-2 (S2A, relative orbit 119, tiles 45RTL/45RTM/45RUL/45RUM), 13 Sep 2026 ~10:47 NPT — the first Sentinel-2 pass over the corridor since 27 Aug. Monsoon cloud is heavy and very unevenly spread: 45 % cloud over the flood AOI as a whole, but 97 % over the upper valley and 99 % over the Mailung gorge, so the north of the corridor is effectively unusable. Roughly a third of the Trisuli Bazar reach and 39 % of the lower corridor are clear. True-colour at the native 10 m, tiled to z14 from the AWS open Sentinel-2 COG archive. © ESA Copernicus Sentinel data 2026.',
+  post_s1_20260914:     'Sentinel-1D ascending pass, relative orbit 158, 14 Sep 2026 ~18:15 NPT, 10 m — the newest radar acquisition, but the frame\'s eastern edge runs down 84.61–84.70°E, so it reaches only the downstream Trishuli tail around Mugling and stops well short of Trisuli Bazar and the upper valley. Water and wet ground read dark, vegetation and buildings bright. Same grayscale VV dB stretch as the other radar layers. Terrain-corrected gamma0 from the Microsoft Planetary Computer. © ESA Copernicus.',
 };
 
 // Damage editor: the committed baseline the editor loads at start-up, on top of
@@ -243,7 +245,7 @@ with distance from the valley floor instead of stopping abruptly.</p>
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 14 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 15 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>

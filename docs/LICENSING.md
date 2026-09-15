@@ -53,13 +53,13 @@ re-projection do not change the underlying license.
 - **HOT / HDX response datasets** (ODbL). From the Humanitarian OpenStreetMap
   Team's "Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli"
   dataset on [HDX](https://data.humdata.org/dataset/hot_flood_npl), snapshot
-  **14 September 2026**. Underlying feature source is OpenStreetMap
+  **15 September 2026**. Underlying feature source is OpenStreetMap
   contributors, licensed [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/):
   - `data/hdx/hot_flood_npl/` — flood-affected area (buildings, roads,
     bridges, waterways, facilities, destroyed/damaged features), snapshot
-    generated 2026-09-14 16:03 UTC
+    generated 2026-09-14 22:09 UTC
   - `data/hdx/hot_flood_npl_corridor/` — same catalogue over a wider 1 km
-    river-corridor buffer, snapshot generated 2026-09-14 03:02 UTC
+    river-corridor buffer, snapshot generated 2026-09-15 06:04 UTC
   - `data/hdx/hotosm_npl_waterways/` — country-wide OSM waterways, snapshot
     2026-09-10, clipped to Rasuwa, Nuwakot, Dhading and Gorkha districts,
     shipped as vector tiles only

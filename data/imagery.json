@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-13",
+ "generated": "2026-09-15",
  "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
  "layers": [
   {
@@ -624,6 +624,62 @@
    "source_ids": [
     "S1D_IW_GRDH_1SDV_20260912T001038_20260912T001103_004537_008704_rtc"
    ]
+  },
+  {
+   "id": "post_s2_20260913",
+   "label": "13 Sep 2026 · Sentinel-2 10 m",
+   "side": "post",
+   "date": "2026-09-13",
+   "sensor": "Sentinel-2",
+   "provider": "ESA Copernicus / AWS open data",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.68353,
+    85.78125,
+    28.61346
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s2_20260913/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus Sentinel data 2026",
+   "coverage": "corridor",
+   "size_mb": 28.0,
+   "cloud_pct": 44.8,
+   "added_by": "manual_sweep",
+   "source_ids": [
+    "S2A_45RTL_20260913_0_L2A",
+    "S2A_45RTM_20260913_0_L2A",
+    "S2A_45RUL_20260913_1_L2A",
+    "S2A_45RUM_20260913_1_L2A"
+   ],
+   "notes_build": "tools/build_s2_tiles.sh from the S2A R119 05:02 UTC pass (45RTL/45RTM/45RUL/45RUM) TCI COGs, native 10 m; 44.8 % SCL cloud over work/aoi_flood_2km.geojson, so below the 50 % manual gate but above the watcher's 40 % whole-tile gate"
+  },
+  {
+   "id": "post_s1_20260914",
+   "label": "14 Sep 2026 · Sentinel-1 radar 10 m",
+   "side": "post",
+   "date": "2026-09-14",
+   "sensor": "Sentinel-1 RTC",
+   "provider": "ESA Copernicus / Microsoft Planetary Computer",
+   "gsd_m": 10,
+   "bounds": [
+    84.50684,
+    27.68353,
+    84.70459,
+    28.45903
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s1_20260914/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus",
+   "coverage": "corridor",
+   "size_mb": 7.0,
+   "added_by": "manual_sweep",
+   "source_ids": [
+    "S1D_IW_GRDH_1SDV_20260914T122947_20260914T123012_004574_008848_rtc"
+   ],
+   "notes_build": "Ascending relative orbit 158; the frame's eastern edge falls at 84.61-84.70 E, so it covers only the downstream Trishuli tail around Mugling. Bounds are the true footprint clipped to the corridor window, same convention as post_s1_20260912."
   }
  ],
  "default_pre": "none",
