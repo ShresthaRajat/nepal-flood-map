@@ -30,6 +30,14 @@ function fmtDate(d) {
 }
 const abs = u => /^(https?:)?\/\//.test(u) ? u : BASE + String(u).replace(/^\.?\//, '');
 
+// Default group-opacity slider positions for a bare URL (owner direction, 16 Sep 2026).
+// storedGroupOpacity() falls back to these when localStorage has nothing saved, and
+// writeHash() only emits oo=/oa=/oi= when the state differs from them, so a first-time
+// visitor and a link that simply omits oo=/oa=/oi= land on the same slider position.
+const OV_OPACITY_DEFAULT = 0.97;
+const ADMIN_OPACITY_DEFAULT = 0.34;
+const INFRA_OPACITY_DEFAULT = 0.97;   // own slider since 16 Sep 2026; see the Infrastructure & rivers group comment
+
 // --------------------------------------------------------------- app state
 const state = {
   // pre / post are ordered lists of catalogue layer ids — any number of scenes
@@ -42,8 +50,9 @@ const state = {
   sidebar: null,            // left rail (info): resolved from hash, then localStorage, then viewport
   controls: null,           // right rail (layer controls): same resolution
   overlays: null,           // Set of enabled entry keys
-  ovOpacity: 1,             // 0-1 master transparency for the damage / ground-report overlay group
-  adminOpacity: 1,          // 0-1 master transparency for the administrative boundaries group
+  ovOpacity: OV_OPACITY_DEFAULT,     // 0-1 master transparency for the damage / ground-report overlay group
+  adminOpacity: ADMIN_OPACITY_DEFAULT, // 0-1 master transparency for the administrative boundaries group
+  infraOpacity: INFRA_OPACITY_DEFAULT, // 0-1 master transparency for the infrastructure & rivers group; its own value since 16 Sep 2026
   center: null, zoom: null,
 };
 
@@ -1003,9 +1012,11 @@ function buildDefs() {
   // and is still spelled out in the Sources & notes drawer; `sub` carries a
   // one-line muted caption only where it says something the label cannot.
   // Hydropower, the national highways and the waterways moved to the separate
-  // "Infrastructure & rivers" group below -- same keys, same defaults, same
-  // opacityKey, so `ov=` and `oo=` links written before the split still resolve
-  // identically.
+  // "Infrastructure & rivers" group below -- same keys, same defaults; it had
+  // shared this group's opacityKey until the owner reported the two sliders
+  // moving together (16 Sep 2026), so it now carries its own `opacityKey: 'infra'`
+  // -- see that group's comment for the decoupling and the `oo=`/`oi=` backward
+  // compatibility it needed.
   groups.push({ gid: 'flood', title: 'Flood & damage', open: true, opacity: true, opacityKey: 'flood', entries: [
     { key: 'flood_extent', label: 'Flood extent, 27 Aug 2026', color: '#7f1d1d', ids: ['flood_extent-fill', 'flood_extent-line'], on: true, count: 1,
       title: 'Flood extent, observed 27 Aug 2026 (HOT / HDX)' },
@@ -1022,14 +1033,14 @@ function buildDefs() {
     // see BRIDGE_SHOWN.  Swatch drawn hollow (outline, no fill) to match the map icon.
     { key: 'bridge_damage', label: 'Bridge damage', sub: 'ground reports \u00b7 damaged & destroyed only',
       title: 'Bridge damage from ground reports; only the damaged and destroyed spans are drawn',
-      color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: true, count: 43, shape: 'semicircle', outline: true },
+      color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: false, count: 43, shape: 'semicircle', outline: true },
     { key: 'fair', label: 'Building damage, fAIr AI', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line', 'fair-point'], on: true, count: 8421,
       title: 'Building damage classified by the fAIr AI model' },
-    { key: 'fair_aoi', label: 'fAIr analysed tiles', color: '#f8fafc', ids: ['fair_aoi-line'], on: true, outline: true,
+    { key: 'fair_aoi', label: 'fAIr analysed tiles', color: '#f8fafc', ids: ['fair_aoi-line'], on: false, outline: true,
       title: 'Outline of the area the fAIr model analysed' },
     // The analyst's graded buildings: the committed export at CFG.DAMAGE_EDITS_URL plus this browser's
     // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
-    { key: 'damage_edits', label: 'Building damage, analyst grading', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: true, count: 65,
+    { key: 'damage_edits', label: 'Building damage, analyst grading', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: false, count: 65,
       title: 'Building damage graded by hand in the Damage editor' },
     { key: 'ems_roads', label: 'Road damage, Copernicus EMS', color: DAMAGE_ROAD_RED,
       ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548,
@@ -1038,7 +1049,7 @@ function buildDefs() {
       ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879,
       title: 'Roads inside the flood extent (computed by clipping the HOT roads to the extent polygon)' },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
-    { key: 'hot_aoi', label: 'Area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: true,
+    { key: 'hot_aoi', label: 'Area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: false,
       title: 'Area of interest outline (HOT + upstream to the glacier)' },
   ] });
 
@@ -1048,16 +1059,20 @@ function buildDefs() {
   // catalogues).  These three are context, not damage: they are what the water ran
   // through, not what it did.
   //
-  // OPACITY-KEY DECISION: this group deliberately reuses `opacityKey: 'flood'`
-  // rather than taking a key of its own.  `oo=` in the hash and `nf26.ov_opacity`
-  // in localStorage therefore still fade exactly the same set of style layers they
-  // faded before the split, so an old link fades an old link's worth of map.
-  // `opacityGroupIds()` collects every group carrying the key (a filter, not a
-  // find), and both groups show a slider bound to the one `state.ovOpacity`;
-  // `syncGroupOpacityUI()` keeps the two sliders reading the same number.
-  groups.push({ gid: 'infra', title: 'Infrastructure & rivers', open: true, opacity: true, opacityKey: 'flood', entries: [
+  // OPACITY-KEY HISTORY: this group reused `opacityKey: 'flood'` from the 10 Sep
+  // 2026 split until 16 Sep 2026, so `oo=` in the hash and `nf26.ov_opacity` in
+  // localStorage faded this group and "Flood & damage" together, through one
+  // `state.ovOpacity` value -- which is exactly the bug the owner reported: the
+  // two sliders moved in lockstep because they were, mechanically, one slider.
+  // It now has its own `opacityKey: 'infra'`, its own `state.infraOpacity`, its
+  // own `nf26.infra_opacity` localStorage key and its own `oi=` hash param (see
+  // setInfraOpacity/storedInfraOpacity and the oi= handling in readHash/writeHash).
+  // Backward compatibility for links written before this split: readHash() applies
+  // an `oo=` value to this group too whenever the link carries no `oi=`, since that
+  // was the only opacity token those links ever had for it.
+  groups.push({ gid: 'infra', title: 'Infrastructure & rivers', open: true, opacity: true, opacityKey: 'infra', entries: [
     { key: 'hydro', label: 'Hydropower plants', color: '#facc15', ids: ['hydro-point', 'hydro-label'],
-      on: true, count: 19, shape: 'square',
+      on: false, count: 19, shape: 'square',
       title: 'Sized by installed capacity and coloured by the damage status in data/reports.json. '
         + 'Ten positions are HOT survey; the nine added by hand draw hollow, and the popup names the source.' },
     { key: 'roads_np', label: 'Highways & main roads (OSM)', color: HW_YELLOW,
@@ -1252,7 +1267,7 @@ function buildDefs() {
               ids: ['admin_district-casing', 'admin_district-line', 'admin_district-label'] }],
     entries: [
     { key: 'admin_municipality', label: 'Municipalities on the flooded river', color: ADMIN_COLOR.municipality,
-      ids: ['admin_municipality-line', 'admin_municipality-label'], on: false, count: 14,   // local levels touching the observed flood extent
+      ids: ['admin_municipality-line', 'admin_municipality-label'], on: true, count: 14,   // local levels touching the observed flood extent
       sub: 'local levels touching the observed flood extent (HOT, 27 Aug)',
       title: 'Municipality / local level boundaries (OCHA COD-AB, 2024), limited to the 14 local levels whose '
         + 'polygon intersects the observed flood extent (tools/list_flood_municipalities.py)' },
@@ -1516,10 +1531,10 @@ const OV_OPACITY_PROPS = {
  * rows in the flood group carry no ids of their own — applyHot() resolves them
  * — so expand them the same way.
  *
- * A filter, not a find: since the rail was reordered on 10 Sep 2026 the flood and
- * "Infrastructure & rivers" groups share `opacityKey: 'flood'`, so one slider
- * value covers the same layers it covered when the two were a single group and an
- * old `oo=` link fades exactly what it used to. */
+ * A filter, not a find: "Flood & damage" (`opacityKey: 'flood'`) and
+ * "Infrastructure & rivers" (`opacityKey: 'infra'` since 16 Sep 2026 -- they
+ * briefly shared `'flood'`, which coupled their sliders) each collect only their
+ * own group's layers, so the two now fade independently. */
 function opacityGroupIds(key) {
   const out = [];
   for (const g of (GROUPS || [])) {
@@ -1551,12 +1566,12 @@ function applyGroupOpacity(key, k) {
     }
   });
 }
-function storedGroupOpacity(storageKey) {
+function storedGroupOpacity(storageKey, dflt) {
   try {
     const v = parseFloat(localStorage.getItem(storageKey));
     if (isFinite(v) && v >= 0 && v <= 1) return v;
   } catch (e) { /* private mode */ }
-  return 1;
+  return dflt;
 }
 function applyOverlayOpacity() { applyGroupOpacity('flood', state.ovOpacity); }
 function setOverlayOpacity(v, persist) {
@@ -1567,7 +1582,7 @@ function setOverlayOpacity(v, persist) {
     writeHash();
   }
 }
-function storedOverlayOpacity() { return storedGroupOpacity('nf26.ov_opacity'); }
+function storedOverlayOpacity() { return storedGroupOpacity('nf26.ov_opacity', OV_OPACITY_DEFAULT); }
 function applyAdminOpacity() { applyGroupOpacity('admin', state.adminOpacity); }
 function setAdminOpacity(v, persist) {
   state.adminOpacity = Math.max(0, Math.min(1, v));
@@ -1577,7 +1592,17 @@ function setAdminOpacity(v, persist) {
     writeHash();
   }
 }
-function storedAdminOpacity() { return storedGroupOpacity('nf26.admin_opacity'); }
+function storedAdminOpacity() { return storedGroupOpacity('nf26.admin_opacity', ADMIN_OPACITY_DEFAULT); }
+function applyInfraOpacity() { applyGroupOpacity('infra', state.infraOpacity); }
+function setInfraOpacity(v, persist) {
+  state.infraOpacity = Math.max(0, Math.min(1, v));
+  applyInfraOpacity();
+  if (persist !== false) {
+    try { localStorage.setItem('nf26.infra_opacity', String(state.infraOpacity)); } catch (e) { /* private mode */ }
+    writeHash();
+  }
+}
+function storedInfraOpacity() { return storedGroupOpacity('nf26.infra_opacity', INFRA_OPACITY_DEFAULT); }
 
 function applyColorBy() {
   const useStatus = state.colorBy === 'status';
@@ -1698,8 +1723,11 @@ function writeHash() {
   if (state.colorBy !== 'status') p.set('cb', state.colorBy);   // status is the default; old cb=status links still parse
   if (state.footprintOutline) p.set('fo', '1');
   if (state.hotExtent !== 'flood') p.set('hx', state.hotExtent);
-  if (state.ovOpacity < 1) p.set('oo', Math.round(state.ovOpacity * 100));
-  if (state.adminOpacity < 1) p.set('oa', Math.round(state.adminOpacity * 100));
+  if (state.ovOpacity !== OV_OPACITY_DEFAULT) p.set('oo', Math.round(state.ovOpacity * 100));
+  if (state.adminOpacity !== ADMIN_OPACITY_DEFAULT) p.set('oa', Math.round(state.adminOpacity * 100));
+  // `oi=` rides along whenever `oo=` is written, even at its default: readHash()
+  // treats a lone `oo=` as a pre-split link and applies it to both groups.
+  if (state.infraOpacity !== INFRA_OPACITY_DEFAULT || p.has('oo')) p.set('oi', Math.round(state.infraOpacity * 100));
   if (!state.sidebar) p.set('sb', '0');
   if (!state.controls) p.set('sc', '0');
   const ov = serialiseOverlays();
@@ -1732,11 +1760,20 @@ function readHash() {
   if (p.get('cb')) state.colorBy = p.get('cb');
   if (p.get('fo')) state.footprintOutline = p.get('fo') === '1';
   if (['flood', 'corridor'].includes(p.get('hx'))) state.hotExtent = p.get('hx');
-  // oo/oa are percentages; the hash wins over localStorage, as it does for the rails.
+  // oo/oa/oi are percentages; the hash wins over localStorage, as it does for the rails.
   const oo = p.get('oo') !== null ? parseFloat(p.get('oo')) : NaN;
   state.ovOpacity = isFinite(oo) ? Math.max(0, Math.min(1, oo / 100)) : storedOverlayOpacity();
   const oa = p.get('oa') !== null ? parseFloat(p.get('oa')) : NaN;
   state.adminOpacity = isFinite(oa) ? Math.max(0, Math.min(1, oa / 100)) : storedAdminOpacity();
+  // oi is new (16 Sep 2026, the flood/infra slider-coupling fix): before it the
+  // infra group had no opacity token of its own, since `oo=` faded it and the
+  // flood group together through one shared opacityKey. A link that carries
+  // `oo=` but no `oi=` predates the split, so fall back to oo's value here too
+  // rather than snapping an old link's infra fade back to the default.
+  const oi = p.get('oi') !== null ? parseFloat(p.get('oi')) : NaN;
+  state.infraOpacity = isFinite(oi) ? Math.max(0, Math.min(1, oi / 100))
+    : isFinite(oo) ? Math.max(0, Math.min(1, oo / 100))
+    : storedInfraOpacity();
   legacyOverture = p.get('ho') === 'overture';   // links from when OSM/Overture was a switch
   state.sidebar = p.get('sb') ? p.get('sb') !== '0' : storedRail('sidebar');
   state.controls = p.get('sc') ? p.get('sc') !== '0' : storedRail('controls');
@@ -1940,12 +1977,16 @@ function describe(l) {
  * against the imagery, and only persisted on release so a sweep does not write
  * eighty hash entries. */
 const OPACITY_GROUP_UI = {
-  flood: { get: () => state.ovOpacity, set: setOverlayOpacity, aria: 'Opacity of the flood, damage and infrastructure layers' },
+  flood: { get: () => state.ovOpacity, set: setOverlayOpacity, aria: 'Opacity of the flood and damage layers' },
   admin: { get: () => state.adminOpacity, set: setAdminOpacity, aria: 'Opacity of the administrative boundary layers' },
+  infra: { get: () => state.infraOpacity, set: setInfraOpacity, aria: 'Opacity of the infrastructure and river layers' },
 };
-/* Two groups share the 'flood' key (see the Infrastructure & rivers comment in
- * buildDefs), so a slider is not the sole owner of its value: every slider on a
- * key is registered here and the others are re-read when one of them moves. */
+/* A slider is not necessarily the sole owner of its value: every slider on a key
+ * is registered here and the others are re-read when one of them moves. No two
+ * groups currently share a key -- "Flood & damage" (flood), "Administrative
+ * boundaries" (admin) and "Infrastructure & rivers" (infra) each have their own,
+ * after the 16 Sep 2026 fix for the flood/infra sliders moving together -- but
+ * the mechanism is kept generic rather than special-cased away. */
 const OPACITY_SLIDERS = {};
 function syncGroupOpacityUI(key, except) {
   for (const s of (OPACITY_SLIDERS[key] || [])) {
@@ -4974,7 +5015,7 @@ async function main() {
   await Promise.all(['pre', 'post'].map(s => new Promise(res => maps[s].on('load', res))));
 
   applyImagery('pre'); applyImagery('post');
-  applyOverlays(); applyBase(); applyColorBy(); applyOverlayOpacity(); applyAdminOpacity();
+  applyOverlays(); applyBase(); applyColorBy(); applyOverlayOpacity(); applyAdminOpacity(); applyInfraOpacity();
   syncMaps(maps.pre, maps.post);
   wirePopups(maps.pre); wirePopups(maps.post);
 
