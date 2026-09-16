@@ -656,6 +656,36 @@
    "notes_build": "tools/build_s2_tiles.sh from the S2A R119 05:02 UTC pass (45RTL/45RTM/45RUL/45RUM) TCI COGs, native 10 m; 44.8 % SCL cloud over work/aoi_flood_2km.geojson, so below the 50 % manual gate but above the watcher's 40 % whole-tile gate"
   },
   {
+   "id": "post_s2_20260916",
+   "label": "16 Sep 2026 · Sentinel-2 10 m",
+   "side": "post",
+   "date": "2026-09-16",
+   "sensor": "Sentinel-2",
+   "provider": "ESA Copernicus / AWS open data",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.68353,
+    85.78125,
+    28.61346
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s2_20260916/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus Sentinel data 2026",
+   "coverage": "corridor",
+   "size_mb": 29.5,
+   "cloud_pct": 56.7,
+   "added_by": "manual_sweep",
+   "source_ids": [
+    "S2B_45RTL_20260916_0_L2A",
+    "S2B_45RUL_20260916_0_L2A",
+    "S2B_45RTM_20260916_0_L2A",
+    "S2B_45RUM_20260916_0_L2A"
+   ],
+   "notes_build": "tools/build_s2_tiles.sh from the S2B R119 05:10 UTC pass (45RTL/45RUL/45RTM/45RUM) TCI COGs, native 10 m; 56.7 % SCL cloud (classes 8/9/10) over work/aoi_flood_2km.geojson, above the 50 % manual gate, built at the owner's request; 45RTM contributes no valid pixels over the AOI on this pass"
+  },
+  {
    "id": "post_s1_20260914",
    "label": "14 Sep 2026 · Sentinel-1 radar 10 m",
    "side": "post",
