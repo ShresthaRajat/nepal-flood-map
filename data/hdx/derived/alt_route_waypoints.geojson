@@ -1,0 +1,600 @@
+{
+ "type": "FeatureCollection",
+ "name": "alt_route_waypoints",
+ "metadata": {
+  "as_of": "2026-09-17",
+  "purpose": "Located waypoints used to anchor data/hdx/derived/alt_routes.geojson.",
+  "unlocated": [
+   "Bogatitar",
+   "Indreni Chaur",
+   "Koshikhola",
+   "Chhatre Khola",
+   "Dhanswara",
+   "Patikharka",
+   "Gadkhar Bridge",
+   "Aapre",
+   "Bore Bhanjyang",
+   "Chogte",
+   "Hiramunitar",
+   "Phedi Besi Chowk",
+   "Dhamle",
+   "Bagkhor",
+   "Harre",
+   "Deurali",
+   "Pahirebesi"
+  ],
+  "note": "Absent from OSM, Nominatim, Overture and the repo gazetteers as of 17 Sep 2026."
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Galchhi",
+    "routes": "TB-0,TB-1",
+    "source": "OSM place node (town)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.00046,
+     27.7974
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Galchhi Trishuli bridge (intact)",
+    "routes": "TB-1",
+    "source": "DoR bridge inventory"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.00277,
+     27.80269
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kallerighat",
+    "routes": "TB-1",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.01243,
+     27.81257
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kalleritar (Kalleri)",
+    "routes": "TB-1",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.00553,
+     27.81887
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Pimaltar",
+    "routes": "TB-1",
+    "source": "places.geojson / OSM residential area"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.01902,
+     27.83695
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Darshantar",
+    "routes": "TB-1",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0513,
+     27.85974
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Darshantar north",
+    "routes": "TB-1",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.05835,
+     27.86217
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gauribesi",
+    "routes": "TB-1",
+    "source": "places.geojson (GeoNames)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1377,
+     27.90771
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ratmate",
+    "routes": "TB-0,TB-2",
+    "source": "OSM place node (suburb)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.06138,
+     27.85302
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Devighat",
+    "routes": "TB-0,TB-3",
+    "source": "OSM place node"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.11006,
+     27.86003
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tadi Khola bridge site, Devighat",
+    "routes": "TB-3",
+    "source": "DoR bridge inventory"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.10908,
+     27.85857
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Niranjana (Atniranjana school)",
+    "routes": "TB-4",
+    "source": "Overture POI"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.10858,
+     27.85958
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Pipaltar",
+    "routes": "TB-4",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.12812,
+     27.86558
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kolputar",
+    "routes": "TB-4",
+    "source": "Overture POI 'Kolputar,nuwakot'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.01429,
+     27.81328
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli Bazar",
+    "routes": "TB-0,TB-1,BW-1",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.148,
+     27.9232
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bidur (Battar)",
+    "routes": "BW-1",
+    "source": "OSM place node (town)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.14645,
+     27.89526
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gerkhu",
+    "routes": "BW-2",
+    "source": "OSM place node (suburb)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18613,
+     27.9521
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bhainse",
+    "routes": "BW-2",
+    "source": "OSM place node (hamlet)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.17033,
+     27.96037
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tupche",
+    "routes": "BW-1",
+    "source": "OSM place node"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.15227,
+     27.97336
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Betrawati",
+    "routes": "BW-1..5",
+    "source": "OSM node 268864226 (name=बेत्रावती)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18595,
+     27.97311
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Betrawati bridge site",
+    "routes": "BW-3,BW-4",
+    "source": "DoR bridge inventory"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18581,
+     27.97434
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Falakhu Khola mouth",
+    "routes": "BW-5",
+    "source": "Overpass, OSM way 300686595"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18404,
+     27.97281
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Dhikure",
+    "routes": "DH-3",
+    "source": "Nominatim"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.20571,
+     27.89965
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Jibjibe",
+    "routes": "DH-3",
+    "source": "Nominatim (Kalika-05 health centre)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.22436,
+     27.99206
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kalikasthan",
+    "routes": "DH-1,DH-2,DH-3",
+    "source": "places.geojson (fallback source)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2134,
+     28.0059
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ramche",
+    "routes": "DH-1",
+    "source": "OSM place node"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.21923,
+     28.03256
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Dhunche",
+    "routes": "DH-1,DH-5,DH-6",
+    "source": "OSM place node"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.30472,
+     28.11041
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Saramthali",
+    "routes": "DH-2",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.27504,
+     27.97573
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lachyang",
+    "routes": "DH-2",
+    "source": "OSM place node (suburb)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.29806,
+     27.97702
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Narjamandap",
+    "routes": "DH-2",
+    "source": "OSM place node (suburb)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.28236,
+     27.91969
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Chhahare",
+    "routes": "DH-2",
+    "source": "OSM place node (hamlet)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.23597,
+     27.83243
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mailung",
+    "routes": "DH-6",
+    "source": "OSM place node"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.207,
+     28.07177
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Uttargaya helipad",
+    "routes": "DH-7",
+    "source": "OSM node 3498339453"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2066,
+     28.07336
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Haku Besi",
+    "routes": "DH-9",
+    "source": "OSM place node (hamlet)"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.27907,
+     28.11648
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Shanti Bazar",
+    "routes": "DH-10",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.18141,
+     28.01726
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Simle",
+    "routes": "DH-10",
+    "source": "places.geojson"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1912,
+     28.0292
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Syabrubesi",
+    "routes": "DH-5,DH-8",
+    "source": "OSM place node"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.34274,
+     28.16457
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Syafrubesi bridge site",
+    "routes": "DH-8",
+    "source": "DoR bridge inventory"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.33249,
+     28.15748
+    ]
+   }
+  }
+ ]
+}

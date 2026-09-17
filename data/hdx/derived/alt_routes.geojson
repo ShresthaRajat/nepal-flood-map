@@ -50,7 +50,9 @@
     "source": "NDRRMA Situation Report #14 (English), 15 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_14_15092026.pdf",
     "source_date": "2026-09-15",
-    "length_km": 25.1
+    "length_km": 25.1,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -1333,562 +1335,40 @@
     "users": "local right-bank communities; a backup for through traffic, which now uses TB-0",
     "confidence": "approximate",
     "role": "backup",
-    "notes": "BACKUP, NOT THE MAIN WAY IN. Now that Galchhi-Devighat-Dhunge-Trishuli is clear (TB-0), this is a maintained second option rather than the necessary route. SitRep #15 describes it as operational and \"connecting communities across the Trishuli River in Nuwakot\", with maintenance continuing. Crosses the Trishuli on the intact Bhimdhunga-Lamidanda road bridge at Galchhi, then runs up the right (west) bank, avoiding all the destroyed left-bank bridges. Narrow single lane, slow, difficult for two-way traffic. Geometry traced 400 m west of the OSM Trishuli centreline; Kalleritar, Koshikhola, Pimaltar, Darshantar and Chhatre Khola could not be geolocated.",
+    "waypoints_located": 6,
+    "waypoints_total": 8,
+    "notes": "BACKUP, NOT THE MAIN WAY IN. Now that Galchhi-Devighat-Dhunge-Trishuli is clear (TB-0), this is a maintained second option rather than the necessary route. SitRep #15 describes it as operational and \"connecting communities across the Trishuli River in Nuwakot\", with maintenance continuing. Crosses the Trishuli on the intact Bhimdhunga-Lamidanda road bridge at Galchhi, then runs up the right (west) bank, avoiding all the destroyed left-bank bridges. Narrow single lane, slow, difficult for two-way traffic. Geometry now runs through real coordinates for Kallerighat, Kalleritar, Pimaltar and Darshantar, recovered from places.geojson on 17 Sep; only the Darshantar-Gauribesi middle section, which contains Koshikhola and Chhatre Khola, is still traced from the Trishuli centreline offset 400 m west.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
     "source_date": "2026-09-16",
-    "length_km": 24.9
+    "length_km": 23.7
    },
    "geometry": {
     "type": "LineString",
     "coordinates": [
      [
-      84.998912,
-      27.803066
+      85.00277,
+      27.80269
      ],
      [
-      85.000543,
-      27.80379
+      85.01243,
+      27.81257
      ],
      [
-      85.002622,
-      27.804609
+      85.00553,
+      27.81887
      ],
      [
-      85.002986,
-      27.80482
+      85.01902,
+      27.83695
      ],
      [
-      85.003276,
-      27.805059
+      85.0513,
+      27.85974
      ],
      [
-      85.003619,
-      27.805522
-     ],
-     [
-      85.003829,
-      27.805752
-     ],
-     [
-      85.003965,
-      27.805826
-     ],
-     [
-      85.004105,
-      27.805842
-     ],
-     [
-      85.004529,
-      27.80566
-     ],
-     [
-      85.004757,
-      27.805586
-     ],
-     [
-      85.005095,
-      27.805603
-     ],
-     [
-      85.005349,
-      27.805664
-     ],
-     [
-      85.006138,
-      27.805899
-     ],
-     [
-      85.006327,
-      27.805983
-     ],
-     [
-      85.007675,
-      27.806597
-     ],
-     [
-      85.008209,
-      27.806806
-     ],
-     [
-      85.009282,
-      27.807285
-     ],
-     [
-      85.009638,
-      27.807546
-     ],
-     [
-      85.009872,
-      27.807876
-     ],
-     [
-      85.009971,
-      27.808243
-     ],
-     [
-      85.009829,
-      27.808623
-     ],
-     [
-      85.009638,
-      27.80887
-     ],
-     [
-      85.00907,
-      27.809252
-     ],
-     [
-      85.008332,
-      27.809572
-     ],
-     [
-      85.007844,
-      27.809849
-     ],
-     [
-      85.007568,
-      27.810324
-     ],
-     [
-      85.00746,
-      27.81114
-     ],
-     [
-      85.007519,
-      27.811828
-     ],
-     [
-      85.007704,
-      27.812573
-     ],
-     [
-      85.007898,
-      27.81291
-     ],
-     [
-      85.008292,
-      27.813422
-     ],
-     [
-      85.009008,
-      27.814219
-     ],
-     [
-      85.00966,
-      27.815016
-     ],
-     [
-      85.010269,
-      27.815879
-     ],
-     [
-      85.010644,
-      27.816824
-     ],
-     [
-      85.010907,
-      27.817374
-     ],
-     [
-      85.011296,
-      27.817875
-     ],
-     [
-      85.011822,
-      27.818456
-     ],
-     [
-      85.012074,
-      27.818743
-     ],
-     [
-      85.01224,
-      27.81895
-     ],
-     [
-      85.012363,
-      27.819242
-     ],
-     [
-      85.012489,
-      27.819702
-     ],
-     [
-      85.012605,
-      27.820209
-     ],
-     [
-      85.012777,
-      27.821641
-     ],
-     [
-      85.012899,
-      27.822528
-     ],
-     [
-      85.01298,
-      27.823511
-     ],
-     [
-      85.012899,
-      27.824366
-     ],
-     [
-      85.012788,
-      27.825027
-     ],
-     [
-      85.012744,
-      27.825475
-     ],
-     [
-      85.012744,
-      27.82585
-     ],
-     [
-      85.012905,
-      27.826496
-     ],
-     [
-      85.013093,
-      27.827013
-     ],
-     [
-      85.013409,
-      27.827639
-     ],
-     [
-      85.013989,
-      27.828312
-     ],
-     [
-      85.015035,
-      27.829261
-     ],
-     [
-      85.016415,
-      27.830735
-     ],
-     [
-      85.017513,
-      27.831897
-     ],
-     [
-      85.018167,
-      27.832656
-     ],
-     [
-      85.018395,
-      27.832966
-     ],
-     [
-      85.018471,
-      27.833162
-     ],
-     [
-      85.01864,
-      27.833782
-     ],
-     [
-      85.018757,
-      27.834665
-     ],
-     [
-      85.018915,
-      27.83544
-     ],
-     [
-      85.018769,
-      27.836147
-     ],
-     [
-      85.018559,
-      27.836648
-     ],
-     [
-      85.018185,
-      27.836968
-     ],
-     [
-      85.017461,
-      27.837257
-     ],
-     [
-      85.01704,
-      27.837919
-     ],
-     [
-      85.016579,
-      27.838564
-     ],
-     [
-      85.016053,
-      27.839318
-     ],
-     [
-      85.015422,
-      27.840217
-     ],
-     [
-      85.014926,
-      27.84128
-     ],
-     [
-      85.014762,
-      27.841905
-     ],
-     [
-      85.014628,
-      27.84253
-     ],
-     [
-      85.014634,
-      27.842804
-     ],
-     [
-      85.01471,
-      27.84299
-     ],
-     [
-      85.014885,
-      27.843119
-     ],
-     [
-      85.015183,
-      27.843238
-     ],
-     [
-      85.015527,
-      27.843284
-     ],
-     [
-      85.015907,
-      27.843294
-     ],
-     [
-      85.016275,
-      27.843382
-     ],
-     [
-      85.016579,
-      27.843578
-     ],
-     [
-      85.017741,
-      27.844802
-     ],
-     [
-      85.0185,
-      27.845283
-     ],
-     [
-      85.019458,
-      27.845722
-     ],
-     [
-      85.020842,
-      27.84631
-     ],
-     [
-      85.021759,
-      27.846785
-     ],
-     [
-      85.024084,
-      27.848196
-     ],
-     [
-      85.024282,
-      27.848396
-     ],
-     [
-      85.024481,
-      27.848712
-     ],
-     [
-      85.024609,
-      27.849466
-     ],
-     [
-      85.024667,
-      27.850106
-     ],
-     [
-      85.024866,
-      27.850984
-     ],
-     [
-      85.025105,
-      27.851805
-     ],
-     [
-      85.025689,
-      27.852543
-     ],
-     [
-      85.026355,
-      27.853369
-     ],
-     [
-      85.026554,
-      27.853674
-     ],
-     [
-      85.026758,
-      27.85401
-     ],
-     [
-      85.027021,
-      27.854263
-     ],
-     [
-      85.027319,
-      27.854381
-     ],
-     [
-      85.027652,
-      27.854412
-     ],
-     [
-      85.028026,
-      27.854283
-     ],
-     [
-      85.028499,
-      27.85403
-     ],
-     [
-      85.029036,
-      27.853813
-     ],
-     [
-      85.029579,
-      27.853725
-     ],
-     [
-      85.03028,
-      27.853731
-     ],
-     [
-      85.031676,
-      27.853767
-     ],
-     [
-      85.032953,
-      27.854237
-     ],
-     [
-      85.033387,
-      27.854397
-     ],
-     [
-      85.03525,
-      27.855574
-     ],
-     [
-      85.036757,
-      27.856435
-     ],
-     [
-      85.03695,
-      27.856545
-     ],
-     [
-      85.037329,
-      27.856684
-     ],
-     [
-      85.037738,
-      27.856741
-     ],
-     [
-      85.038016,
-      27.856753
-     ],
-     [
-      85.038596,
-      27.856554
-     ],
-     [
-      85.039327,
-      27.856065
-     ],
-     [
-      85.040285,
-      27.855352
-     ],
-     [
-      85.041229,
-      27.854762
-     ],
-     [
-      85.041996,
-      27.854344
-     ],
-     [
-      85.042318,
-      27.85416
-     ],
-     [
-      85.04271,
-      27.853763
-     ],
-     [
-      85.042983,
-      27.853455
-     ],
-     [
-      85.043289,
-      27.853223
-     ],
-     [
-      85.04381,
-      27.852986
-     ],
-     [
-      85.044432,
-      27.852862
-     ],
-     [
-      85.04533,
-      27.852829
-     ],
-     [
-      85.046232,
-      27.852945
-     ],
-     [
-      85.047047,
-      27.853101
-     ],
-     [
-      85.048702,
-      27.853567
-     ],
-     [
-      85.050346,
-      27.854261
-     ],
-     [
-      85.051905,
-      27.855267
-     ],
-     [
-      85.052699,
-      27.856239
-     ],
-     [
-      85.052996,
-      27.85785
-     ],
-     [
-      85.053061,
-      27.85821
-     ],
-     [
-      85.053297,
-      27.858691
+      85.05835,
+      27.86217
      ],
      [
       85.054686,
@@ -2315,276 +1795,12 @@
       27.908247
      ],
      [
-      85.134369,
-      27.909243
+      85.1377,
+      27.90771
      ],
      [
-      85.133574,
-      27.910647
-     ],
-     [
-      85.132327,
-      27.91196
-     ],
-     [
-      85.130872,
-      27.913419
-     ],
-     [
-      85.129865,
-      27.914072
-     ],
-     [
-      85.129645,
-      27.914314
-     ],
-     [
-      85.129589,
-      27.914846
-     ],
-     [
-      85.129817,
-      27.915225
-     ],
-     [
-      85.130115,
-      27.915607
-     ],
-     [
-      85.130442,
-      27.915766
-     ],
-     [
-      85.131244,
-      27.916159
-     ],
-     [
-      85.131725,
-      27.916314
-     ],
-     [
-      85.132172,
-      27.916443
-     ],
-     [
-      85.132518,
-      27.916534
-     ],
-     [
-      85.132752,
-      27.91659
-     ],
-     [
-      85.133294,
-      27.916687
-     ],
-     [
-      85.133813,
-      27.916798
-     ],
-     [
-      85.134258,
-      27.916877
-     ],
-     [
-      85.134628,
-      27.916916
-     ],
-     [
-      85.134816,
-      27.916937
-     ],
-     [
-      85.135029,
-      27.916966
-     ],
-     [
-      85.135171,
-      27.916997
-     ],
-     [
-      85.135355,
-      27.917067
-     ],
-     [
-      85.135528,
-      27.91715
-     ],
-     [
-      85.13573,
-      27.917237
-     ],
-     [
-      85.135936,
-      27.917355
-     ],
-     [
-      85.136138,
-      27.917483
-     ],
-     [
-      85.136311,
-      27.917611
-     ],
-     [
-      85.136541,
-      27.917824
-     ],
-     [
-      85.136703,
-      27.918012
-     ],
-     [
-      85.13692,
-      27.918242
-     ],
-     [
-      85.137093,
-      27.91842
-     ],
-     [
-      85.137262,
-      27.918612
-     ],
-     [
-      85.137444,
-      27.918867
-     ],
-     [
-      85.137551,
-      27.919049
-     ],
-     [
-      85.137663,
-      27.919255
-     ],
-     [
-      85.137816,
-      27.919528
-     ],
-     [
-      85.137912,
-      27.919706
-     ],
-     [
-      85.138035,
-      27.919865
-     ],
-     [
-      85.138153,
-      27.919983
-     ],
-     [
-      85.138302,
-      27.920089
-     ],
-     [
-      85.138471,
-      27.920238
-     ],
-     [
-      85.138614,
-      27.920354
-     ],
-     [
-      85.138749,
-      27.920414
-     ],
-     [
-      85.138894,
-      27.920436
-     ],
-     [
-      85.139041,
-      27.920455
-     ],
-     [
-      85.13919,
-      27.920451
-     ],
-     [
-      85.139569,
-      27.920463
-     ],
-     [
-      85.139825,
-      27.920474
-     ],
-     [
-      85.139998,
-      27.92048
-     ],
-     [
-      85.140244,
-      27.920488
-     ],
-     [
-      85.14063,
-      27.920513
-     ],
-     [
-      85.140921,
-      27.92054
-     ],
-     [
-      85.141239,
-      27.920577
-     ],
-     [
-      85.141607,
-      27.920612
-     ],
-     [
-      85.141848,
-      27.920631
-     ],
-     [
-      85.142038,
-      27.920653
-     ],
-     [
-      85.142181,
-      27.920683
-     ],
-     [
-      85.142413,
-      27.920747
-     ],
-     [
-      85.142582,
-      27.920821
-     ],
-     [
-      85.143051,
-      27.920984
-     ],
-     [
-      85.143298,
-      27.921067
-     ],
-     [
-      85.143533,
-      27.921156
-     ],
-     [
-      85.143754,
-      27.921257
-     ],
-     [
-      85.143918,
-      27.921338
-     ],
-     [
-      85.144048,
-      27.921408
-     ],
-     [
-      85.144249,
-      27.92152
-     ],
-     [
-      85.144455,
-      27.921634
+      85.148,
+      27.9232
      ]
     ]
    }
@@ -2608,7 +1824,9 @@
     "source": "NDRRMA Situation Report #14 (English), 15 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_14_15092026.pdf",
     "source_date": "2026-09-15",
-    "length_km": 0.5
+    "length_km": 0.5,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -2682,7 +1900,9 @@
     "notes": "60 m Acrow bridge, 5.5 m wide, 50-tonne capacity, built in five days by a 55-member Nepal Army Bridging Unit team at the site of the destroyed 55 m Tadi Khola bridge. Opened to pedestrians 10 Sep, vehicles from 11 Sep. NDRRMA SitRep #15 confirms Galchhi-Devighat is clear and operational, with Kolphu Khola bridge on one-lane traffic.",
     "source": "Meroauto - Rs 32.5m allocated for road repairs as Bailey bridges planned at three sites",
     "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
-    "source_date": "2026-09-10"
+    "source_date": "2026-09-10",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -2698,6 +1918,8 @@
     "id": "TB-4",
     "role": "backup",
     "town": "Trisuli Bazar",
+    "waypoints_located": 3,
+    "waypoints_total": 8,
     "name": "Devighat bridge bypass (Pipaltar - Kolputar)",
     "route": "Pipaltar - Pasang Lhamu Highway - Dhamle - Niranjana - Bagkhor - Harre - Deurali - Kolputar",
     "from": "Pipaltar",
@@ -2707,11 +1929,11 @@
     "since": "2026-09-15",
     "users": "local traffic bypassing the destroyed Tadi Khola bridge",
     "confidence": "approximate",
-    "notes": "Listed as operational in NDRRMA SitRep #15 as the alternative to the damaged Devighat bridge, with maintenance continuing. Only Pipaltar and Devighat could be geolocated; Dhamle, Niranjana, Bagkhor, Harre, Deurali and Kolputar are not in OSM or Nominatim, so the line is a coarse connector, not a surveyed alignment.",
+    "notes": "Listed as operational in NDRRMA SitRep #15 as the alternative to the damaged Devighat bridge, with maintenance continuing. Re-anchored on 17 Sep: Pipaltar (85.12812,27.86558) from places.geojson, Niranjana from the Atniranjana Higher Secondary School POI at Devighat, and Kolputar from an Overture POI at 85.01429,27.81328 near the Kolpu Khola. The route therefore runs south-west over the hills from Pipaltar to Kolputar near Galchhi, bypassing the Tadi Khola crossing entirely, rather than being the short local link an earlier draft assumed. Dhamle, Bagkhor, Harre and Deurali are still unlocated.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
     "source_date": "2026-09-16",
-    "length_km": 2.1
+    "length_km": 11.7
    },
    "geometry": {
     "type": "LineString",
@@ -2721,16 +1943,20 @@
       27.86558
      ],
      [
-      85.12,
-      27.869
+      85.10858,
+      27.85958
      ],
      [
-      85.115,
-      27.864
+      85.08,
+      27.842
      ],
      [
-      85.11006,
-      27.86003
+      85.045,
+      27.825
+     ],
+     [
+      85.01429,
+      27.81328
      ]
     ]
    }
@@ -2753,7 +1979,9 @@
     "notes": "NDRRMA SitRep #15: \"Rope crossings have been completed at Devighat, Indreni Chaur and Syafrubesi.\" Placed at the destroyed Devighat suspension bridge recorded in the DoR inventory; the rope may be strung a short distance away.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
-    "source_date": "2026-09-16"
+    "source_date": "2026-09-16",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -2782,7 +2010,9 @@
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
     "source_date": "2026-09-16",
-    "length_km": 11.0
+    "length_km": 11.0,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -3701,7 +2931,9 @@
     "source": "Kathmandu Post - Flood damage leaves Rasuwagadhi road facing long repairs",
     "source_url": "https://kathmandupost.com/national/2026/09/13/flood-damage-leaves-rasuwagadhi-road-facing-long-repairs",
     "source_date": "2026-09-13",
-    "length_km": 3.6
+    "length_km": 3.6,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -3739,7 +2971,9 @@
     "notes": "DAMAGED, STATUS UNCONFIRMED. NDRRMA SitRep #14, 15 Sep, in full: \"A temporary footbridge approximately 30 metres long has been rebuilt at Betrawati, Bidur-10, on the Nuwakot-Rasuwa border. The crossing, built on Bhadra 28, was damaged by flooding following overnight rainfall.\" SitRep #15 on 16 Sep drops the footbridge entirely, so there is no confirmation it was repaired. It is the only fixed crossing at Betrawati either way. Placed at the destroyed Betrawati old and new bridges (70 m each) in the DoR inventory.",
     "source": "NDRRMA Situation Report #14 (English), 15 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_14_15092026.pdf",
-    "source_date": "2026-09-15"
+    "source_date": "2026-09-15",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -3767,7 +3001,9 @@
     "notes": "NDRRMA SitRep #15: \"Foundation excavation is underway for a Bailey bridge at Betrawati.\" DoR had specified roughly a 48 m span. The Nepal Army bridging team moved here after finishing Devighat. Not open as of 16 Sep.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
-    "source_date": "2026-09-16"
+    "source_date": "2026-09-16",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -3792,16 +3028,18 @@
     "since": "2026-09-13",
     "users": "not yet open",
     "confidence": "approximate",
-    "notes": "Kathmandu Post 13 Sep: a 70 m Bailey bridge is planned at Falakhu Khola on the Rasuwa-Nuwakot border; the Indian-supplied bridge was en route from Hetauda, with DoR deputy director Shubha Raj Neupane saying \"we expect to install it within ten days\". India handed over the first components on 12 Sep. Once in, it would give a direct road connection to Dhunche. Location approximated at the confluence north of Betrawati; the exact site is not published.",
+    "notes": "Kathmandu Post 13 Sep: a 70 m Bailey bridge is planned at Falakhu Khola on the Rasuwa-Nuwakot border; the Indian-supplied bridge was en route from Hetauda, with DoR deputy director Shubha Raj Neupane saying \"we expect to install it within ten days\". India handed over the first components on 12 Sep. Once in, it would give a direct road connection to Dhunche. LOCATION NOW PINNED AND A LIKELY DUPLICATE OF BW-4: Overpass gives the Falaakhu River (OSM way 300686595) meeting the Trishuli at 85.18404,27.97281, which is Betrawati itself and is the Rasuwa-Nuwakot boundary. The 70 m Falakhu bridge and the \"Bailey bridge at Betrawati\" in the SitReps are therefore very probably the same structure, with the DoR 48 m estimate superseded by the 70 m Indian-supplied span. Treat BW-4 and BW-5 as one project unless a source separates them.",
     "source": "Kathmandu Post - Flood damage leaves Rasuwagadhi road facing long repairs",
     "source_url": "https://kathmandupost.com/national/2026/09/13/flood-damage-leaves-rasuwagadhi-road-facing-long-repairs",
-    "source_date": "2026-09-13"
+    "source_date": "2026-09-13",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
     "coordinates": [
-     85.188,
-     27.98
+     85.18404,
+     27.97281
     ]
    }
   },
@@ -3824,7 +3062,9 @@
     "source": "OpenStreetMap via Overpass (data timestamp 2026-09-17T08:26Z)",
     "source_url": "https://overpass-api.de/api/interpreter",
     "source_date": "2026-09-17",
-    "length_km": 21.1
+    "length_km": 21.1,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -6942,6 +6182,8 @@
     "id": "DH-2",
     "role": "lifeline",
     "town": "Dhunche",
+    "waypoints_located": 6,
+    "waypoints_total": 11,
     "name": "Kathmandu - Tokha - Saramthali - Bogatitar route to Rasuwa",
     "route": "Kathmandu - Tokha - Chhahare - Gadkhar Bridge - Aapre - Narja - Lachyang - Saramthali - Patikharka - Bogatitar - Kalikasthan - Dhunche",
     "from": "Kathmandu",
@@ -6951,11 +6193,11 @@
     "since": "2026-08-28",
     "users": "relief convoys and government traffic; the main lifeline to Rasuwa",
     "confidence": "approximate",
-    "notes": "Announced by the Ministry of Physical Infrastructure and Transport and reported reopened on 28 Aug 2026, two days after the flood. Restricted to light four-wheeled vehicles; heavy trucks excluded. Only Tokha, Chhahare, Narjamandap and Lachyang could be geolocated in OSM; Gadkhar Bridge, Aapre, Saramthali, Patikharka and Bogatitar could not, so this is a coarse ridge-route trace, not a surveyed alignment.",
+    "notes": "Announced by the Ministry of Physical Infrastructure and Transport and reported reopened on 28 Aug 2026, two days after the flood. Restricted to light four-wheeled vehicles; heavy trucks excluded. Tokha, Chhahare, Narjamandap, Lachyang, Saramthali (85.27504,27.97573, recovered 17 Sep) and Kalikasthan are located; Gadkhar Bridge, Aapre, Patikharka and Bogatitar are not in any gazetteer, so this remains a ridge-route trace rather than a surveyed alignment.",
     "source": "OnlineKhabar - Rasuwa reconnected to road network after devastating floods",
     "source_url": "https://english.onlinekhabar.com/rasuwa-reconnected-road-network.html",
     "source_date": "2026-08-29",
-    "length_km": 37.8
+    "length_km": 38.7
    },
    "geometry": {
     "type": "LineString",
@@ -6985,8 +6227,12 @@
       27.97702
      ],
      [
-      85.26,
-      28.0
+      85.27504,
+      27.97573
+     ],
+     [
+      85.25,
+      28.005
      ],
      [
       85.2134,
@@ -7001,6 +6247,8 @@
     "id": "DH-3",
     "role": "lifeline",
     "town": "Dhunche",
+    "waypoints_located": 3,
+    "waypoints_total": 10,
     "name": "Dhikure - Jibjibe - Bogatitar route (Nuwakot side)",
     "route": "Dhikure - Phedi Besi Chowk - Hiramunitar - Chogte - Bore Bhanjyang - Sano Khola - Dhanswara - Bhorle - Jibjibe - Bogatitar",
     "from": "Dhikure (Likhu, Nuwakot)",
@@ -7057,7 +6305,9 @@
     "source": "Department of Roads bridge-damage inventory (HDX / HOT flood_npl bridge_damage)",
     "source_url": "data/hdx/hot_flood_npl/hot_flood_npl_bridge_damage.geojson",
     "source_date": "2026-09-06",
-    "length_km": 17.4
+    "length_km": 17.4,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -11500,7 +10750,9 @@
     "source": "Kathmandu Post - Dhunche has relief supplies; getting aid to villages is the problem",
     "source_url": "https://kathmandupost.com/national/2026/09/08/dhunche-has-relief-supplies-getting-aid-to-flood-hit-rasuwa-villages-is-the-problem",
     "source_date": "2026-09-08",
-    "length_km": 10.4
+    "length_km": 10.4,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -14343,7 +13595,9 @@
     "source": "Kathmandu Post - Dhunche has relief supplies; getting aid to villages is the problem",
     "source_url": "https://kathmandupost.com/national/2026/09/08/dhunche-has-relief-supplies-getting-aid-to-flood-hit-rasuwa-villages-is-the-problem",
     "source_date": "2026-09-08",
-    "length_km": 9.6
+    "length_km": 9.6,
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "LineString",
@@ -14377,7 +13631,9 @@
     "notes": "OSM node 3498339453, tagged emergency_helipad=potential, status Standing, in the HDX/HOT flood_npl helipad layer. Mailung is road-cut: the Trishuli-Mailung-Syabrubesi road was washed away and relief reaches it by air.",
     "source": "OpenStreetMap via Overpass (data timestamp 2026-09-17T08:26Z)",
     "source_url": "https://overpass-api.de/api/interpreter",
-    "source_date": "2026-09-17"
+    "source_date": "2026-09-17",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -14405,7 +13661,9 @@
     "notes": "NDRRMA SitRep #15 lists rope crossings completed at Devighat, Indreni Chaur and Syafrubesi. Placed at the destroyed Syafrubesi bridge in the DoR inventory. The Kathmandu Post of 8 Sep described a planned crossing of the Bhotekoshi between Syabrubesi and Chilime.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
-    "source_date": "2026-09-16"
+    "source_date": "2026-09-16",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -14433,7 +13691,9 @@
     "notes": "NDRRMA SitRep #15: \"Instructions have been issued to expedite two additional crossings at Hakubesi and Pahirebesi.\" Coordinates from the OSM Haku Besi place node; the crossing point itself is not published.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
-    "source_date": "2026-09-16"
+    "source_date": "2026-09-16",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
@@ -14458,16 +13718,18 @@
     "since": "2026-09-16",
     "users": "Uttargaya and Kispang residents, including Simle and Shanti Bazaar which lost all road access",
     "confidence": "approximate",
-    "notes": "Kathmandu Post 8 Sep lists a planned Trishuli crossing between Pahirebesi and Shantibazar; NDRRMA SitRep #15 orders it expedited. Neither settlement is in OSM or Nominatim; the point is inferred from the Uttargaya-Kispang boundary on the Trishuli near the intact Sukaure Khola bridge, so it may be off by a few kilometres.",
+    "notes": "Kathmandu Post 8 Sep lists a planned Trishuli crossing between Pahirebesi and Shantibazar; NDRRMA SitRep #15 orders it expedited. Re-anchored on 17 Sep: Shanti Bazar is in places.geojson at 85.18141,28.01726 and Simle at 85.19120,28.02920, so the crossing is placed on the Trishuli just south of Shanti Bazar. Pahirebesi itself is still unlocated, so the point is good to roughly a kilometre rather than the several-kilometre error of the first draft.",
     "source": "Kathmandu Post - Dhunche has relief supplies; getting aid to villages is the problem",
     "source_url": "https://kathmandupost.com/national/2026/09/08/dhunche-has-relief-supplies-getting-aid-to-flood-hit-rasuwa-villages-is-the-problem",
-    "source_date": "2026-09-08"
+    "source_date": "2026-09-08",
+    "waypoints_located": null,
+    "waypoints_total": null
    },
    "geometry": {
     "type": "Point",
     "coordinates": [
-     85.183,
-     28.008
+     85.1821,
+     28.013
     ]
    }
   }
