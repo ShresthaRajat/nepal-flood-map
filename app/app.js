@@ -542,6 +542,11 @@ function buildDefs() {
     admin_district: { type: 'geojson', data: ADMIN + 'admin_district.geojson', attribution: ATTR_ADMIN_COD },
     admin_municipality: { type: 'geojson', data: ADMIN + 'admin_municipality.geojson', attribution: ATTR_ADMIN_COD },
     admin_ward: { type: 'geojson', data: ADMIN + 'admin_ward.geojson', attribution: ATTR_ADMIN_WARD },
+    // The same 2018 ward polygons carrying the road-network result from
+    // tools/build_cutoff_wards.py: how much of each ward's usual drive to its
+    // district HQ and to Kathmandu the destroyed bridges took away.
+    admin_cutoff: { type: 'geojson', data: HDX + 'derived/cutoff_wards.geojson',
+      attribution: ATTR_ADMIN_WARD + ' · routing on ' + ATTR_HDX },
     search_pin: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     report_hl: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     sel_footprint: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
@@ -1210,6 +1215,17 @@ function buildDefs() {
         'line-opacity': ['case', WARD_DEEP_EXPR, 1, 0.85] }
     : null;
 
+  // Wards cut off from their usual routes (tools/build_cutoff_wards.py).  Pink
+  // rather than another brown, so it stays legible over the ward damage ramp and
+  // over both the Esri imagery and the OSM basemap; opacity carries the severity,
+  // which is what the owner asked the layer to say (17 Sep 2026).
+  const CUTOFF_PINK = '#ec4899', CUTOFF_EDGE = '#9d174d';
+  const CUTOFF_SEV = ['to-number', ['coalesce', ['get', 'severity'], 0]];
+  const CUTOFF_SHOWN = ['>=', ['to-number', ['coalesce', ['get', 'severity'], 0]], 1];
+  // Legend swatch: the same three steps the fill uses, left to right.
+  const CUTOFF_RAMP_CSS = 'linear-gradient(90deg,' + [[0.3, 0], [0.3, 33], [0.55, 34],
+    [0.55, 66], [0.8, 67], [0.8, 100]].map(([a, p]) => rgba(CUTOFF_PINK, a) + ' ' + p + '%').join(',') + ')';
+
   /* opts: { filter } narrows every layer of the level, { fillFilter, fillPaint }
    * add and style the fill, { linePaint } overrides the outline's paint keys (the
    * ward level uses it for the data-driven NDRRMA edge), { visible } builds the
@@ -1252,6 +1268,18 @@ function buildDefs() {
     ...adminLayers('ward', ['concat', 'Ward ', ['to-string', ['get', 'NEW_WARD_N']]], 12,
       { filter: WARD_MUNI_FILTER, fillFilter: WARD_FILLED, fillPaint: WARD_PAINT,
         linePaint: WARD_LINE_PAINT }),
+    // Cut-off wards go over the damage ramp and under the district outline: this
+    // is the answer to "who lost their road", the brown ramp behind it is context.
+    // Severity 0 is filtered out rather than painted at zero opacity, so the 89
+    // unaffected wards do not lay an invisible click target over everything below.
+    { id: 'admin_cutoff-fill', type: 'fill', source: 'admin_cutoff',
+      filter: CUTOFF_SHOWN, layout: { visibility: 'none' },
+      paint: { 'fill-color': CUTOFF_PINK,
+               'fill-opacity': ['match', CUTOFF_SEV, 3, 0.8, 2, 0.55, 1, 0.3, 0] } },
+    { id: 'admin_cutoff-line', type: 'line', source: 'admin_cutoff',
+      filter: CUTOFF_SHOWN, layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': CUTOFF_EDGE, 'line-width': ['match', CUTOFF_SEV, 3, 1.6, 1.1],
+               'line-opacity': ['match', CUTOFF_SEV, 3, 0.95, 2, 0.8, 1, 0.5, 0] } },
     ...adminLayers('district', ['get', 'adm2_name'], 8,
       { filter: DISTRICT_FILTER, visible: true, casing: DISTRICT_CASING,
         linePaint: { 'line-opacity': 1 } }),
@@ -1283,6 +1311,18 @@ function buildDefs() {
         + 'mapped in it left unfilled rather than washed white. Casualties are not published '
         + 'at ward level by any official source, so the ramp is mapped damage only.',
       ids: ['admin_ward-fill', 'admin_ward-line', 'admin_ward-label'], on: true, count: 108 },   // on by default (owner direction, 10 Sep 2026); 108 = wards drawn in the 14 local levels
+    { key: 'admin_cutoff', label: 'Wards cut off from their bridges',
+      color: CUTOFF_RAMP_CSS, shape: 'ramp',
+      sub: 'network analysis, OSM roads minus destroyed/damaged bridges, 17 Sep 2026; darker = worse',
+      title: 'Wards of Rasuwa, Nuwakot and Dhading that lost road access when the flood took the '
+        + 'Trishuli / Bhote Koshi bridges, from a shortest-path analysis of the OSM road network '
+        + 'before and after (tools/build_cutoff_wards.py). Darkest pink = no route left to its own '
+        + 'district headquarters or to Kathmandu (16 wards); mid = at least twice as far or 30 km '
+        + 'further (70); lightest = 1.25-2x or 10-30 km further (46). Unchanged wards are not drawn. '
+        + 'Click a ward for its before / after distance, the target used and the bridges its usual '
+        + 'route went over. "Damaged" counts as impassable, so this is an upper bound, and the '
+        + 'result is only as complete as OSM is in these hills.',
+      ids: ['admin_cutoff-fill', 'admin_cutoff-line'], on: true, count: 132 },   // 16 + 70 + 46 wards at severity >= 1
   ] });
 
   // 6. search pin + selected-scene outline + report highlight ----------------
@@ -2320,6 +2360,13 @@ function renderSidebar() {
     add(wardEntry.color, 'Ward fill: OSM-mapped destroyed and damaged features, unfilled at none to brown at most (534)',
         false, wardEntry.shape);
     add('#7c2d12', 'Ward NDRRMA lists as affected (SitRep 01, 1 Sep 2026)', true);
+  }
+  // The legend is hand-written rather than generated from GROUPS, so a new row
+  // in the rail does not appear here on its own.
+  const cutoffEntry = ENTRY['admin_cutoff'];
+  if (cutoffEntry) {
+    add(cutoffEntry.color, 'Ward cut off from its usual route: pale at a 10-30 km detour, '
+      + 'deep pink where no road to the district HQ or Kathmandu is left', false, cutoffEntry.shape);
   }
   lBlock.appendChild(lg);
 

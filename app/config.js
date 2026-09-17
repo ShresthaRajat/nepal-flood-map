@@ -340,6 +340,26 @@ counts isolation and road closure as well as inundation — so the shaded set is
 flood-touching wards and the NDRRMA ones, not a subset of either. Every ward inside the fourteen local
 levels, shaded or not, still gets the ordinary dashed green outline. Full method, data sources and
 field definitions: <code>data/admin/README.md</code>.</p>
+<p><strong>Wards cut off from their bridges</strong> is a routing result, not an observation.
+<code>tools/build_cutoff_wards.py</code> builds a graph of the drivable OSM roads across Rasuwa, Nuwakot,
+Dhading and Kathmandu plus a 15 km buffer, removes every road and bridge that the ground reports,
+the Copernicus EMS grading or the HOT corridor layer records as Destroyed or Damaged, and compares the
+shortest route from each of the 221 wards to its own district headquarters — Dhunche, Bidur, Dhading
+Besi — and to Kathmandu, before and after. Sixteen wards keep no route at all to either, seventy face a
+detour of at least double or 30 km, forty-six of 1.25–2× or 10–30 km; the remaining eighty-nine are
+essentially unchanged and are not drawn. Click a ward for its before / after distance and the bridges
+its usual route went over.</p>
+<p>Four things to hold against it. <strong>Damaged counts as impassable</strong> for vehicles, so the
+severity is an upper bound, not a best guess. The national OSM export is a <em>post-flood</em> snapshot
+in which mappers have already deleted the washed-away stretches, so the pre-flood baseline is rebuilt by
+unioning the HOT flood-corridor roads back in — without that step the lost roads are missing from both
+sides of the comparison and every ward looks fine. Routing weights each road by class, so a highway
+kilometre counts for less than a village-track kilometre; a ward can therefore show a shorter route after
+the flood and still be worse off, because it was pushed onto rough hill roads, and its note says so.
+And the whole thing is only as complete as OSM is in these hills: a ward with no mapped road falls back
+to the nearest node outside it, which its note also records. Ward boundaries are the same 2018 HRRP
+reference geometry as the layer above, with the same caveats. Temporary crossings, fords and air
+resupply are not modelled, so a ward marked cut off may still be reachable in practice.</p>
 
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery
