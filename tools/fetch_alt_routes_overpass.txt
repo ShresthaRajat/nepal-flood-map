@@ -1,0 +1,116 @@
+Overpass queries used to build data/hdx/derived/alt_routes.geojson
+Run date: 2026-09-17   OSM data timestamp of the responses: 2026-09-17T08:26:40Z
+Endpoint: https://overpass-api.de/api/interpreter   (mirror: https://overpass.kumi.systems/api/interpreter)
+
+NOTE: overpass-api.de returns HTTP 406 without a User-Agent header, and returns a
+"Dispatcher_Client::request_read_and_idx::timeout" runtime error when busy. Retry with a pause.
+
+  curl -sS -A "nepal-flood-2026-route-research/1.0" \
+       --data-urlencode "data@QUERY_FILE" \
+       https://overpass-api.de/api/interpreter -o OUT.json
+
+Corridor bounding box used throughout (south,west,north,east): 27.85,84.9,28.35,85.55
+
+
+--------------------------------------------------------------------------------
+Q1. Roads edited since the flood (what mappers have added or re-surveyed)
+    -> 1840 highway ways; surfaced the "register with the police in Kalikasthan"
+       advisory note and the Army Road destroyed-after-flood note.
+--------------------------------------------------------------------------------
+[out:json][timeout:180];
+(
+  way["highway"](newer:"2026-08-26T00:00:00Z")(27.85,84.9,28.35,85.55);
+);
+out tags center;
+
+
+--------------------------------------------------------------------------------
+Q2. Flood damage, temporary crossings and detour tagging
+    -> 379 features, of which 303 carry damage:event=2026NepalFlood.
+       Found way 1559050050 note="Under construction to bypass damaged section" (Ratmate bypass)
+       and the Chinese-built temporary Friendship Bridge at Rasuwagadhi (ways 1552746552 / 1552746560).
+    A broader nwr[...] regex version of this query times out; keep it restricted to way[highway].
+--------------------------------------------------------------------------------
+[out:json][timeout:240];
+(
+  way["highway"]["note"](27.85,84.9,28.35,85.55);
+  way["highway"]["description"](27.85,84.9,28.35,85.55);
+  way["highway"]["temporary"](27.85,84.9,28.35,85.55);
+  way["bridge"~"temporary|bailey"](27.85,84.9,28.35,85.55);
+  way["destroyed:bridge"](27.85,84.9,28.35,85.55);
+  way["demolished:bridge"](27.85,84.9,28.35,85.55);
+  way["disused:highway"](27.85,84.9,28.35,85.55);
+  way["destroyed:highway"](27.85,84.9,28.35,85.55);
+  node["amenity"="ferry_terminal"](27.85,84.9,28.35,85.55);
+  way["aerialway"~"zip_line|goods"](27.85,84.9,28.35,85.55);
+);
+out tags center;
+
+
+--------------------------------------------------------------------------------
+Q3. Geometry of the advisory-noted highway and the Ratmate bypass
+    -> features DH-1 (Kalikasthan-Dhunche 4WD section) and TB-2 (Ratmate bypass).
+--------------------------------------------------------------------------------
+[out:json][timeout:240];
+(
+  way["highway"]["note"~"Kalikasthan"](27.85,85.0,28.25,85.45);
+  way(1559050050);
+  way["highway"]["destroyed:highway"](27.85,85.0,28.25,85.45);
+);
+out geom;
+
+
+--------------------------------------------------------------------------------
+Q4. Pasang Lhamu Highway geometry, Betrawati to Syabrubesi
+    -> 14 ways, stitched into a single 48.9 km line from (85.18406,27.97489) to
+       (85.32397,28.14934); sliced for features DH-1, DH-4 and DH-5.
+--------------------------------------------------------------------------------
+[out:json][timeout:240];
+way["highway"]["name"="Pasang Lhamu Highway"](27.96,85.14,28.14,85.33);
+out geom;
+
+
+--------------------------------------------------------------------------------
+Q5. Pasang Lhamu Highway and destroyed F21/NH42 sections, Bidur to Betrawati
+    -> 15 ways; does not stitch cleanly because of the washed-out gap, so feature
+       BW-1 falls back to the Trishuli centreline (Q7) offset east.
+--------------------------------------------------------------------------------
+[out:json][timeout:240];
+(
+  way["highway"]["name"="Pasang Lhamu Highway"](27.85,85.09,27.99,85.22);
+  way["destroyed:highway"]["ref"~"F21|NH42"](27.85,85.09,27.99,85.22);
+);
+out geom;
+
+
+--------------------------------------------------------------------------------
+Q6. Gazetteer for route waypoints
+    -> 2347 place features. Match on name, name:en, alt_name and name:ne: the
+       primary name tag in this corridor is usually Devanagari, so matching on
+       "name" alone misses almost everything (e.g. Betrawati is name=बेत्रावती).
+--------------------------------------------------------------------------------
+[out:json][timeout:240];
+(
+  node["place"](27.70,84.85,28.40,85.60);
+  way["place"](27.70,84.85,28.40,85.60);
+);
+out tags center;
+
+
+--------------------------------------------------------------------------------
+Q7. Trishuli centreline (local file, not Overpass)
+    Read from data/hdx/hot_flood_npl/waterways_osm.geojson, selecting LineStrings named
+    "Trishuli Ganga River", "त्रिशुली नदी", "Trisuli" or "Trishuli River", then stitched
+    into a 2665-point chain from Syabrubesi down to Benighat. Used as the approximate
+    trace for features TB-1 (offset 0.0045 deg west) and BW-1 (offset 0.0022 deg east).
+
+
+--------------------------------------------------------------------------------
+Q8. Waypoints not in OSM: Nominatim fallback
+    Resolved: Dhikure (27.89965,85.20571), Jibjibe (27.99206,85.22436).
+    Not resolved by either service: Bogatitar, Kalikasthan (Rasuwa), Gauribesi,
+    Kolputar, Darshantar, Koshikhola, Kalleritar, Pimaltar, Falakhu Khola,
+    Pahirebesi, Indreni Chaur, Dhanswara, Saramthali, Patikharka, Gadkhar Bridge.
+--------------------------------------------------------------------------------
+curl -sS -A "nepal-flood-2026-route-research/1.0" \
+  "https://nominatim.openstreetmap.org/search?format=json&limit=2&q=Dhikure%2C%20Nuwakot%2C%20Nepal"
