@@ -3,12 +3,21 @@
 **As of 17 September 2026.** Bhote Koshi / Trishuli glacier-collapse flood of 26 August 2026.
 
 This note records what people and relief convoys are actually using right now to reach or pass
-through Trisuli Bazar / Bidur, Betrawati and Dhunche, with the Pasang Lhamu Highway and most of
-the Trishuli corridor bridges destroyed. Every claim carries a source. Where something is
-inferred rather than reported, it says so.
+through Trisuli Bazar / Bidur, Betrawati and Dhunche. Every claim carries a source. Where
+something is inferred rather than reported, it says so.
+
+> **Where the problem actually is.** South of Trisuli Bazar the road network is back. The
+> Galchhi - Devighat - Dhunge - Trishuli line is clear and operational, the Ratamate hillside
+> cutting is finished and traffic has resumed, and road access to Dhading district headquarters
+> has been restored. Trisuli Bazar itself is **not** cut off. The unresolved severance is
+> everything north of it: the 800 m gap on the Bidur - Betrawati road, the Betrawati crossing,
+> and the whole corridor beyond Dhunche. Features in the GeoJSON carry a `role` field
+> (`restored`, `backup`, `lifeline`, `cut`, `planned`) so the map can show that difference rather
+> than flagging restored southern stretches as problems.
+> **Source: NDRRMA SitRep 14, 15 Sep; SitRep 15, 16 Sep.**
 
 Geographic features for the routes below are in `data/hdx/derived/alt_routes.geojson`
-(20 features, ids `TB-*`, `BW-*`, `DH-*`). The Overpass queries behind them are in
+(21 features, ids `TB-*`, `BW-*`, `DH-*`). The Overpass queries behind them are in
 `tools/fetch_alt_routes_overpass.txt`.
 
 ## Sources used
@@ -36,7 +45,21 @@ Kathmandu to Trisuli Bazar ran along the Prithvi Highway to Galchhi in Dhading, 
 Pasang Lhamu Highway (NH42) up the left bank of the Trishuli through Ratmate, Buddhasinghghat and
 Devighat, crossing the Tadi Khola at Devighat and the Trishuli at Trisuli Bazar.
 
-### What is gone
+### Current status: restored
+
+**The ordinary route works again** (`TB-0`, role `restored`). NDRRMA SitRep 14 of 15 September:
+"Galchhi-Devighat: Hillside cutting at Ratamate has been completed, and traffic has resumed.
+Kolphu Bridge is open to one-lane traffic following minor repairs. Devighat-Dhunge: The road is
+clear and operational. Dhunge-Trishuli: The road is clear and operational." SitRep 15 repeats that
+Galchhi - Devighat is clear and operational.
+
+Two things made that possible: the Ratamate hillside cutting, and the Nepal Army Acrow bridge at
+Devighat. Everything else in this section is therefore a **maintained backup**, not the way in.
+Southern Dhading is likewise reconnected: SitRep 15 records the Dhadingbesi - Parewatar -
+Gajuritar - Keurinitar - Mastar route to the Prithvi Highway as operational, with road access to
+the district headquarters restored.
+
+### What was gone
 
 The Department of Roads inventory records, on this stretch alone, both Trisuli Bazar bridges
 (60 m each), Simchaur (100 m), both Devighat Tadi Khola bridges (55 m each), the Devighat
@@ -45,41 +68,39 @@ Buddhasinghghat (140 m), Ratmate (150 m) and Keurini/Phosretar, all washed out. 
 EMSR927 grades 430 road and bridge segments in the corridor "Destroyed", concentrated around
 Bidur and Phosretar. **Source: DoR inventory; Copernicus EMSR927.**
 
-### Alternatives currently in use
+### What restored access, and what is now only a backup
 
-**1. The Trishuli right-bank detour** (`TB-1`, approximate, 25 km)
-Galchhi - Trishuli Bridge - Kalleritar - Koshikhola - Pimaltar - Darshantar - Chhatre Khola -
-Gauribesi - Trishuli Bazaar. Listed as **operational** in SitRep 15, with maintenance continuing.
-It crosses the Trishuli on the Bhimdhunga-Lamidanda road bridge near Galchhi, which the DoR
-inventory records as intact, then runs up the right (west) bank and re-crosses at Trisuli Bazar,
-avoiding every destroyed left-bank bridge. Open to vehicles, but narrow, single lane, slow and
-hard for two-way traffic; it opened around 2 September. **Mode: vehicle. Users: general traffic
-and relief convoys from Dhading. Source: SitRep 15; corridor description in `data/reports.json`
-citing OnlineKhabar, 2 Sep.**
-
-**2. The Ratmate bypass track** (`TB-2`, mapped from OSM, short stub only)
+**1. The Ratmate bypass track** (`TB-2`, mapped from OSM, role `restored`) - **complete**
 A new track cut into the hillside above the washed-out highway at Ratmate, about 8 km from
-Galchhi, adding roughly 3 km to the journey and rejoining the road at Dui Pipal village to reach
-Bidur. DoR deputy director Shubha Raj Neupane on 13 September: "We are opening a new track above
-the section washed away by the flood," expected complete by Sunday 14 September. OpenStreetMap way
-1559050050 carries `note=Under construction to bypass damaged section` with `ref=NH42`, which is
-the only part of this track mapped so far. **Mode: unsealed vehicle track. Status: under
-construction as of 13 Sep, completion not independently confirmed. Source: KP 13 Sep; OSM.**
+Galchhi, adding roughly 3 km to the journey and rejoining at Dui Pipal village. SitRep 14,
+15 September: "Hillside cutting at Ratamate has been completed, and traffic has resumed."
+The OpenStreetMap way that maps it (1559050050) still carries the older
+`note=Under construction to bypass damaged section`, so **the OSM tag lags the SitRep**.
+**Source: SitRep 14; KP 13 Sep; OSM.**
 
-**3. The Devighat Acrow bridge** (`TB-3`, mapped point)
+**2. The Devighat Acrow bridge** (`TB-3`, mapped point, role `restored`)
 A 60 m Acrow bridge, 5.5 m wide and rated 50 tonnes, built in five days by a 55-member Nepal Army
 Bridging Unit team at the site of the destroyed Tadi Khola bridge. Opened to pedestrians on
-10 September and to vehicles from 11 September. SitRep 15 confirms Galchhi-Devighat is now clear
-and operational, with the Kolphu Khola bridge on one-lane traffic after minor repairs.
-**Mode: temporary bridge, all traffic. Source: Meroauto 10 Sep; SitRep 15.**
+10 September and to vehicles from 11 September. This is the link that put Galchhi - Devighat -
+Trishuli back together. **Source: Meroauto 10 Sep; SitRep 15.**
 
-**4. The Devighat bridge bypass** (`TB-4`, approximate)
+**3. The Trishuli right-bank detour** (`TB-1`, approximate, 25 km, role `backup`)
+Galchhi - Trishuli Bridge - Kalleritar - Koshikhola - Pimaltar - Darshantar - Chhatre Khola -
+Gauribesi - Trishuli Bazaar. Still listed as operational and maintained in SitRep 15, but it is no
+longer the necessary route. It crosses the Trishuli on the Bhimdhunga-Lamidanda road bridge near
+Galchhi, which the DoR inventory records as intact, then runs up the right (west) bank through
+Galchhi rural municipality in **southern Dhading** and re-crosses at Trisuli Bazar. Narrow, single
+lane, slow and hard for two-way traffic. It opened around 2 September, when the left bank was
+still severed. **Mode: vehicle. Users: right-bank communities; a fallback for through traffic.
+Source: SitRep 15; `data/reports.json` citing OnlineKhabar, 2 Sep.**
+
+**4. The Devighat bridge bypass** (`TB-4`, approximate, role `backup`)
 Pipaltar - Pasang Lhamu Highway - Dhamle - Niranjana - Bagkhor - Harre - Deurali - Kolputar.
 SitRep 15 lists it as operational, providing an alternative to the damaged Tadi Khola bridge at
 Devighat, with maintenance continuing. It is a local hill road, not a highway.
 **Mode: vehicle. Source: SitRep 15.**
 
-**5. The Devighat rope crossing** (`TB-5`, approximate point)
+**5. The Devighat rope crossing** (`TB-5`, approximate point, role `backup`)
 SitRep 15: "Rope crossings have been completed at Devighat, Indreni Chaur and Syafrubesi." A tuin
 across the Trishuli for people and goods where the Devighat suspension bridge was lost.
 **Mode: rope crossing, foot and goods. Source: SitRep 15.**
@@ -90,7 +111,9 @@ The Prithvi Highway is still blocked at Krishnabhir on the Mugling-Malekhu secti
 base eroded into the Trishuli. A 250 m hill-cut track is graveled and traffic was due to resume at
 06:00 on Asoj 1. The Fisling-Benighat alternative is still in procurement and construction has not
 started. Traffic from the west therefore runs Abukhaireni - Arughat - Salyantar - Dhadingbesi -
-Mastar or Kalleri to Kathmandu. **Source: SitRep 15.**
+Mastar or Kalleri to Kathmandu. This is the one genuinely unresolved constraint south of Trisuli
+Bazar, and it is a Prithvi Highway problem in Benighat Rorang, not a Trisuli corridor one.
+**Source: SitRep 15.**
 
 ---
 
@@ -124,11 +147,13 @@ A 1.5 km feeder route through Gerku and Bhainse covers the remaining 500 m gap, 
 for the final 300 m: a track along the riverbed, or the Bar Bhanjyang local road. **Mode: 4WD and
 foot. Users: works traffic and local people. Source: KP 13 Sep.**
 
-**3. The temporary footbridge at Betrawati** (`BW-3`, approximate point)
-SitRep 14, 15 September: "A temporary footbridge approximately 30 metres long has been rebuilt at
-Betrawati, Bidur-10." It is still listed on 16 September. This is currently the only fixed
-crossing at Betrawati, and it carries people and head-loaded relief, not vehicles.
-**Mode: foot. Source: SitRep 14, repeated in SitRep 15.**
+**3. The temporary footbridge at Betrawati** (`BW-3`, approximate point) - **damaged, status unconfirmed**
+SitRep 14 of 15 September, in full: "A temporary footbridge approximately 30 metres long has been
+rebuilt at Betrawati, Bidur-10, on the Nuwakot-Rasuwa border. The crossing, built on Bhadra 28,
+**was damaged by flooding following overnight rainfall.**" SitRep 15 on 16 September drops the
+footbridge entirely, so there is no confirmation it has been repaired. It is the only fixed
+crossing at Betrawati either way, and it carries people and head-loaded relief, not vehicles.
+**Mode: foot. Status: damaged as of 15 Sep, unconfirmed since. Source: SitRep 14.**
 
 **4. The Betrawati Bailey bridge** (`BW-4`, approximate point) - **not yet open**
 SitRep 15: "Foundation excavation is underway for a Bailey bridge at Betrawati." DoR had specified
@@ -242,6 +267,15 @@ closure enforced. This comes from a community-run bulletin, not an official sour
 
 ## Unknowns and conflicting reports
 
+**Scope: where the flood still bites**
+
+South of Trisuli Bazar, road access has been restored and should not be presented as an access
+problem. That covers the Galchhi - Devighat - Trishuli line, the Ratamate section, southern
+Dhading and the route to Dhading district headquarters. The one live constraint in the south is
+the Prithvi Highway at Krishnabhir, which is a separate landslide problem on the Mugling - Malekhu
+section. The genuine severance runs north from Trisuli Bazar: the 800 m Bidur - Betrawati gap, the
+Betrawati crossing, and the corridor beyond Dhunche where there is no road at all.
+
 **Conflicts in the numbers**
 
 - *Length of the Bidur - Betrawati gap.* SitRep 15 (16 Sep) says 9.2 km of 10 km clear with 0.8 km
@@ -257,10 +291,19 @@ closure enforced. This comes from a community-run bulletin, not an official sour
   OnlineKhabar and the Ministry named the Tokha - Saramthali - Bogatitar route. Both appear to be
   in use and both converge at Bogatitar; no source ranks them by traffic volume.
 
+**Resolved since the first draft of this note**
+
+- *The Ratmate bypass.* Confirmed complete: SitRep 14 of 15 September says the hillside cutting at
+  Ratamate is finished and traffic has resumed. An earlier draft recorded this as unconfirmed.
+- *Whether Trisuli Bazar is cut off.* It is not. Galchhi - Devighat - Dhunge - Trishuli is clear
+  and operational. An earlier draft of this note presented the right-bank detour as the way in,
+  which overstated the severance south of Trisuli Bazar and in southern Dhading.
+
 **Not established**
 
-- Whether the Ratmate bypass track actually opened on 14 September as DoR expected. No source
-  after 13 September confirms it.
+- Whether the Betrawati temporary footbridge was repaired after the overnight-rain damage recorded
+  on 15 September. SitRep 15 simply stops mentioning it, which could mean repaired, still out, or
+  dropped for brevity. This matters: it is the only fixed crossing at Betrawati.
 - Whether the Falakhu Khola Bailey bridge has been installed. The ten-day window from 13 September
   had not closed as of 17 September, and no report confirms installation.
 - Whether the Betrawati Bailey bridge has progressed past foundation excavation.

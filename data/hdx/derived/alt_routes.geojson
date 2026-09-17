@@ -15,6 +15,14 @@
    "Betrawati",
    "Dhunche"
   ],
+  "role": {
+   "restored": "the normal route, working again - not an access problem",
+   "backup": "maintained alternative, no longer the necessary way in",
+   "lifeline": "what people and relief actually depend on right now",
+   "cut": "still severed, no vehicle route",
+   "planned": "ordered or under construction, not yet open"
+  },
+  "where_the_problem_is": "South of Trisuli Bazar, including southern Dhading and the Galchhi-Devighat-Trishuli line, road access has been restored. The unresolved severance is north of Trisuli Bazar: the 0.8 km Bidur-Betrawati gap, the Betrawati crossing, and everything beyond Dhunche.",
   "confidence": {
    "mapped": "geometry taken from OpenStreetMap way geometry or a surveyed point",
    "approximate": "coarse polyline or point through the waypoints that could be geolocated"
@@ -26,6 +34,1293 @@
   {
    "type": "Feature",
    "properties": {
+    "id": "TB-0",
+    "town": "Trisuli Bazar",
+    "role": "restored",
+    "name": "Galchhi - Devighat - Dhunge - Trishuli Bazaar (normal route, RESTORED)",
+    "route": "Galchhi - Ratamate - Devighat - Dhunge Bazar - Trishuli Bazaar",
+    "from": "Galchhi (Dhading) / Prithvi Highway",
+    "to": "Trishuli Bazaar (Bidur, Nuwakot)",
+    "mode": "vehicle (normal traffic)",
+    "status": "restored",
+    "since": "2026-09-15",
+    "users": "all traffic; this is now the ordinary way in to Trisuli Bazar",
+    "confidence": "approximate",
+    "notes": "THE MAIN ROUTE IS BACK. NDRRMA SitRep #14, 15 Sep: \"Galchhi-Devighat: Hillside cutting at Ratamate has been completed, and traffic has resumed. Kolphu Bridge is open to one-lane traffic following minor repairs. Devighat-Dhunge: The road is clear and operational. Dhunge-Trishuli: The road is clear and operational.\" SitRep #15 repeats that Galchhi-Devighat is clear and operational. Restoration hinged on the Ratamate hillside cutting and the Army Acrow bridge at Devighat. Trisuli Bazar is therefore NOT cut off; the detours below are maintained backups, not the way in. Geometry traced from the OSM Trishuli centreline offset east.",
+    "source": "NDRRMA Situation Report #14 (English), 15 Sep 2026",
+    "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_14_15092026.pdf",
+    "source_date": "2026-09-15",
+    "length_km": 25.1
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.004835,
+      27.802167
+     ],
+     [
+      85.005048,
+      27.802125
+     ],
+     [
+      85.005504,
+      27.802298
+     ],
+     [
+      85.006912,
+      27.803066
+     ],
+     [
+      85.008543,
+      27.80379
+     ],
+     [
+      85.010622,
+      27.804609
+     ],
+     [
+      85.010986,
+      27.80482
+     ],
+     [
+      85.011276,
+      27.805059
+     ],
+     [
+      85.011619,
+      27.805522
+     ],
+     [
+      85.011829,
+      27.805752
+     ],
+     [
+      85.011965,
+      27.805826
+     ],
+     [
+      85.012105,
+      27.805842
+     ],
+     [
+      85.012529,
+      27.80566
+     ],
+     [
+      85.012757,
+      27.805586
+     ],
+     [
+      85.013095,
+      27.805603
+     ],
+     [
+      85.013349,
+      27.805664
+     ],
+     [
+      85.014138,
+      27.805899
+     ],
+     [
+      85.014327,
+      27.805983
+     ],
+     [
+      85.015675,
+      27.806597
+     ],
+     [
+      85.016209,
+      27.806806
+     ],
+     [
+      85.017281,
+      27.807285
+     ],
+     [
+      85.017638,
+      27.807546
+     ],
+     [
+      85.017872,
+      27.807876
+     ],
+     [
+      85.017971,
+      27.808243
+     ],
+     [
+      85.017829,
+      27.808623
+     ],
+     [
+      85.017638,
+      27.80887
+     ],
+     [
+      85.01707,
+      27.809252
+     ],
+     [
+      85.016332,
+      27.809572
+     ],
+     [
+      85.015844,
+      27.809849
+     ],
+     [
+      85.015568,
+      27.810324
+     ],
+     [
+      85.01546,
+      27.81114
+     ],
+     [
+      85.015519,
+      27.811828
+     ],
+     [
+      85.015704,
+      27.812573
+     ],
+     [
+      85.015898,
+      27.81291
+     ],
+     [
+      85.016292,
+      27.813422
+     ],
+     [
+      85.017008,
+      27.814219
+     ],
+     [
+      85.01766,
+      27.815016
+     ],
+     [
+      85.018269,
+      27.815879
+     ],
+     [
+      85.018644,
+      27.816824
+     ],
+     [
+      85.018907,
+      27.817374
+     ],
+     [
+      85.019296,
+      27.817875
+     ],
+     [
+      85.019822,
+      27.818456
+     ],
+     [
+      85.020074,
+      27.818743
+     ],
+     [
+      85.02024,
+      27.81895
+     ],
+     [
+      85.020363,
+      27.819242
+     ],
+     [
+      85.020489,
+      27.819702
+     ],
+     [
+      85.020605,
+      27.820209
+     ],
+     [
+      85.020777,
+      27.821641
+     ],
+     [
+      85.020899,
+      27.822528
+     ],
+     [
+      85.02098,
+      27.823511
+     ],
+     [
+      85.020899,
+      27.824366
+     ],
+     [
+      85.020788,
+      27.825027
+     ],
+     [
+      85.020744,
+      27.825475
+     ],
+     [
+      85.020744,
+      27.82585
+     ],
+     [
+      85.020905,
+      27.826496
+     ],
+     [
+      85.021093,
+      27.827013
+     ],
+     [
+      85.021409,
+      27.827639
+     ],
+     [
+      85.021989,
+      27.828312
+     ],
+     [
+      85.023035,
+      27.829261
+     ],
+     [
+      85.024415,
+      27.830735
+     ],
+     [
+      85.025513,
+      27.831897
+     ],
+     [
+      85.026167,
+      27.832656
+     ],
+     [
+      85.026395,
+      27.832966
+     ],
+     [
+      85.026471,
+      27.833162
+     ],
+     [
+      85.02664,
+      27.833782
+     ],
+     [
+      85.026757,
+      27.834665
+     ],
+     [
+      85.026915,
+      27.83544
+     ],
+     [
+      85.026769,
+      27.836147
+     ],
+     [
+      85.026559,
+      27.836648
+     ],
+     [
+      85.026185,
+      27.836968
+     ],
+     [
+      85.025461,
+      27.837257
+     ],
+     [
+      85.02504,
+      27.837919
+     ],
+     [
+      85.024579,
+      27.838564
+     ],
+     [
+      85.024053,
+      27.839318
+     ],
+     [
+      85.023422,
+      27.840217
+     ],
+     [
+      85.022926,
+      27.84128
+     ],
+     [
+      85.022762,
+      27.841905
+     ],
+     [
+      85.022628,
+      27.84253
+     ],
+     [
+      85.022634,
+      27.842804
+     ],
+     [
+      85.02271,
+      27.84299
+     ],
+     [
+      85.022885,
+      27.843119
+     ],
+     [
+      85.023183,
+      27.843238
+     ],
+     [
+      85.023527,
+      27.843284
+     ],
+     [
+      85.023907,
+      27.843294
+     ],
+     [
+      85.024275,
+      27.843382
+     ],
+     [
+      85.024579,
+      27.843578
+     ],
+     [
+      85.025741,
+      27.844802
+     ],
+     [
+      85.0265,
+      27.845283
+     ],
+     [
+      85.027458,
+      27.845722
+     ],
+     [
+      85.028842,
+      27.84631
+     ],
+     [
+      85.029759,
+      27.846785
+     ],
+     [
+      85.032084,
+      27.848196
+     ],
+     [
+      85.032282,
+      27.848396
+     ],
+     [
+      85.032481,
+      27.848712
+     ],
+     [
+      85.032609,
+      27.849466
+     ],
+     [
+      85.032667,
+      27.850106
+     ],
+     [
+      85.032866,
+      27.850984
+     ],
+     [
+      85.033105,
+      27.851805
+     ],
+     [
+      85.033689,
+      27.852543
+     ],
+     [
+      85.034355,
+      27.853369
+     ],
+     [
+      85.034554,
+      27.853674
+     ],
+     [
+      85.034758,
+      27.85401
+     ],
+     [
+      85.035021,
+      27.854263
+     ],
+     [
+      85.035319,
+      27.854381
+     ],
+     [
+      85.035652,
+      27.854412
+     ],
+     [
+      85.036026,
+      27.854283
+     ],
+     [
+      85.036499,
+      27.85403
+     ],
+     [
+      85.037036,
+      27.853813
+     ],
+     [
+      85.037579,
+      27.853725
+     ],
+     [
+      85.03828,
+      27.853731
+     ],
+     [
+      85.039676,
+      27.853767
+     ],
+     [
+      85.040953,
+      27.854237
+     ],
+     [
+      85.041387,
+      27.854397
+     ],
+     [
+      85.04325,
+      27.855574
+     ],
+     [
+      85.044757,
+      27.856435
+     ],
+     [
+      85.04495,
+      27.856545
+     ],
+     [
+      85.045329,
+      27.856684
+     ],
+     [
+      85.045738,
+      27.856741
+     ],
+     [
+      85.046016,
+      27.856753
+     ],
+     [
+      85.046596,
+      27.856554
+     ],
+     [
+      85.047326,
+      27.856065
+     ],
+     [
+      85.048285,
+      27.855352
+     ],
+     [
+      85.049229,
+      27.854762
+     ],
+     [
+      85.049996,
+      27.854344
+     ],
+     [
+      85.050318,
+      27.85416
+     ],
+     [
+      85.05071,
+      27.853763
+     ],
+     [
+      85.050983,
+      27.853455
+     ],
+     [
+      85.051289,
+      27.853223
+     ],
+     [
+      85.05181,
+      27.852986
+     ],
+     [
+      85.052432,
+      27.852862
+     ],
+     [
+      85.05333,
+      27.852829
+     ],
+     [
+      85.054232,
+      27.852945
+     ],
+     [
+      85.055047,
+      27.853101
+     ],
+     [
+      85.056702,
+      27.853567
+     ],
+     [
+      85.058346,
+      27.854261
+     ],
+     [
+      85.059905,
+      27.855267
+     ],
+     [
+      85.060699,
+      27.856239
+     ],
+     [
+      85.060996,
+      27.85785
+     ],
+     [
+      85.06106,
+      27.85821
+     ],
+     [
+      85.061296,
+      27.858691
+     ],
+     [
+      85.062686,
+      27.859815
+     ],
+     [
+      85.063866,
+      27.860135
+     ],
+     [
+      85.065239,
+      27.859398
+     ],
+     [
+      85.066033,
+      27.858373
+     ],
+     [
+      85.066489,
+      27.857847
+     ],
+     [
+      85.067168,
+      27.857442
+     ],
+     [
+      85.069198,
+      27.856583
+     ],
+     [
+      85.071103,
+      27.855708
+     ],
+     [
+      85.072637,
+      27.854686
+     ],
+     [
+      85.074292,
+      27.853702
+     ],
+     [
+      85.075858,
+      27.853076
+     ],
+     [
+      85.078264,
+      27.853453
+     ],
+     [
+      85.080734,
+      27.855004
+     ],
+     [
+      85.082681,
+      27.856118
+     ],
+     [
+      85.084569,
+      27.856173
+     ],
+     [
+      85.084916,
+      27.856183
+     ],
+     [
+      85.08987,
+      27.856335
+     ],
+     [
+      85.091358,
+      27.856955
+     ],
+     [
+      85.09175,
+      27.857136
+     ],
+     [
+      85.091933,
+      27.857322
+     ],
+     [
+      85.092068,
+      27.857563
+     ],
+     [
+      85.092682,
+      27.860039
+     ],
+     [
+      85.092754,
+      27.860233
+     ],
+     [
+      85.092859,
+      27.860321
+     ],
+     [
+      85.092986,
+      27.860377
+     ],
+     [
+      85.094433,
+      27.86048
+     ],
+     [
+      85.096114,
+      27.860336
+     ],
+     [
+      85.097976,
+      27.860176
+     ],
+     [
+      85.100006,
+      27.85999
+     ],
+     [
+      85.100849,
+      27.859837
+     ],
+     [
+      85.101328,
+      27.859721
+     ],
+     [
+      85.102034,
+      27.859373
+     ],
+     [
+      85.104225,
+      27.858383
+     ],
+     [
+      85.105178,
+      27.858164
+     ],
+     [
+      85.106879,
+      27.858089
+     ],
+     [
+      85.108706,
+      27.858252
+     ],
+     [
+      85.109743,
+      27.858496
+     ],
+     [
+      85.110162,
+      27.85874
+     ],
+     [
+      85.110428,
+      27.859096
+     ],
+     [
+      85.11091,
+      27.859919
+     ],
+     [
+      85.11124,
+      27.86034
+     ],
+     [
+      85.111808,
+      27.860643
+     ],
+     [
+      85.112761,
+      27.861349
+     ],
+     [
+      85.112261,
+      27.861349
+     ],
+     [
+      85.113328,
+      27.861825
+     ],
+     [
+      85.113512,
+      27.86197
+     ],
+     [
+      85.113523,
+      27.862375
+     ],
+     [
+      85.113602,
+      27.862675
+     ],
+     [
+      85.113762,
+      27.863019
+     ],
+     [
+      85.113914,
+      27.863263
+     ],
+     [
+      85.114024,
+      27.86352
+     ],
+     [
+      85.114611,
+      27.864636
+     ],
+     [
+      85.114866,
+      27.865133
+     ],
+     [
+      85.115306,
+      27.866037
+     ],
+     [
+      85.115685,
+      27.866618
+     ],
+     [
+      85.115973,
+      27.867059
+     ],
+     [
+      85.116212,
+      27.868069
+     ],
+     [
+      85.116666,
+      27.86852
+     ],
+     [
+      85.117465,
+      27.869124
+     ],
+     [
+      85.117404,
+      27.869647
+     ],
+     [
+      85.117919,
+      27.869858
+     ],
+     [
+      85.118634,
+      27.870107
+     ],
+     [
+      85.119416,
+      27.870424
+     ],
+     [
+      85.11998,
+      27.870901
+     ],
+     [
+      85.121766,
+      27.871745
+     ],
+     [
+      85.123934,
+      27.873035
+     ],
+     [
+      85.125178,
+      27.873547
+     ],
+     [
+      85.12683,
+      27.873983
+     ],
+     [
+      85.12786,
+      27.874305
+     ],
+     [
+      85.128343,
+      27.874647
+     ],
+     [
+      85.12866,
+      27.875053
+     ],
+     [
+      85.128911,
+      27.875689
+     ],
+     [
+      85.12906,
+      27.876323
+     ],
+     [
+      85.129043,
+      27.877086
+     ],
+     [
+      85.128792,
+      27.877985
+     ],
+     [
+      85.12867,
+      27.878795
+     ],
+     [
+      85.128762,
+      27.879338
+     ],
+     [
+      85.129166,
+      27.880591
+     ],
+     [
+      85.12972,
+      27.881426
+     ],
+     [
+      85.131309,
+      27.883062
+     ],
+     [
+      85.133681,
+      27.884703
+     ],
+     [
+      85.136381,
+      27.886455
+     ],
+     [
+      85.137746,
+      27.887549
+     ],
+     [
+      85.139597,
+      27.888549
+     ],
+     [
+      85.140059,
+      27.888986
+     ],
+     [
+      85.140075,
+      27.890331
+     ],
+     [
+      85.139258,
+      27.892596
+     ],
+     [
+      85.138968,
+      27.892963
+     ],
+     [
+      85.138805,
+      27.89349
+     ],
+     [
+      85.138682,
+      27.894385
+     ],
+     [
+      85.138647,
+      27.895228
+     ],
+     [
+      85.139143,
+      27.896517
+     ],
+     [
+      85.139689,
+      27.897703
+     ],
+     [
+      85.139828,
+      27.898894
+     ],
+     [
+      85.139828,
+      27.900141
+     ],
+     [
+      85.140598,
+      27.9007
+     ],
+     [
+      85.140735,
+      27.900799
+     ],
+     [
+      85.142016,
+      27.901143
+     ],
+     [
+      85.142707,
+      27.901462
+     ],
+     [
+      85.14344,
+      27.902105
+     ],
+     [
+      85.143848,
+      27.903303
+     ],
+     [
+      85.14389,
+      27.903997
+     ],
+     [
+      85.143775,
+      27.904561
+     ],
+     [
+      85.143419,
+      27.905178
+     ],
+     [
+      85.142467,
+      27.906192
+     ],
+     [
+      85.1421,
+      27.907109
+     ],
+     [
+      85.141952,
+      27.908247
+     ],
+     [
+      85.141869,
+      27.909243
+     ],
+     [
+      85.141074,
+      27.910647
+     ],
+     [
+      85.139827,
+      27.91196
+     ],
+     [
+      85.138372,
+      27.913419
+     ],
+     [
+      85.137365,
+      27.914072
+     ],
+     [
+      85.137145,
+      27.914314
+     ],
+     [
+      85.137089,
+      27.914846
+     ],
+     [
+      85.137317,
+      27.915225
+     ],
+     [
+      85.137615,
+      27.915607
+     ],
+     [
+      85.137942,
+      27.915766
+     ],
+     [
+      85.138744,
+      27.916159
+     ],
+     [
+      85.139224,
+      27.916314
+     ],
+     [
+      85.139672,
+      27.916443
+     ],
+     [
+      85.140018,
+      27.916534
+     ],
+     [
+      85.140252,
+      27.91659
+     ],
+     [
+      85.140794,
+      27.916687
+     ],
+     [
+      85.141313,
+      27.916798
+     ],
+     [
+      85.141758,
+      27.916877
+     ],
+     [
+      85.142128,
+      27.916916
+     ],
+     [
+      85.142316,
+      27.916937
+     ],
+     [
+      85.142529,
+      27.916966
+     ],
+     [
+      85.142671,
+      27.916997
+     ],
+     [
+      85.142855,
+      27.917067
+     ],
+     [
+      85.143028,
+      27.91715
+     ],
+     [
+      85.14323,
+      27.917237
+     ],
+     [
+      85.143436,
+      27.917355
+     ],
+     [
+      85.143638,
+      27.917483
+     ],
+     [
+      85.143811,
+      27.917611
+     ],
+     [
+      85.144041,
+      27.917824
+     ],
+     [
+      85.144203,
+      27.918012
+     ],
+     [
+      85.14442,
+      27.918242
+     ],
+     [
+      85.144593,
+      27.91842
+     ],
+     [
+      85.144762,
+      27.918612
+     ],
+     [
+      85.144943,
+      27.918867
+     ],
+     [
+      85.145051,
+      27.919049
+     ],
+     [
+      85.145163,
+      27.919255
+     ],
+     [
+      85.145316,
+      27.919528
+     ],
+     [
+      85.145412,
+      27.919706
+     ],
+     [
+      85.145535,
+      27.919865
+     ],
+     [
+      85.145653,
+      27.919983
+     ],
+     [
+      85.145802,
+      27.920089
+     ],
+     [
+      85.145971,
+      27.920238
+     ],
+     [
+      85.146114,
+      27.920354
+     ],
+     [
+      85.146249,
+      27.920414
+     ],
+     [
+      85.146394,
+      27.920436
+     ],
+     [
+      85.146541,
+      27.920455
+     ],
+     [
+      85.14669,
+      27.920451
+     ],
+     [
+      85.147069,
+      27.920463
+     ],
+     [
+      85.147325,
+      27.920474
+     ],
+     [
+      85.147498,
+      27.92048
+     ],
+     [
+      85.147744,
+      27.920488
+     ],
+     [
+      85.148129,
+      27.920513
+     ],
+     [
+      85.148421,
+      27.92054
+     ],
+     [
+      85.148739,
+      27.920577
+     ],
+     [
+      85.149107,
+      27.920612
+     ],
+     [
+      85.149348,
+      27.920631
+     ],
+     [
+      85.149538,
+      27.920653
+     ],
+     [
+      85.149681,
+      27.920683
+     ],
+     [
+      85.149913,
+      27.920747
+     ],
+     [
+      85.150082,
+      27.920821
+     ],
+     [
+      85.150551,
+      27.920984
+     ],
+     [
+      85.150798,
+      27.921067
+     ],
+     [
+      85.151033,
+      27.921156
+     ],
+     [
+      85.151254,
+      27.921257
+     ],
+     [
+      85.151418,
+      27.921338
+     ],
+     [
+      85.151548,
+      27.921408
+     ],
+     [
+      85.151749,
+      27.92152
+     ],
+     [
+      85.151955,
+      27.921634
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
     "id": "TB-1",
     "town": "Trisuli Bazar",
     "name": "Trishuli right-bank detour (Galchhi - Gauribesi - Trishuli Bazaar)",
@@ -33,11 +1328,12 @@
     "from": "Galchhi (Dhading)",
     "to": "Trishuli Bazaar (Bidur, Nuwakot)",
     "mode": "vehicle (single lane, light)",
-    "status": "operational",
+    "status": "operational_backup",
     "since": "2026-09-02",
-    "users": "general traffic, relief convoys from Dhading and the Prithvi Highway",
+    "users": "local right-bank communities; a backup for through traffic, which now uses TB-0",
     "confidence": "approximate",
-    "notes": "Listed as operational in NDRRMA SitRep #15. Crosses the Trishuli on the intact Bhimdhunga-Lamidanda road bridge at Galchhi, then runs up the right (west) bank, avoiding all the destroyed left-bank bridges. Narrow single lane, slow, difficult for two-way traffic. Geometry traced 400 m west of the OSM Trishuli centreline; Kalleritar, Koshikhola, Pimaltar, Darshantar and Chhatre Khola could not be geolocated.",
+    "role": "backup",
+    "notes": "BACKUP, NOT THE MAIN WAY IN. Now that Galchhi-Devighat-Dhunge-Trishuli is clear (TB-0), this is a maintained second option rather than the necessary route. SitRep #15 describes it as operational and \"connecting communities across the Trishuli River in Nuwakot\", with maintenance continuing. Crosses the Trishuli on the intact Bhimdhunga-Lamidanda road bridge at Galchhi, then runs up the right (west) bank, avoiding all the destroyed left-bank bridges. Narrow single lane, slow, difficult for two-way traffic. Geometry traced 400 m west of the OSM Trishuli centreline; Kalleritar, Koshikhola, Pimaltar, Darshantar and Chhatre Khola could not be geolocated.",
     "source": "NDRRMA Situation Report #15 (English), 16 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_15_16092026.pdf",
     "source_date": "2026-09-16",
@@ -1303,14 +2599,15 @@
     "from": "Galchhi (Dhading)",
     "to": "Bidur (Nuwakot)",
     "mode": "vehicle (unsealed track)",
-    "status": "under_construction",
-    "since": "2026-09-13",
-    "users": "Department of Roads works traffic, then general traffic",
+    "status": "complete",
+    "since": "2026-09-15",
+    "users": "all traffic on the Galchhi-Devighat road",
     "confidence": "mapped",
-    "notes": "OSM way 1559050050, highway=primary, ref=NH42, note=\"Under construction to bypass damaged section\", tagged damaged:event=2026NepalFlood. Matches the Kathmandu Post report of 13 Sep: new track above the flood-washed section at Ratmate, about 8 km from Galchhi, adding roughly 3 km to the journey and rejoining at Dui Pipal village, expected complete around 14 Sep (DoR deputy director Shubha Raj Neupane).",
-    "source": "OpenStreetMap via Overpass (data timestamp 2026-09-17T08:26Z)",
-    "source_url": "https://overpass-api.de/api/interpreter",
-    "source_date": "2026-09-17",
+    "role": "restored",
+    "notes": "COMPLETE. NDRRMA SitRep #14, 15 Sep: \"Hillside cutting at Ratamate has been completed, and traffic has resumed.\" Kathmandu Post 13 Sep had described it in progress: a new track above the flood-washed section about 8 km from Galchhi, adding roughly 3 km and rejoining at Dui Pipal village (DoR deputy director Shubha Raj Neupane). OSM way 1559050050 still carries the older note=\"Under construction to bypass damaged section\" with ref=NH42; the OSM tag lags the SitRep.",
+    "source": "NDRRMA Situation Report #14 (English), 15 Sep 2026",
+    "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_14_15092026.pdf",
+    "source_date": "2026-09-15",
     "length_km": 0.5
    },
    "geometry": {
@@ -1371,6 +2668,7 @@
    "type": "Feature",
    "properties": {
     "id": "TB-3",
+    "role": "restored",
     "town": "Trisuli Bazar",
     "name": "Devighat Acrow bridge over the Tadi Khola",
     "route": "Pasang Lhamu Highway at Devighat, Bidur",
@@ -1398,6 +2696,7 @@
    "type": "Feature",
    "properties": {
     "id": "TB-4",
+    "role": "backup",
     "town": "Trisuli Bazar",
     "name": "Devighat bridge bypass (Pipaltar - Kolputar)",
     "route": "Pipaltar - Pasang Lhamu Highway - Dhamle - Niranjana - Bagkhor - Harre - Deurali - Kolputar",
@@ -1440,6 +2739,7 @@
    "type": "Feature",
    "properties": {
     "id": "TB-5",
+    "role": "backup",
     "town": "Trisuli Bazar",
     "name": "Devighat rope crossing (tuin)",
     "route": "across the Trishuli at Devighat",
@@ -1467,6 +2767,7 @@
    "type": "Feature",
    "properties": {
     "id": "BW-1",
+    "role": "lifeline",
     "town": "Betrawati",
     "name": "Bidur - Betrawati road (Pasang Lhamu Highway, partly restored)",
     "route": "Bidur - Trishuli Bazaar - Tupche - Dhunge Bazar - Betrawati",
@@ -2385,6 +3686,7 @@
    "type": "Feature",
    "properties": {
     "id": "BW-2",
+    "role": "lifeline",
     "town": "Betrawati",
     "name": "Gerkhu - Bhainse feeder around the Betrawati gap",
     "route": "Bidur - Gerkhu - Bhainse - Betrawati; final 300 m either a riverbed track or the Bar Bhanjyang local road",
@@ -2423,17 +3725,18 @@
    "type": "Feature",
    "properties": {
     "id": "BW-3",
+    "role": "lifeline",
     "town": "Betrawati",
     "name": "Betrawati temporary footbridge (~30 m)",
     "route": "across the Phalankhu/Trishuli at Betrawati, Bidur-10",
     "from": "Betrawati (Nuwakot side)",
     "to": "Betrawati (Rasuwa side)",
     "mode": "foot",
-    "status": "operational",
+    "status": "damaged_unconfirmed",
     "since": "2026-09-15",
-    "users": "residents, porters carrying relief across the gap",
+    "users": "residents and porters, when serviceable",
     "confidence": "approximate",
-    "notes": "NDRRMA SitRep #14 (15 Sep): \"A temporary footbridge approximately 30 metres long has been rebuilt at Betrawati, Bidur-10.\" Still listed in the 16 Sep report. Placed at the site of the destroyed Betrawati old and new bridges (70 m each) in the DoR inventory. This is currently the only fixed crossing at Betrawati.",
+    "notes": "DAMAGED, STATUS UNCONFIRMED. NDRRMA SitRep #14, 15 Sep, in full: \"A temporary footbridge approximately 30 metres long has been rebuilt at Betrawati, Bidur-10, on the Nuwakot-Rasuwa border. The crossing, built on Bhadra 28, was damaged by flooding following overnight rainfall.\" SitRep #15 on 16 Sep drops the footbridge entirely, so there is no confirmation it was repaired. It is the only fixed crossing at Betrawati either way. Placed at the destroyed Betrawati old and new bridges (70 m each) in the DoR inventory.",
     "source": "NDRRMA Situation Report #14 (English), 15 Sep 2026",
     "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_14_15092026.pdf",
     "source_date": "2026-09-15"
@@ -2450,6 +3753,7 @@
    "type": "Feature",
    "properties": {
     "id": "BW-4",
+    "role": "planned",
     "town": "Betrawati",
     "name": "Betrawati Bailey bridge (foundation excavation)",
     "route": "Pasang Lhamu Highway crossing at Betrawati",
@@ -2477,6 +3781,7 @@
    "type": "Feature",
    "properties": {
     "id": "BW-5",
+    "role": "planned",
     "town": "Betrawati",
     "name": "Falakhu Khola 70 m Bailey bridge (Indian-supplied, planned)",
     "route": "Rasuwa-Nuwakot boundary just north of Betrawati",
@@ -2504,6 +3809,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-1",
+    "role": "lifeline",
     "town": "Dhunche",
     "name": "Kalikasthan - Dhunche (Pasang Lhamu Highway, 4WD only)",
     "route": "Bogatitar - Kalikasthan - Ramche - Dhunche",
@@ -5634,6 +6940,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-2",
+    "role": "lifeline",
     "town": "Dhunche",
     "name": "Kathmandu - Tokha - Saramthali - Bogatitar route to Rasuwa",
     "route": "Kathmandu - Tokha - Chhahare - Gadkhar Bridge - Aapre - Narja - Lachyang - Saramthali - Patikharka - Bogatitar - Kalikasthan - Dhunche",
@@ -5692,6 +6999,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-3",
+    "role": "lifeline",
     "town": "Dhunche",
     "name": "Dhikure - Jibjibe - Bogatitar route (Nuwakot side)",
     "route": "Dhikure - Phedi Besi Chowk - Hiramunitar - Chogte - Bore Bhanjyang - Sano Khola - Dhanswara - Bhorle - Jibjibe - Bogatitar",
@@ -5734,6 +7042,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-4",
+    "role": "cut",
     "town": "Dhunche",
     "name": "Betrawati - Kalikasthan (Pasang Lhamu Highway) - the link the detours replace",
     "route": "Betrawati - Khalte - Ramche - Kalikasthan",
@@ -10176,6 +11485,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-5",
+    "role": "cut",
     "town": "Dhunche",
     "name": "Dhunche onward to Syabrubesi and Rasuwagadhi",
     "route": "Dhunche - Thulo Bharkhu - Syabrubesi - Timure - Rasuwagadhi",
@@ -13018,6 +14328,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-6",
+    "role": "lifeline",
     "town": "Dhunche",
     "name": "Helicopter lifeline from Dhunche to cut-off Rasuwa villages",
     "route": "Dhunche staging area to Mailung, Haku, Syabrubesi and upper Gosaikunda wards",
@@ -13052,6 +14363,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-7",
+    "role": "lifeline",
     "town": "Dhunche",
     "name": "Uttargaya emergency helipad (Mailung area)",
     "route": "Uttargaya rural municipality, Rasuwa",
@@ -13079,6 +14391,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-8",
+    "role": "lifeline",
     "town": "Dhunche",
     "name": "Syafrubesi rope crossing (tuin)",
     "route": "across the Bhotekoshi at Syabrubesi",
@@ -13106,6 +14419,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-9",
+    "role": "planned",
     "town": "Dhunche",
     "name": "Hakubesi rope crossing (ordered, not yet complete)",
     "route": "across the Trishuli at Haku Besi, Gosaikunda",
@@ -13133,6 +14447,7 @@
    "type": "Feature",
    "properties": {
     "id": "DH-10",
+    "role": "planned",
     "town": "Dhunche",
     "name": "Pahirebesi - Shantibazar rope crossing (ordered, not yet complete)",
     "route": "across the Trishuli between Pahirebesi (Uttargaya-4) and Shantibazar (Kispang-5, Nuwakot)",
