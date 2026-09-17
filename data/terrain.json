@@ -9,40 +9,40 @@
       "c1000": {
         "minzoom": 8,
         "maxzoom": 15,
-        "description": "Contours at multiples of 1000 m Limited to a 10 km buffer around the HOT flood-affected AOI (work/aoi_flood_10km.geojson) - not present outside it.",
+        "description": "Contours at multiples of 1000 m Limited to a 10 km buffer around the HOT flood-affected AOI unioned with a 3 km buffer around the collapse origin and a 1.5 km Lhende valley corridor joining the two (work/aoi_flood_10km.geojson) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "always 0 for this class (uniform schema with c50/c10)" },
-        "clip": "work/aoi_flood_10km.geojson (10 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
+        "clip": "work/aoi_flood_10km.geojson (10 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson, unioned with work/aoi_origin_3km.geojson, a 3 km buffer of data/hdx/derived/collapse_origin.geojson, and work/aoi_lhende_corridor.geojson, a 1.5 km buffer of the OSM Lende Khola plus a hand-drawn valley-floor extension up to the origin)"
       },
       "c500": {
         "minzoom": 9,
         "maxzoom": 15,
-        "description": "Contours at multiples of 500 m, excluding those already in c1000 Limited to a 10 km buffer around the HOT flood-affected AOI (work/aoi_flood_10km.geojson) - not present outside it.",
+        "description": "Contours at multiples of 500 m, excluding those already in c1000 Limited to a 10 km buffer around the HOT flood-affected AOI unioned with a 3 km buffer around the collapse origin and a 1.5 km Lhende valley corridor joining the two (work/aoi_flood_10km.geojson) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "always 0 for this class (uniform schema with c50/c10)" },
-        "clip": "work/aoi_flood_10km.geojson (10 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
+        "clip": "work/aoi_flood_10km.geojson (10 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson, unioned with work/aoi_origin_3km.geojson, a 3 km buffer of data/hdx/derived/collapse_origin.geojson, and work/aoi_lhende_corridor.geojson, a 1.5 km buffer of the OSM Lende Khola plus a hand-drawn valley-floor extension up to the origin)"
       },
       "c100": {
         "minzoom": 11,
         "maxzoom": 15,
-        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000 Limited to a 2 km buffer around the HOT flood-affected AOI (work/aoi_flood_2km.geojson) - not present outside it.",
+        "description": "Contours at multiples of 100 m, excluding those already in c500/c1000 Limited to a 2 km buffer around the HOT flood-affected AOI unioned with a 3 km buffer around the collapse origin and a 1.5 km Lhende valley corridor joining the two (work/aoi_flood_2km.geojson) - not present outside it.",
         "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "always 0 for this class (uniform schema with c50/c10)" },
-        "clip": "work/aoi_flood_2km.geojson (2 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson)"
+        "clip": "work/aoi_flood_2km.geojson (2 km buffer of data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson, unioned with work/aoi_origin_3km.geojson, a 3 km buffer of data/hdx/derived/collapse_origin.geojson, and work/aoi_lhende_corridor.geojson, a 1.5 km buffer of the OSM Lende Khola plus a hand-drawn valley-floor extension up to the origin)"
       },
       "c50": {
         "minzoom": 13,
         "maxzoom": 15,
-        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000. Clipped by height above river (HAND-style, owner direction 6 Sep 2026) instead of the flood AOI polygon, so lines fade out along the valley instead of stopping at a hard edge; see `fade`.",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "0 = height above river < 80 m (full opacity), 1 = 80-100 m, 2 = 100-120 m (near-invisible); all bands hard-limited to work/aoi_flood_2km.geojson" },
-        "clip": "Height-above-river bands (work/hab_band0.geojson, hab_band1.geojson, hab_band2.geojson; see tools/build_terrain.sh step 2b), each also limited to work/aoi_flood_2km.geojson"
+        "description": "Contours at multiples of 50 m, excluding those already in c100/c500/c1000. Clipped by height above river (HAND-style, owner direction 6 Sep 2026) instead of the flood AOI polygon, so lines fade out along the valley instead of stopping at a hard edge; see `fade`. Also present at full opacity within a 3 km buffer of the collapse origin (work/aoi_origin_3km.geojson) and along a 1.5 km Lhende valley corridor joining it to the flood AOI (work/aoi_lhende_corridor.geojson), neither of which the height-above-river surface reaches.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "0 = height above river < 80 m (full opacity), 1 = 80-100 m, 2 = 100-120 m (near-invisible); all bands hard-limited to work/aoi_flood_2km.geojson. Lines inside work/aoi_origin_3km.geojson and work/aoi_lhende_corridor.geojson are also fade 0" },
+        "clip": "Height-above-river bands (work/hab_band0.geojson, hab_band1.geojson, hab_band2.geojson; see tools/build_terrain.sh step 2b), each also limited to work/aoi_flood_2km.geojson, plus work/aoi_origin_3km.geojson (3 km buffer of data/hdx/derived/collapse_origin.geojson) and work/aoi_lhende_corridor.geojson (1.5 km buffer of the OSM Lende Khola and a hand-drawn valley-floor extension, with the other two fade 0 areas subtracted so the passes stay mutually exclusive) at fade 0"
       },
       "c10": {
         "minzoom": 14,
         "maxzoom": 15,
-        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Clipped by height above river (HAND-style, owner direction 6 Sep 2026) instead of the flood AOI polygon, so lines fade out along the valley instead of stopping at a hard edge; see `fade`.",
-        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "0 = height above river < 80 m (full opacity), 1 = 80-100 m, 2 = 100-120 m (near-invisible); all bands hard-limited to work/aoi_flood_2km.geojson" },
-        "clip": "Height-above-river bands (work/hab_band0.geojson, hab_band1.geojson, hab_band2.geojson; see tools/build_terrain.sh step 2b), each also limited to work/aoi_flood_2km.geojson"
+        "description": "All remaining 10 m contours, excluding those already in c50/c100/c500/c1000. Clipped by height above river (HAND-style, owner direction 6 Sep 2026) instead of the flood AOI polygon, so lines fade out along the valley instead of stopping at a hard edge; see `fade`. Also present at full opacity within a 3 km buffer of the collapse origin (work/aoi_origin_3km.geojson) and along a 1.5 km Lhende valley corridor joining it to the flood AOI (work/aoi_lhende_corridor.geojson), neither of which the height-above-river surface reaches.",
+        "fields": { "ele": "elevation in metres", "idx": "1 if ele is also a multiple of 100 m", "fade": "0 = height above river < 80 m (full opacity), 1 = 80-100 m, 2 = 100-120 m (near-invisible); all bands hard-limited to work/aoi_flood_2km.geojson. Lines inside work/aoi_origin_3km.geojson and work/aoi_lhende_corridor.geojson are also fade 0" },
+        "clip": "Height-above-river bands (work/hab_band0.geojson, hab_band1.geojson, hab_band2.geojson; see tools/build_terrain.sh step 2b), each also limited to work/aoi_flood_2km.geojson, plus work/aoi_origin_3km.geojson (3 km buffer of data/hdx/derived/collapse_origin.geojson) and work/aoi_lhende_corridor.geojson (1.5 km buffer of the OSM Lende Khola and a hand-drawn valley-floor extension, with the other two fade 0 areas subtracted so the passes stay mutually exclusive) at fade 0"
       }
     },
-    "size_note": "~17 MB total (3315 .pbf files), under the ~120 MB target. c10/c50 are clipped by height above river (HAND-style) rather than the flood AOI polygon, split into three fade bands (see `fade` on c10/c50) and hard-limited to work/aoi_flood_2km.geojson; previous polygon-clipped tileset kept at work/contours_v10_aoi_polygon_clip (~16 MB) for comparison. c1000/c500/c100 remain full-extent within their own buffers since they are cheap.",
+    "size_note": "~20 MB total (3415 .pbf files), under the ~120 MB target. c10/c50 are clipped by height above river (HAND-style) rather than the flood AOI polygon, split into three fade bands (see `fade` on c10/c50) and hard-limited to work/aoi_flood_2km.geojson; previous polygon-clipped tileset kept at work/contours_v10_aoi_polygon_clip (~16 MB) for comparison. All five classes also cover a 3 km buffer of the collapse origin (work/aoi_origin_3km.geojson), unioned into the 2 km and 10 km clips and added as a fade 0 area for c50/c10 (17 Sep 2026): a 1.5 km Lhende valley corridor (work/aoi_lhende_corridor.geojson) joins that buffer to the flood AOI, closing a ~6 km stretch of valley that had no contours; together these added 100 tiles and ~3 MB, all within the two new areas; the pre-origin tileset is kept at work/backup_tiles/contours_before_origin_20260917 (~17 MB, 3315 files). c1000/c500/c100 remain full-extent within their own buffers since they are cheap.",
     "elevation_range_m": [183.06, 7857.32],
     "attribution": "Copernicus GLO-30 DEM © ESA / Airbus"
   },

@@ -84,16 +84,71 @@ rm -f "$SPLIT_GPKG"
 # (76 MB), then all classes on the flood AOI (2.4 MB), then coarse classes to
 # 1 km (4.2 MB) — see work/contours_v*. Full-extent c10 alone was ~226 MB, so
 # the clipping is also what keeps the tileset small.
+#
+# The collapse origin (UNOSAT detachment zone, its centroid and the barrier
+# lakes, data/hdx/derived/collapse_origin.geojson) sits ~85.48-85.53 E,
+# 28.28-28.33 N, i.e. north-east of and outside every one of those buffers, so
+# it had no contours at all. A 3 km buffer around it is unioned into the 2 km
+# and 10 km clips and is also used as an extra full-opacity (fade=0) area for
+# c50/c10, so all five classes are present at the source of the event
+# (owner direction, 17 Sep 2026).
+#
+# Those two areas are ~6 km apart, which left a hole with no contours along the
+# Lhende valley between them. The third clip is that connecting corridor: the
+# OSM Lende Khola (waterway=river), which runs from inside the flood AOI up to
+# 85.431 E, 28.330 N, plus a hand-drawn extension for the last 4.5 km that OSM
+# does not map. The extension's vertices are the valley floor, read off the
+# GLO-30 mosaic as the lowest cell per longitude column between 85.43 and
+# 85.51 E over the 28.26-28.35 N band (2284 m at the river end rising to
+# 3324 m at the detachment zone). Buffered 1.5 km, this joins the flood AOI
+# clip and the origin buffer into one continuous area.
 AOI_FINE="$ROOT/data/hdx/hot_flood_npl/hot_flood_npl_aoi.geojson"
 AOI_MID="$WORK/aoi_flood_2km.geojson"
 AOI_WIDE="$WORK/aoi_flood_10km.geojson"
+ORIGIN_SRC="$ROOT/data/hdx/derived/collapse_origin.geojson"
+AOI_ORIGIN="$WORK/aoi_origin_3km.geojson"
+ORIGIN_BUF_M="${ORIGIN_BUF_M:-3000}"
+WATERWAYS="$ROOT/data/hdx/hot_flood_npl/waterways_osm.geojson"
+AOI_CORRIDOR="$WORK/aoi_lhende_corridor.geojson"
+CORRIDOR_BUF_M="${CORRIDOR_BUF_M:-1500}"
+CORRIDOR_EXT="LINESTRING(85.4296 28.3306, 85.4432 28.3356, 85.4612 28.3367, \
+85.4748 28.3336, 85.4883 28.3308, 85.5019 28.3333, 85.5109 28.3317)"
 # Buffers computed in UTM 45N so the distances are metric, then back to WGS84.
-rm -f "$AOI_MID" "$AOI_WIDE" "$WORK/aoi_utm.gpkg"
+rm -f "$AOI_MID" "$AOI_WIDE" "$AOI_ORIGIN" "$AOI_CORRIDOR" "$WORK/aoi_utm.gpkg"
 "$GDAL_BIN/ogr2ogr" -f GPKG -t_srs EPSG:32645 "$WORK/aoi_utm.gpkg" "$AOI_FINE" -nln aoi
+# collapse_origin.geojson mixes polygons and a point, hence -nlt GEOMETRY.
+"$GDAL_BIN/ogr2ogr" -f GPKG -update -t_srs EPSG:32645 "$WORK/aoi_utm.gpkg" \
+  "$ORIGIN_SRC" -nln origin -nlt GEOMETRY
+"$GDAL_BIN/ogr2ogr" -f GPKG -update -t_srs EPSG:32645 "$WORK/aoi_utm.gpkg" \
+  "$WATERWAYS" -nln corridor -nlt LINESTRING -dialect sqlite -sql \
+  "SELECT geometry AS geom FROM waterways
+    WHERE waterway = 'river' AND name_en = 'Lende Khola'
+   UNION ALL SELECT GeomFromText('$CORRIDOR_EXT', 4326) AS geom"
+"$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_ORIGIN" "$WORK/aoi_utm.gpkg" \
+  -dialect sqlite -sql \
+  "SELECT ST_Union(ST_Buffer(geom, $ORIGIN_BUF_M)) AS geom FROM origin"
+# The corridor's fade=0 area has the other two fade=0 areas subtracted, so the
+# three c50/c10 passes below stay mutually exclusive: without this the stretch
+# of corridor inside the flood AOI would emit a second, full-opacity copy of
+# lines the HAND bands already place at fade 1 or 2.
+"$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_CORRIDOR" "$WORK/aoi_utm.gpkg" \
+  -dialect sqlite -sql \
+  "SELECT ST_Difference(ST_Difference(c.g, a.g), o.g) AS geom FROM
+     (SELECT ST_Union(ST_Buffer(geom, $CORRIDOR_BUF_M)) g FROM corridor) c,
+     (SELECT ST_Union(ST_Buffer(geom, 2000)) g FROM aoi) a,
+     (SELECT ST_Union(ST_Buffer(geom, $ORIGIN_BUF_M)) g FROM origin) o"
 "$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_MID" "$WORK/aoi_utm.gpkg" \
-  -dialect sqlite -sql "SELECT ST_Buffer(geom, 2000) AS geom FROM aoi"
+  -dialect sqlite -sql \
+  "SELECT ST_Union(geom) AS geom FROM (
+     SELECT ST_Buffer(geom, 2000) AS geom FROM aoi
+     UNION ALL SELECT ST_Buffer(geom, $ORIGIN_BUF_M) AS geom FROM origin
+     UNION ALL SELECT ST_Buffer(geom, $CORRIDOR_BUF_M) AS geom FROM corridor)"
 "$GDAL_BIN/ogr2ogr" -f GeoJSON -t_srs EPSG:4326 "$AOI_WIDE" "$WORK/aoi_utm.gpkg" \
-  -dialect sqlite -sql "SELECT ST_Buffer(geom, 10000) AS geom FROM aoi"
+  -dialect sqlite -sql \
+  "SELECT ST_Union(geom) AS geom FROM (
+     SELECT ST_Buffer(geom, 10000) AS geom FROM aoi
+     UNION ALL SELECT ST_Buffer(geom, $ORIGIN_BUF_M) AS geom FROM origin
+     UNION ALL SELECT ST_Buffer(geom, $CORRIDOR_BUF_M) AS geom FROM corridor)"
 
 # ---------------------------------------------------------------------------
 # 2b. Height-above-river (HAND-style) clip for c10/c50 (owner direction,
@@ -196,13 +251,22 @@ mk_class () {
 
 # c10/c50: clipped per HAND fade band in turn, appended into one layer with
 # an integer `fade` attribute (0/1/2) so the app can fade opacity by band.
+# The collapse-origin buffer and the Lhende corridor are appended as two
+# further fade=0 areas. The HAND surface is only spread ~3 km from the mapped
+# rivers and so never reaches either of them, and the corridor polygon has the
+# other two subtracted when it is built above, so all four passes are mutually
+# exclusive and no contour is emitted twice.
 mk_class_faded () {
   local name="$1" where="$2"
-  local fade=0
-  local clip
-  for clip in "$HAB_BAND0" "$HAB_BAND1" "$HAB_BAND2"; do
+  local first=1
+  local spec clip fade
+  for spec in "$HAB_BAND0:0" "$HAB_BAND1:1" "$HAB_BAND2:2" \
+              "$AOI_ORIGIN:0" "$AOI_CORRIDOR:0"; do
+    clip="${spec%:*}"
+    fade="${spec##*:}"
     local opts=(-update)
-    [ "$fade" -gt 0 ] && opts+=(-append)
+    [ "$first" -eq 0 ] && opts+=(-append)
+    first=0
     "$GDAL_BIN/ogr2ogr" -f GPKG "${opts[@]}" "$SPLIT_GPKG" \
       "$WORK/contours_10m.gpkg" -dialect sqlite -sql \
       "SELECT geom, CAST(ROUND(ele) AS INTEGER) AS ele, \
@@ -210,7 +274,6 @@ mk_class_faded () {
               $fade AS fade \
        FROM contours10 WHERE $where" \
       -nln "$name" -nlt LINESTRING -clipsrc "$clip"
-    fade=$((fade+1))
   done
 }
 
@@ -248,7 +311,7 @@ rm -rf "$TILES/contours"
   c1000 c500 c100 c50 c10 \
   -dsco MINZOOM=8 -dsco MAXZOOM=15 -dsco COMPRESS=NO -dsco FORMAT=DIRECTORY \
   -dsco NAME=trisuli-contours \
-  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30: 10/50 m clipped by height above river (HAND-style; fade bands at ${HAB_FULL}/${HAB_MID}/${HAB_MAX} m, hard-limited to 2 km of the flood AOI), 100 m to 2 km beyond the AOI, 500/1000 m to 10 km" \
+  -dsco DESCRIPTION="Trisuli/Bhote Koshi flood map contours, GLO-30: 10/50 m clipped by height above river (HAND-style; fade bands at ${HAB_FULL}/${HAB_MID}/${HAB_MAX} m, hard-limited to 2 km of the flood AOI) plus a ${ORIGIN_BUF_M} m buffer of the collapse origin and a ${CORRIDOR_BUF_M} m Lhende valley corridor between the two, both at full opacity, 100 m to 2 km beyond the AOI, 500/1000 m to 10 km; all buffers unioned with the collapse-origin buffer and the corridor" \
   -dsco BOUNDS="$MINLON,$MINLAT,$MAXLON,$MAXLAT" \
   -dsco CONF="$WORK/mvt_conf.json"
 
