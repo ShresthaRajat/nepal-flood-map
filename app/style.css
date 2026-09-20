@@ -221,6 +221,9 @@ label.row > span.t > .sub { display: block; font-size: 10px; line-height: 1.35; 
    (flat edge down, like the arch icon on the map) -- owner direction, 10 Sep 2026. */
 .sw.square { border-radius: 0; }
 .sw.semicircle { height: 5.5px; align-self: flex-end; border-radius: 50% 50% 0 0; }
+/* Crowd-sourced photo/video evidence draws as a circle on the map, so its rail and
+   legend swatch is a circle too. */
+.sw.circle { border-radius: 50%; }
 /* A continuous scale rather than a category: the ward row's white-to-brown damage
    ramp. Wider than a plain swatch so the gradient reads, with a hairline border
    because the low end is near-white on a dark rail. The gradient itself is set
@@ -323,6 +326,14 @@ summary .n .chip { margin-left: 6px; }
 /* How far to trust a point's position, said on the face of the popup. */
 .pop-loc { font-size: 11.5px; color: #1d4ed8; margin-top: 3px; }
 .pop-n { font-size: 11px; color: #555; margin-top: 3px; }
+/* Crowd-sourced evidence popup: the thumbnail leads, capped so a tall portrait
+   photo cannot push the provenance below the fold, with a corner chip marking a
+   video (the thumbnail of a video is a still frame and reads as a photo). */
+.ev-thumb { position: relative; margin: -2px 0 6px; line-height: 0; }
+.ev-img { display: block; width: 100%; max-width: 300px; max-height: 220px;
+          object-fit: cover; border-radius: 3px; background: #e5e7eb; }
+.ev-play { position: absolute; left: 6px; bottom: 6px; font-size: 10.5px; line-height: 1.5;
+           padding: 1px 6px; border-radius: 10px; background: rgba(17,24,39,.82); color: #fff; }
 .pop-all { margin-top: 6px; }
 .pop-all > summary { cursor: pointer; font-size: 11.5px; color: #555; font-weight: 500; }
 .pop-all table { margin-top: 4px; }

@@ -28,6 +28,7 @@ from unpkg.
 | `tools/merge_bipad_reports.py` | reports | Optional: merges a per-municipality summary extracted from Nepal's BIPAD incident portal into `data/reports.json`. |
 | `tools/build_hydropower_points.py` | reports | Merges the 10 surveyed HDX hydropower points with 9 hand-geocoded plants into `data/hdx/derived/hydropower_points.geojson`. |
 | `data/hdx/derived/hydropower_extra_src.geojson` | reports | The hand-geocoded plants as found, committed so the merge is reproducible offline. |
+| `tools/build_evidence_media.py` | derived | Snapshots the Rasuwa Flood Evidence Map (VIVA-D) archive into `data/hdx/derived/evidence_media.geojson`: published, located photographs and videos with the contributor's metadata and the contact email stripped. Fetches `archive.rasuwaflood.org/api/items?all=1` by default; `--from FILE` reads a saved copy, `--check` reports and writes nothing. Run hourly by the `refresh-evidence` Action. |
 | `data/hdx/` | HDX snapshot | GeoJSON + PMTiles, 5 Sep 2026. |
 | `tiles/<id>/{z}/{x}/{y}.webp` | retile agent | Imagery pyramids, 256 px, alpha. |
 | `tiles/contours/`, `tiles/hillshade/` | contours agent | Vector and raster terrain tiles. |
@@ -202,6 +203,83 @@ the Sanjen Khola is absent from the waterways data altogether.
 
 `python3 tools/build_hydropower_points.py --check` reports the counts and the
 reports.json cross-check without writing.
+
+### Flood evidence media
+
+`data/hdx/derived/evidence_media.geojson` is an hourly snapshot of the [Rasuwa
+Flood Evidence Map](https://archive.rasuwaflood.org/), a public VIVA-D instance
+where people upload geotagged photographs and videos of the flood. It is built
+by `tools/build_evidence_media.py` from the archive's one open endpoint,
+`GET https://archive.rasuwaflood.org/api/items?all=1`, which returns every item
+in a single `{"items": [...]}` response and needs a browser-like `User-Agent`
+(Cloudflare sits in front of it).
+
+Items are dropped unless `status` is `published`, and dropped again if the
+coordinate is the archive's `0, 0` placeholder. The collection carries top-level
+`generated` (ISO UTC) and `source` (the endpoint) members; features are sorted by
+item id and the feature `id` is that integer, so the output is byte-identical
+between runs apart from `generated`.
+
+Every feature carries:
+
+| property | meaning |
+| --- | --- |
+| `id` | the archive's item id, as an integer; also the feature `id` and the source's `promoteId` |
+| `name` | the contributor's title, or `Photo/Video/Document #<id>` when untitled |
+| `media_type` | `photo`, `video` or `document`; picks the map icon |
+| `status` | always `published` |
+| `description` | the contributor's account of what the media shows |
+| `location_name` | the archive's place string, usually a reverse-geocode |
+| `captured_at` | capture date as `YYYY-MM-DD` where it could be parsed, else the raw string |
+| `captured_at_raw` | the capture string exactly as typed |
+| `submitted_at` | ISO timestamp of upload to the archive |
+| `taken_by`, `owner` | photographer and rights holder as credited |
+| `location_source` | `Photo GPS`, `User-set`, `Approximate`, `Community update` or null |
+| `precision` | `exact` when `location_source` is `Photo GPS`, else `approximate`; drives icon opacity |
+| `source_url`, `source_platform` | the original Facebook/X post, for imported items |
+| `media_url` | the archived original in Google Cloud Storage |
+| `thumb_url` | absolute URL of the archive's thumbnail endpoint; the popup's `<img>` |
+| `item_url` | the archive home page (see below) |
+| `community_notes` | moderator or community annotation |
+| `mime_type` | the archived file's media type |
+| `adm3_name`, `district` | resolved from the coordinate against `admin_municipality.geojson` |
+| `source`, `source_ref` | always `viva-d` and the endpoint URL |
+
+The archive's `contact` field is a personal email address on most items. It is
+never read into the output, and nothing downstream may reintroduce it.
+
+`item_url` is the archive's home page for every feature because the archive's
+front end has no URL routing at all — no `?item=`, no `#item`, no `/item/<id>`.
+The per-item record exists only as JSON at `/api/items/<id>`, which is not
+somewhere to send a popup reader. If the archive adds deep links, this is the one
+property to change.
+
+`python3 tools/build_evidence_media.py --check` prints the counts by media type,
+location source and district, plus the capture-date range, and writes nothing.
+`--from FILE` reads a saved copy of the endpoint for offline work.
+
+#### Live-first loading
+
+The `evidence` source is initialised with the committed snapshot, so the layer
+draws the moment the style loads. After `renderSidebar()`, `startEvidenceLive()`
+fetches the archive's endpoint directly and, on success, replaces the source data
+with features built in the browser by `evidenceItemToFeature()` — the same field
+mapping and the same drops as the Python builder, minus `adm3_name`/`district`,
+which need the boundary polygons. It repeats every fifteen minutes while the tab
+is visible.
+
+The archive sends no `Access-Control-Allow-Origin` header, so that fetch is
+currently refused from the Pages origin and the snapshot is what stays on screen.
+That is the expected path, not a fault: it costs one `console.info` line, once,
+and the rail row's second line reads `snapshot · <date> · N items` instead of
+`live · N items`. If the archive ever adds the header, the live path starts
+working with no change to the app.
+
+The snapshot is kept current by `.github/workflows/refresh-evidence.yml`, hourly
+at :17 plus `workflow_dispatch`. It reruns the builder and commits only when the
+file differs by more than its `generated` line (`git diff -I '"generated"'`), so
+an unchanged archive does not push an hourly no-op.
+
 
 `tools/merge_bipad_reports.py` optionally tops the `municipalities` figures up
 from Nepal's BIPAD incident portal (NDRRMA's official register). It takes
@@ -749,6 +827,10 @@ root and all paths are relative, so no configuration is needed. Two caveats:
 - `work/` is gitignored, so the development catalogue never ships. If
   `data/imagery.json` is missing from a published build the page will show its
   "no imagery catalogue" warning.
+- `data/hdx/derived/evidence_media.geojson` is the only file in the repository
+  written by a bot. The `refresh-evidence` workflow rebuilds and commits it
+  hourly as `github-actions[bot]`, which triggers the usual Pages deploy; every
+  other file here is built and committed by hand.
 - `data/hdx/hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson` (8 MB) is
   also gitignored, but the "Waterways of Nepal" overlay does not read it: it
   draws from the tracked vector tiles in `data/hdx/tiles/hotosm_npl_waterways/`

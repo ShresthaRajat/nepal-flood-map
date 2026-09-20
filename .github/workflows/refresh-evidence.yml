@@ -1,0 +1,59 @@
+# Rebuild the Rasuwa Flood Evidence Map snapshot the page falls back to.
+#
+# The archive (archive.rasuwaflood.org, a VIVA-D instance) is live: people keep
+# uploading photographs and videos, and it sends no Access-Control-Allow-Origin
+# header, so the browser cannot read it directly from the Pages origin.  This job
+# does the read server-side once an hour and commits the result.
+#
+# GitHub Pages deploys from `main`, so a commit here is on the live map about
+# four minutes later.  data/hdx/derived/evidence_media.geojson is the only file
+# in the repository written by a bot; everything else is built and committed by
+# hand.
+name: refresh-evidence
+
+on:
+  schedule:
+    # Hourly at :17 -- off the hour, where scheduled runs queue worst.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# A run that is still pushing must not be overtaken by the next hour's.
+concurrency:
+  group: refresh-evidence
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild the snapshot
+        run: python3 tools/build_evidence_media.py
+
+      # Every run rewrites `generated`, so an unconditional commit would push a
+      # no-op change (and a Pages deploy) every hour.  -I ignores lines matching
+      # that pattern when deciding whether the file differs: if the timestamp is
+      # the only change, the file is restored and the job ends green.
+      - name: Commit only a real change
+        run: |
+          set -euo pipefail
+          FILE=data/hdx/derived/evidence_media.geojson
+          if git diff -I '"generated"' --quiet -- "$FILE"; then
+            echo "Only the generated timestamp changed; nothing to commit."
+            git checkout -- "$FILE"
+            exit 0
+          fi
+          N=$(python3 -c 'import json,sys;print(len(json.load(open(sys.argv[1]))["features"]))' "$FILE")
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$FILE"
+          git commit -m "data: refresh evidence media snapshot ($N items)"
+          git push
