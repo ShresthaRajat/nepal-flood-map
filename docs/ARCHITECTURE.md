@@ -16,7 +16,7 @@ from unpkg.
 | `tools/build_s2_tiles.sh` | imagery | Sentinel-2 true-colour pyramids at native 10 m (z8–14) straight from the AWS COG archive; used for `post_s2_20260827`. |
 | `tools/build_roads_tiles.sh`, `build_waterways_tiles.sh` | vector | National OSM roads / waterways from HDX, clipped and tiled (MVT). |
 | `tools/build_ems_roads.py`, `build_flooded_roads.py` | derived | Copernicus EMS road grades; roads inside the flood extent with bridge rules. |
-| `tools/build_road_status.py` | derived | Road accessibility. Matches the hand-maintained corridor segments in `data/road_status.json` against the flood-extent roads and the Copernicus EMS grading into `data/hdx/derived/road_status.geojson`: every feature of both inputs recoloured by `road_status`, plus the curated polylines as `feature_kind` 'segment'. Buffer 120 m, 200 m for trunk and primary, gated on name and highway-class compatibility. `--check` reports per-segment capture counts and writes nothing. |
+| `tools/build_road_status.py` | derived | Road accessibility. Matches the hand-maintained corridor segments in `data/road_status.json` against the flood-extent roads and the Copernicus EMS grading into `data/hdx/derived/road_status.geojson`: every feature of both inputs recoloured by `road_status`, plus the curated polylines as `feature_kind` 'segment'. The per-feature `damage_grade` decides first — Destroyed is never upgraded, Damaged reaches `under_repair` at most — and a curated route may only upgrade the rest, within 40 m (60 m main, 30 m point repair, 25 m ungraded in-channel) over 70% of the feature's length, gated on name and highway class. `--check` reports the grade/status cross-tab, per-segment counts and a diff against the previous output, and writes nothing. |
 | `tools/build_bridge_status.py` | derived | Bridge type and repair status. Joins the HDX bridge ground reports to the nearest OSM span (type) and to the hand-maintained `data/bridge_status.json` (repair status) into `data/hdx/derived/bridge_status.geojson`: a point per ground report, a point per curated bridge no report covers, and a LineString per OSM span a curated entry names. `--check` validates the curated file and writes nothing. |
 | `tools/build_places.py`, `build_collapse_origin.py` | derived | Settlement labels (OSM/Overpass); UNOSAT detachment zone, barrier lakes, upstream AOI. |
 | `tools/build_cutoff_wards.py` | derived | Wards cut off from their usual routes. Shortest paths over the drivable OSM graph (national export unioned with the HOT corridor export, which still holds the washed-away ways) to each district HQ and Kathmandu, before and after the destroyed bridges are removed, into `data/hdx/derived/cutoff_wards.geojson` (`severity` 0–3) plus `work/cutoff_wards/summary.csv`. Needs `work/roads_build/roads.gpkg`; `--rebuild` re-reads it instead of the cached graph. |
@@ -441,18 +441,31 @@ Destroyed; bridges carry the status tint at all times, so a destroyed span alway
 reads red.
 
 Both road overlays — the flood-extent clip and the Copernicus grading — draw
-from `data/hdx/derived/road_status.geojson` and are coloured by `road_status`,
-not by damage: white for a stretch a situation report says is open (the map's
-existing convention for an open road, with a stronger casing so white reads
-against the basemap), orange for work under way, red for everything else
-including every stretch nobody has reported on. A restored road keeps whatever
-width its `highway` class gives it. On the Copernicus layer this replaces the
-old grade-driven colour, so Destroyed and Damaged no longer differ by colour;
-the grade survives in the solid-versus-dashed split and in the popup. The
-curated corridors themselves draw underneath as a wide translucent ribbon
-(`road_status-segment`), which is the only thing that says anything about the
-hill detour routes: they lie outside the flood extent and the Copernicus areas,
-so they carry no road features to recolour.
+from `data/hdx/derived/road_status.geojson` and are coloured by `road_status`:
+white for a stretch that is open, orange for work under way, red for everything
+else. A restored road keeps whatever width its `highway` class gives it, with a
+stronger casing so white reads against the basemap.
+
+A curated segment is a claim about a **route**, not an alignment. The route is
+open because it diverts around the stretches the river took, so the per-feature
+`damage_grade` decides the colour first and the route may only upgrade what the
+imagery did not rule out: Destroyed stays red whatever the route says, Damaged
+reaches orange at most, and only an ungraded or possibly-damaged stretch can go
+white. An earlier version matched on proximity alone and painted 82
+Copernicus-Destroyed segments white, drawing open road across the post-flood
+channel at Devighat; that is the failure this ordering exists to prevent. On the
+Copernicus layer the status colour replaces the old grade-driven one, so
+Destroyed and Damaged no longer differ by colour; the grade survives in the
+solid-versus-dashed split and in the popup.
+
+The curated corridors themselves draw underneath as a wide translucent ribbon
+(`road_status-segment`), fading out by z12. That ribbon is what carries "the
+route through Devighat is open" while the alignment pieces under it stay red,
+and it is the only thing that says anything about the hill detour routes, which
+lie outside the flood extent and the Copernicus areas and so carry no road
+features to recolour. It is a low-zoom object on purpose: a segment is four to
+eight waypoints, so at street scale it would draw a straight band across
+hillsides and contradict the truthful red underneath.
 
 Above them, the spans a curated entry in `data/bridge_status.json` names by OSM
 way id are redrawn from the derived GeoJSON in their repair colour: red

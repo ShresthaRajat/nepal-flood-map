@@ -312,25 +312,36 @@ dataset on HDX, snapshot of 20 September 2026. ${HDX_CREDIT}.</p>
       not whether a vehicle gets through today. That second answer exists only in the situation
       reports and the press, so it is kept by hand in <code>data/road_status.json</code> — 23 corridor
       segments, 11 restored, 5 under repair and 7 still cut — and joined to both overlays by
-      <code>tools/build_road_status.py</code>. A road draws white once a source says traffic is
-      getting through, whatever width it is down to; orange while work is under way; and red
-      otherwise, which includes every stretch nobody has reported on, so the colour never claims
-      more than a source said. 483 of the 2,154 road features are recoloured, matched within 120 m
-      of a curated corridor (200 m for trunk and primary) and only where the road's own name and
-      highway class are compatible, so a highway's status cannot bleed onto a farm track crossing
-      under it. The picture as of SitRep 18 (19 Sep): Galchhi through Devighat, Battar, Bidur and
+      <code>tools/build_road_status.py</code>.
+      <br><br>A situation report saying traffic is operating from Galchhi through Devighat to Battar
+      is a claim about a <i>route</i>, not about every piece of tarmac near it — the route is open
+      precisely because it now diverts around the stretches the river took. So the per-segment damage
+      grade decides the colour first, and a curated route can only upgrade what the imagery did not
+      rule out. A stretch Copernicus EMSR927 or OpenStreetMap records as destroyed stays red however
+      open the route through it is; a stretch graded damaged goes orange at best; and only a stretch
+      with no damage recorded against it can draw white. On top of that the feature has to lie within
+      40 m of the curated route (60 m for trunk, primary and secondary, 30 m for a single repaired
+      span, 25 m for a road sitting in the channel with no grade) for at least 70% of its length, and
+      its name and highway class have to be compatible, so a route's status cannot bleed onto a farm
+      track crossing under it. Where those disagree the answer is red, which is also the default for
+      every stretch nobody has reported on.
+      <br><br>That leaves only 30 of the 2,154 road features recoloured, and it is meant to: 975 of
+      them are graded destroyed. A route being open is carried instead by the curated corridor
+      ribbons, which is why those are drawn only when zoomed out — at street level the honest answer
+      is the red alignment underneath. The picture as of SitRep 18 (19 Sep): Galchhi through Devighat, Battar, Bidur and
       Trishuli Bazar to Gerkhu is open and two-lane, the Prithvi Highway is through at Krishnabhir,
       the last 0.8 km of the Bidur–Betrawati section is still being blasted and gravelled, and
       everything from Betrawati through Kalikasthan and beyond Dhunche to Syabrubesi, Timure and
       Rasuwagadhi has no confirmed vehicle repair — traffic reaches Dhunche over the
       Dhikure–Jibjibe–Bogatitar and Tokha–Saramthali–Bogatitar hill routes instead. Those hill
       routes carry no mapped road features to recolour, because they run outside the flood extent
-      and the Copernicus areas, so they are drawn as translucent corridor ribbons under the roads.
+      and the Copernicus areas, so they too are drawn only as corridor ribbons.
       One consequence worth knowing: on the Copernicus layer the colour now carries accessibility
       rather than the grade, so Destroyed and Damaged no longer differ by colour — the grade is in
       the popup, and the solid-versus-dashed split still separates a firm grade from a possible
-      one. 82 stretches Copernicus graded Destroyed on 27 August have since been cleared and
-      reopened, which is exactly what this overlay is for.</li>
+      one. The roads-inside-the-flood-extent overlay stays almost entirely red, which is correct:
+      those 877 features are by definition the roads the water reached, 546 of them graded
+      destroyed and most of the rest sitting in the channel with nothing recorded either way.</li>
   <li><b>Highways and main roads</b> — the national OSM roads export on HDX (9 Aug 2026), clipped to the
       corridor and its approaches and drawn underneath the HOT roads with the same styling: national
       highways (trunk and primary) yellow, everything else white. Nepal's highways are under-tagged in

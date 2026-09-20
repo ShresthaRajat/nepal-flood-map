@@ -14,9 +14,11 @@ Trishuli rivers, Nepal. Merges two sources:
   damaged, under repair, repaired — from `data/bridge_status.json`, a hand-maintained file
   compiled from NDRRMA situation reports and press coverage.
 - **Road accessibility**: both road overlays are coloured by whether a vehicle gets through today
-  rather than by how bad the damage was — white restored, orange under repair, red cut or
-  unreported — from `data/road_status.json`, 23 corridor segments compiled the same way. The hill
-  detour routes, which carry no mapped road features, draw as curated corridor ribbons.
+  — white restored, orange under repair, red destroyed, closed or unreported — from
+  `data/road_status.json`, 23 corridor segments compiled the same way. A curated route describes a
+  route, not an alignment, so the per-segment damage grade wins: a stretch Copernicus or OSM records
+  as destroyed stays red however open the route through it is. Routes being open is shown by the
+  corridor ribbons at low zoom, which is also how the hill detours appear at all.
 - **Road condition**: Copernicus EMS rapid-mapping grades (EMSR927) for every road and bridge
   segment in four assessed areas, plus a computed overlay of roads inside the observed flood extent.
 - **Ground evidence**: geotagged photographs and videos from the community

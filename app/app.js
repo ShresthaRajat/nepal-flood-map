@@ -389,7 +389,9 @@ const ROAD_STATUS_COLORS = {
   damaged:      DAMAGE_ROAD_RED,
 };
 const RSTATUS_KEYS = ['restored', 'under_repair', 'damaged'];
-const RSTATUS_LABEL = { restored: 'Restored', under_repair: 'Under repair', damaged: 'Damaged / closed' };
+const RSTATUS_LABEL = { restored: 'Restored', under_repair: 'Under repair', damaged: 'Destroyed / closed' };
+const GRADE_SOURCE_LABEL = { ems: 'Copernicus EMSR927', 'ems-inherited': 'Copernicus EMSR927',
+  'osm-status': 'OpenStreetMap', 'osm-destroyed-features': 'OpenStreetMap' };
 const LANE_LABEL = { 'two-lane': 'two-lane', 'one-lane': 'one-lane', track: 'track only' };
 const ROAD_STATUS_COLOR = (() => {
   const e = ['match', ['to-string', ['get', 'road_status']]];
@@ -1137,27 +1139,29 @@ function buildDefs() {
    * so there are no road features along them to recolour, and a reader looking for
    * "how do I get to Dhunche" would see only the cut highway.
    *
-   * It fades out above z12 and is gone by z14.5.  A segment is four to eight
+   * It is a low-zoom object and is gone by z12.  A segment is four to eight
    * waypoints, so the line between them is a chord, not an alignment: at corridor
    * scale that reads correctly as "this way through", but zoomed to a street it
    * would draw a straight band across hillsides where no road exists, which is a
-   * claim the data cannot support.  By the zoom where that would matter the
-   * individual roads underneath are themselves recoloured, so nothing is lost. */
+   * claim the data cannot support -- and worse, it would contradict the red
+   * alignment pieces underneath, which are the truthful answer at that zoom. */
   push(
     { id: 'road_status-segment', type: 'line', source: 'road_status', filter: OF_KIND('segment'),
       layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'round' },
       paint: { 'line-color': ROAD_STATUS_COLOR,
-               'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.3, 12, 0.3, 13.5, 0.12, 14.5, 0],
-               'line-width': ['interpolate', ['linear'], ['zoom'], 8, 4, 12, 9, 15, 16] } },
+               'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.3, 10.5, 0.3, 11.5, 0.12, 12, 0],
+               'line-width': ['interpolate', ['linear'], ['zoom'], 8, 4, 12, 9] } },
   );
 
   // Roads that lie inside the mapped water, computed by clipping the HOT roads to the flood
   // extent polygon, drawn on top of the roads so the affected stretches read even where HOT
-  // has not recorded a status yet (616 of 879 segments are still "Standing").  The colour is
-  // now current accessibility rather than damage: white where a situation report says traffic
-  // is getting through, orange where work is under way, red everywhere else -- which is every
-  // stretch nobody has reported on, so the overlay never over-claims.  A restored road gets a
-  // slightly stronger casing, because white on white basemap needs the outline to read.
+  // has not recorded a status yet.  Colour is current accessibility, but the per-feature damage
+  // grade decides it first: a stretch Copernicus or OSM records as Destroyed stays red however
+  // open the route through it is, because an open route is open by diverting around it.  Only
+  // 1 of these 877 features is recoloured at all -- they are by definition the roads the water
+  // reached, 546 of them graded Destroyed and the rest sitting in the channel with no grade,
+  // which the build leaves red on purpose.  A restored road gets a slightly stronger casing,
+  // because white on a pale basemap needs the outline to read.
   // Bridges are decided by river position and the ground reports in tools/build_flooded_roads.py, not by
   // the polygon (a deck always intersects it): upstream of BhimDhunga every bridge is red unless a report says Intact;
   // BhimDhunga to Benighat the nearest report decides; Benighat and downstream is unaffected.
@@ -1295,18 +1299,18 @@ function buildDefs() {
     // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
     { key: 'damage_edits', label: 'Building damage, analyst grading', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: false, count: 65,
       title: 'Building damage graded by hand in the Damage editor' },
-    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', sub: 'colour = open, under repair or cut',
+    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', sub: 'colour = status per segment; Copernicus grade wins',
       color: DAMAGE_ROAD_RED,
       ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548,
       title: 'Copernicus EMS road grading, 27\u201331 Aug 2026, coloured by whether the stretch is open now' },
-    { key: 'flooded_roads', label: 'Roads inside flood extent', sub: 'colour = open, under repair or cut',
+    { key: 'flooded_roads', label: 'Roads inside flood extent', sub: 'colour = status per segment; Copernicus grade wins',
       color: DAMAGE_ROAD_RED,
       ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879,
       title: 'Roads inside the flood extent (computed by clipping the HOT roads to the extent polygon), coloured by whether the stretch is open now' },
     // The curated corridors as a translucent ribbon: the only thing on the map that
     // says anything about the hill detour routes, which carry no road features to
     // recolour because they run outside the flood extent and the Copernicus areas.
-    { key: 'road_status_segments', label: 'Road status corridors', sub: 'curated \u00b7 NDRRMA SitRep 18 & press',
+    { key: 'road_status_segments', label: 'Road status corridors', sub: 'route, not alignment \u00b7 low zoom only',
       color: ROAD_STATUS_COLORS.under_repair, ids: ['road_status-segment'], on: false, count: 18,
       title: 'Curated road accessibility corridors, including the hill detour routes that carry no mapped road features' },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
@@ -2673,13 +2677,16 @@ function renderSidebar() {
     'Repair status is curated from NDRRMA SitReps and press (as of 19 Sep); see data/bridge_status.json.</span></div>' +
     '<div class="r"><span class="note">Beyond the 1 km corridor, roads come from the national OSM export (trunk to tertiary only).</span></div>' +
     '<div class="hd">Road status \u2014 can a vehicle get through today</div>' +
-    '<div class="r"><i class="rl w3 rs-restored"></i>Restored \u2014 traffic is getting through, at two lanes, one lane or track width</div>' +
+    '<div class="r"><i class="rl w3 rs-restored"></i>Restored (alignment open) \u2014 at two lanes, one lane or track width</div>' +
     '<div class="r"><i class="rl w3 rs-repair"></i>Under repair \u2014 work under way, not through yet</div>' +
-    '<div class="r"><i class="rl w3 rs-damaged"></i>Damaged or closed, and every stretch nobody has reported on</div>' +
-    '<div class="r"><i class="rl w4 rs-ribbon"></i>Curated corridor, including the hill detours that carry no mapped road (fades out when zoomed in)</div>' +
+    '<div class="r"><i class="rl w3 rs-damaged"></i>Destroyed / closed, and every stretch nobody has reported on</div>' +
+    '<div class="r"><i class="rl w4 rs-ribbon"></i>Route open / under repair (corridor, not alignment) \u2014 low zoom only</div>' +
     '<div class="r"><i class="rl w2 dash"></i>Copernicus graded the stretch only "possibly damaged"</div>' +
-    '<div class="r"><span class="note">Applies to both road overlays. Curated from NDRRMA SitRep 18 (19 Sep) and press; see data/road_status.json. ' +
-    'Colour is accessibility, not damage: the Copernicus Destroyed and Damaged grades no longer differ by colour and are in the popup instead.</span></div>' +
+    '<div class="r"><span class="note">Applies to both road overlays. The per-segment damage grade decides first: a stretch Copernicus EMSR927 or ' +
+    'OpenStreetMap records as destroyed stays red however open the route through it is, because an open route is open by diverting around it. ' +
+    'A route being open is shown by the corridor ribbon, which is why it is drawn only when zoomed out. ' +
+    'Routes curated from NDRRMA SitRep 18 (19 Sep) and press; see data/road_status.json. ' +
+    'Destroyed and Damaged no longer differ by colour \u2014 the grade is in the popup.</span></div>' +
     '<div class="hd">Contours (GLO-30)</div>' +
     '<div class="r"><i class="rl ct idx"></i>Index line, multiple of 100 m</div>' +
     '<div class="r"><i class="rl ct"></i>Intermediate line</div>';
@@ -3718,14 +3725,19 @@ function popupHTML(label, props) {
    * longer carries it. */
   if (p.road_status) {
     const rc = ROAD_STATUS_COLORS[p.road_status] || DAMAGE_ROAD_RED;
+    const gsrc = GRADE_SOURCE_LABEL[p.damage_source] || p.damage_source;
     h += '<div><span class="chip lg' + (rc === ROAD_WHITE ? ' pale' : '') + '" style="background:' + rc + '">' +
       esc(RSTATUS_LABEL[p.road_status] || p.road_status) +
       (p.lane ? ', ' + esc(LANE_LABEL[p.lane] || p.lane) : '') + '</span>' +
-      (p.grade_ems ? ' <span class="chip lg" style="background:' + statusColour(p.grade_ems) + '">Copernicus: ' +
-        esc(p.grade_ems) + '</span>' : '') +
-      (p.status_hdx ? ' <span class="chip lg" style="background:' + statusColour(p.status_hdx) + '">' +
+      // The grade this segment was given, and by whom.  It is what decided the
+      // colour whenever it says Destroyed or Damaged, so it belongs beside it.
+      (p.damage_grade ? ' <span class="chip lg" style="background:' + statusColour(p.damage_grade) + '">' +
+        esc(p.damage_grade) + (gsrc ? ', ' + esc(gsrc) : '') + '</span>' : '') +
+      (!p.damage_grade && p.status_hdx ? ' <span class="chip lg" style="background:' + statusColour(p.status_hdx) + '">' +
         esc(p.status_hdx) + ', OSM</span>' : '') + '</div>';
-    if (p.segment_name && p.segment_id) h += '<div class="pop-loc">Section: ' + esc(p.segment_name) + '</div>';
+    // Why a red line sits on an open route, or an orange one on a restored route.
+    if (p.status_note) h += '<div class="pop-n">' + esc(p.status_note) + '</div>';
+    if (p.segment_name && p.segment_id) h += '<div class="pop-loc">Route: ' + esc(p.segment_name) + '</div>';
   }
   // Hand-geocoded points say so on the face of the popup, not just in the
   // attribute table: a settlement-level pin is a different claim from a survey.
