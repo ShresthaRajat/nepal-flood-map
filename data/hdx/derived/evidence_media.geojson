@@ -1,0 +1,4338 @@
+{
+ "type": "FeatureCollection",
+ "name": "evidence_media",
+ "generated": "2026-09-20T14:09:43Z",
+ "source": "https://archive.rasuwaflood.org/api/items?all=1",
+ "note": "Published items from the Rasuwa Flood Evidence Map (VIVA-D); see tools/build_evidence_media.py. Crowd-sourced: `precision` says whether the coordinate is the photograph's own GPS or a pin the uploader dropped. Rights stay with the photographers; contact details are not carried here.",
+ "features": [
+  {
+   "type": "Feature",
+   "id": 1,
+   "properties": {
+    "id": 1,
+    "name": "chitwan_OLD_test",
+    "media_type": "photo",
+    "status": "published",
+    "description": "THIS IS FOR TEST",
+    "location_name": "Bharatpur-28, Bharatpur, Chitwan, Bagamati Province, 44210, Nepal",
+    "captured_at": "2026-06-10",
+    "captured_at_raw": "Jun 10, 2026",
+    "submitted_at": "2026-08-27T21:01:30.269Z",
+    "taken_by": "APIL",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1787864482140-chitwan.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/1/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bharatpur",
+    "district": "Chitawan",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.167244,
+     27.572528
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 2,
+   "properties": {
+    "id": 2,
+    "name": "nuwakot trishuli Pandit Rakeshbajar ko aawasta🌊 | Raj Kapoor",
+    "media_type": "video",
+    "status": "published",
+    "description": "nuwakot trishuli Pandit Rakeshbajar ko aawasta🌊",
+    "location_name": "Bidur municipality, Pasang Lhamu Highway, Batār Bāzār, Bidur-04, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-27T21:12:18.277Z",
+    "taken_by": "Raj Kapoor",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/19KAiCxGPX/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787865140802-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/2/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.141597,
+     27.911379
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 3,
+   "properties": {
+    "id": 3,
+    "name": "2M views · 25K reactions | उपेन्द्र के सि on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "2M views · 25K reactions | उपेन्द्र के सि on Reels",
+    "location_name": "Bidur-01, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-27T21:14:03.860Z",
+    "taken_by": "उपेन्द्र के सि",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/18RWmeVQUA/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787865246161-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/3/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.148163,
+     27.923277
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 4,
+   "properties": {
+    "id": 4,
+    "name": "12K views · 187K reactions | #nepal#flood#nepalflood | Maheshwor Subedi",
+    "media_type": "video",
+    "status": "published",
+    "description": "#nepal#flood#nepalflood",
+    "location_name": "29A001, Dhunge, Uttargaya-04, Uttargaya, Rasuwa, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-27T21:14:53.123Z",
+    "taken_by": "Maheshwor Subedi",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1DgS1UaKgA/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787865295467-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/4/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Uttargaya",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.203438,
+     28.003332
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 6,
+   "properties": {
+    "id": 6,
+    "name": "275K views · 2.5K reactions | A mudslide, which occurred on the Nepalese side, struck Gyirong Port in Gyirong County, Xizang, on Wednesday morning. On the second day at 10:20 a.m., with the border roa",
+    "media_type": "video",
+    "status": "published",
+    "description": "A mudslide, which occurred on the Nepalese side, struck Gyirong Port in Gyirong County, Xizang, on Wednesday morning.\r\n\r\nOn the second day at 10:20 a.m., with the border road cut off, the Lhasa fire‑rescue team went to Guoba Village and used a drone to survey the site, finding that the landslide area is stable for now, but the barrier lake's water level is still rising.",
+    "location_name": "Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-27T21:43:30.892Z",
+    "taken_by": "China News 中国新闻网",
+    "owner": null,
+    "location_source": "Approximate",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1Dj7UYm6aU/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787867013787-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/6/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.477332,
+     28.118477
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 7,
+   "properties": {
+    "id": 7,
+    "name": "渡邉英徳 wtnv - 2026年ネパール洪水の3Dマップを更新。  @vantortech の衛星画像を追加しました。ラスガワディ国境検問所，ラスガワディ水力発...",
+    "media_type": "video",
+    "status": "published",
+    "description": "2026年ネパール洪水の3Dマップを更新。  @vantortech の衛星画像を追加しました。ラスガワディ国境検問所，ラスガワディ水力発電所，河沿いの押し流された集落などの被害を確認できます。  マップはこちら： https://t.co/gAXm4Cv2LU https://t.co/ltJiFDsLFz",
+    "location_name": "Pasang Laahamu, Timure, Gosaikunda-02, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T01:12:53.266Z",
+    "taken_by": "渡邉英徳 wtnv",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/hwtnv/status/2093129474619699331/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787879574472-x-2093129474619699331.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/7/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.374756,
+     28.266892
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 10,
+   "properties": {
+    "id": 10,
+    "name": "Before and after showing the border crossing.",
+    "media_type": "video",
+    "status": "published",
+    "description": "Before and after showing the border crossing that was affected by the glacial flooding even on the border of Nepal and China https://t.co/fP9Z7bASQl",
+    "location_name": "NH42, Bridhim, Gosaikunda-03, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T01:21:06.319Z",
+    "taken_by": "TripleZ",
+    "owner": null,
+    "location_source": "Community update",
+    "precision": "approximate",
+    "source_url": "https://x.com/NotZ3Music/status/2093070245279699052/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787880068793-x-2093070245279699052.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/10/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.377084,
+     28.277843
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 11,
+   "properties": {
+    "id": 11,
+    "name": "297K views · 6.1K reactions | KRIMASINGSA UANAMASINGSA NEPAL OH AMOSWK KHE TWI BAI HA BAI SABOLWI PHAI MANI.....SWRAI SWRAI MANGPHILI.... | Jorani News",
+    "media_type": "video",
+    "status": "published",
+    "description": "KRIMASINGSA UANAMASINGSA NEPAL OH AMOSWK KHE TWI BAI HA BAI SABOLWI PHAI MANI.....SWRAI SWRAI MANGPHILI....",
+    "location_name": "Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T01:28:22.151Z",
+    "taken_by": "Jorani News",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/19UPtDusFz/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787880506211-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/11/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Aamachhodingmo",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.262489,
+     28.09952
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 13,
+   "properties": {
+    "id": 13,
+    "name": "22K views · 21 reactions | लक्ष्मण देवकोटा on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "22K views · 21 reactions | लक्ष्मण देवकोटा on Reels",
+    "location_name": "NH42, Shyaphru, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-28T02:29:37.194Z",
+    "taken_by": "लक्ष्मण देवकोटा",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/14knzByMkxy/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884180436-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/13/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.340424,
+     28.180224
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 14,
+   "properties": {
+    "id": 14,
+    "name": "76K views · 37 reactions | लक्ष्मण देवकोटा on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "76K views · 37 reactions | लक्ष्मण देवकोटा on Reels",
+    "location_name": "Brimdang, Aamachhodingmo-05, Aamachhodingmo, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-28T02:30:14.208Z",
+    "taken_by": "लक्ष्मण देवकोटा",
+    "owner": null,
+    "location_source": "Approximate",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/18d5SkH4Yj/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884226949-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/14/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Aamachhodingmo",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.307114,
+     28.207242
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 15,
+   "properties": {
+    "id": 15,
+    "name": "19K views · 14 reactions | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "19K views · 14 reactions | Pradip Khatiwada on Reels",
+    "location_name": "Dhunche, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:31:03.476Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1EF28KeKyE/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884265371-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/15/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.311584,
+     28.141762
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 16,
+   "properties": {
+    "id": 16,
+    "name": "2.5K views | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "2.5K views | Pradip Khatiwada on Reels",
+    "location_name": "Dhunche, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:31:43.502Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1C2JQLVJxw/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884305787-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/16/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.313473,
+     28.145244
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 18,
+   "properties": {
+    "id": 18,
+    "name": "1.9K views | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "1.9K views | Pradip Khatiwada on Reels",
+    "location_name": "Dhunche, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:32:35.000Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1JuhKxyD1z/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884356780-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/18/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.315361,
+     28.146001
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 19,
+   "properties": {
+    "id": 19,
+    "name": "1.5K views | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "1.5K views | Pradip Khatiwada on Reels",
+    "location_name": "Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:33:02.511Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1BdcjfP5Zj/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884384475-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/19/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Uttargaya",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.23262,
+     28.089831
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 20,
+   "properties": {
+    "id": 20,
+    "name": "1.1K views | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "1.1K views | Pradip Khatiwada on Reels",
+    "location_name": "NH42, Simle, Uttargaya-02, Uttargaya, Rasuwa, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:33:31.335Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1Lw4MV5Ex7/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884413346-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/20/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Uttargaya",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.192795,
+     28.034989
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 21,
+   "properties": {
+    "id": 21,
+    "name": "19K views · 14 reactions | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "19K views · 14 reactions | Pradip Khatiwada on Reels",
+    "location_name": "Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:34:13.152Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1GFP5DYp86/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884454939-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/21/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Aamachhodingmo",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.286865,
+     28.118298
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 22,
+   "properties": {
+    "id": 22,
+    "name": "2.5K views | Pradip Khatiwada on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "2.5K views | Pradip Khatiwada on Reels",
+    "location_name": "Dhunche, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:34:36.874Z",
+    "taken_by": "Pradip Khatiwada",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/19agCgNtmw/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884478731-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/22/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.306091,
+     28.139038
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 23,
+   "properties": {
+    "id": 23,
+    "name": "reuters",
+    "media_type": "photo",
+    "status": "published",
+    "description": "https://www.facebook.com/photo/?fbid=1652940176696708&set=a.389433423047396",
+    "location_name": "Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": null,
+    "captured_at_raw": null,
+    "submitted_at": "2026-08-28T02:36:13.071Z",
+    "taken_by": null,
+    "owner": "Reuters",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1787884569975-reuters.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/23/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.247726,
+     28.09156
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 24,
+   "properties": {
+    "id": 24,
+    "name": "Before the flood-narrative",
+    "media_type": "video",
+    "status": "published",
+    "description": "हेर्दै आङ सिरिङग हुने भिडियो \r\nरसुवा बाढी - यसरी लग्यो बस्ती, हाइड्रोपावर 😭",
+    "location_name": "Pasang Lhamu Highway, Shyaphru, Gosaikunda-05, Brabal, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T02:37:20.884Z",
+    "taken_by": "Bibek Lopchan",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1DV7qc5jXZ/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884643656-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/24/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.332184,
+     28.157655
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 25,
+   "properties": {
+    "id": 25,
+    "name": "21K reactions · 570 shares | हे भगवान सिँगो गाउँ नै सखाप पारेको कस्तो विपति आएको होला। | Navin Shah",
+    "media_type": "video",
+    "status": "published",
+    "description": "हे भगवान सिँगो गाउँ नै सखाप पारेको कस्तो विपति आएको होला।",
+    "location_name": "29A004, Kalika-05, Kalika, Rasuwa, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-28T02:39:17.360Z",
+    "taken_by": "Navin Shah",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1DZ6JjKRB5/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884759660-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/25/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Kalika",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.223007,
+     27.998603
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 26,
+   "properties": {
+    "id": 26,
+    "name": "21K reactions · 570 shares | हे भगवान सिँगो गाउँ नै सखाप पारेको कस्तो विपति आएको होला। | Navin Shah",
+    "media_type": "video",
+    "status": "published",
+    "description": "हे भगवान सिँगो गाउँ नै सखाप पारेको कस्तो विपति आएको होला।",
+    "location_name": "Pasang Lhamu Highway, Shyaphru, Gosaikunda-05, Brabal, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-28T02:40:26.018Z",
+    "taken_by": "Navin Shah",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1DZ6JjKRB5/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787884828270-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/26/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.328407,
+     28.151541
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 27,
+   "properties": {
+    "id": 27,
+    "name": "KRIMASINGSA UANAMASINGSA NEPAL OH AMOSWK KHE TWI BAI HA BAI SABOLWI PHAI MANI.....SWRAI SWRAI MANGPHILI.... | Jorani News",
+    "media_type": "video",
+    "status": "published",
+    "description": "KRIMASINGSA UANAMASINGSA NEPAL OH AMOSWK KHE TWI BAI HA BAI SABOLWI PHAI MANI.....SWRAI SWRAI MANGPHILI....",
+    "location_name": "Dhunche, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T03:20:41.793Z",
+    "taken_by": "Jorani News",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/18qt35ESEm/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787887247096-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/27/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.305233,
+     28.137918
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 28,
+   "properties": {
+    "id": 28,
+    "name": "3.4K reactions · 91 shares | नेपाल में बाढ़ | Het Ram Bharti",
+    "media_type": "video",
+    "status": "published",
+    "description": "नेपाल में बाढ़",
+    "location_name": "Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-28T13:03:57.832Z",
+    "taken_by": "Het Ram Bharti",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/198PwMATXQ/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787922240451-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/28/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.235825,
+     28.08982
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 29,
+   "properties": {
+    "id": 29,
+    "name": "458K views · 5.8K reactions | Trying our best to reach the hydropower tunnel for rescue operations🚨🛟⛑️#apfnepal #nepalarmy | Sohan Gurung",
+    "media_type": "video",
+    "status": "published",
+    "description": "Trying our best to reach the hydropower tunnel for rescue operations🚨🛟⛑️#apfnepal #nepalarmy",
+    "location_name": "NH42, Mailung, Uttargaya-01, Uttargaya, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T13:06:17.048Z",
+    "taken_by": "Sohan Gurung",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1DsRbmTj1V/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787922379798-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/29/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Uttargaya",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.222092,
+     28.082718
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 30,
+   "properties": {
+    "id": 30,
+    "name": "स्वारी ;)) - Dozens of flood victims waiting for air lift at Syafrubesi !",
+    "media_type": "video",
+    "status": "published",
+    "description": "Dozens of flood victims waiting for air lift at Syafrubesi ! https://t.co/0Xsg71pvHC",
+    "location_name": "29A013, Shyaphru, Gosaikunda-05, Brabal, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T14:06:15.802Z",
+    "taken_by": "स्वारी ;))",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/ptkums/status/2093264468025454934/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787925977813-x-2093264468025454934.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/30/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.341454,
+     28.160924
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 31,
+   "properties": {
+    "id": 31,
+    "name": "Weather Monitor - Terrifying footage shows a flash flood sweeping through the Nepal–Tib...",
+    "media_type": "video",
+    "status": "published",
+    "description": "Terrifying footage shows a flash flood sweeping through the Nepal–Tibet border, trapping people on rooftops and balconies. At least 469 have been killed, with hundreds still missing. https://t.co/xRgRWmwut7",
+    "location_name": "Pasang Lhamu Highway, Sano Bharkhu, Gosaikunda-05, Brabal, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T14:10:47.400Z",
+    "taken_by": "Weather Monitor",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/WeatherMonitors/status/2093202626930524474/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787926256851-x-2093202626930524474.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/31/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.312614,
+     28.129441
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 32,
+   "properties": {
+    "id": 32,
+    "name": "No rescue from government",
+    "media_type": "video",
+    "status": "published",
+    "description": "Onlinekhabar - जति बोलाउँदा पनि बेत्रावती बजारमा एउटा हेली आएन : आशिष तामाङ | Online...\r\n\r\nजति बोलाउँदा पनि बेत्रावती बजारमा एउटा हेली आएन : आशिष तामाङ | Onlinekhabar https://t.co/9M0HNi7GpL",
+    "location_name": "28A019R, Tupche, Bidur-07, Bidur, Nuwakot, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T14:12:27.562Z",
+    "taken_by": "Onlinekhabar",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/Online_khabar/status/2093334064757633130/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787926365346-x-2093334064757633130.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/32/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.172024,
+     27.963545
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 33,
+   "properties": {
+    "id": 33,
+    "name": "Flood victims waiting for air lift",
+    "media_type": "video",
+    "status": "published",
+    "description": null,
+    "location_name": "Langtang Trek Trail, Shyaphru Bensi, Gosaikunda-03, Brabal, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026, 2:10 pm",
+    "submitted_at": "2026-08-28T14:12:57.312Z",
+    "taken_by": "@ptkums",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/ptkums/status/2093264468025454934?s=46",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787926380100-x-2093264468025454934.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/33/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.334473,
+     28.163629
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 34,
+   "properties": {
+    "id": 34,
+    "name": "595K views · 12K reactions | Surya Narayan Shrestha on Reels",
+    "media_type": "video",
+    "status": "published",
+    "description": "595K views · 12K reactions | Surya Narayan Shrestha on Reels",
+    "location_name": "NH42, Shanti Bazar, Kispang-05, Kispang, Nuwakot, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-28T16:07:10.807Z",
+    "taken_by": "Surya Narayan Shrestha",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1LAaerSLpJ/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787933234891-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/34/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Kispang",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.184097,
+     27.998208
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 35,
+   "properties": {
+    "id": 35,
+    "name": "702K views · 7.1K reactions | भोटेकोशी नदी के उफान से हाइड्रोपावर प्रोजेक्ट का लेबर कैंप तबाही की चपेट में, कई टीन शेड बहे... ​ भोटेकोशी नदी में आए अचानक उफान और जलस्तर में हुई भारी वृद्धि से तटीय इला",
+    "media_type": "video",
+    "status": "published",
+    "description": "भोटेकोशी नदी के उफान से हाइड्रोपावर प्रोजेक्ट का लेबर कैंप तबाही की चपेट में, कई टीन शेड बहे...\r\n​\r\nभोटेकोशी नदी में आए अचानक उफान और जलस्तर में हुई भारी वृद्धि से तटीय इलाके में निर्माणाधीन हाइड्रोपावर प्रोजेक्ट स्थल पर भीषण तबाही देखने को मिली है। नदी के तेज बहाव ने प्रोजेक्ट में काम कर रहे मजदूरों के अस्थायी आवास (टीन शेड) को पूरी तरह से तहस-नहस कर दिया। कई शेड पानी के तेज प्रवाह में बह गए, जिससे घटनास्थल पर अफरा-तफरी का माहौल बन गया।\r\n📍 स्थान: नेपाल/सीमावर्ती क्षेत्र के तट पर स्थित जलविद्युत परियोजना\r\n📰 NEWS 8 BIHAR — सच की खबर, सबसे पहले\r\nवीडियो पसंद आए तो Like 👍, Share ↗️ और Subscribe 🔔 जरूर करें।\r\n#Jehanabad #JehanabadNews #BiharNews #BiharBreakingNews #BiharNewsToday #News8Bihar #BiharSamachar #LatestBiharNews #JehanabadNewsToday\r\n#Biharnewsupatde\r\n#Newsupdate \r\n#BiharFlood2026 #NepalFlood #KosiBarrage #Bihar #BiharNews #GangaRiverFlood",
+    "location_name": "Timure, Gosaikunda-02, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T19:37:52.155Z",
+    "taken_by": "News 8 Bihar",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1Eyh99Mhxt/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787945874219-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/35/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.358391,
+     28.240993
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 36,
+   "properties": {
+    "id": 36,
+    "name": "2.4K reactions · 68 shares | #nepal ko kina yesto baho#nepali flood#trinding vireal video#😥😥😥😭😭😭😭😭 | Gorkha Prem Sky",
+    "media_type": "video",
+    "status": "published",
+    "description": "#nepal ko kina yesto baho#nepali flood#trinding vireal video#😥😥😥😭😭😭😭😭",
+    "location_name": "28A015R, Bidur-06, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-28T19:38:38.846Z",
+    "taken_by": "Gorkha Prem Sky",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1853haTNZX/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787945922214-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/36/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.123672,
+     27.882853
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 37,
+   "properties": {
+    "id": 37,
+    "name": "396K views · 4.4K reactions | प्रकृति सङ्ग खेल बाड नगरौ 😭😭😭😭😭😭 सबै सकुसल रहेको देख्न पाउ भगबान | Sankalp Kunwar",
+    "media_type": "video",
+    "status": "published",
+    "description": "प्रकृति सङ्ग खेल बाड नगरौ\r\n😭😭😭😭😭😭\r\nसबै सकुसल रहेको देख्न पाउ भगबान",
+    "location_name": "Kalika-03, Kalika, Rasuwa, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-27",
+    "captured_at_raw": "Aug 27, 2026",
+    "submitted_at": "2026-08-28T21:27:36.240Z",
+    "taken_by": "Sankalp Kunwar",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1cfr5TEgsR/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1787952459070-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/37/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Kalika",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.199661,
+     27.991891
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 38,
+   "properties": {
+    "id": 38,
+    "name": "पौडेल - Betrawoti 😢",
+    "media_type": "video",
+    "status": "published",
+    "description": "Betrawoti 😢 https://t.co/irotNpL1I8",
+    "location_name": "Bhimsen-08, Borlang, Bhimsen, Gorkha, Gandaki Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "Aug 30, 2026",
+    "submitted_at": "2026-08-30T13:27:35.291Z",
+    "taken_by": "पौडेल",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/paudel00123/status/2094039852006211684/video/1?s=46",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788096458165-x-2094039852006211684.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/38/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bhimsenthapa",
+    "district": "Gorkha",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.773254,
+     27.986595
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 41,
+   "properties": {
+    "id": 41,
+    "name": "Nikhil saini - Every video emerging from Nepal is somehow even scarier than the last... #1",
+    "media_type": "video",
+    "status": "published",
+    "description": "Every video emerging from Nepal is somehow even scarier than the last. A peaceful valley under a bright, completely normal sky and then suddenly look at how that wall of gushing water sweeps away everything in its path. #Nepal https://t.co/z8VAhP8Tnd",
+    "location_name": "NH42, Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-30T20:07:04.375Z",
+    "taken_by": "Nikhil saini",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/iNikhilsaini/status/2092638042536456651/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788120432272-x-2092638042536456651.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/41/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Aamachhodingmo",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.294933,
+     28.125413
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 42,
+   "properties": {
+    "id": 42,
+    "name": "967K views · 14K reactions | रसुवामा तिब्बततर्फबाट आएको भीषण बाढी रसुवा, १० भदौ। तिब्बततर्फबाट भोटेकोशी नदीमा एक्कासि ठूलो बाढी प्रवेश गरेपछि रसुवाको टिमुरे, स्याफ्रुबेँसीलगायत क्षेत्रमा ठूलो क्षति पु",
+    "media_type": "video",
+    "status": "published",
+    "description": "रसुवामा तिब्बततर्फबाट आएको भीषण बाढी\r\n\r\nरसुवा, १० भदौ। तिब्बततर्फबाट भोटेकोशी नदीमा एक्कासि ठूलो बाढी प्रवेश गरेपछि रसुवाको टिमुरे, स्याफ्रुबेँसीलगायत क्षेत्रमा ठूलो क्षति पुगेको छ। बुधबार बिहान करिब ९ बजेतिर आएको बाढीले बस्ती तथा भौतिक संरचनामा क्षति पुर्‍याएको प्रारम्भिक विवरण प्राप्त भएको छ।",
+    "location_name": "NH42, Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-08-31T01:41:05.737Z",
+    "taken_by": "MeroSafar",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1HNP4mR9yW/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788140468322-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/42/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Aamachhodingmo",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.265923,
+     28.102236
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 43,
+   "properties": {
+    "id": 43,
+    "name": "509K views · 7.4K reactions | है~~ट | Satyaman Gurung",
+    "media_type": "video",
+    "status": "published",
+    "description": "है~~ट",
+    "location_name": "NH42, Sano Bharkhu, Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "Aug 30, 2026",
+    "submitted_at": "2026-08-31T02:15:31.477Z",
+    "taken_by": "Satyaman Gurung",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1B5WnHbLve/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788142533763-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/43/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.310154,
+     28.141246
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 44,
+   "properties": {
+    "id": 44,
+    "name": "574K views · 10K reactions | 2083-05-10 gate aayako badi | Amit Dangol",
+    "media_type": "video",
+    "status": "published",
+    "description": "2083-05-10 gate aayako badi",
+    "location_name": "NH42, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-28",
+    "captured_at_raw": "Aug 28, 2026",
+    "submitted_at": "2026-08-31T02:20:16.126Z",
+    "taken_by": "Amit Dangol",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1BsAyAwrwV/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788142818191-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/44/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.250587,
+     28.091704
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 45,
+   "properties": {
+    "id": 45,
+    "name": "188K views · 1.6K reactions | भदौ १० गतेको विनाशकारी बाढीबाट जोगिएको धादिङ र गोरखा जोड्ने झोलुङ्गे पुल आइतबार बिहानको भोटेकोशीको बाढीले बगाएको छ #dainiki #dainikitv | Dainiki दैनिकी",
+    "media_type": "video",
+    "status": "published",
+    "description": "भदौ १० गतेको विनाशकारी बाढीबाट जोगिएको धादिङ र गोरखा जोड्ने झोलुङ्गे पुल आइतबार बिहानको भोटेकोशीको बाढीले बगाएको छ #dainiki #dainikitv",
+    "location_name": "Siddhalek-04, Siddhalek, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "Aug 30, 2026",
+    "submitted_at": "2026-09-01T01:43:39.619Z",
+    "taken_by": "Dainiki दैनिकी",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1Bo9sqeLqg/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788227022607-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/45/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Siddhalek",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.811993,
+     27.814905
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 46,
+   "properties": {
+    "id": 46,
+    "name": "Anderson Cooper 360° - Anderson Cooper reports from Syabru Besi, a once-bustling Nepal marke...",
+    "media_type": "video",
+    "status": "published",
+    "description": "Anderson Cooper reports from Syabru Besi, a once-bustling Nepal market town now buried under flood debris, as the death toll continues to rise and thousands remain missing. https://t.co/F6tGKsgfER",
+    "location_name": "9, Pasang Lhamu Highway, Gosaikunda-05, Shyaphru, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "Aug 31, 2026",
+    "submitted_at": "2026-09-01T15:15:00.342Z",
+    "taken_by": "Anderson Cooper 360°",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://x.com/AC360/status/2094496873595732249/video/1",
+    "source_platform": "x",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788275705717-x-2094496873595732249.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/46/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.337591,
+     28.162516
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 47,
+   "properties": {
+    "id": 47,
+    "name": "238K views · 3.3K reactions | The bodies of those killed by a devastating flood in Nepal have been found more than 100 kilometres down stream, as emergency crew race to find survivors and identify the",
+    "media_type": "video",
+    "status": "published",
+    "description": "The bodies of those killed by a devastating flood in Nepal have been found more than 100 kilometres down stream, as emergency crew race to find survivors and identify the dead.\r\n\r\n#ABCNews #ABCNewsInternational",
+    "location_name": "Gosaikunda-05, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-09-01",
+    "captured_at_raw": "Sep 1, 2026",
+    "submitted_at": "2026-09-01T20:44:37.126Z",
+    "taken_by": "ABC News",
+    "owner": null,
+    "location_source": "Approximate",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1AmTHunP7p/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788295479626-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/47/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gosaikunda",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.446885,
+     28.134782
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 49,
+   "properties": {
+    "id": 49,
+    "name": "14K views · 296 reactions | #परेवा भिर अबको केहि बेरमा खुल्दै छ | Prakash Ximekee",
+    "media_type": "video",
+    "status": "published",
+    "description": "#परेवा भिर अबको केहि बेरमा खुल्दै छ",
+    "location_name": "Prithvi Rajmarg, Adamghat, Gajuri-06, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-09-01",
+    "captured_at_raw": "Sep 1, 2026",
+    "submitted_at": "2026-09-01T21:10:50.764Z",
+    "taken_by": "Prakash Ximekee",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1F4mToXp8K/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788297052944-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/49/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.944687,
+     27.811464
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 51,
+   "properties": {
+    "id": 51,
+    "name": "Early Warning",
+    "media_type": "video",
+    "status": "published",
+    "description": "🙏 नमस्ते सबैजना,\r\n\r\nबाढी आउनुभन्दा करिब १० मिनेट अगाडि म जनै पूर्णिमाको लागि सामान किन्न त्रिशूली बजारमा थिएँ। केही मिनेटमै हामीले चिनेको, माया गरेको र जीवनका धेरै सम्झना जोडिएको यो ठाउँले यति ठूलो विपत्तिको सामना गर्नुपर्ला भन्ने कल्पनासमेत गरेको थिइनँ।\r\n\r\nअहिले हाम्रो ठाउँ अत्यन्तै ठूलो पीडा र शोकबाट गुज्रिरहेको छ। त्यसैले कृपया हाम्रो अवस्थालाई बुझ्ने प्रयास गरिदिनुहोस्। नकारात्मक वा मन दुखाउने टिप्पणी गर्नुअघि एकछिन आफूलाई हाम्रो ठाउँमा राखेर सोचिदिनुहुन विनम्र अनुरोध गर्दछु।\r\n\r\nयो भिडियो शेयर गर्नुको उद्देश्य कसैको भावना दुखाउनु वा ध्यान आकर्षित गर्नु होइन। हाम्रो ठाउँ अहिले शोकमा डुबेको छ। धेरै परिवारले आफ्ना प्रियजन, घर, जग्गा तथा जीवनभरको सम्पत्ति गुमाएका छन्।\r\n\r\nम स्वयं पनि यस विपत्तिको पीडित हुँ। मैले पनि आफ्ना घर र जग्गा गुमाएको छु। आफ्नै आँखाअगाडि यो विपत्तिले धेरै मानिसहरूको ज्यान लिएको देख्नुपर्‍यो—मैले चिनेका मानिसहरू, परिचित अनुहारहरू र मैले जीवनभर चिनेको यस ठाउँका मानिसहरू। हामीले देखेको, भोगेको र गुमाएको पीडालाई शब्दमा व्यक्त गर्न अत्यन्तै कठिन छ।\r\n\r\nयस कठिन समयमा, हाम्रो प्रभावित ठाउँ र पीडित परिवारहरूलाई सहयोग गर्न चाहनुहुने सबैलाई आधिकारिक सरकारी माध्यम तथा विश्वसनीय राहत कोष वा अभियानमार्फत आफूले सक्ने सहयोग गरिदिनुहुन हार्दिक अनुरोध गर्दछु।\r\n\r\nकृपया यस विपत्तिमा ज्यान गुमाउनु भएका व्यक्तिहरू, बेपत्ता भएकाहरू, उहाँहरूका परिवारहरू तथा यस विपत्तिबाट प्रभावित सबैलाई आफ्नो प्रार्थना र सम्झनामा राखिदिनुहोस्। 🙏\r\n\r\nतपाईंहरूको समझदारी, माया, सहानुभूति र सहयोगका लागि हृदयदेखि धन्यवाद। ❤️\r\n\r\n🙏 Namaste everyone,\r\n\r\nJust about 10 minutes before the flood, I was in Trishuli doing grocery shopping for Janai Purnima. I could never have imagined that within just a few minutes, the place we knew, loved, and shared so many memories with would face such a devastating disaster.\r\n\r\nOur place is already going through unimaginable pain and grief. I kindly request everyone to please try to understand our situation and, even for a moment, put yourself in our place before leaving any negative or hurtful comments.\r\n\r\nThe purpose of sharing this video is not to hurt anyone’s feelings or to seek attention. Our place is already grieving. Many families have lost their loved ones, homes, land, and everything they had built throughout their lives.\r\n\r\nI am also a victim of this disaster. I have lost my houses and land as well. I witnessed this disaster taking lives in front of my eyes—people I knew, familiar faces, and people from the place I have known throughout my life. It is extremely difficult to put into words what we have seen, experienced, and lost.\r\n\r\nAt this difficult time, I humbly request everyone who is able to help the affected people and families from our place to please provide support through authorised government channels and trusted official relief efforts.\r\n\r\nPlease keep those who lost their lives, those who are still missing, their families, and everyone affected by this disaster in your thoughts and prayers. 🙏\r\n\r\nThank you from the bottom of my heart for your understanding, kindness, compassion, and support. ❤️",
+    "location_name": "Jyamireghat-Ghyalchok, Majuwa village, Gandaki-07, Ghyalchok, Gandaki, Gorkha, Gandaki Province, Nepal",
+    "captured_at": "2026-09-01",
+    "captured_at_raw": "Sep 1, 2026",
+    "submitted_at": "2026-09-02T14:20:01.294Z",
+    "taken_by": "Bhimsen Thapa",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1DucnE9ZPM/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788358803804-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/51/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Gandaki",
+    "district": "Gorkha",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.729996,
+     27.800646
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 52,
+   "properties": {
+    "id": 52,
+    "name": "5.7M views · 93K reactions | बाचेर भिडियो बनाको | Tara KC",
+    "media_type": "video",
+    "status": "published",
+    "description": "बाचेर भिडियो बनाको",
+    "location_name": "Shree Pabarti kunda Pra.V, Army Road, Dhunche, Gosaikunda-06, Gosaikunda, Rasuwa, Bagamati Province, Nepal",
+    "captured_at": "2026-09-02",
+    "captured_at_raw": "Sep 2, 2026",
+    "submitted_at": "2026-09-02T23:25:35.923Z",
+    "taken_by": "Tara KC",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/19g7cgXkZT/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788391538271-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/52/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Aamachhodingmo",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.282288,
+     28.12387
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 54,
+   "properties": {
+    "id": 54,
+    "name": "34K views · 329 reactions | So many people were swept away by the floods in nepal omg Live visual 😪😪😪😪 #trendingreels #viralreelschallenge #goviral | Jeevan Thapa",
+    "media_type": "video",
+    "status": "published",
+    "description": "Flood sweapting entire village location on the bank of Trishuliii River somewhere U's of Betrawati and D's of Syaprubesi.",
+    "location_name": "NH42, Upper Trishuli 3A Powerhouse, Simle, Uttargaya-02, Uttargaya, Rasuwa, Bagamati Province, 45003, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-09-03T03:24:51.771Z",
+    "taken_by": "NA",
+    "owner": "NA",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/18FVPsL8J8/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788405894401-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/54/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Uttargaya",
+    "district": "Rasuwa",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.186644,
+     28.021511
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 55,
+   "properties": {
+    "id": 55,
+    "name": "Bus damage",
+    "media_type": "video",
+    "status": "published",
+    "description": null,
+    "location_name": "Devighat Path, Devighat, Bidur-05, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": null,
+    "captured_at_raw": null,
+    "submitted_at": "2026-09-03T20:27:23.492Z",
+    "taken_by": null,
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/r/1Dy33Up5uW/?mibextid=wwXIfr",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788467249026-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/55/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.115891,
+     27.865004
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 56,
+   "properties": {
+    "id": 56,
+    "name": "448K views · 11K reactions | नुवाकोट भैँसेका घिमिरे परिवार जसले घर र परिवार गुमाए 📹:श्रीराम सुवेदी #Nuwakot #flood #NagarikNews | NagarikNews",
+    "media_type": "video",
+    "status": "published",
+    "description": "This is very sad case of double hit of disaster where a family who had moved to low hill after 2015 Gorkha earthquake are affected by this-Rasuwa  Flood.",
+    "location_name": "Goganpani, Thakre-09, Thakre, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-09-02",
+    "captured_at_raw": "Sep 2, 2026",
+    "submitted_at": "2026-09-04T02:44:22.632Z",
+    "taken_by": "NagarikNews",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/14pCctZf1p6/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788489865441-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/56/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Thakre",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.116577,
+     27.755102
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 57,
+   "properties": {
+    "id": 57,
+    "name": "IMG 1690",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Highway, MaheshDovan, Galchhi -06, Galchhi, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:47:15.058Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750029389-IMG_1690.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/57/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Galchhi",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.982619,
+     27.800928
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 58,
+   "properties": {
+    "id": 58,
+    "name": "IMG 1691",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Highway, MaheshDovan, Galchhi -06, Galchhi, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:47:22.750Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750038597-IMG_1691.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/58/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Galchhi",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.982444,
+     27.800914
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 59,
+   "properties": {
+    "id": 59,
+    "name": "IMG 1692",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Highway, MaheshDovan, Galchhi -06, Galchhi, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:47:58.482Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750073892-IMG_1692.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/59/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Galchhi",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.982353,
+     27.800914
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 60,
+   "properties": {
+    "id": 60,
+    "name": "IMG 1697",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Highway, MaheshDovan, Galchhi -06, Galchhi, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:48:06.390Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750082141-IMG_1697.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/60/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.901864,
+     27.805633
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 61,
+   "properties": {
+    "id": 61,
+    "name": "IMG 1698",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:07.945Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750381928-IMG_1698.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/61/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.901747,
+     27.805711
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 62,
+   "properties": {
+    "id": 62,
+    "name": "IMG 1705",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:16.544Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750391954-IMG_1705.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/62/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738144,
+     27.799739
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 63,
+   "properties": {
+    "id": 63,
+    "name": "IMG 1707",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:24.191Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750400006-IMG_1707.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/63/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738153,
+     27.799728
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 64,
+   "properties": {
+    "id": 64,
+    "name": "IMG 1708",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:32.042Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750407762-IMG_1708.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/64/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738144,
+     27.799728
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 65,
+   "properties": {
+    "id": 65,
+    "name": "IMG 1712",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:39.974Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750415681-IMG_1712.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/65/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738128,
+     27.799806
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 66,
+   "properties": {
+    "id": 66,
+    "name": "IMG 1721",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:47.576Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750423143-IMG_1721.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/66/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738144,
+     27.799736
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 67,
+   "properties": {
+    "id": 67,
+    "name": "IMG 1738",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:53:56.152Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750431569-IMG_1738.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/67/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.735406,
+     27.797097
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 68,
+   "properties": {
+    "id": 68,
+    "name": "IMG 1786",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:54:04.914Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750440258-IMG_1786.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/68/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838517,
+     27.801981
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 69,
+   "properties": {
+    "id": 69,
+    "name": "IMG 1787",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:54:13.745Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750449212-IMG_1787.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/69/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838517,
+     27.801978
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 70,
+   "properties": {
+    "id": 70,
+    "name": "IMG 1788",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:54:20.849Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750456945-IMG_1788.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/70/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838531,
+     27.802086
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 71,
+   "properties": {
+    "id": 71,
+    "name": "IMG 1791",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:02.279Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750497385-IMG_1791.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/71/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838622,
+     27.801919
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 72,
+   "properties": {
+    "id": 72,
+    "name": "IMG 1792",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:11.087Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750506404-IMG_1792.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/72/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838639,
+     27.801914
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 73,
+   "properties": {
+    "id": 73,
+    "name": "IMG 1795",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:19.040Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750514747-IMG_1795.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/73/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.839347,
+     27.801422
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 74,
+   "properties": {
+    "id": 74,
+    "name": "IMG 1797",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:27.716Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750523074-IMG_1797.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/74/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.839394,
+     27.801381
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 75,
+   "properties": {
+    "id": 75,
+    "name": "IMG 1807",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:35.812Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750531564-IMG_1807.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/75/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.841217,
+     27.801103
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 76,
+   "properties": {
+    "id": 76,
+    "name": "IMG 1808",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:43.655Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750539514-IMG_1808.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/76/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.841217,
+     27.801103
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 77,
+   "properties": {
+    "id": 77,
+    "name": "IMG 1809",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:55:51.931Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750547231-IMG_1809.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/77/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.841172,
+     27.801144
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 78,
+   "properties": {
+    "id": 78,
+    "name": "IMG 1810",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:56:00.764Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750556165-IMG_1810.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/78/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.841172,
+     27.801153
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 79,
+   "properties": {
+    "id": 79,
+    "name": "IMG 1822",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:56:10.225Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750565553-IMG_1822.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/79/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.843011,
+     27.801539
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 80,
+   "properties": {
+    "id": 80,
+    "name": "IMG 1826",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:56:17.894Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750573792-IMG_1826.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/80/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.843019,
+     27.801547
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 81,
+   "properties": {
+    "id": 81,
+    "name": "IMG 1826",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-18T16:56:50.422Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750605985-IMG_1826.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/81/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.843019,
+     27.801547
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 82,
+   "properties": {
+    "id": 82,
+    "name": "IMG 1835",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:56:59.006Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750614686-IMG_1835.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/82/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Galchhi",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.982331,
+     27.801006
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 83,
+   "properties": {
+    "id": 83,
+    "name": "IMG 1836",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:06.789Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750622472-IMG_1836.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/83/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Galchhi",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.982239,
+     27.800903
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 84,
+   "properties": {
+    "id": 84,
+    "name": "IMG 2021",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:57:12.434Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750627531-IMG_2021.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/84/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.913789,
+     27.802847
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 85,
+   "properties": {
+    "id": 85,
+    "name": "IMG 1840",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:15.818Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750631091-IMG_1840.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/85/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.914436,
+     27.802789
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 86,
+   "properties": {
+    "id": 86,
+    "name": "IMG 2022",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:57:19.874Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750635550-IMG_2022.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/86/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.913728,
+     27.802911
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 87,
+   "properties": {
+    "id": 87,
+    "name": "IMG 1841",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:24.403Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750639599-IMG_1841.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/87/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.894486,
+     27.806081
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 88,
+   "properties": {
+    "id": 88,
+    "name": "IMG 2025",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:57:28.069Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750643834-IMG_2025.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/88/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.893203,
+     27.806208
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 89,
+   "properties": {
+    "id": 89,
+    "name": "IMG 1842",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:32.100Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750647881-IMG_1842.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/89/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738206,
+     27.799206
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 90,
+   "properties": {
+    "id": 90,
+    "name": "IMG 2027",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:57:36.143Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750651642-IMG_2027.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/90/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.861992,
+     27.804589
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 91,
+   "properties": {
+    "id": 91,
+    "name": "IMG 1854",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:40.962Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750656387-IMG_1854.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/91/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.735397,
+     27.797211
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 92,
+   "properties": {
+    "id": 92,
+    "name": "IMG 2029",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:57:44.592Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750660123-IMG_2029.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/92/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.864511,
+     27.800875
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 93,
+   "properties": {
+    "id": 93,
+    "name": "IMG 1907",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:50.530Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750665862-IMG_1907.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/93/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838494,
+     27.802083
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 94,
+   "properties": {
+    "id": 94,
+    "name": "IMG 2030",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:57:52.958Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750668351-IMG_2030.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/94/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.864442,
+     27.800906
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 95,
+   "properties": {
+    "id": 95,
+    "name": "IMG 1908",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-31",
+    "captured_at_raw": "2026-08-31",
+    "submitted_at": "2026-09-18T16:57:58.567Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750674174-IMG_1908.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/95/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.838503,
+     27.802083
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 96,
+   "properties": {
+    "id": 96,
+    "name": "IMG 2031",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:58:00.777Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750676577-IMG_2031.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/96/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.852411,
+     27.807817
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 97,
+   "properties": {
+    "id": 97,
+    "name": "IMG 2019",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:58:07.510Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750682905-IMG_2019.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/97/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.914283,
+     27.801897
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 98,
+   "properties": {
+    "id": 98,
+    "name": "IMG 2032",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:58:09.092Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750684747-IMG_2032.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/98/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.852347,
+     27.807842
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 99,
+   "properties": {
+    "id": 99,
+    "name": "IMG 2036",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:58:15.475Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750690996-IMG_2036.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/99/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.845506,
+     27.802144
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 100,
+   "properties": {
+    "id": 100,
+    "name": "IMG 2033",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:58:18.056Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750693682-IMG_2033.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/100/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.852286,
+     27.807839
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 101,
+   "properties": {
+    "id": 101,
+    "name": "IMG 2517",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "Sep 3, 2026",
+    "submitted_at": "2026-09-18T16:58:22.681Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750699223-IMG_2517.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/101/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.845506,
+     27.802144
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 102,
+   "properties": {
+    "id": 102,
+    "name": "IMG 2035",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-03",
+    "captured_at_raw": "2026-09-03",
+    "submitted_at": "2026-09-18T16:58:26.799Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750702286-IMG_2035.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/102/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.845597,
+     27.802178
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 103,
+   "properties": {
+    "id": 103,
+    "name": "IMG 2576",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-09",
+    "captured_at_raw": "2026-09-09",
+    "submitted_at": "2026-09-18T16:58:32.449Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750707779-IMG_2576.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/103/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.668014,
+     27.817753
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 104,
+   "properties": {
+    "id": 104,
+    "name": "IMG 2577",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-09",
+    "captured_at_raw": "2026-09-09",
+    "submitted_at": "2026-09-18T16:58:41.841Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750717136-IMG_2577.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/104/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.668014,
+     27.817753
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 105,
+   "properties": {
+    "id": 105,
+    "name": "IMG 2579",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-09",
+    "captured_at_raw": "2026-09-09",
+    "submitted_at": "2026-09-18T16:58:52.616Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750727963-IMG_2579.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/105/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.667847,
+     27.817811
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 106,
+   "properties": {
+    "id": 106,
+    "name": "IMG 2586",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-09",
+    "captured_at_raw": "2026-09-09",
+    "submitted_at": "2026-09-18T16:59:00.755Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750736531-IMG_2586.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/106/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.734003,
+     27.796086
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 107,
+   "properties": {
+    "id": 107,
+    "name": "IMG 2670",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-11",
+    "captured_at_raw": "2026-09-11",
+    "submitted_at": "2026-09-18T16:59:10.300Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750745987-IMG_2670.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/107/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738075,
+     27.799797
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 108,
+   "properties": {
+    "id": 108,
+    "name": "IMG 2671",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-11",
+    "captured_at_raw": "2026-09-11",
+    "submitted_at": "2026-09-18T16:59:18.232Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750753846-IMG_2671.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/108/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738069,
+     27.799803
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 109,
+   "properties": {
+    "id": 109,
+    "name": "IMG 2674",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-11",
+    "captured_at_raw": "2026-09-11",
+    "submitted_at": "2026-09-18T16:59:28.459Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750763635-IMG_2674.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/109/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.735664,
+     27.797164
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 110,
+   "properties": {
+    "id": 110,
+    "name": "IMG 2675",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Purano Malekhu, Gajuri-02, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-09-11",
+    "captured_at_raw": "2026-09-11",
+    "submitted_at": "2026-09-18T16:59:38.873Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750774206-IMG_2675.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/110/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.735664,
+     27.797161
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 111,
+   "properties": {
+    "id": 111,
+    "name": "IMG 2516",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Salanghat, Benighat Rorang-03, Benighat Rorang, Dhading, Bagamati Province, Nepal",
+    "captured_at": null,
+    "captured_at_raw": null,
+    "submitted_at": "2026-09-18T17:00:48.384Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789750844524-IMG_2516.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/111/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.805012,
+     27.814555
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 112,
+   "properties": {
+    "id": 112,
+    "name": "Bridge",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Prithvi Rajmarg, Ghatbesi, Gajuri-05, Gajuri, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-20T01:57:47.112Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789869458805-IMG_1698.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/112/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Gajuri",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.901747,
+     27.805711
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 113,
+   "properties": {
+    "id": 113,
+    "name": "In flood-hit Nepal, survivors search ruins to find traces of home",
+    "media_type": "video",
+    "status": "published",
+    "description": "Each day, scores of Nepal flood survivors sheltering in tents trek downhill to wander across the wasteland that was once their town, searching for traces of homes https://reut.rs/4y4PYBF",
+    "location_name": "Charghare, Bidur-12, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-18",
+    "captured_at_raw": "Sep 18, 2026",
+    "submitted_at": "2026-09-20T03:06:22.330Z",
+    "taken_by": "Reuters",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1F6VxANrUv/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1789873588335-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/113/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.133057,
+     27.915108
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 114,
+   "properties": {
+    "id": 114,
+    "name": "176K views · 3.4K reactions | لافاوی نیپاڵ Rasuwa Flood News Today I rasuwa badhi रसुवामा बाढी | raauwa news today flood nepal timure rasuwa betrawati bajar rasuwa badhi rasuwa flood latest update ras",
+    "media_type": "video",
+    "status": "published",
+    "description": "لافاوی نیپاڵ\r\nRasuwa Flood News Today I rasuwa badhi रसुवामा बाढी | raauwa news today flood nepal\r\n\r\ntimure rasuwa\r\n\r\nbetrawati bajar rasuwa badhi rasuwa flood latest update\r\n\r\nrasuwa\r\n\r\nflood in nepal\r\n\r\nnepal flood news today badhi\r\n\r\nflood news today.\r\n\r\nRasuwa Flood live | rasuwa badhi | trishuli river flood | रसुवामा भयानक बाढी रसुवा बाढी rasuwa news\r\n\r\ntimure flood\r\n\r\ntrisuli bhutekoshi river flood\r\n\r\n#rasuwa\r\n\r\ntrishuli river\r\n\r\ntrishuli river\r\n\r\nrasuwa\r\n\r\ntrishuli\r\n\r\ntrishuli khabar\r\n\r\ntrisuli",
+    "location_name": "Kalleri, Galchhi -01, Galchhi, Dhading, Bagamati Province, Nepal",
+    "captured_at": "2026-08-26",
+    "captured_at_raw": "Aug 26, 2026",
+    "submitted_at": "2026-09-20T03:29:26.775Z",
+    "taken_by": "S K Media",
+    "owner": null,
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": "https://www.facebook.com/share/v/1BufrJ7Mcc/",
+    "source_platform": "facebook",
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1789874970067-facebook-media.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/114/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Galchhi",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.001221,
+     27.806606
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 115,
+   "properties": {
+    "id": 115,
+    "name": "IMG 1705",
+    "media_type": "photo",
+    "status": "published",
+    "description": null,
+    "location_name": "Hills and Horizon Resort, Charaudhi, Benighat Rorang-07, Dhussa, Benighat Rorang, Dhading, Bagamati Province, 45100, Nepal",
+    "captured_at": "2026-08-30",
+    "captured_at_raw": "2026-08-30",
+    "submitted_at": "2026-09-20T03:29:57.159Z",
+    "taken_by": "Rajan KC",
+    "owner": null,
+    "location_source": "Photo GPS",
+    "precision": "exact",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789874992165-IMG_1705.JPG",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/115/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Benighat Rorang",
+    "district": "Dhading",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.738144,
+     27.799739
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 116,
+   "properties": {
+    "id": 116,
+    "name": "WhatsApp Image 2026 09 20 at 12.37.06 PM (1)",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the, Dhunge Nuwakot",
+    "location_name": "ADBNL ATM, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-20",
+    "captured_at_raw": "Sep 20, 2026",
+    "submitted_at": "2026-09-20T07:06:19.788Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789887975267-WhatsApp_Image_2026-09-20_at_12.37.06_PM__1_.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/116/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.143289,
+     27.912279
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 117,
+   "properties": {
+    "id": 117,
+    "name": "WhatsApp Image 2026 09 20 at 12.37.06 PM (2)",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the, Dhunge Nuwakot",
+    "location_name": "ADBNL ATM, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-20",
+    "captured_at_raw": "Sep 20, 2026",
+    "submitted_at": "2026-09-20T07:06:37.091Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789887993924-WhatsApp_Image_2026-09-20_at_12.37.06_PM__2_.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/117/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.143289,
+     27.912279
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 118,
+   "properties": {
+    "id": 118,
+    "name": "WhatsApp Image 2026 09 20 at 12.37.07 PM (3)",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Devighat areas.",
+    "location_name": "Devighat, Bidur-05, Bidur, Nuwakot, Bagamati Province, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep 19,2026",
+    "submitted_at": "2026-09-20T07:13:09.870Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789888385309-WhatsApp_Image_2026-09-20_at_12.37.07_PM__3_.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/118/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.11069,
+     27.858938
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 119,
+   "properties": {
+    "id": 119,
+    "name": "WhatsApp Image 2026 09 20 at 12.37.06 PM (3)",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Devighat areas.",
+    "location_name": "NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep 19,2026",
+    "submitted_at": "2026-09-20T07:16:56.522Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789888611940-WhatsApp_Image_2026-09-20_at_12.37.06_PM__3_.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/119/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142922,
+     27.912752
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 120,
+   "properties": {
+    "id": 120,
+    "name": "WhatsApp Image 2026 09 20 at 12.37.07 PM (1)",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Devighat areas.",
+    "location_name": "NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep 19,2026",
+    "submitted_at": "2026-09-20T07:17:13.337Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789888630284-WhatsApp_Image_2026-09-20_at_12.37.07_PM__1_.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/120/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142922,
+     27.912752
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 121,
+   "properties": {
+    "id": 121,
+    "name": "WhatsApp Image 2026 09 20 at 12.43.12 PM",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Trishuli areas.",
+    "location_name": "Nari Chetana Bal Bikash Kendra, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep19 ,2026",
+    "submitted_at": "2026-09-20T07:23:36.796Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789889012376-WhatsApp_Image_2026-09-20_at_12.43.12_PM.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/121/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142316,
+     27.913722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 122,
+   "properties": {
+    "id": 122,
+    "name": "WhatsApp Image 2026 09 20 at 12.43.11 PM (1)",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Trishuli areas.",
+    "location_name": "Nari Chetana Bal Bikash Kendra, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep19 ,2026",
+    "submitted_at": "2026-09-20T07:23:43.054Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789889020171-WhatsApp_Image_2026-09-20_at_12.43.11_PM__1_.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/122/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142316,
+     27.913722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 123,
+   "properties": {
+    "id": 123,
+    "name": "WhatsApp Image 2026 09 20 at 12.43.11 PM",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Trishuli areas.",
+    "location_name": "Nari Chetana Bal Bikash Kendra, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep19 ,2026",
+    "submitted_at": "2026-09-20T07:23:49.347Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789889026284-WhatsApp_Image_2026-09-20_at_12.43.11_PM.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/123/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142316,
+     27.913722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 124,
+   "properties": {
+    "id": 124,
+    "name": "WhatsApp Image 2026 09 20 at 12.43.10 PM",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Trishuli areas.",
+    "location_name": "Nari Chetana Bal Bikash Kendra, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep19 ,2026",
+    "submitted_at": "2026-09-20T07:23:55.966Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789889032864-WhatsApp_Image_2026-09-20_at_12.43.10_PM.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/124/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142316,
+     27.913722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 125,
+   "properties": {
+    "id": 125,
+    "name": "WhatsApp Image 2026 09 20 at 12.43.09 PM",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Trishuli areas.",
+    "location_name": "Nari Chetana Bal Bikash Kendra, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep19 ,2026",
+    "submitted_at": "2026-09-20T07:24:02.495Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789889039614-WhatsApp_Image_2026-09-20_at_12.43.09_PM.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/125/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142316,
+     27.913722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 126,
+   "properties": {
+    "id": 126,
+    "name": "WhatsApp Image 2026 09 20 at 12.43.08 PM",
+    "media_type": "photo",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the Nuwakot, Trishuli areas.",
+    "location_name": "Nari Chetana Bal Bikash Kendra, NH42, Bidur-04, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "Sep19 ,2026",
+    "submitted_at": "2026-09-20T07:24:08.835Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/image/1789889045831-WhatsApp_Image_2026-09-20_at_12.43.08_PM.jpeg",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/126/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "image/jpeg",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.142316,
+     27.913722
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 127,
+   "properties": {
+    "id": 127,
+    "name": "WhatsApp Video 2026 09 20 at 1.10.37 PM",
+    "media_type": "video",
+    "status": "published",
+    "description": "Field visit as an Insurance Surveyor and Loss Adjuster to assess the impact of the flash flood in the , Nuwakot, Trishuli–Dhunge, and areas.",
+    "location_name": "Trishuli Bazar Road, Bidur-09, Trishuli, Bidur, Nuwakot, Bagamati Province, 44900, Nepal",
+    "captured_at": "2026-09-19",
+    "captured_at_raw": "sep 19,2026",
+    "submitted_at": "2026-09-20T07:29:37.447Z",
+    "taken_by": "Binod Bahadur Pal",
+    "owner": "Binod Bahadur Pal",
+    "location_source": "User-set",
+    "precision": "approximate",
+    "source_url": null,
+    "source_platform": null,
+    "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/video/1789889367556-WhatsApp_Video_2026-09-20_at_1.10.37_PM.mp4",
+    "thumb_url": "https://archive.rasuwaflood.org/api/items/127/thumbnail",
+    "item_url": "https://archive.rasuwaflood.org/",
+    "community_notes": null,
+    "mime_type": "video/mp4",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
+    "source": "viva-d",
+    "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.146966,
+     27.921096
+    ]
+   }
+  }
+ ]
+}

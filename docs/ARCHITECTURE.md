@@ -258,6 +258,28 @@ property to change.
 location source and district, plus the capture-date range, and writes nothing.
 `--from FILE` reads a saved copy of the endpoint for offline work.
 
+#### In-page media viewer
+
+The popup's thumbnail is a `<button>`, not a link: it opens a full-screen overlay
+over the map (`#mediaViewer`, built once on first use) rather than a new tab, so a
+video plays without leaving the map. Videos render as a native `<video controls
+autoplay playsinline preload="metadata">` with the archive thumbnail as the
+poster; photographs render the full-size original with the thumbnail as a
+fallback if it fails to load. Closing pauses the video and clears its `src`, so a
+closed overlay is not still streaming a hundred-megabyte file. Escape (captured,
+so it beats the imagery menu, the search box and the damage editor), a backdrop
+click and the close button all dismiss it.
+
+The archived files are served from `storage.googleapis.com` with byte-range
+support and `Content-Type: video/mp4`, and the `<video>` element carries no
+`crossorigin` attribute, so playback is an ordinary media request and needs no
+CORS headers — unlike the `fetch()` of the items endpoint, which does.
+
+A popup is destroyed and rebuilt on every map click, so nothing inside one can
+own state or a handler: `evidencePopupHTML()` records the feature properties in
+`evidenceProps` under the item id and puts that id on the button, and a single
+delegated listener on `document` reads it back. There are no inline handlers.
+
 #### Live-first loading
 
 The `evidence` source is initialised with the committed snapshot, so the layer

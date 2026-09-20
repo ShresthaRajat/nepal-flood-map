@@ -3416,13 +3416,23 @@ function popLink(url, text) {
  * somebody dropped rather than the camera's own GPS. */
 function evidencePopupHTML(p) {
   const kind = String(p.media_type || 'photo');
-  const thumb = safeUrl(p.thumb_url), item = safeUrl(p.item_url);
+  const thumb = safeUrl(p.thumb_url);
+  const title = String(p.name || 'Flood evidence');
   let h = '';
   if (thumb) {
-    const img = '<img class="ev-img" src="' + esc(thumb) + '" loading="lazy" alt="'
-      + esc(p.name || 'Flood evidence') + '">';
-    h += '<div class="ev-thumb">' + (item ? '<a href="' + esc(item) + '" target="_blank" rel="noopener">' + img + '</a>' : img)
-      + (kind === 'video' ? '<span class="ev-play">▶ Video</span>' : '') + '</div>';
+    // The thumbnail opens the in-page viewer rather than a new tab (owner
+    // direction, 20 Sep 2026: a video should play on the map, not replace it).
+    // A <button> rather than a div so Enter and Space work without key handling
+    // and the control is in the tab order; the props go into evidenceProps and
+    // the id onto the element, because the popup is rebuilt on every click and
+    // an inline handler would not survive it.
+    const key = p.id != null ? String(p.id) : 'ev' + (evidenceProps.size + 1);
+    evidenceProps.set(key, p);
+    h += '<button type="button" class="ev-thumb ev-open" data-ev-id="' + esc(key) + '"'
+      + ' aria-label="' + esc((kind === 'video' ? 'Play video: ' : 'View photo: ') + title) + '">'
+      + '<img class="ev-img" src="' + esc(thumb) + '" loading="lazy" alt="">'
+      + '<span class="ev-play">' + (kind === 'video' ? '▶ Video' : '⤢ View') + '</span>'
+      + '</button>';
   }
   h += '<div class="pop-h">' + esc(p.name || 'Flood evidence') + '</div>';
   const meta = ['Flood evidence', kind];
@@ -3482,6 +3492,149 @@ function popupAttrs(p) {
       (/^https?:\/\//.test(String(v)) ? '<a href="' + esc(v) + '" target="_blank" rel="noopener">' + esc(v) + '</a>' : esc(v)) +
       '</td></tr>').join('');
   return '<details class="pop-all"><summary>All attributes</summary><table class="popup">' + rows + '</table></details>';
+}
+
+// ------------------------------------------------------------ media viewer
+/* Clicking a piece of evidence used to open the archived file in a new tab,
+ * which for a video meant leaving the map to watch it.  It now opens here, in a
+ * full-screen overlay over the map.  The archived files are served from
+ * storage.googleapis.com with permissive headers, so a plain <video src> plays
+ * them with nothing else set up; the map never reads the bytes itself, so no
+ * CORS configuration is involved either way.
+ *
+ * The overlay is built once, on first use, and reused: a popup is re-rendered
+ * on every map click, so nothing inside a popup may own state. */
+let mediaViewer = null;         // {overlay, box, media, cap, close} once built
+let mediaViewerReturn = null;   // element focus goes back to on close
+/* Feature properties by evidence id, recorded as each popup is built, so the
+ * delegated click handler can find them without re-querying the map.  Bounded
+ * by the size of the archive (~120 items). */
+const evidenceProps = new Map();
+
+/* The overlay's inner HTML for one evidence feature.  Pure: it reads nothing but
+ * `p` and writes nothing, so it can be exercised on its own.  Same rules as the
+ * popup -- everything through esc(), and a URL only survives safeUrl() if it is
+ * https, so a javascript: or data: media_url is dropped rather than rendered. */
+function mediaViewerHTML(p) {
+  const kind = String(p.media_type || 'photo');
+  const media = safeUrl(p.media_url), thumb = safeUrl(p.thumb_url);
+  const title = String(p.name || 'Flood evidence');
+  let inner;
+  if (!media && !thumb) {
+    inner = '<p class="mv-none">This item has no archived file to show.</p>';
+  } else if (kind === 'video' && media) {
+    // `preload="metadata"` so opening the viewer does not pull the whole file
+    // before the viewer has decided to play it; the poster covers the gap.
+    inner = '<video class="mv-el" controls autoplay playsinline preload="metadata"'
+      + (thumb ? ' poster="' + esc(thumb) + '"' : '')
+      + ' src="' + esc(media) + '"></video>';
+  } else {
+    // Full-size original, with the thumbnail as the fallback: the archive holds
+    // some large originals that occasionally fail to load where the thumbnail
+    // endpoint always answers.  The fallback is applied by the open() code, not
+    // by an inline onerror.
+    const src = media || thumb;
+    inner = '<img class="mv-el" src="' + esc(src) + '" alt="' + esc(title) + '"'
+      + (media && thumb && media !== thumb ? ' data-fallback="' + esc(thumb) + '"' : '') + '>';
+  }
+  const meta = [];
+  if (p.captured_at) meta.push('Captured: ' + esc(p.captured_at));
+  const who = p.taken_by || p.owner;
+  if (who) meta.push('By: ' + esc(who));
+  if (p.location_name) meta.push('Location: ' + esc(p.location_name));
+  const links = [popLink(p.item_url, 'Open in archive'), popLink(p.media_url, 'Original file')].filter(Boolean);
+  return '<div class="mv-media">' + inner + '</div>'
+    + '<div class="mv-cap"><div class="mv-t">' + esc(title) + '</div>'
+    + (meta.length ? '<div class="mv-m">' + meta.join(' · ') + '</div>' : '')
+    + (links.length ? '<div class="mv-l">' + links.join(' · ') + '</div>' : '')
+    + '</div>';
+}
+
+function buildMediaViewer() {
+  if (mediaViewer) return mediaViewer;
+  const overlay = el('div');
+  overlay.id = 'mediaViewer';
+  overlay.hidden = true;
+  const box = el('div', 'mv-box');
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', 'Flood evidence');
+  const close = el('button', 'mv-close', '&times;');
+  close.type = 'button';
+  close.setAttribute('aria-label', 'Close');
+  const body = el('div', 'mv-body');
+  box.append(close, body);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  // A click on the backdrop closes; a click inside the panel must not.
+  overlay.addEventListener('click', ev => { if (ev.target === overlay) closeMediaViewer(); });
+  close.addEventListener('click', closeMediaViewer);
+  mediaViewer = { overlay, box, body, close };
+  return mediaViewer;
+}
+
+function openMediaViewer(p) {
+  const v = buildMediaViewer();
+  // The Fullscreen control puts #stage into fullscreen, and a fullscreen element
+  // renders only its own subtree -- an overlay left on <body> would be invisible.
+  // Move it under whatever is fullscreen, and back to <body> when nothing is.
+  const host = document.fullscreenElement || document.webkitFullscreenElement || document.body;
+  if (v.overlay.parentNode !== host) host.appendChild(v.overlay);
+  v.box.setAttribute('aria-label', String(p.name || 'Flood evidence'));
+  v.body.innerHTML = mediaViewerHTML(p);
+  const img = v.body.querySelector('img.mv-el[data-fallback]');
+  if (img) {
+    let tried = false;
+    img.addEventListener('error', () => {
+      if (tried) return;
+      tried = true;
+      img.src = img.dataset.fallback;
+    });
+  }
+  mediaViewerReturn = document.activeElement;
+  v.overlay.hidden = false;
+  document.body.classList.add('mv-open');
+  v.close.focus();
+}
+
+function closeMediaViewer() {
+  if (!mediaViewer || mediaViewer.overlay.hidden) return;
+  // Stop the download as well as the playback: leaving the src in place keeps a
+  // multi-megabyte MP4 streaming behind a closed overlay.
+  const vid = mediaViewer.body.querySelector('video');
+  if (vid) { try { vid.pause(); vid.removeAttribute('src'); vid.load(); } catch (e) {} }
+  mediaViewer.body.innerHTML = '';
+  mediaViewer.overlay.hidden = true;
+  document.body.classList.remove('mv-open');
+  if (mediaViewerReturn && document.contains(mediaViewerReturn)) {
+    try { mediaViewerReturn.focus(); } catch (e) {}
+  }
+  mediaViewerReturn = null;
+}
+
+const mediaViewerOpen = () => !!mediaViewer && !mediaViewer.overlay.hidden;
+
+/* A popup is thrown away and rebuilt on every map click, so the thumbnail cannot
+ * carry its own handler.  One delegated listener on the document covers every
+ * popup on either map, now and after any re-render.  The thumbnail is a real
+ * <button>, so Enter and Space reach this the same way a click does and no extra
+ * key handling is needed. */
+function wireMediaViewer() {
+  document.addEventListener('click', ev => {
+    const btn = ev.target.closest && ev.target.closest('.ev-open');
+    if (!btn) return;
+    ev.preventDefault();
+    const p = evidenceProps.get(btn.dataset.evId);
+    if (p) openMediaViewer(p);
+  });
+  // Capture phase: while the viewer is up it owns Escape, ahead of the imagery
+  // menu, the search box and the damage editor, which all listen for it too.
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape' || !mediaViewerOpen()) return;
+    ev.stopPropagation();
+    ev.preventDefault();
+    closeMediaViewer();
+  }, true);
 }
 
 // --------------------------------------------------------------- behaviour
@@ -5354,7 +5507,7 @@ async function main() {
   startEvidenceLive();
   applyMode();
   setSwipe(state.swipe, false);
-  wireDivider(); wireKeyboard();
+  wireDivider(); wireKeyboard(); wireMediaViewer();
   wireDamageEditor();
   if (ALIGN_TOOL) wireImageAlign();
   initDamageEdits();
