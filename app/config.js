@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (16 Sep 2026).
+// overview page (20 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -34,17 +34,17 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':163,'buildings|osm':20374,'buildings|overture':19913,'destroyed_features|osm':4034,
+  flood: { 'bridges|osm':163,'buildings|osm':20405,'buildings|overture':19913,'destroyed_features|osm':4036,
     'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
     'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':405,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':537,
     'roads|osm':2301,'waterways|osm':400 },
-  corridor: { 'bridges|osm':220,'buildings|osm':52272,'buildings|overture':52646,'destroyed_features|osm':4059,
+  corridor: { 'bridges|osm':220,'buildings|osm':52354,'buildings|overture':52646,'destroyed_features|osm':4061,
     'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':96,
     'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':98,
     'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
     'police_stations|overture':2,'populated_places|osm':149,'populated_places|overture':43,'residential_areas|osm':1474,
-    'roads|osm':5378,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
+    'roads|osm':5381,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.
@@ -158,12 +158,12 @@ And the district figures record <b>where remains were found</b>, not where peopl
 the two Nawalparasi districts exceed Rasuwa and Nuwakot — bodies travelled up to 240 km downstream. "Missing" is
 a separate category that Nepal's authorities do not treat as presumed dead.</p>
 <p>Official and inter-governmental sources used:
-<a href="https://ndrrma.gov.np/mediafiles/publications/SitRep_24_NEP_14092026_rVK6Zae.pdf" target="_blank" rel="noopener">NDRRMA
-Rasuwa-Bhote Koshi Flood Situation Report #24</a> (Nepali, 14 Sep 2026), its
-<a href="https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_13_14092026.pdf" target="_blank" rel="noopener">English
-edition #13</a> and the rest of the
+<a href="https://ndrrma.gov.np/mediafiles/publications/SitRep_29_NEP_19092026.pdf" target="_blank" rel="noopener">NDRRMA
+Rasuwa-Bhote Koshi Flood Situation Report #29</a> (Nepali, 19 Sep 2026), its
+<a href="https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf" target="_blank" rel="noopener">English
+edition #18</a> and the rest of the
 <a href="https://ndrrma.gov.np/rasuwa/situation" target="_blank" rel="noopener">SitRep series</a>, back through
-the English #02–#13 (2–14 Sep 2026), including the
+the English #02–#18 (2–19 Sep 2026), including the
 <a href="https://ndrrma.gov.np/mediafiles/publications/Rapid_Damage_and_Needs_Assessment_RDNA_Rasuwa-Bhotekoshi_Flood_2026_compressed_Sp3BwkM.pdf" target="_blank" rel="noopener">Rapid
 Damage and Needs Assessment</a> (11 Sep 2026), to
 <a href="https://ndrrma.gov.np/mediafiles/rasuwa/Rasuwa_Flood_SitRep_Temp_ENG_01_01092026.pdf" target="_blank" rel="noopener">#01</a>
@@ -245,7 +245,7 @@ with distance from the valley floor instead of stopping abruptly.</p>
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 16 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 20 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>
@@ -360,6 +360,27 @@ And the whole thing is only as complete as OSM is in these hills: a ward with no
 to the nearest node outside it, which its note also records. Ward boundaries are the same 2018 HRRP
 reference geometry as the layer above, with the same caveats. Temporary crossings, fords and air
 resupply are not modelled, so a ward marked cut off may still be reachable in practice.</p>
+
+<h3>Ground evidence photographs and videos</h3>
+<p>The "Flood evidence photos &amp; videos" layer mirrors the <a href="https://archive.rasuwaflood.org/"
+target="_blank" rel="noopener">Rasuwa Flood Evidence Map</a>, a public VIVA-D archive where people upload
+geotagged photographs and videos of the flood's impacts, either from their own phone or imported from a
+Facebook or X post. The map reads the archive's open endpoint
+<code>archive.rasuwaflood.org/api/items?all=1</code> live, and re-reads it every fifteen minutes while the
+tab is open; the archive currently sends no cross-origin header, so that call is refused from this site and
+what draws instead is a snapshot rebuilt hourly by <code>tools/build_evidence_media.py</code> in the
+<code>refresh-evidence</code> GitHub Action. The rail row says which of the two you are looking at, and the
+snapshot's date when it is the snapshot. Only published items with a real coordinate are carried over;
+the archive's own municipality is not used, district and municipality are resolved from the coordinate
+against the COD-AB boundaries like every other point layer here.</p>
+<p>This is the one crowd-sourced layer on the map and it is not a survey. Titles, descriptions, dates and
+attributions are whatever the contributor typed, capture dates are free text and are only normalised where
+they can be read, and roughly half the coordinates are a pin somebody dropped on a map rather than the
+photograph's own GPS — those points draw faded and the popup says so. Rights stay with the photographers and
+videographers; the material is shown here for situational awareness only. Contact details the archive
+publishes alongside each item are stripped and never reach this map. Items cannot be removed from this
+snapshot by anyone but the archive: if something should come down, it has to come down there first, and the
+next hourly rebuild drops it.</p>
 
 <h3>Basemaps</h3>
 <p>OpenStreetMap raster © OpenStreetMap contributors. Esri World Imagery © Esri and its imagery

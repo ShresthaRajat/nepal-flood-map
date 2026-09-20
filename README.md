@@ -11,6 +11,10 @@ Trishuli rivers, Nepal. Merges two sources:
   bridge conditions.
 - **Road condition**: Copernicus EMS rapid-mapping grades (EMSR927) for every road and bridge
   segment in four assessed areas, plus a computed overlay of roads inside the observed flood extent.
+- **Ground evidence**: geotagged photographs and videos from the community
+  [Rasuwa Flood Evidence Map](https://archive.rasuwaflood.org/), read live where the browser is
+  allowed to and otherwise from an hourly snapshot. Crowd-sourced and unverified; rights stay with
+  the photographers.
 
 [![Trisuli Bazar: Esri basemap on the left, Vantor WorldView-2 of 28 Aug 2026 on the right, with the observed flood extent and volunteer-recorded destroyed and damaged features in dark red](docs/img/trisuli-bazar-swipe.jpg)](https://shrestharajat.github.io/nepal-flood-map/#m=swipe&pre=none&post=post_wv02_20260828&c=85.15298%2C27.92922&z=15.68&s=73.3&b=esri&ov=-hot_bridges%2C-bridge_damage%2C-hydro%2C-fair%2C-fair_aoi)
 
@@ -23,7 +27,7 @@ Layout:
 - `index.html` — the map (MapLibre GL, swipe compare)
 - `tiles/<layer>/{z}/{x}/{y}.webp` — Web Mercator imagery pyramids; `tiles/contours/` vector tiles
 - `data/imagery.json` — imagery catalogue read by the app
-- `data/hdx/` — HDX downloads (GeoJSON + PMTiles), 16 Sep 2026 snapshot
+- `data/hdx/` — HDX downloads (GeoJSON + PMTiles), 20 Sep 2026 snapshot
 - `tools/` — reproducible build scripts, including `imagery_watch.py` (6-hourly scan for new scenes; see
   docs/ARCHITECTURE.md)
 
@@ -41,7 +45,7 @@ breakdown and what it means for reuse.
 This is an independent volunteer visualisation, not an official government or
 humanitarian source. Damage statuses (Standing / Damaged / Destroyed), fAIr
 AI damage detections, and bridge ground reports are provisional remote and
-crowd assessments as of the 16 September 2026 HDX snapshot, and may be wrong,
+crowd assessments as of the 20 September 2026 HDX snapshot, and may be wrong,
 incomplete, or outdated. Do not use this map for navigation or operational
 decision-making without independent verification. Imagery layers are
 registered approximately; positions may be offset by tens of metres.

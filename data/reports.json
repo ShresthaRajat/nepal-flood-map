@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-15",
+  "as_of": "2026-09-19",
   "sources": {
     "rw_0828": {
       "label": "ReliefWeb — flash flood leaves 18 missing",
@@ -460,26 +460,39 @@
       "date": "2026-09-15",
       "official": true,
       "note": "Same content as the Nepali #25. Both editions are listed in the publication index at /api/v1/publication/publications/, and the inner-page \"Situation Report # 11\" header carried by the 13 and 14 September editions is corrected here."
+    },
+    "ndrrma_sitrep29": {
+      "label": "NDRRMA Rasuwa-Bhote Koshi Flood Situation Report #29 (Nepali)",
+      "url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_29_NEP_19092026.pdf",
+      "date": "2026-09-19",
+      "official": true
+    },
+    "ndrrma_sitrep_en18": {
+      "label": "NDRRMA Situation Report #18 (English), 19 September, 19:00",
+      "url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+      "date": "2026-09-19",
+      "official": true,
+      "note": "Same content as the Nepali #29. SitReps #26, #27 and #28 (Nepali) and their English equivalents were not read into this file, so this bump skips four days of intermediate updates."
     }
   },
   "casualties": {
     "headline": {
       "bodies_recovered": {
-        "value": 1399,
-        "as_of": "2026-09-15",
-        "src": "ndrrma_sitrep25",
+        "value": 1411,
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep29",
         "alt": {
-          "text": "1,395 as of 14 Sep (NDRRMA SitRep #24) and 1,388 as of 13 Sep (SitRep #23)",
-          "src": "ndrrma_sitrep24"
+          "text": "1,399 as of 15 Sep 2026 (NDRRMA SitRep #25/English #14). SitReps #26-28 were not read into this file.",
+          "src": "ndrrma_sitrep25"
         }
       },
       "missing": {
-        "value": 5179,
-        "as_of": "2026-09-15",
-        "src": "ndrrma_sitrep25",
+        "value": 5875,
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep29",
         "alt": {
-          "text": "5,283 before NDRRMA deducts the 104 bodies identified so far. The rise from 5,130, the first since 9 Sep, comes entirely from a new chart row of 49 Indian nationals working at hydropower projects; every pre-existing row is unchanged. The English edition of the same report gives the identical figures",
-          "src": "ndrrma_sitrep_en14"
+          "text": "5,985 before NDRRMA deducts the 110 bodies identified so far. The chart structure changed from #25: it now carries only two rows per district (local residents; people from other districts) plus a single foreign-nationals row of 636, rather than the extra Nepal Army/Police/government/bank-employee rows and the separate 49-worker Indian row carried in #25. Rasuwa is 1,677 local plus 1,836 from other districts (3,513); Nuwakot is 657 local plus 1,179 from other districts (1,836); foreign nationals are 636. The English #18 gives the identical chart.",
+          "src": "ndrrma_sitrep_en18"
         }
       },
       "injured": {
@@ -487,14 +500,14 @@
         "as_of": "2026-09-01",
         "src": "ndrrma_sitrep1",
         "alt": {
-          "text": "Situation Report #14 publishes no injured count. Its nearest figure is \"a total of 343 patients received treatment\" across 19 hospitals as of 15 Sep, of whom 282 discharged, 25 still under treatment, 32 referred to other hospitals and 4 died during treatment - a cumulative treatment count, not the same category",
-          "src": "ndrrma_sitrep_en14"
+          "text": "Situation Report #18 publishes no injured count. Its nearest figure is \"a total of 344 patients received treatment\" across 19 hospitals as of 19 Sep, of whom 290 discharged, 18 still under treatment, 32 referred to other hospitals and 4 died during treatment - a cumulative treatment count, not the same category",
+          "src": "ndrrma_sitrep_en18"
         }
       },
       "rescued": {
-        "value": 13742,
-        "as_of": "2026-09-15",
-        "src": "ndrrma_sitrep25"
+        "value": 13784,
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep29"
       }
     },
     "series": [
@@ -650,6 +663,15 @@
         "rescued": 13742,
         "src": "ndrrma_sitrep25",
         "note": "NDRRMA SitRep #25 (Nepali) and #14 (English), 19:00 NPT. Missing rises for the first time since 9 September, from 5,130 to 5,179, because the chart gains a row it did not previously carry - 49 Indian nationals working at hydropower projects - taking the chart total from 5,234 to 5,283 against the same 104 identified bodies deducted; no pre-existing row moved. The deceased breakdown is corrected to 544 male, 336 female and 519 partial remains, which sums to the new 1,399, resolving the mismatch printed in #24, and the district bars sum to 1,399 as well. DNA samples stand at 1,286 from the deceased and 1,889 from relatives. 343 treated across 19 health facilities, 282 discharged, 25 still under treatment, 32 referred, 4 died in treatment; a further 9,496 treated by the security agencies. 1,561 Nepal Army flights (30 on the day) and 320 Armed Police Force flights. Holding centres fall to 30 sheltering 2,155 people."
+      },
+      {
+        "as_of": "2026-09-19",
+        "bodies_recovered": 1411,
+        "missing": 5875,
+        "injured": null,
+        "rescued": 13784,
+        "src": "ndrrma_sitrep29",
+        "note": "NDRRMA SitRep #29 (Nepali) and #18 (English), 19:00 NPT, four days after #25/#14 (SitReps #26-28 were not read into this file). Missing falls to 5,875 from 5,179 on 15 Sep: the chart is restructured to carry only local-residents and other-district rows per district plus one merged foreign-nationals row of 636 (previously 587 plus a separate 49-worker row), and 110 identified bodies are now deducted rather than 104. The deceased breakdown is 549 male, 336 female and 526 partial remains, summing to the new 1,411. DNA samples stand at 1,286 from the deceased; the report gives 1,991 for relatives on its infographic and 1,997 in its own text, not reconciled here. 344 treated across 19 health facilities, 290 discharged, 18 still under treatment, 32 referred, 4 died in treatment; a further 10,041 treated by the security agencies. 1,692 Nepal Army flights and 320 Armed Police Force flights. Holding centres fall to 24 sheltering 1,342 people (Rasuwa 794 in 9, Nuwakot 427 in 11, Dhading 121 in 4). The Rasuwa District Security Committee stood down further search and rescue at Langtang and Chilime; at Upper Trishuli-1's Adit-3 tunnel, 31 bodies were recovered (plus 6 recovered earlier)."
       }
     ],
     "china": {
@@ -667,10 +689,10 @@
       "note": "Tracked entirely separately from Nepal's national count. No NDRRMA or MoFA figure includes these people."
     },
     "foreign_nationals": {
-      "value": 587,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep25",
-      "detail": "NDRRMA carries foreign nationals as a row of its own on the missing-persons chart, outside the Rasuwa and Nuwakot bars and not split by district. Unchanged since SitRep #07 of 7 Sep; the English #14 of 15 September gives the same 587. From #25 the chart carries a second foreign row alongside it, 49 Indian nationals working at hydropower projects, counted separately from the 587 and not folded into it.",
+      "value": 636,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep29",
+      "detail": "NDRRMA's missing chart now carries a single foreign-nationals row of 636, replacing the 587-plus-a-separate-49-worker split carried in SitRep #25 of 15 September (SitReps #26-28 were not read into this file, so the exact point of the merge is not established). The English #18 gives the same 636.",
       "alternates": [
         {
           "label": "MoFA, from 35 countries (about)",
@@ -695,15 +717,15 @@
       "note": "NDRRMA's own 587 now matches the Department of Tourism count taken a week earlier; MoFA's ~600 and the Nepal Tourism Board's 644 were taken on different dates by different agencies and have not been reconciled. India is the largest single nationality reported, revised upward from 178 to 288 across updates."
     },
     "notes": [
-      "The headline figure is bodies recovered, not identified deaths. NDRRMA SitRep #25 of 15 September puts formally identified bodies at 104 of 1,399, and subtracts exactly those 104 from the missing total; forensic teams from India, China, Japan, Singapore and South Korea have been working since early September.",
+      "The headline figure is bodies recovered, not identified deaths. NDRRMA SitRep #29 of 19 September puts formally identified bodies at 110 of 1,411, and subtracts exactly those 110 from the missing total; forensic teams from India, China, Japan, Singapore and South Korea have been working since early September.",
       "Missing is a separate category and is not presumed dead. NDRRMA notes on every dashboard that the out-of-contact figure may still include unidentified bodies and people already rescued, and that it is being verified.",
-      "District counts reflect where a body was found, not where the person lived or died. Bodies travelled up to 240 km downstream, which is why Chitwan (364 on 15 September) and the two Nawalparasi districts (454 combined) show higher recovered-body counts than the upstream epicentre districts of Rasuwa (189) and Nuwakot (202).",
+      "District counts reflect where a body was found, not where the person lived or died. Bodies travelled up to 240 km downstream, which is why Chitwan (364, unchanged since 13 September) and the two Nawalparasi districts (454 combined, unchanged) show higher recovered-body counts than the upstream epicentre districts of Rasuwa (199) and Nuwakot (203).",
       "The often-quoted ~900 figure is the 31 August snapshot, not a competing method. It is the same count at an earlier date.",
-      "NDRRMA publishes a situation report every day, and the Nepali and English editions are numbered separately: the Nepali #25 and the English #14 are both dated 15 September 2026, 19:00 NPT, and their dashboards carry identical figures. Nepali #20 (10 Sep) and #21 (11 Sep) were never posted to the Rasuwa index and their /mediafiles/rasuwa/ URLs return 404, but both are in the general publication index at /api/v1/publication/publications/ under /mediafiles/publications/, which is where every edition from 10 September on is filed. The English #12 of 13 September and #13 of 14 September carry \"Situation Report # 11\" on their inner pages, a template slip; the English #14 corrects it.",
-      "No consolidated official injured count has been published since 31 August 2026. SitRep #25 reports 343 patients treated across 19 health facilities and 9,496 treated by the security agencies, both cumulative treatment counts in a different category from the 279 injured figure of 1 September, and neither replaces it.",
-      "The missing breakdown is published only as an infographic. Read off SitRep #25's chart it is: Rasuwa 2,860 (local residents 1,393; people from other districts 1,286; Nepal Army 45; government employees 73; bank and financial-institution employees 26; Nepal Police 25; Armed Police Force 12), Nuwakot 1,787 (651 local, 1,136 from other districts), 587 foreign nationals and, new in this edition, 49 Indian nationals working at hydropower projects, the last two carried as rows of their own. Those sum to 5,283, from which NDRRMA subtracts the 104 identified bodies to reach 5,179. It gives no equivalent Rasuwa/Nuwakot split of the dead.",
+      "NDRRMA publishes a situation report every day, and the Nepali and English editions are numbered separately: the Nepali #29 and the English #18 are both dated 19 September 2026, 19:00 NPT, and their dashboards carry identical figures. Nepali #20 (10 Sep) and #21 (11 Sep) were never posted to the Rasuwa index and their /mediafiles/rasuwa/ URLs return 404, but both are in the general publication index at /api/v1/publication/publications/ under /mediafiles/publications/, which is where every edition from 10 September on is filed. The English #12 of 13 September and #13 of 14 September carry \"Situation Report # 11\" on their inner pages, a template slip; the English #14 corrects it. SitReps #26, #27 and #28 (Nepali) and their English equivalents were not read into this file, so this bump moves directly from #25/#14 (15 Sep) to #29/#18 (19 Sep).",
+      "No consolidated official injured count has been published since 31 August 2026. SitRep #29 reports 344 patients treated across 19 health facilities and 10,041 treated by the security agencies, both cumulative treatment counts in a different category from the 279 injured figure of 1 September, and neither replaces it.",
+      "The missing breakdown is published only as an infographic, and its structure changed in this edition. Read off SitRep #29's chart it is: Rasuwa 1,677 local residents plus 1,836 people from other districts (3,513), Nuwakot 657 local plus 1,179 from other districts (1,836), and a single foreign-nationals row of 636 - the Nepal Army, Nepal Police, government-employee and bank-employee rows carried separately through SitRep #25, and the extra 49-worker Indian hydropower row introduced in #25, no longer appear as such (SitReps #26-28 were not read into this file, so the exact point of the change is not established). Those figures sum to 5,985, from which NDRRMA subtracts the 110 identified bodies to reach 5,875. It gives no equivalent Rasuwa/Nuwakot split of the dead.",
       "NDRRMA's initial damage and needs assessment, published in SitRep #22 on 12 September and not repeated in #23, puts 32,936 people, 8,317 households and 7,570 private buildings affected; 13 hydropower plants, 69 km of road, 68 suspension bridges, 37 motorable bridges and 443 km of pipeline damaged; 48 public buildings, 30 heritage sites, 18 schools and 7 health facilities in the social sector; 1,806 ha of cropland, 697.05 ha of irrigated agriculture, 4,800 business establishments and 17 bank branches; total disaster effect Rs 408 bn against total recovery needs of Rs 723 bn, of which Rs 8.73 bn immediate. It names Bidur (Nuwakot), Gosaikunda (Rasuwa), Benighat Rorang (Dhading) and Kispang (Nuwakot) as the four worst-affected local levels, with 3,431, 1,156, 1,146 and 721 respectively - the graphic does not state what those numbers count, so they are not carried into the municipality table. The detailed PDNA is still in progress.",
-      "Cash relief was extended on 10 September 2026 by cabinet decision to households whose homes were destroyed across 15 local levels in Rasuwa, Nuwakot, Dhading, Tanahun and Gorkha: Rs 15,000 a month for a household of up to four, plus Rs 2,000 a month per further member, for up to six months or until alternative accommodation is arranged, and only for families housing themselves rather than staying in a holding centre. Situation reports through #25 publish no district or local-level total of what has actually been disbursed.",
+      "Cash relief was extended on 10 September 2026 by cabinet decision to households whose homes were destroyed across 15 local levels in Rasuwa, Nuwakot, Dhading, Tanahun and Gorkha: Rs 15,000 a month for a household of up to four, plus Rs 2,000 a month per further member, for up to six months or until alternative accommodation is arranged, and only for families housing themselves rather than staying in a holding centre. Situation reports through #29 publish no district or local-level total of what has actually been disbursed.",
       "IOM appealed on 8 September for USD 20.5 million to assist 43,000 of an estimated 84,000 people affected by the floods, as part of the Government of Nepal-led response."
     ]
   },
@@ -1381,6 +1403,11 @@
           "as_of": "2026-09-14",
           "value": 202,
           "src": "ndrrma_sitrep24"
+        },
+        {
+          "as_of": "2026-09-19",
+          "value": 203,
+          "src": "ndrrma_sitrep29"
         }
       ],
       "detail": "About 1,981 missing persons also reported in-district on 8 Sep"
@@ -1407,6 +1434,11 @@
           "as_of": "2026-09-15",
           "value": 78,
           "src": "ndrrma_sitrep25"
+        },
+        {
+          "as_of": "2026-09-19",
+          "value": 79,
+          "src": "ndrrma_sitrep29"
         }
       ],
       "detail": null
@@ -1490,6 +1522,11 @@
           "as_of": "2026-09-15",
           "value": 189,
           "src": "ndrrma_sitrep25"
+        },
+        {
+          "as_of": "2026-09-19",
+          "value": 199,
+          "src": "ndrrma_sitrep29"
         }
       ],
       "detail": "The 8 Sep figure is reported as 161 to 170 depending on the article"
@@ -2612,6 +2649,31 @@
         "text": "Search and rescue, 15 September: at Chilime 150 m of the 250 m tunnel has been searched and debris fully cleared from 80 m of it, with Nepal Army, Indian Army and NDRF teams working night shifts while water is pumped out. A joint Nepal Army and Chinese DART team went about 170 m into the Langtang tunnel with a thermal drone and found nothing. At Upper Trishuli-1 a team searched 200 m into Adit-1 at Hakubeshi with no trace; with Adit-1 blocked, teams entered through Adit-3 and cleared 60 m of debris along the connecting tunnel. At Trishuli 3B, excavation about 2 m below river level has exposed the project office foundation and part of a powerhouse pillar, with Adit-1 cleared for 476 m and Adit-2 for 2.7 km, but nothing found of residential blocks A1, A2, B1, B2 or D. The 19-member Australian DART team left on Bhadra 29; seven Australian forensic personnel remain in Kathmandu.",
         "as_of": "2026-09-15",
         "src": "ndrrma_sitrep_en14"
+      },
+      {
+        "text": "Shelter, 19 September: 1,342 people remain in 24 holding centres - 794 in 9 centres in Rasuwa, 427 in 11 in Nuwakot and 121 in 4 in Dhading, down from 2,155 in 30 centres on 15 September.",
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep_en18"
+      },
+      {
+        "text": "Roads, 19 September: two-way traffic resumed at Krishnabhir on the Prithvi Highway at 06:00 on 17 September, and traffic at Jyamireghat-Chaukibhir, interrupted the previous evening, resumed the morning of 18 September; Shital Bazaar remains one lane while hard-rock blasting continues, and the proposed Fisling-to-Benighat bridge alternative is still in procurement with construction not begun. Of the 10 km Bidur-Betrawati section, 9.2 km is clear and the remaining 0.8 km, including 0.5 km of hard rock, is still being cut; foundation excavation for the Betrawati Bailey bridge has begun.",
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep_en18"
+      },
+      {
+        "text": "Electricity, 19 September: supply is fully restored in all areas except 46 households in Dahalfedi, ward 1, and 40 in Lingling, ward 3, of Gosaikunda Rural Municipality, Rasuwa; solar power systems are being distributed where restoring the grid will take longer.",
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep_en18"
+      },
+      {
+        "text": "Communications, 19 September: Nepal Telecom has 117 of 120 BTS towers operational, with Timure, Chilime Khola and Trishuli 3B still out; Ncell has service interruptions at Timure, Tiru, Gatlang and Goljung, the last two on transformer failures. 12 of 29 arranged satellite internet terminals are installed and operational, one at NDRRMA, seven in Nuwakot and four in Rasuwa.",
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep_en18"
+      },
+      {
+        "text": "Search and rescue, 19 September: following site inspections, the Rasuwa District Security Committee and project management stood down further search and rescue at Langtang and Chilime. At Upper Trishuli-1's Adit-3 tunnel at Hakubeshi, crews cutting steel reinforcement cleared about 2,000 m of tunnel and recovered 31 bodies trapped in a rebar-mesh structure prepared for concrete lining, on top of 6 recovered earlier from the same tunnel; 13 of the 31 were scheduled for transport to Trishuli on 20 September. Searches at Rasuwagadhi, Langtang, Chilime, Trishuli 3A and Trishuli 3B found nothing further.",
+        "as_of": "2026-09-19",
+        "src": "ndrrma_sitrep_en18"
       }
     ]
   },
@@ -2694,42 +2756,42 @@
     {
       "district": "Rasuwa",
       "label": "people in holding centres",
-      "value": 825,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep25",
+      "value": 794,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep29",
       "detail": "Across 9 centres"
     },
     {
       "district": "Nuwakot",
       "label": "people in holding centres",
-      "value": 1236,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep25",
-      "detail": "Across 19 centres"
+      "value": 427,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep29",
+      "detail": "Across 11 centres"
     },
     {
       "district": "Dhading",
       "label": "people in holding centres",
-      "value": 94,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep25",
-      "detail": "Across 2 centres"
+      "value": 121,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep29",
+      "detail": "Across 4 centres"
     },
     {
       "district": "All affected",
       "label": "people in holding centres",
-      "value": 2155,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep25",
-      "detail": "30 centres in total, down from 33 centres and 2,418 people on 14 September and from 37 and 3,761 on 12 September as families move to self-arranged accommodation under the cash-relief scheme"
+      "value": 1342,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep29",
+      "detail": "24 centres in total, down from 30 centres and 2,155 people on 15 September as families move to self-arranged accommodation under the cash-relief scheme; SitReps #26-28 were not read into this file"
     },
     {
       "district": "All affected",
       "label": "bodies formally identified",
-      "value": 104,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep25",
-      "detail": "Of 1,399 recovered. NDRRMA deducts exactly these 104 from the missing total"
+      "value": 110,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep29",
+      "detail": "Of 1,411 recovered. NDRRMA deducts exactly these 110 from the missing total"
     },
     {
       "district": "All affected",
@@ -2759,17 +2821,17 @@
       "district": "All affected",
       "label": "DNA samples collected (deceased)",
       "value": 1286,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep_en14",
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep_en18",
       "detail": "Samples may be given at the relevant District Police Office with two photographs and proof of relationship"
     },
     {
       "district": "All affected",
       "label": "DNA samples collected (relatives)",
-      "value": 1889,
-      "as_of": "2026-09-15",
-      "src": "ndrrma_sitrep_en14",
-      "detail": "Reference samples from families of the missing and the deceased"
+      "value": 1997,
+      "as_of": "2026-09-19",
+      "src": "ndrrma_sitrep_en18",
+      "detail": "Reference samples from families of the missing and the deceased. The report's own infographic shows 1,991 for the same date; the text figure of 1,997, from its forensic-laboratories section, is used here and the discrepancy is not reconciled."
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+ "hot_flood_npl": {
+  "checked_at": "2026-09-20T14:10:29+00:00",
+  "fingerprint": "5c552c5127fd5d6b",
+  "metadata_modified": "2026-09-20T10:54:49.923101",
+  "refreshed_at": "2026-09-20T14:13:19+00:00"
+ },
+ "hot_flood_npl_corridor": {
+  "checked_at": "2026-09-20T14:10:29+00:00",
+  "fingerprint": "1102cbc9fa603d4a",
+  "metadata_modified": "2026-09-20T09:52:12.612429",
+  "refreshed_at": "2026-09-20T14:13:19+00:00"
+ }
+}

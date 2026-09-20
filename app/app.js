@@ -75,6 +75,8 @@ let QUERY_IDS = [];         // style layer ids that answer clicks
 let PAINT_TARGETS = [];     // {id, prop, def} for the colour-by-status switch
 let IMAGERY_BEFORE = null;  // style layer id the imagery layer is inserted before
 let OV_BASE = {};           // style layer id -> {paint prop: opacity as first built}, for the group slider
+let evidenceRowEls = null;  // {cnt, sub} of the evidence rail row, the one row updated after build
+let evidenceState = { count: null, sub: 'loading…' };  // what that row should currently say
 const maps = {};            // {pre, post}
 const tagEl = {};           // {pre, post} corner <select> tags over the map
 
@@ -325,6 +327,15 @@ const andF = (...fs) => ['all', ...fs.filter(Boolean)];
 const HDX = 'data/hdx/';
 const ATTR_HDX = CFG.HDX_CREDIT + ' via <a href="' + CFG.HDX_URL + '" target="_blank" rel="noopener">HDX</a>';
 const ADMIN = 'data/admin/';
+/* Rasuwa Flood Evidence Map (a VIVA-D instance): the live endpoint the page tries
+ * first, and the hourly server-side snapshot it falls back to.  The archive sends
+ * no Access-Control-Allow-Origin header, so the live call fails from the Pages
+ * origin today; the snapshot (tools/build_evidence_media.py, refreshed by
+ * .github/workflows/refresh-evidence.yml) is what actually draws.  Both are kept
+ * here rather than in config.js because EVIDENCE_SNAPSHOT is built from HDX. */
+const EVIDENCE_API = 'https://archive.rasuwaflood.org/api/items?all=1';
+const EVIDENCE_SNAPSHOT = HDX + 'derived/evidence_media.geojson';
+const ATTR_EVIDENCE = 'Rasuwa Flood Evidence Map (VIVA-D) · photos/videos © their authors';
 // Province/district/municipality: OCHA COD-AB Nepal, v02 (2024-03-14), CC BY-IGO.
 const ATTR_ADMIN_COD = 'Survey Department of Nepal / UN RCO Nepal via OCHA COD-AB, CC BY-IGO';
 // Ward: HRRP Nepal 2018 ward boundaries for the 31 earthquake districts, filtered to
@@ -431,6 +442,30 @@ function semicircleIcon(stroke) {
     path(r); ctx.strokeStyle = stroke;    ctx.lineWidth = 2 * SHAPE_ICON_RATIO; ctx.stroke();
   });
 }
+// Filled circle with the same baked dark stroke as squareIcon: the photo half of
+// the crowd-sourced evidence layer.  A circle rather than a square so it cannot be
+// read as a hydropower plant at a glance.
+function circleIcon(fill) {
+  return iconCanvas((ctx, sz, pad) => {
+    const r = (sz - 2 * pad) / 2, c = sz / 2;
+    ctx.beginPath(); ctx.arc(c, c, r, 0, Math.PI * 2);
+    ctx.fillStyle = fill; ctx.fill();
+    ctx.strokeStyle = '#000000'; ctx.lineWidth = SHAPE_ICON_RATIO; ctx.stroke();
+  });
+}
+// Filled right-pointing triangle -- a play button -- for the video half of the
+// evidence layer, so photo and video are told apart by shape and not only by a
+// colour the imagery underneath can swamp.
+function playIcon(fill) {
+  return iconCanvas((ctx, sz, pad) => {
+    const x = pad, y = pad, w = sz - 2 * pad, h = sz - 2 * pad;
+    ctx.beginPath();
+    ctx.moveTo(x, y); ctx.lineTo(x + w, y + h / 2); ctx.lineTo(x, y + h); ctx.closePath();
+    ctx.fillStyle = fill; ctx.fill();
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000000'; ctx.lineWidth = SHAPE_ICON_RATIO; ctx.stroke();
+  });
+}
 /* icon name -> pixel factory.  Hydro square colours come from DMG_COLOR/DMG_CLASS
  * (defined below hydroKey); bridge colours are the two ground-report statuses
  * that are actually shown (Standing/Intact is filtered out, see BRIDGE_SHOWN)
@@ -455,6 +490,20 @@ SHAPE_ICONS['bridge-damaged'] = () => semicircleIcon(CFG.STATUS.damaged);
 SHAPE_ICONS['bridge-destroyed'] = () => semicircleIcon(CFG.STATUS.destroyed);
 SHAPE_ICONS['bridge-standing'] = () => semicircleIcon(CFG.STATUS.standing);
 SHAPE_ICONS['bridge-hot'] = () => semicircleIcon(HOT_BRIDGE_COLOR);
+/* Crowd-sourced photographs and videos from the Rasuwa Flood Evidence Map.  One
+ * fuchsia not otherwise in the palette (the CATS list's #f032e6 is the closest,
+ * and only appears on a raw HOT catalogue row that is off by default), so a piece
+ * of ground evidence never reads as damage, admin or infrastructure. */
+const EVIDENCE_COLOR = '#e879f9';
+SHAPE_ICONS['evidence-photo'] = () => circleIcon(EVIDENCE_COLOR);
+SHAPE_ICONS['evidence-video'] = () => playIcon(EVIDENCE_COLOR);
+const EVIDENCE_ICON = ['match', ['to-string', ['get', 'media_type']],
+  'video', 'evidence-video', 'evidence-photo'];
+/* Same claim-strength rule as HYDRO_OPACITY: a coordinate read out of the
+ * photograph's own EXIF draws solid, a pin the uploader dropped by hand draws
+ * translucent.  Roughly half the archive is user-set, so the distinction carries
+ * most of what the layer can honestly say about where a picture was taken. */
+const EVIDENCE_OPACITY = ['case', ['==', ['to-string', ['get', 'precision']], 'exact'], 1, 0.5];
 
 /* Circle radius from installed capacity: a 14 MW plant still reads as a dot,
  * a 216 MW one is unmistakable, and the scale is square-root-ish so the big
@@ -521,6 +570,11 @@ function buildDefs() {
     // 9 hand-geocoded plants, named with the spellings data/reports.json uses.
     hydro: { type: 'geojson', data: HDX + 'derived/hydropower_points.geojson',
       attribution: ATTR_HDX + '; OpenStreetMap, Wikidata and Global Energy Monitor for the added plants' },
+    // Crowd-sourced flood photographs and videos.  Initialised from the committed
+    // snapshot so the layer draws at once; startEvidenceLive() replaces the data
+    // with the archive's own feed whenever that call succeeds.  promoteId keeps the
+    // archive's item id as the feature id across both paths.
+    evidence: { type: 'geojson', data: EVIDENCE_SNAPSHOT, promoteId: 'id', attribution: ATTR_EVIDENCE },
     fair: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage.geojson' },
     fair_aoi: { type: 'geojson', data: HDX + 'hot_flood_npl_buildings_damage/hot_flood_npl_buildings_damage_analyzed_aoi.geojson' },
     // National OSM waterways, pre-tiled by tools/build_waterways_tiles.sh (the 8 MB
@@ -1009,6 +1063,24 @@ function buildDefs() {
     paint: { 'text-color': '#fde68a', 'text-halo-color': 'rgba(8,12,18,.85)', 'text-halo-width': 1.6, 'text-halo-blur': 0.3 } });
   push(...placeLayers);
 
+  // Crowd-sourced photographs and videos from the Rasuwa Flood Evidence Map, on top
+  // of the settlement labels so a piece of ground evidence is never buried under a
+  // place name.  Circle for a photo, play triangle for a video (EVIDENCE_ICON);
+  // solid where the coordinate is the photograph's own GPS and translucent where the
+  // uploader dropped the pin (EVIDENCE_OPACITY).  Off by default -- it is eyewitness
+  // material, not a measured layer.  Labelled only from zoom 13, where the points
+  // have separated enough for a title to mean anything.
+  push(
+    { id: 'evidence-point', type: 'symbol', source: 'evidence', layout: { visibility: 'none',
+        'icon-image': EVIDENCE_ICON, 'icon-size': 13 / SHAPE_ICON_PX,
+        'icon-allow-overlap': true, 'icon-ignore-placement': true },
+      paint: { 'icon-opacity': EVIDENCE_OPACITY } },
+    { id: 'evidence-label', type: 'symbol', source: 'evidence', minzoom: 13,
+      layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-font': FONT, 'text-size': 10.5,
+        'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-max-width': 10, 'text-optional': true },
+      paint: { 'text-color': '#fae8ff', 'text-halo-color': 'rgba(0,0,0,.85)', 'text-halo-width': 1.6 } },
+  );
+
   // `opacity: true` gives this group the master transparency slider; the damage
   // and ground-report layers are the ones an analyst reads the imagery through.
   // Labels are kept short enough to sit on one line at the rail's 340 px (owner
@@ -1085,6 +1157,17 @@ function buildDefs() {
       title: 'Highways and main roads, OpenStreetMap, national coverage' },
     { key: 'waterways_np', label: 'Waterways of Nepal (OSM)', color: '#0ea5e9', ids: ['waterways_np-line', 'waterways_np-fill'], on: false,
       title: 'Rivers and streams of Nepal, OpenStreetMap' },
+    // The one crowd-sourced layer on the map: eyewitness photographs and videos from
+    // archive.rasuwaflood.org.  `sub` is rewritten at runtime by setEvidenceRow() to
+    // say whether the points on screen came from the live archive or the committed
+    // snapshot, and `count` with them; the values here are what shows until the first
+    // load lands.
+    { key: 'evidence', label: 'Flood evidence photos & videos', color: EVIDENCE_COLOR,
+      ids: ['evidence-point', 'evidence-label'], on: false, count: 117, shape: 'circle',
+      sub: 'loading…',
+      title: 'Geotagged photographs and videos contributed to the Rasuwa Flood Evidence Map. '
+        + 'Circle for a photo, play triangle for a video; solid where the coordinate is the '
+        + 'photograph\'s own GPS, translucent where the uploader placed it by hand.' },
   ] });
 
   // 5a. Administrative boundaries (province/district/municipality/ward) ----
@@ -2288,6 +2371,9 @@ function renderSidebar() {
       else if (e.title) row.title = e.title;
       boxes.push([cb, e]); rows.push({ e, row, cb, sw, cnt });
       if (e.hot) hotRows.push({ e, row, cb, cnt, minz });
+      // The evidence row is the only one whose count and second line change after the
+      // rail is built (live archive vs committed snapshot), so it keeps a handle.
+      if (e.key === 'evidence') { evidenceRowEls = { cnt, sub: t.querySelector('.sub') }; setEvidenceRow(); }
       det.appendChild(row);
     }
     ctl.querySelectorAll('button').forEach(b => b.addEventListener('click', ev => {
@@ -2363,6 +2449,13 @@ function renderSidebar() {
   }
   // The legend is hand-written rather than generated from GROUPS, so a new row
   // in the rail does not appear here on its own.
+  const evEntry = ENTRY['evidence'];
+  if (evEntry) {
+    lg.appendChild(el('div', 'hd', 'Ground evidence'));
+    add(evEntry.color, 'Flood photograph (circle) or video (play triangle), crowd-sourced; '
+      + 'solid where the coordinate is the photo\'s own GPS, faded where the uploader placed it',
+      false, evEntry.shape);
+  }
   const cutoffEntry = ENTRY['admin_cutoff'];
   if (cutoffEntry) {
     add(cutoffEntry.color, 'Ward cut off from its usual route: pale at a 10-30 km detour, '
@@ -2457,6 +2550,138 @@ function toast(msg) {
   toast._t = setTimeout(() => { t.className = ''; }, 2200);
 }
 
+// ------------------------------------------------- crowd-sourced evidence
+/* The Rasuwa Flood Evidence Map is a live archive: people were still uploading
+ * photographs while this map was being built, so a file committed once would be
+ * out of date within the day.  The page therefore tries the archive's own
+ * endpoint first and falls back to the hourly snapshot that is already loaded.
+ *
+ * The archive sends no Access-Control-Allow-Origin header, so as things stand
+ * the live call always fails from the Pages origin and the snapshot is what
+ * draws.  That is the expected path, not an error, so it costs one console.info
+ * and nothing louder.  If the archive ever adds the header the live path starts
+ * working with no change here. */
+const EVIDENCE_REFRESH_MS = 15 * 60 * 1000;
+
+/* One archive item -> one GeoJSON Point, or null if it must be dropped.  Kept in
+ * step with item_to_feature() in tools/build_evidence_media.py: the same fields,
+ * the same drops (unpublished rows and the 0,0 placeholder coordinate) and the
+ * same omission -- the archive's `contact` field is a personal email address and
+ * is never carried onto the map.  The one field the browser cannot fill is the
+ * municipality/district, which the builder resolves from the COD-AB polygons;
+ * live features simply have none. */
+function evidenceItemToFeature(it) {
+  if (!it || (it.status || '') !== 'published') return null;
+  const lat = Number(it.lat), lng = Number(it.lng);
+  if (!isFinite(lat) || !isFinite(lng) || (lat === 0 && lng === 0)) return null;
+  const id = Number(it.id);
+  const clean = v => { const s = v == null ? '' : String(v).trim(); return s || null; };
+  const kind = clean(it.media_type) || 'photo';
+  const label = { photo: 'Photo', video: 'Video', document: 'Document' }[kind] || 'Item';
+  const raw = clean(it.captured_at);
+  const locSrc = (it.location_source || '').trim();
+  const thumb = clean(it.thumbnailUrl);
+  return { type: 'Feature', id, geometry: { type: 'Point', coordinates: [lng, lat] }, properties: {
+    id,
+    name: clean(it.title) || label + ' #' + id,
+    media_type: kind,
+    status: 'published',
+    description: clean(it.description),
+    location_name: clean(it.location_name),
+    captured_at: evidenceDate(raw) || raw,
+    captured_at_raw: raw,
+    submitted_at: clean(it.submitted_at),
+    taken_by: clean(it.taken_by),
+    owner: clean(it.owner),
+    location_source: locSrc || null,
+    precision: locSrc === 'Photo GPS' ? 'exact' : 'approximate',
+    source_url: clean(it.source_url),
+    source_platform: clean(it.source_platform),
+    media_url: clean(it.drive_url) || clean(it.previewUrl),
+    thumb_url: thumb && !/^https?:/.test(thumb) ? 'https://archive.rasuwaflood.org' + thumb : thumb,
+    item_url: 'https://archive.rasuwaflood.org/',
+    community_notes: clean(it.community_notes),
+    mime_type: clean(it.mime_type),
+    adm3_name: null,
+    district: null,
+    source: 'viva-d',
+    source_ref: EVIDENCE_API,
+  } };
+}
+/* The archive's capture field is free text, so the feed carries "2026-08-30",
+ * "Aug 28, 2026, 2:10 pm" and "sep 19,2026" side by side.  Same rule as
+ * norm_date() in the builder: a date it can read becomes YYYY-MM-DD, anything
+ * else is left alone for the popup to print verbatim. */
+const EVIDENCE_MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+function evidenceDate(raw) {
+  const s = String(raw || '').trim();
+  if (!s) return null;
+  let y, mo, d;
+  let m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);
+  if (m) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+  else {
+    m = /^\s*([A-Za-z]{3,9})\s*(\d{1,2})\s*,?\s*(\d{4})/.exec(s);
+    if (!m) return null;
+    mo = EVIDENCE_MONTHS.indexOf(m[1].slice(0, 3).toLowerCase()) + 1;
+    if (!mo) return null;
+    d = +m[2]; y = +m[3];
+  }
+  const dt = new Date(Date.UTC(y, mo - 1, d));
+  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null;
+  return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+}
+
+/* Push `evidenceState` into the rail row.  Called once when the row is built and
+ * again after each load, so the row always says where its points came from. */
+function setEvidenceRow(count, sub) {
+  if (count !== undefined) evidenceState.count = count;
+  if (sub !== undefined) evidenceState.sub = sub;
+  const e = ENTRY['evidence'];
+  if (e) { if (evidenceState.count != null) e.count = evidenceState.count; e.sub = evidenceState.sub; }
+  if (!evidenceRowEls) return;
+  if (evidenceRowEls.cnt && evidenceState.count != null) evidenceRowEls.cnt.textContent = fmtCount(evidenceState.count);
+  if (evidenceRowEls.sub) evidenceRowEls.sub.textContent = evidenceState.sub;
+}
+
+let evidenceLoggedBlock = false;
+async function loadEvidence() {
+  try {
+    const res = await fetch(EVIDENCE_API, { cache: 'no-store' });
+    if (!res.ok) throw new Error(EVIDENCE_API + ' -> ' + res.status);
+    const items = (await res.json()).items || [];
+    const features = items.map(evidenceItemToFeature).filter(Boolean)
+      .sort((a, b) => a.id - b.id);
+    if (!features.length) throw new Error('no published items in the live feed');
+    const fc = { type: 'FeatureCollection', features };
+    eachMap(m => { const s = m.getSource('evidence'); if (s) s.setData(fc); });
+    setEvidenceRow(features.length, 'live · ' + features.length + ' items');
+    return true;
+  } catch (e) {
+    // Expected while the archive sends no CORS header: keep the snapshot on screen
+    // and say so in the rail.  One line, once, at info level.
+    if (!evidenceLoggedBlock) {
+      evidenceLoggedBlock = true;
+      console.info('evidence: live archive unreachable from this origin (' + e.message
+        + '); showing the committed snapshot');
+    }
+    try {
+      const snap = await gj('derived/evidence_media.geojson');
+      const n = snap && snap.features ? snap.features.length : 0;
+      const when = snap && snap.generated ? String(snap.generated).slice(0, 10) : '';
+      setEvidenceRow(n, 'snapshot' + (when ? ' · ' + when : '') + ' · ' + n + ' items');
+    } catch (_) {
+      setEvidenceRow(undefined, 'snapshot');
+    }
+    return false;
+  }
+}
+/* Re-read the archive every 15 minutes while the tab is open; a hidden tab is
+ * skipped rather than queued, and the next visible tick picks it up. */
+function startEvidenceLive() {
+  loadEvidence();
+  setInterval(() => { if (!document.hidden) loadEvidence(); }, EVIDENCE_REFRESH_MS);
+}
+
 // ------------------------------------------------------------ place search
 const SEARCH_FILES = [
   ['hot_flood_npl_corridor/populated_places_osm.geojson', 'Settlement'],
@@ -2466,6 +2691,9 @@ const SEARCH_FILES = [
   ['hot_flood_npl_corridor/police_stations_osm.geojson', 'Police'],
   ['hot_flood_npl_corridor/bridges_osm.geojson', 'Bridge'],
   ['hot_flood_npl/hot_flood_npl_bridge_damage.geojson', 'Bridge report'],
+  // The evidence snapshot, not the live feed: the index is built from committed
+  // files, and an item title ("Bridge washed out near Timure") is a real search term.
+  ['derived/evidence_media.geojson', 'Photo/video'],
 ];
 let searchIndex = null, searchLoading = null;
 function buildSearchIndex() {
@@ -2952,8 +3180,8 @@ async function renderMunicipalities(det, body) {
   body.appendChild(el('p', 'note',
     'Municipality-level detail comes from the "needs and priority" table in NDRRMA situation report #01 of ' +
     '1 September, which names the affected wards and what had reached each local level but publishes no ' +
-    'casualty counts below district level. NDRRMA has kept reporting daily in Nepali since - #24 is dated ' +
-    '14 September, 19:00 NPT - but no report after #01 restates the ward lists or adds a municipality-level ' +
+    'casualty counts below district level. NDRRMA has kept reporting daily in Nepali since - #29 is dated ' +
+    '19 September, 19:00 NPT - but no report after #01 restates the ward lists or adds a municipality-level ' +
     'figure, so those columns stay dated 1 September while the district table, the holding-centre rows and ' +
     'the headline counts carry the newer source.'));
   body.appendChild(el('p', 'inview', ''));
@@ -3174,8 +3402,57 @@ async function renderCommunities(det, body) {
 }
 
 // -------------------------------------------------------------- popup body
+/* Only https links are ever written into a popup: the archive's URLs arrive from
+ * a third-party feed, and anything else (javascript:, data:) is dropped rather
+ * than escaped-and-linked. */
+const safeUrl = v => (/^https:\/\//.test(String(v || '')) ? String(v) : '');
+function popLink(url, text) {
+  const u = safeUrl(url);
+  return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(text) + '</a>' : '';
+}
+/* Crowd-sourced photographs and videos (source `evidence`).  The picture is the
+ * point of the popup, so it leads; everything under it is provenance, and the
+ * precision line is there because roughly half of these coordinates are a pin
+ * somebody dropped rather than the camera's own GPS. */
+function evidencePopupHTML(p) {
+  const kind = String(p.media_type || 'photo');
+  const thumb = safeUrl(p.thumb_url), item = safeUrl(p.item_url);
+  let h = '';
+  if (thumb) {
+    const img = '<img class="ev-img" src="' + esc(thumb) + '" loading="lazy" alt="'
+      + esc(p.name || 'Flood evidence') + '">';
+    h += '<div class="ev-thumb">' + (item ? '<a href="' + esc(item) + '" target="_blank" rel="noopener">' + img + '</a>' : img)
+      + (kind === 'video' ? '<span class="ev-play">▶ Video</span>' : '') + '</div>';
+  }
+  h += '<div class="pop-h">' + esc(p.name || 'Flood evidence') + '</div>';
+  const meta = ['Flood evidence', kind];
+  if (p.adm3_name) meta.push(String(p.adm3_name) + (p.district ? ', ' + p.district : ''));
+  h += '<div class="pop-m">' + meta.map(esc).join(' · ') + '</div>';
+  if (p.description) h += '<div class="pop-n">' + esc(p.description) + '</div>';
+  const rows = [];
+  if (p.captured_at) rows.push('Captured: ' + esc(p.captured_at));
+  const who = p.taken_by || p.owner;
+  if (who) rows.push('By: ' + esc(who) + (p.owner && p.taken_by && p.owner !== p.taken_by ? ' (rights: ' + esc(p.owner) + ')' : ''));
+  if (p.location_name) rows.push('Location: ' + esc(p.location_name));
+  rows.push(p.precision === 'exact'
+    ? 'GPS from the photo'
+    : 'Location set by the uploader — approximate' + (p.location_source ? ' (' + esc(p.location_source) + ')' : ''));
+  if (p.community_notes) rows.push(esc(p.community_notes));
+  h += '<div class="pop-loc">' + rows.join('<br>') + '</div>';
+  const links = [popLink(p.item_url, 'Open in archive'), popLink(p.media_url, 'Original media'),
+                 popLink(p.source_url, 'Source post' + (p.source_platform ? ' (' + p.source_platform + ')' : ''))].filter(Boolean);
+  if (links.length) h += '<div class="pop-m">' + links.join(' · ') + '</div>';
+  return h;
+}
 function popupHTML(label, props) {
   const p = props || {};
+  if (p.thumb_url && p.source === 'viva-d') {
+    // The picture, its provenance and its links are all in the branch above; the
+    // generic table still follows for anything not surfaced there, minus the two
+    // URL fields it would repeat.
+    const rest = Object.fromEntries(Object.entries(p).filter(([k]) => k !== 'thumb_url' && k !== 'media_url'));
+    return evidencePopupHTML(p) + popupAttrs(rest);
+  }
   const name = p.name || p.name_en || p.name_latin || '';
   const ne = p.name_ne && p.name_ne !== name ? p.name_ne : '';
   const type = [p.feature_type, p.amenity, p.highway, p.man_made, p.place, p.bridge_structure,
@@ -3194,13 +3471,17 @@ function popupHTML(label, props) {
   // attribute table: a settlement-level pin is a different claim from a survey.
   if (p.location) h += '<div class="pop-loc">Location: ' + esc(p.location) + '</div>';
   if (p.notes) h += '<div class="pop-n">' + esc(p.notes) + '</div>';
+  return h + popupAttrs(p);
+}
+/* The raw property table every popup ends with, split out so the evidence branch
+ * can reuse it after dropping the fields it has already shown as a picture. */
+function popupAttrs(p) {
   const rows = Object.entries(p)
     .filter(([, v]) => v !== null && v !== '' && v !== 'null' && v !== undefined)
     .map(([k, v]) => '<tr><th>' + esc(k) + '</th><td>' +
       (/^https?:\/\//.test(String(v)) ? '<a href="' + esc(v) + '" target="_blank" rel="noopener">' + esc(v) + '</a>' : esc(v)) +
       '</td></tr>').join('');
-  h += '<details class="pop-all"><summary>All attributes</summary><table class="popup">' + rows + '</table></details>';
-  return h;
+  return '<details class="pop-all"><summary>All attributes</summary><table class="popup">' + rows + '</table></details>';
 }
 
 // --------------------------------------------------------------- behaviour
@@ -5069,6 +5350,8 @@ async function main() {
   imgAlignRestore();
   if (ALIGN_TOOL) imgAlignProbeSize(imgAlign.url);
   renderSidebar();
+  // After the rail exists, so the first result can write into the evidence row.
+  startEvidenceLive();
   applyMode();
   setSwipe(state.swipe, false);
   wireDivider(); wireKeyboard();

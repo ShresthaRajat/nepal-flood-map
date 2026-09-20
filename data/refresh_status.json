@@ -1,0 +1,146 @@
+{
+ "dry_run": false,
+ "failures": [],
+ "finished": "2026-09-20T14:16:58+00:00",
+ "git": {},
+ "hdx": {
+  "changed": false,
+  "datasets": {
+   "hot_flood_npl": {
+    "basis": "fingerprint matches",
+    "changed": false,
+    "checked_at": "2026-09-20T14:15:36+00:00",
+    "dataset": "hot_flood_npl",
+    "fingerprint": "5c552c5127fd5d6b",
+    "metadata_modified": "2026-09-20T10:54:49.923101",
+    "newest_resource": "2026-09-20T10:06:02.786556",
+    "previous": "5c552c5127fd5d6b",
+    "repo_snapshot": "2026-09-20T10:02:51Z"
+   },
+   "hot_flood_npl_corridor": {
+    "basis": "fingerprint matches",
+    "changed": false,
+    "checked_at": "2026-09-20T14:15:36+00:00",
+    "dataset": "hot_flood_npl_corridor",
+    "fingerprint": "1102cbc9fa603d4a",
+    "metadata_modified": "2026-09-20T09:52:12.612429",
+    "newest_resource": "2026-09-20T03:05:55.836005",
+    "previous": "1102cbc9fa603d4a",
+    "repo_snapshot": "2026-09-20T03:03:03Z"
+   }
+  },
+  "forced": false,
+  "will_refresh": false
+ },
+ "selected": [
+  "ems",
+  "waterways",
+  "hdx",
+  "admin_ward",
+  "hydropower",
+  "extent_munis",
+  "sitrep"
+ ],
+ "started": "2026-09-20T14:15:36+00:00",
+ "steps": {
+  "admin_ward": {
+   "detail": {},
+   "duration_s": 6.1,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  },
+  "ems": {
+   "detail": {},
+   "duration_s": 2.3,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  },
+  "extent_munis": {
+   "detail": {
+    "added": [],
+    "computed": [
+     "Aamachhodingmo",
+     "Belkotgadhi",
+     "Benighat Rorang",
+     "Bidur",
+     "Gajuri",
+     "Galchhi",
+     "Gandaki",
+     "Gosaikunda",
+     "Kalika",
+     "Kispang",
+     "Shahid Lakhan",
+     "Siddhalek",
+     "Tarakeshwor",
+     "Uttargaya"
+    ],
+    "drift": false,
+    "in_app_js": [
+     "Aamachhodingmo",
+     "Belkotgadhi",
+     "Benighat Rorang",
+     "Bidur",
+     "Gajuri",
+     "Galchhi",
+     "Gandaki",
+     "Gosaikunda",
+     "Kalika",
+     "Kispang",
+     "Shahid Lakhan",
+     "Siddhalek",
+     "Tarakeshwor",
+     "Uttargaya"
+    ],
+    "removed": []
+   },
+   "duration_s": 0.6,
+   "exit_code": 0,
+   "note": "matches app/app.js",
+   "status": "ok"
+  },
+  "hdx": {
+   "detail": {
+    "reason": "unchanged",
+    "refreshed": false
+   },
+   "duration_s": 0.0,
+   "exit_code": 0,
+   "note": "unchanged",
+   "status": "ok"
+  },
+  "hydropower": {
+   "detail": {},
+   "duration_s": 0.2,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  },
+  "sitrep": {
+   "detail": {
+    "latest_in_repo": {
+     "eng": 18,
+     "nep": 29
+    },
+    "newest_found": {
+     "eng": null,
+     "nep": null
+    },
+    "reports_age_days": 1,
+    "reports_as_of": "2026-09-19"
+   },
+   "duration_s": 45.3,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  },
+  "waterways": {
+   "detail": {},
+   "duration_s": 25.5,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  }
+ }
+}

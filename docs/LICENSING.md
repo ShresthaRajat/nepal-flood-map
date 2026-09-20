@@ -53,13 +53,13 @@ re-projection do not change the underlying license.
 - **HOT / HDX response datasets** (ODbL). From the Humanitarian OpenStreetMap
   Team's "Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli"
   dataset on [HDX](https://data.humdata.org/dataset/hot_flood_npl), snapshot
-  **16 September 2026**. Underlying feature source is OpenStreetMap
+  **20 September 2026**. Underlying feature source is OpenStreetMap
   contributors, licensed [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/):
   - `data/hdx/hot_flood_npl/` — flood-affected area (buildings, roads,
     bridges, waterways, facilities, destroyed/damaged features), snapshot
-    generated 2026-09-16 10:02 UTC
+    generated 2026-09-20 10:02 UTC
   - `data/hdx/hot_flood_npl_corridor/` — same catalogue over a wider 1 km
-    river-corridor buffer, snapshot generated 2026-09-16 03:03 UTC
+    river-corridor buffer, snapshot generated 2026-09-20 03:03 UTC
   - `data/hdx/hotosm_npl_waterways/` — country-wide OSM waterways, snapshot
     2026-09-10, clipped to Rasuwa, Nuwakot, Dhading and Gorkha districts,
     shipped as vector tiles only
@@ -116,6 +116,29 @@ re-projection do not change the underlying license.
   (7 Sep 2026). The grades are this project's own work; the footprints are
   copied from Overture Maps (293) and OpenStreetMap (29), so the layer carries
   their attribution and terms above. 5 polygons were drawn by hand.
+
+- **Rasuwa Flood Evidence Map (VIVA-D)** — `data/hdx/derived/evidence_media.geojson`,
+  an hourly snapshot of the public archive at
+  [archive.rasuwaflood.org](https://archive.rasuwaflood.org/), built by
+  `tools/build_evidence_media.py` from its open endpoint
+  `/api/items?all=1`. **The archive publishes no formal licence.** Copyright in
+  each photograph and video remains with the person who took it; the archive is a
+  place they chose to publish it, not a grant of reuse rights. The layer is shown
+  here for situational awareness only, on the same footing as the drone
+  photographs in the imagery list, and nothing in it may be redistributed on the
+  assumption that it is open. Attribution string as it appears in the map's
+  attribution control: *Rasuwa Flood Evidence Map (VIVA-D) · photos/videos ©
+  their authors*, plus the contributor named in each feature's `taken_by` or
+  `owner`.
+  - **Personal data stripped.** The archive publishes a `contact` field, an email
+    address or phone number, beside most items. The builder never reads it into
+    the output and it must not be reintroduced.
+  - **Accuracy.** Crowd-sourced and unverified. Titles, descriptions, dates and
+    attributions are whatever the contributor typed. Roughly half the coordinates
+    are a pin dropped on a map rather than the photograph's own GPS, which is why
+    every feature carries `precision` and the approximate ones draw faded. Treat
+    the layer as eyewitness material, never as a survey or as evidence of what is
+    at a given coordinate.
 
 ## Terrain
 
