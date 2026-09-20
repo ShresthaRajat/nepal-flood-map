@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-15",
+ "generated": "2026-09-20",
  "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
  "layers": [
   {
@@ -710,6 +710,32 @@
     "S1D_IW_GRDH_1SDV_20260914T122947_20260914T123012_004574_008848_rtc"
    ],
    "notes_build": "Ascending relative orbit 158; the frame's eastern edge falls at 84.61-84.70 E, so it covers only the downstream Trishuli tail around Mugling. Bounds are the true footprint clipped to the corridor window, same convention as post_s1_20260912."
+  },
+  {
+   "id": "post_s2_20260920",
+   "label": "20 Sep 2026 · Sentinel-2 10 m",
+   "side": "post",
+   "date": "2026-09-20",
+   "sensor": "Sentinel-2",
+   "provider": "ESA Copernicus / AWS open data",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s2_20260920/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus Sentinel data 2026",
+   "coverage": "corridor",
+   "size_mb": 7.0,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "S2A_45RUL_20260920_0_L2A",
+    "S2A_45RUM_20260920_0_L2A"
+   ]
   }
  ],
  "default_pre": "none",
