@@ -1,0 +1,873 @@
+{
+ "_readme": [
+  "Curated road accessibility for the Trishuli / Bhote Koshi flood corridor: can a vehicle get",
+  "through today, as distinct from how badly the road was damaged four weeks ago.",
+  "Hand-maintained; nothing writes to this file.  tools/build_road_status.py matches each segment",
+  "here against data/hdx/derived/roads_in_flood_extent.geojson and the road features of",
+  "data/hdx/derived/ems_road_grading.geojson, and writes data/hdx/derived/road_status.geojson,",
+  "which the map draws.  A road feature that matches nothing here stays `damaged` and keeps drawing",
+  "red, so this file only ever needs the stretches somebody has reported a change on.",
+  "",
+  "To add a segment, append an object to `segments` with:",
+  "  id             a short kebab-case slug, unique in this file",
+  "  name           a human name for the stretch",
+  "  road           the road it belongs to, in words",
+  "  ref            the highway reference (H01, NH42) or null",
+  "  from, to       the two ends, in words",
+  "  status         restored | under_repair | damaged",
+  "                 restored  = traffic is getting through, at whatever width `lane` says",
+  "                 under_repair = work is under way and it is not through yet",
+  "                 damaged   = cut, with no repair reported.  This is also the default for",
+  "                             every road feature that matches no segment, so a `damaged`",
+  "                             entry is only worth adding when the source names the stretch.",
+  "  lane           two-lane | one-lane | track | null",
+  "  status_detail  one paragraph: what was done, by whom, when, and what is still missing",
+  "  as_of          ISO date the status was last confirmed",
+  "  source_url     the SitRep or article URL, or null",
+  "  source_title   the publication and headline, or the SitRep number",
+  "  confidence     high | medium | low",
+  "  match_names    OSM `name` values this stretch is known by, used to stop a highway's status",
+  "                 bleeding onto a side road that merely runs near it.  A road feature whose",
+  "                 own name is set and matches none of these is never recoloured by this",
+  "                 segment.  Leave the list empty for a stretch with no reliable name.",
+  "  waypoints      [[lon, lat], ...] along the stretch, in order.  The build densifies this",
+  "                 polyline and matches road features within 120 m of it, 200 m for trunk and",
+  "                 primary features.  Two to eight points is usually enough; they are the",
+  "                 corridor, not a survey.",
+  "",
+  "A segment that captures no road features still draws, as a wide translucent ribbon under the",
+  "roads (feature_kind 'segment'), which is how the hill detour routes appear: they run outside",
+  "the flood extent and the Copernicus areas, so there are no road features there to recolour.",
+  "Run the build with --check after editing; it reports per-segment capture counts."
+ ],
+ "as_of": "2026-09-19",
+ "sources": [
+  "NDRRMA Situation Report #18 (English), 19 September 2026 - Roads section",
+  "Kathmandu Post, OnlineKhabar, Ratopati, Himalpress, Deccan Herald, 6-19 September 2026",
+  "Cross-checked against docs/ALTERNATIVE_ROUTES.md and the corridor entries in data/reports.json"
+ ],
+ "notes": [
+  "No situation report newer than #18 English / #29 Nepali (19 Sep) was retrievable, so the",
+  "fast-moving entries (the Betrawati Bailey bridge, the Trisuli Bazar crossing, the last 0.8 km",
+  "of the Bidur-Betrawati section) may already be a day or more stale.",
+  "A 24th researched segment, Devighat-Kakani-Ranipauwa-Kathmandu, was left out: it was marked",
+  "restored purely because no damage had been reported on it, with no source either way.",
+  "Two waypoint corrections were applied against the road geometry; both are described in the",
+  "status_detail of the segment concerned.  One further waypoint, the middle of the three on",
+  "prithvi-jyamireghat-chaukibhir, could not be checked: the Prithvi Highway between Jyamireghat",
+  "and Chaukibhir falls outside both the flood extent and the Copernicus areas, so there is no",
+  "geometry there to check it against.",
+  "Lane counts for the Bailey and Acrow crossings at Devighat, Betrawati and Syabrubesi are",
+  "inferred from typical Bailey-bridge width, not stated in any source."
+ ],
+ "segments": [
+  {
+   "id": "prithvi-krishnabhir",
+   "name": "Prithvi Highway: Krishnabhir (Mugling-Malekhu section)",
+   "road": "Prithvi Highway (H01)",
+   "ref": "H01",
+   "from": "Mugling side",
+   "to": "Malekhu side",
+   "status": "restored",
+   "lane": "two-lane",
+   "status_detail": "Road base collapse at Krishnabhir (~70-300 m) repaired with a hillside bypass track; two-way traffic resumed 06:00, 17 September after weeks of one-lane/closed running.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Roads section",
+   "confidence": "high",
+   "match_names": [
+    "Prithvi Rajmarg"
+   ],
+   "waypoints": [
+    [
+     84.665,
+     27.8252
+    ],
+    [
+     84.68,
+     27.818
+    ],
+    [
+     84.6967,
+     27.8074
+    ]
+   ]
+  },
+  {
+   "id": "prithvi-jyamireghat-chaukibhir",
+   "name": "Prithvi Highway: Jyamireghat - Chaukibhir",
+   "road": "Prithvi Highway (H01)",
+   "ref": "H01",
+   "from": "Jyamireghat",
+   "to": "Chaukibhir",
+   "status": "restored",
+   "lane": "one-lane",
+   "status_detail": "Traffic interrupted the evening of 17 Sep resumed the morning of 18 Sep; treated as one-lane pending confirmation of full two-way running.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Roads section",
+   "confidence": "medium",
+   "match_names": [
+    "Prithvi Rajmarg"
+   ],
+   "waypoints": [
+    [
+     84.634,
+     27.8608
+    ],
+    [
+     84.644,
+     27.846
+    ],
+    [
+     84.665,
+     27.8252
+    ]
+   ]
+  },
+  {
+   "id": "prithvi-shital-bazaar",
+   "name": "Prithvi Highway: Shital Bazaar (Krishnabhir area)",
+   "road": "Prithvi Highway (H01)",
+   "ref": "H01",
+   "from": "Shital Bazaar",
+   "to": "Krishnabhir",
+   "status": "under_repair",
+   "lane": "one-lane",
+   "status_detail": "Traffic restricted to one lane; hard-rock blasting underway following completion of clearance procedures and a request for Nepal Army support.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Roads section",
+   "confidence": "high",
+   "match_names": [
+    "Prithvi Rajmarg",
+    "Prithvi Rajmarga"
+   ],
+   "waypoints": [
+    [
+     84.7908,
+     27.8121
+    ],
+    [
+     84.7963,
+     27.8129
+    ],
+    [
+     84.8356,
+     27.8068
+    ]
+   ]
+  },
+  {
+   "id": "galchhi-devighat-ratamate",
+   "name": "Pasang Lhamu Highway: Galchhi - Devighat (via Ratamate)",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Galchhi",
+   "to": "Devighat",
+   "status": "restored",
+   "lane": "two-lane",
+   "status_detail": "Hillside cutting at Ratamate (~100 m washed out by river erosion) complete, reopening the section to traffic; Thulokhola debris (2-3 m deposits) cleared and Thulokhola-Kashitar-Devighat also cleared. Waypoint 4 of 5 was moved 1.4 km north onto the road alignment: as given it sat in open hillside with no road within 780 m.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Galchhi-Devighat-Dhunge-Trishuli section",
+   "confidence": "high",
+   "match_names": [
+    "Pasang Lhamu Highway",
+    "Devighat Path"
+   ],
+   "waypoints": [
+    [
+     85.00046,
+     27.7974
+    ],
+    [
+     85.0412,
+     27.8562
+    ],
+    [
+     85.062,
+     27.8595
+    ],
+    [
+     85.0811,
+     27.8548
+    ],
+    [
+     85.11006,
+     27.86003
+    ]
+   ]
+  },
+  {
+   "id": "devighat-tadi-acrow-bridge",
+   "name": "Devighat: Tadi Khola crossing (Acrow/Bailey bridge)",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Devighat (south bank)",
+   "to": "Devighat (north bank)",
+   "status": "restored",
+   "lane": "one-lane",
+   "status_detail": "60 m, 5.5 m wide, 50-tonne Nepal Army Acrow/Bailey bridge over the Tadi Khola, built in 5 days, open to pedestrians 10 Sep and vehicles from 11 Sep; SitRep 18 (19 Sep) confirms it remains in operation. Original Tadi Khola bridges (old/new) stay destroyed.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026",
+   "confidence": "high",
+   "match_names": [
+    "devighat-Tadi bridge"
+   ],
+   "waypoints": [
+    [
+     85.10889,
+     27.85834
+    ],
+    [
+     85.109075,
+     27.858575
+    ],
+    [
+     85.10924,
+     27.85887
+    ]
+   ]
+  },
+  {
+   "id": "devighat-battar-bidur-trishuli",
+   "name": "Pasang Lhamu Highway: Devighat - Battar - Bidur - Trishuli Bazar - Gerkhu",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Devighat",
+   "to": "Trishuli Bazar / Gerkhu",
+   "status": "restored",
+   "lane": "two-lane",
+   "status_detail": "Devighat-Dhunge and Dhunge-Trishuli sections clear and operational; SitRep 18: \"Traffic is operating from Galchhi through Devighat to Battar, Bidur, Trishuli and Gerkhu.\"",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026",
+   "confidence": "high",
+   "match_names": [
+    "Devighat Path"
+   ],
+   "waypoints": [
+    [
+     85.11006,
+     27.86003
+    ],
+    [
+     85.14645,
+     27.89526
+    ],
+    [
+     85.148,
+     27.9232
+    ],
+    [
+     85.18613,
+     27.9521
+    ]
+   ]
+  },
+  {
+   "id": "kolphu-bridge-belkotgadhi",
+   "name": "Kolphu (Kolpu) Bridge, Belkotgadhi",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Belkotgadhi",
+   "to": "Belkotgadhi",
+   "status": "restored",
+   "lane": "one-lane",
+   "status_detail": "Open to one-lane traffic following minor repairs; confirmed still holding as of SitRep 18 (19 Sep).",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026",
+   "confidence": "high",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.0162111,
+     27.8101111
+    ]
+   ]
+  },
+  {
+   "id": "trisuli-bazar-bridges",
+   "name": "Trisuli Bazar: old & new road bridges over the Trishuli",
+   "road": "Pasang Lhamu Highway (NH42) local crossing",
+   "ref": null,
+   "from": "Trisuli Bazar (west bank)",
+   "to": "Trisuli Bazar (east bank)",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "Both Trisuli Bazar bridges (60 m each) remain washed out. A ~48 m Bailey-bridge design for Trisuli Bazaar was reported complete in early Sep, but no installation-start news has been found as of 19-20 Sep; through-traffic still uses the Galchhi right-bank detour instead of a repaired crossing here.",
+   "as_of": "2026-09-20",
+   "source_url": "https://kathmandupost.com/national/2026/09/13/india-sends-three-bailey-bridges-to-restore-flood-hit-connectivity",
+   "source_title": "Kathmandu Post, India sends three Bailey bridges to restore flood-hit connectivity, 13 Sep 2026",
+   "confidence": "medium",
+   "match_names": [
+    "Trishuli Bazar Road",
+    "Trishuli Naya Pul",
+    "trishuli bridge",
+    "Trishuli Bridge",
+    "Trishuli River Bridge"
+   ],
+   "waypoints": [
+    [
+     85.14945,
+     27.9218278
+    ],
+    [
+     85.1479639,
+     27.9212361
+    ]
+   ]
+  },
+  {
+   "id": "galchhi-trisuli-rightbank-detour",
+   "name": "Right-bank detour: Galchhi - Trishuli Bridge - Kalleritar - Koshikhola - Pimaltar - Darshantar - Chhatre Khola - Gauribesi - Trisuli Bazar",
+   "road": "Local road (Galchhi rural municipality, right bank)",
+   "ref": null,
+   "from": "Galchhi",
+   "to": "Trisuli Bazar",
+   "status": "restored",
+   "lane": "one-lane",
+   "status_detail": "Operational, connecting right-bank communities across the Trishuli in Nuwakot; maintenance continues. Narrow single-lane, no longer the necessary route for through traffic now that Galchhi-Devighat-Trishuli (left bank) is open, but still maintained as a backup/local link.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 (route 6, Trishuli River Right Bank)",
+   "confidence": "medium",
+   "match_names": [
+    "Trishuli Bridge",
+    "trishuli bridge"
+   ],
+   "waypoints": [
+    [
+     85.00277,
+     27.80269
+    ],
+    [
+     85.07468,
+     27.85612
+    ],
+    [
+     85.09623,
+     27.85838
+    ],
+    [
+     85.10711,
+     27.86464
+    ],
+    [
+     85.12116,
+     27.87505
+    ],
+    [
+     85.13118,
+     27.89438
+    ],
+    [
+     85.148,
+     27.9232
+    ]
+   ]
+  },
+  {
+   "id": "bidur-betrawati",
+   "name": "Pasang Lhamu Highway: Bidur - Betrawati",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Bidur / Trisuli Bazar",
+   "to": "Betrawati",
+   "status": "under_repair",
+   "lane": "track",
+   "status_detail": "Of the 10 km section, 9.2 km is clear; the remaining 0.8 km (incl. 0.5 km through hard rock) was completely washed away. Road formation and graveling continue, with blasting being coordinated with the Nepal Army; landslides and waterlogged ground keep affecting both the new and existing tracks.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Bidur-Betrawati section",
+   "confidence": "high",
+   "match_names": [
+    "Pasang Lhamu Highway"
+   ],
+   "waypoints": [
+    [
+     85.14264,
+     27.9021
+    ],
+    [
+     85.1434,
+     27.91801
+    ],
+    [
+     85.15095,
+     27.92152
+    ],
+    [
+     85.15224,
+     27.92757
+    ],
+    [
+     85.15411,
+     27.9332
+    ],
+    [
+     85.16475,
+     27.95317
+    ],
+    [
+     85.18662,
+     27.97211
+    ]
+   ]
+  },
+  {
+   "id": "bhainse-betrawati-track",
+   "name": "Bhainse - Betrawati feeder track (bypassing the Bidur-Betrawati gap)",
+   "road": "Local feeder track",
+   "ref": null,
+   "from": "Bhainse / Gerkhu",
+   "to": "Betrawati",
+   "status": "under_repair",
+   "lane": "track",
+   "status_detail": "About 2.5 km of track opening completed; widening to 6 m and graveling continue along with Hume-pipe and drain installation. Rock cutting continues on the remaining ~300 m between Uttargaya School and Betrawati Bridge; debris (3-4 m deep in places) still being cleared over ~500 m toward Betrawati.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Bhainse-Betrawati section",
+   "confidence": "high",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.18613,
+     27.9521
+    ],
+    [
+     85.17033,
+     27.96037
+    ],
+    [
+     85.18595,
+     27.97311
+    ]
+   ]
+  },
+  {
+   "id": "betrawati-bailey-bridge",
+   "name": "Betrawati Bailey bridge (Phalakhu/Falaakhu Khola)",
+   "road": "Pasang Lhamu Highway (NH42) crossing",
+   "ref": null,
+   "from": "Betrawati",
+   "to": "Betrawati",
+   "status": "under_repair",
+   "lane": null,
+   "status_detail": "Design complete, foundation excavation underway. On 18 Sep, components for a Betrawati Acrow bridge were loaded at the Nepal Army's No. 28 Brigade in Bara, with transport being coordinated with the Department of Roads; a separate 70 m Indian-supplied Bailey span is also en route. Not yet installed as of 19-20 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Bidur-Betrawati / Bhainse-Betrawati sections",
+   "confidence": "high",
+   "match_names": [
+    "Falaakhu River Bridge"
+   ],
+   "waypoints": [
+    [
+     85.1858,
+     27.9742
+    ]
+   ]
+  },
+  {
+   "id": "dhikure-jibjibe-bogatitar",
+   "name": "Dhikure - Phedi Besi Chowk - Hiramunitar - Chogte - Bore Bhanjyang - Sano Khola - Dhanswara - Bhorle - Jibjibe - Bogatitar",
+   "road": "Mid-Hill Highway feeder (Nuwakot side)",
+   "ref": null,
+   "from": "Dhikure",
+   "to": "Bogatitar",
+   "status": "restored",
+   "lane": "track",
+   "status_detail": "Reported operational, providing alternative access to Rasuwa while the Trishuli-Betrawati highway section remains damaged; newly operational as of SitRep 14 (15 Sep), maintenance continuing per SitRep 18 (19 Sep).",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Alternative Routes Connecting Dhading and Rasuwa",
+   "confidence": "medium",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.20571,
+     27.89965
+    ],
+    [
+     85.215,
+     27.94
+    ],
+    [
+     85.22436,
+     27.99206
+    ],
+    [
+     85.2134,
+     28.0059
+    ]
+   ]
+  },
+  {
+   "id": "tokha-saramthali-bogatitar",
+   "name": "Kathmandu - Tokha - Chhahare - Gadkhar Bridge - Saramthali - Patikharka - Bogatitar - Kalikasthan - Dhunche",
+   "road": "Mid-Hill Highway feeder (Kathmandu side)",
+   "ref": null,
+   "from": "Tokha, Kathmandu",
+   "to": "Kalikasthan / Dhunche",
+   "status": "restored",
+   "lane": "one-lane",
+   "status_detail": "Announced by the Ministry of Physical Infrastructure and Transport and reported reopened 28 Aug, two days after the flood; restricted to light four-wheeled vehicles, heavy trucks excluded. Main lifeline into Rasuwa alongside the Dhikure-Jibjibe-Bogatitar route.",
+   "as_of": "2026-09-17",
+   "source_url": "https://english.onlinekhabar.com/rasuwa-reconnected-road-network.html",
+   "source_title": "OnlineKhabar, Rasuwa reconnected to road network, 29 Aug 2026 (status carried in SitRep 15, 16 Sep)",
+   "confidence": "medium",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.3283,
+     27.7484
+    ],
+    [
+     85.29,
+     27.78
+    ],
+    [
+     85.25,
+     27.87
+    ],
+    [
+     85.28236,
+     27.91969
+    ],
+    [
+     85.29806,
+     27.97702
+    ],
+    [
+     85.25,
+     28.005
+    ],
+    [
+     85.2134,
+     28.0059
+    ]
+   ]
+  },
+  {
+   "id": "devighat-bridge-bypass-kolputar",
+   "name": "Devighat bridge bypass: Pipaltar - Pasang Lhamu Highway - Dhamle - Niranjana - Bagkhor - Harre - Deurali - Kolputar",
+   "road": "Local hill road",
+   "ref": null,
+   "from": "Pipaltar",
+   "to": "Kolputar",
+   "status": "restored",
+   "lane": "track",
+   "status_detail": "Operational, providing an alternative to the (since-repaired) Tadi Khola crossing at Devighat; maintenance continues. Now a backup rather than a necessity since the Devighat Acrow bridge opened.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Alternative to Devighat Bridge",
+   "confidence": "medium",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.12812,
+     27.86558
+    ],
+    [
+     85.10858,
+     27.85958
+    ],
+    [
+     85.08,
+     27.842
+    ],
+    [
+     85.045,
+     27.825
+    ],
+    [
+     85.01429,
+     27.81328
+    ]
+   ]
+  },
+  {
+   "id": "kalikasthan-dhunche-light4wd",
+   "name": "Pasang Lhamu Highway: Bogatitar - Kalikasthan - Dhunche",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Kalikasthan",
+   "to": "Dhunche",
+   "status": "restored",
+   "lane": "one-lane",
+   "status_detail": "Open but tightly restricted: OSM way advisory notes read \"Only small vehicles (4x4 jeeps) are allowed. Caution due to risk of landslides. Not advised to travel at night. Relief vehicles should register with the police in Kalikasthan before driving to Dhunche.\" Matches reporting that Bidur-Dhunche is limited to small 4WD vehicles.",
+   "as_of": "2026-09-17",
+   "source_url": "https://kathmandupost.com/national/2026/09/08/dhunche-has-relief-supplies-getting-aid-to-flood-hit-rasuwa-villages-is-the-problem",
+   "source_title": "Kathmandu Post, Dhunche has relief supplies; getting aid to villages is the problem, 8 Sep 2026 (via OSM advisory notes, retrieved 17 Sep)",
+   "confidence": "medium",
+   "match_names": [
+    "Pasang Lhamu Highway"
+   ],
+   "waypoints": [
+    [
+     85.21402,
+     28.00768
+    ],
+    [
+     85.22341,
+     28.02586
+    ],
+    [
+     85.22703,
+     28.0483
+    ],
+    [
+     85.23002,
+     28.06823
+    ],
+    [
+     85.25996,
+     28.08217
+    ],
+    [
+     85.28756,
+     28.10505
+    ],
+    [
+     85.30409,
+     28.10959
+    ]
+   ]
+  },
+  {
+   "id": "betrawati-kalikasthan-cut",
+   "name": "Pasang Lhamu Highway: Betrawati - Khalte - Ramche - Kalikasthan (main highway alignment)",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Betrawati",
+   "to": "Kalikasthan",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "The direct highway alignment remains cut: Betrawati old and new bridges and the Naya Pul at Khalte are washed out. Traffic instead uses the Dhikure-Jibjibe-Bogatitar and Tokha-Saramthali-Bogatitar bypasses to reach Kalikasthan/Dhunche without using this alignment. No repair-start news found for this direct stretch as of 19-20 Sep. One of the seven waypoints was dropped as out of order; it doubled back past Choktar and lay 1.9 km from any named place.",
+   "as_of": "2026-09-20",
+   "source_url": "https://kathmandupost.com/national/2026/09/08/dhunche-has-relief-supplies-getting-aid-to-flood-hit-rasuwa-villages-is-the-problem",
+   "source_title": "Kathmandu Post, 8 Sep 2026; cross-checked against SitRep 18 (19 Sep), no update",
+   "confidence": "low",
+   "match_names": [
+    "Pasang Lhamu Highway"
+   ],
+   "waypoints": [
+    [
+     85.18406,
+     27.9749
+    ],
+    [
+     85.18779,
+     27.98206
+    ],
+    [
+     85.19396,
+     27.98427
+    ],
+    [
+     85.19804,
+     27.99444
+    ],
+    [
+     85.20735,
+     27.99785
+    ],
+    [
+     85.21402,
+     28.00768
+    ]
+   ]
+  },
+  {
+   "id": "beyond-dhunche-thulo-bharkhu",
+   "name": "Pasang Lhamu Highway: Dhunche - Thulo Bharkhu (toward Syabrubesi)",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Dhunche",
+   "to": "Thulo Bharkhu",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "\"Beyond Dhunche, the road is gone,\" per a Rasuwa local quoted in the Kathmandu Post; movement past Dhunche is by helicopter/drone only. DoR's plan targets a temporary track by Dashain (mid-Oct) using Bailey bridges over the Bhotekoshi and Chilime, but no construction-start news found as of 19-20 Sep.",
+   "as_of": "2026-09-08",
+   "source_url": "https://kathmandupost.com/national/2026/09/08/dhunche-has-relief-supplies-getting-aid-to-flood-hit-rasuwa-villages-is-the-problem",
+   "source_title": "Kathmandu Post, Dhunche has relief supplies; getting aid to villages is the problem, 8 Sep 2026",
+   "confidence": "low",
+   "match_names": [
+    "Pasang Lhamu Highway"
+   ],
+   "waypoints": [
+    [
+     85.30409,
+     28.10959
+    ],
+    [
+     85.31222,
+     28.10921
+    ],
+    [
+     85.3092,
+     28.12779
+    ],
+    [
+     85.31577,
+     28.13832
+    ],
+    [
+     85.32354,
+     28.14343
+    ],
+    [
+     85.32397,
+     28.14934
+    ]
+   ]
+  },
+  {
+   "id": "syabrubesi-bailey-bridge",
+   "name": "Syafrubesi Bridge (Pasang Lhamu Highway crossing)",
+   "road": "Pasang Lhamu Highway (NH42) crossing",
+   "ref": null,
+   "from": "Syabrubesi",
+   "to": "Syabrubesi",
+   "status": "under_repair",
+   "lane": null,
+   "status_detail": "Part of DoR's Bailey-bridge plan (Syabrubesi needs a ~75 m span); a rope crossing was completed at Syafrubesi for pedestrians/goods (SitRep 15/18). No confirmation the vehicle Bailey bridge itself has been installed as of 19-20 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Suspension Bridges and Rope Crossings",
+   "confidence": "low",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.3324917,
+     28.1574778
+    ]
+   ]
+  },
+  {
+   "id": "rasuwagadhi-miteri-bridge",
+   "name": "Miteri (Nepal-China Friendship) Bridge, Rasuwagadhi",
+   "road": "Pasang Lhamu Highway (NH42) border crossing",
+   "ref": null,
+   "from": "Rasuwagadhi, Nepal",
+   "to": "Gyirong, China",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "Destroyed for the second time (previously rebuilt as a 91 m Bailey bridge after a July 2025 flood, reopened Jan 2026, washed out again 26 Aug 2026 along with its temporary replacement). China has signalled willingness to help rebuild but no formal agreement or rebuild timeline as of 20 Sep; a 5 km stretch of China National Highway 216 toward Rasuwagadhi was also destroyed on the Chinese side.",
+   "as_of": "2026-09-14",
+   "source_url": "https://kathmandupost.com/money/2026/09/14/beijing-signals-support-for-rebuilding-flood-ravaged-rasuwagadhi-route",
+   "source_title": "Kathmandu Post, Beijing signals support for rebuilding flood-ravaged Rasuwagadhi route, 14 Sep 2026",
+   "confidence": "medium",
+   "match_names": [
+    "热索桥 रसुवागढी मितेरी पुल",
+    "热索临时便桥 रसुवागढीमा अस्थायी मितेरी पुल"
+   ],
+   "waypoints": [
+    [
+     85.3780972,
+     28.2789444
+    ]
+   ]
+  },
+  {
+   "id": "syabrubesi-timure-rasuwagadhi-road",
+   "name": "Pasang Lhamu Highway: Syabrubesi - Timure - Rasuwagadhi",
+   "road": "Pasang Lhamu Highway (NH42)",
+   "ref": "NH42",
+   "from": "Syabrubesi",
+   "to": "Rasuwagadhi",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "The ~16 km Syabrubesi-Rasuwagadhi road (being upgraded under a Chinese-funded project when the flood hit) had large sections swept away along with the border crossing; authorities advise against travel to Rasuwagadhi/Timure. Nepal has asked China to build a temporary track from the border toward Timure and targets a temporary track through to the border by Dashain, but no completion reported as of 20 Sep.",
+   "as_of": "2026-09-14",
+   "source_url": "https://kathmandupost.com/money/2026/09/14/beijing-signals-support-for-rebuilding-flood-ravaged-rasuwagadhi-route",
+   "source_title": "Kathmandu Post, Beijing signals support for rebuilding flood-ravaged Rasuwagadhi route, 14 Sep 2026",
+   "confidence": "medium",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.34274,
+     28.16457
+    ],
+    [
+     85.35,
+     28.2
+    ],
+    [
+     85.36667,
+     28.25285
+    ],
+    [
+     85.37778,
+     28.27777
+    ]
+   ]
+  },
+  {
+   "id": "betrawati-mailung-haku-hydropower-roads",
+   "name": "Betrawati - Mailung - Haku hydropower access roads",
+   "road": "Hydropower access roads (Upper Trishuli-1, Trishuli 216, Mailung)",
+   "ref": null,
+   "from": "Betrawati",
+   "to": "Haku",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "Mailung Bailey Bridge, the Upper Trishuli hydropower Bailey bridge, and both Haku (1 and 2) hydropower Bailey bridges remain destroyed with no public repair-start news found in NDRRMA SitReps or web search; these are project access crossings rather than the public highway, and search-and-rescue operations at Upper Trishuli-1 and Chilime were only stood down 19 Sep, suggesting reconstruction has not yet started.",
+   "as_of": "2026-09-19",
+   "source_url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_18_19092026.pdf",
+   "source_title": "NDRRMA Situation Report #18 (English), 19 Sep 2026 - Search and rescue section; cf. HDX bridge damage inventory",
+   "confidence": "low",
+   "match_names": [],
+   "waypoints": [
+    [
+     85.1858,
+     27.9742
+    ],
+    [
+     85.2075333,
+     28.0718944
+    ],
+    [
+     85.2128444,
+     28.0759778
+    ],
+    [
+     85.2751389,
+     28.1083667
+    ],
+    [
+     85.2810306,
+     28.1129528
+    ]
+   ]
+  },
+  {
+   "id": "midhill-highway-devighat-trisuli-bridge",
+   "name": "Mid-Hill Highway: Trisuli River bridge near Devighat",
+   "road": "Mid-Hill Highway (Madan Bhandari Highway)",
+   "ref": null,
+   "from": "Devighat",
+   "to": "Devighat",
+   "status": "damaged",
+   "lane": null,
+   "status_detail": "This separate Mid-Hill Highway crossing of the main Trishuli near Devighat (distinct from the repaired Tadi Khola/Acrow crossing) remains destroyed in the HDX/DoR bridge-damage inventory, with no repair-specific news found; through traffic bypasses it via the Tadi Khola Acrow bridge and the Devighat-Battar-Bidur route instead.",
+   "as_of": "2026-09-06",
+   "source_url": "https://data.humdata.org/dataset/hot_flood_npl_bridge_damage",
+   "source_title": "HDX / HOT flood NPL bridge damage inventory, 6 Sep 2026 (Department of Roads)",
+   "confidence": "low",
+   "match_names": [
+    "Devighat Path"
+   ],
+   "waypoints": [
+    [
+     85.116225,
+     27.8703389
+    ]
+   ]
+  }
+ ]
+}

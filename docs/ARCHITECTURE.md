@@ -16,6 +16,8 @@ from unpkg.
 | `tools/build_s2_tiles.sh` | imagery | Sentinel-2 true-colour pyramids at native 10 m (z8–14) straight from the AWS COG archive; used for `post_s2_20260827`. |
 | `tools/build_roads_tiles.sh`, `build_waterways_tiles.sh` | vector | National OSM roads / waterways from HDX, clipped and tiled (MVT). |
 | `tools/build_ems_roads.py`, `build_flooded_roads.py` | derived | Copernicus EMS road grades; roads inside the flood extent with bridge rules. |
+| `tools/build_road_status.py` | derived | Road accessibility. Matches the hand-maintained corridor segments in `data/road_status.json` against the flood-extent roads and the Copernicus EMS grading into `data/hdx/derived/road_status.geojson`: every feature of both inputs recoloured by `road_status`, plus the curated polylines as `feature_kind` 'segment'. Buffer 120 m, 200 m for trunk and primary, gated on name and highway-class compatibility. `--check` reports per-segment capture counts and writes nothing. |
+| `tools/build_bridge_status.py` | derived | Bridge type and repair status. Joins the HDX bridge ground reports to the nearest OSM span (type) and to the hand-maintained `data/bridge_status.json` (repair status) into `data/hdx/derived/bridge_status.geojson`: a point per ground report, a point per curated bridge no report covers, and a LineString per OSM span a curated entry names. `--check` validates the curated file and writes nothing. |
 | `tools/build_places.py`, `build_collapse_origin.py` | derived | Settlement labels (OSM/Overpass); UNOSAT detachment zone, barrier lakes, upstream AOI. |
 | `tools/build_cutoff_wards.py` | derived | Wards cut off from their usual routes. Shortest paths over the drivable OSM graph (national export unioned with the HOT corridor export, which still holds the washed-away ways) to each district HQ and Kathmandu, before and after the destroyed bridges are removed, into `data/hdx/derived/cutoff_wards.geojson` (`severity` 0–3) plus `work/cutoff_wards/summary.csv`. Needs `work/roads_build/roads.gpkg`; `--rebuild` re-reads it instead of the cached graph. |
 | `tools/refresh_hdx.sh`, `update_hdx_counts.py` | data | Pull the latest HOT/HDX exports, retile, rebuild overlays, recompute counts and snapshot dates. |
@@ -399,14 +401,20 @@ optional `minzoom`/`maxzoom`.
 
 The loose GeoJSON files supply flood extent, bridge ground reports, exposed
 hydropowers, Tasking Manager boundaries and fAIr damage, and are also read
-directly by the search, bridges and damage panels.
+directly by the search, bridges and damage panels. The map draws bridges from
+`data/hdx/derived/bridge_status.geojson` rather than the raw ground reports; the
+raw file is still what the search index and the counts read.
 
 ### Properties the styling reads
 
 `highway` (OSM classes, for road and bridge width and dash class),
 `bridge_structure` (`simple-suspension`, `suspension`, for footbridges),
 `status` (`Standing`, `Damaged`, `Destroyed`; also `Intact` and `Washed out` in
-the bridge reports), `category` and `source` (PMTiles back end only),
+the bridge reports), `bridge_type` (`motorable`, `foot`, `unknown`) and
+`repair_status` (`repaired`, `under_repair`, `damaged`, `destroyed`, `intact`)
+on the derived bridge layer, `road_status` (`restored`, `under_repair`,
+`damaged`) and `feature_kind` (`flooded`, `ems`, `segment`) on the derived road
+layer, `category` and `source` (PMTiles back end only),
 `name`, `name_ne`, `name_en`, `name_latin`, `adm3_name`, `feature_type`,
 `damage_type`, `length_m`, `location`, `amenity`, `place`, `man_made`. Every one
 has a fallback: a missing `highway` styles as the unknown width, solid white; a
@@ -422,9 +430,39 @@ measured between zoom 14 and 18.
 
 `line-dasharray` is **not** data-driven in MapLibre, so each dash class is its
 own filtered layer: solid roads, dashed tracks `[4,2]`, dotted paths `[1,2]` with
-round caps, and for bridges a solid span plus a dotted footbridge layer. Roads
-stay white under colour-by-status unless the feature is Damaged or Destroyed;
-bridges carry the status tint at all times, so a destroyed span always reads red.
+round caps, and for bridges three classes rather than two — a solid motorable
+span, a dotted footbridge `[1,2]`, and a long-dashed `[6,3]` layer for the spans
+OSM records no type for (52 of the 220 in the corridor, all but one of them
+tagged Destroyed — spans re-added after the flood with only `bridge=yes`). Those
+are never folded into motorable. `tools/build_bridge_status.py` applies the same
+three rules to the GeoJSON, and the two agree on all 383 spans.
+Roads stay white under colour-by-status unless the feature is Damaged or
+Destroyed; bridges carry the status tint at all times, so a destroyed span always
+reads red.
+
+Both road overlays — the flood-extent clip and the Copernicus grading — draw
+from `data/hdx/derived/road_status.geojson` and are coloured by `road_status`,
+not by damage: white for a stretch a situation report says is open (the map's
+existing convention for an open road, with a stronger casing so white reads
+against the basemap), orange for work under way, red for everything else
+including every stretch nobody has reported on. A restored road keeps whatever
+width its `highway` class gives it. On the Copernicus layer this replaces the
+old grade-driven colour, so Destroyed and Damaged no longer differ by colour;
+the grade survives in the solid-versus-dashed split and in the popup. The
+curated corridors themselves draw underneath as a wide translucent ribbon
+(`road_status-segment`), which is the only thing that says anything about the
+hill detour routes: they lie outside the flood extent and the Copernicus areas,
+so they carry no road features to recolour.
+
+Above them, the spans a curated entry in `data/bridge_status.json` names by OSM
+way id are redrawn from the derived GeoJSON in their repair colour: red
+destroyed, dark amber damaged, orange under repair, green on a white casing
+repaired. The ground-report markers carry both facts at once — repair status in
+the colour, bridge type in the arc (solid motorable, dashed footbridge, hairline
+where the type is not recorded) — which needs one baked icon image per
+combination, 18 in all, because `icon-image` cannot take a colour expression on a
+non-SDF icon. Intact bridges stay off the map unless somebody has curated a
+status for them.
 
 Layers are emitted in three passes — all fills, then lines, then roads, then all
 points — so roads always sit above building fills and below every point layer.

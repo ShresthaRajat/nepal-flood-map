@@ -1,0 +1,380 @@
+{
+ "_readme": [
+  "Curated repair status for bridges in the Trishuli / Bhote Koshi corridor: the OVERRIDES only.",
+  "Hand-maintained; nothing writes to this file.  tools/build_bridge_status.py joins it to the HDX",
+  "ground reports and the OSM bridge spans and writes data/hdx/derived/bridge_status.geojson, which",
+  "the map draws.  Bridges NOT listed here take their status from the HDX bridge_damage layer",
+  "(Washed out -> destroyed, Damaged -> damaged, Intact -> intact), so only add an entry when a",
+  "source says something HDX does not.",
+  "",
+  "To add an entry, append an object to `bridges` with:",
+  "  id             a short kebab-case slug, unique in this file",
+  "  name           a human name; if match.report_name is set, prefer that report's wording",
+  "  name_ne        Nepali name, or null",
+  "  location       settlement / ward / district, free text",
+  "  lat, lon       decimal degrees; used to place a curated-only point and as the fallback join",
+  "  bridge_type    motorable | foot_suspension | foot | unknown",
+  "  status         repaired | under_repair | damaged | destroyed",
+  "  status_detail  one paragraph: what was done, by whom, when, and what is still missing",
+  "  as_of          ISO date the status was last confirmed",
+  "  source_url     the article or SitRep URL, or null when only a PDF SitRep number is known",
+  "  source_title   the publication and headline, or the SitRep number",
+  "  confidence     high | medium | low",
+  "  match.report_name  the EXACT `name` of a feature in",
+  "                 data/hdx/hot_flood_npl/hot_flood_npl_bridge_damage.geojson, or null.",
+  "                 Non-null and not found is a hard error in the build (run it with --check).",
+  "  match.osm_id   the `id` of a span in either hot_flood_npl/bridges_osm.geojson or",
+  "                 hot_flood_npl_corridor/bridges_osm.geojson, e.g. 'way/168199206', or null.",
+  "                 Set it to recolour the drawn OSM span, not only the point.",
+  "",
+  "An entry with match.report_name null and no report within 60 m of its lat/lon draws as its own",
+  "point (feature_kind 'curated') rather than recolouring an existing ground report.",
+  "",
+  "Scope rule used when this file was first compiled (19-20 Sep 2026): include every bridge whose",
+  "status is repaired or under_repair, plus destroyed bridges whose destruction is confirmed by a",
+  "SitRep or a news report.  Bridges that are only destroyed in the HDX baseline are left out --",
+  "the HDX status already says destroyed and an entry here would add nothing."
+ ],
+ "as_of": "2026-09-19",
+ "sources": [
+  "NDRRMA Situation Report #29 (Nepali) and #18 (English), 19 September 2026",
+  "Kathmandu Post, OnlineKhabar, Ratopati, DC Nepal, Rising Nepal, Meroauto, myRepublica, 6-19 September 2026",
+  "HOTOSM hot_flood_npl bridge_damage layer (baseline status only)"
+ ],
+ "notes": [
+  "Suspension footbridges are tracked in aggregate, not per span: a government survey found 53 of the",
+  "64 footbridges between Muglin and Timure damaged (20 repairable, 33 needing full reconstruction).",
+  "As of 19 Sep NDRRMA counted 5 under repair with 15 in procurement, while a same-day press report",
+  "named 12 under active repair targeted for completion by about 6 October.  Those two counts are not",
+  "reconciled and the 12 named spans could not be geocoded, so they are described in the About text",
+  "rather than placed on the map.",
+  "The 12 hydropower-access Bailey bridges upstream of Syabrubesi (Haku, Mailung, Trisuli 216, Upper",
+  "Trishuli, Chilime, Ghatte Khola, Timure) have no repair-specific reporting in either the SitReps or",
+  "the press; they keep the HDX baseline status."
+ ],
+ "bridges": [
+  {
+   "id": "devighat-tadi-bailey",
+   "name": "Tandi Khola Bridge, Devighat (Acrow/Bailey replacement)",
+   "name_ne": null,
+   "location": "Devighat, Bidur-5, Nuwakot",
+   "lat": 27.858575,
+   "lon": 85.109075,
+   "bridge_type": "motorable",
+   "status": "repaired",
+   "status_detail": "60 m, 5.5 m wide, 50-tonne Nepal Army Acrow/Bailey bridge over the Tadi Khola at Devighat Bazaar, replacing the two washed-out Tandi Khola bridges (old and new). Installation began 6 Sep, fully complete and carrying traffic by 14 Sep; still described as installed and operating on 19 Sep. Reconnects Devighat Bazaar with Jiling. Mapped onto the HDX 'Tandi Khola Bridge, Devighat (New)' ground report: the Bailey carries the crossing the two washed-out Tandi Khola spans used to carry. The '(Old)' report stays destroyed.",
+   "as_of": "2026-09-19",
+   "source_url": "https://kathmandupost.com/national/2026/09/19/mud-and-steep-cliffs-hamper-efforts-to-reopen-flood-hit-roads",
+   "source_title": "Kathmandu Post: Mud and steep cliffs hamper efforts to reopen flood-hit roads",
+   "confidence": "high",
+   "match": {
+    "report_name": "Tandi Khola Bridge, Devighat (New)",
+    "osm_id": "way/168199206"
+   }
+  },
+  {
+   "id": "devighat-suspension-tuin",
+   "name": "Suspension Bridge at Devighat near Jalshrot tatha Sinchai Division",
+   "name_ne": null,
+   "location": "Devighat, Bidur, Nuwakot",
+   "lat": 27.8923417,
+   "lon": 85.1365,
+   "bridge_type": "foot_suspension",
+   "status": "repaired",
+   "status_detail": "A tuin (rope crossing) was completed at Devighat as one of 3 emergency rope crossings finished (with Indreni Chaur and Syaphrubesi) per NDRRMA SitRep #29 (19 Sep); this is a stop-gap, not the original suspension bridge rebuilt. osm_id left null: the rope crossing is not the mapped suspension span, so the OSM line is not recoloured.",
+   "as_of": "2026-09-19",
+   "source_url": null,
+   "source_title": "NDRRMA SitRep #29 (Nepali, 19 Sep 2026)",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Suspension Bridge at Devighat near Jalshrot tatha Sinchai Division",
+    "osm_id": null
+   }
+  },
+  {
+   "id": "betrawati-temp-footbridge",
+   "name": "Betrawati temporary footbridge (~30 m), Bidur-10",
+   "name_ne": null,
+   "location": "Betrawati, Bidur-10",
+   "lat": 27.974,
+   "lon": 85.186,
+   "bridge_type": "foot_suspension",
+   "status": "repaired",
+   "status_detail": "Temporary footbridge built Bhadra 28 (~13 Sep), washed out again by flooding after overnight rain, then rebuilt; reported standing and in use on 15 Sep. No HDX ground report covers this temporary footbridge, so it draws as its own curated point.",
+   "as_of": "2026-09-15",
+   "source_url": null,
+   "source_title": "NDRRMA SitRep #ENG-14 (15 Sep 2026)",
+   "confidence": "medium",
+   "match": {
+    "report_name": null,
+    "osm_id": null
+   }
+  },
+  {
+   "id": "kolpu-khola-old",
+   "name": "Kolpu Khola Bridge (Old)",
+   "name_ne": null,
+   "location": "Belkotgadhi, Nuwakot",
+   "lat": 27.8101111,
+   "lon": 85.0162111,
+   "bridge_type": "motorable",
+   "status": "repaired",
+   "status_detail": "Referred to as 'Kolphu Bridge' in NDRRMA SitReps: reopened to one-lane traffic after minor repairs, reported consistently 13-19 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": null,
+   "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+   "confidence": "high",
+   "match": {
+    "report_name": "Kolpu Khola Bridge (Old)",
+    "osm_id": "way/209012420"
+   }
+  },
+  {
+   "id": "kolpu-khola-new",
+   "name": "Kolpu Khola Bridge (New)",
+   "name_ne": null,
+   "location": "Belkotgadhi, Nuwakot",
+   "lat": 27.8101111,
+   "lon": 85.0162111,
+   "bridge_type": "motorable",
+   "status": "repaired",
+   "status_detail": "Same Kolphu Bridge crossing as the old bridge; one-lane traffic restored after minor repairs (13-19 Sep NDRRMA SitReps). Same crossing and same OSM span (way/209012420) as the '(Old)' entry.",
+   "as_of": "2026-09-19",
+   "source_url": null,
+   "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Kolpu Khola Bridge (New)",
+    "osm_id": "way/209012420"
+   }
+  },
+  {
+   "id": "betrawati-bailey",
+   "name": "Betrawati Bailey Bridge (new, over Phalakhu/Falaakhu Khola)",
+   "name_ne": null,
+   "location": "Betrawati, Uttargaya, Rasuwa / Nuwakot border",
+   "lat": 27.9742,
+   "lon": 85.1858,
+   "bridge_type": "motorable",
+   "status": "under_repair",
+   "status_detail": "Design complete; foundation excavation under way as of 19 Sep. A 70 m Bailey bridge from India was handed to the Road Division in Hetauda on 12 Sep for this site; components/Acrow parts were being loaded at the Nepal Army's No. 28 Battalion in Bharatpur on 18 Sep for transport. Not yet open to traffic as of 20 Sep. Mapped onto the HDX 'Betrawati New Bridge' ground report; the '(Old)' report stays destroyed.",
+   "as_of": "2026-09-19",
+   "source_url": "https://kathmandupost.com/national/2026/09/13/india-sends-three-bailey-bridges-to-restore-flood-hit-connectivity",
+   "source_title": "Kathmandu Post 13 Sep / NDRRMA SitRep #18 (Eng) & #29 (Nep)",
+   "confidence": "high",
+   "match": {
+    "report_name": "Betrawati New Bridge",
+    "osm_id": "way/341461646"
+   }
+  },
+  {
+   "id": "mastar-dhading",
+   "name": "Trisuli River Bridge, Mastar Dhading",
+   "name_ne": null,
+   "location": "Near Hamlet Resort, Galchhi, Dhading",
+   "lat": 27.8118583,
+   "lon": 84.9652639,
+   "bridge_type": "motorable",
+   "status": "under_repair",
+   "status_detail": "HDX baseline records this as 'Damaged' (not washed out). The Dhadingbesi-Parewatar-Nepaltar-Gajuritar-Piplatar-Adamtar-Belintar-Keurinatar-Mastar alternative route rejoins the Prithvi Highway near here and reconnected Dhading headquarters to the network by 13 Sep, implying this crossing/road is passable; road-division repairs ('सडक विभागबाट मर्मत') mentioned in NDRRMA SitRep for this general stretch. HDX records this as Damaged, not washed out; 'under repair' rests on the SitRep's mention of road-division repairs on this stretch plus the alternative route rejoining the highway here. Low confidence.",
+   "as_of": "2026-09-13",
+   "source_url": null,
+   "source_title": "NDRRMA SitRep #ENG-12 (13 Sep 2026)",
+   "confidence": "low",
+   "match": {
+    "report_name": "Trisuli River Bridge, Mastar Dhading",
+    "osm_id": "way/1432603259"
+   }
+  },
+  {
+   "id": "syaphrubeshi-hydro-bailey",
+   "name": "Hydropower Bailey Bridge at Bhotekoshi, Syaphrubeshi",
+   "name_ne": null,
+   "location": "Syafrubesi, Gosaikunda, Rasuwa",
+   "lat": 28.1643861,
+   "lon": 85.3399278,
+   "bridge_type": "motorable",
+   "status": "under_repair",
+   "status_detail": "Washed out. Department of Roads plans, in a second construction phase, to install Bailey bridges over the Bhotekoshi and Chilime rivers at Syafrubesi; a Bailey bridge for Syabrubesi is being prepared, after which routing toward the border will be decided. Not yet complete as of 19 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": "https://risingnepaldaily.com/news/66824",
+   "source_title": "Rising Nepal Daily: Works to build Bailey bridge begin in Rasuwagadhi",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Hydropower Bailey Bridge at Bhotekoshi, Syaphrubeshi",
+    "osm_id": "way/1017959928"
+   }
+  },
+  {
+   "id": "syafrubesi-bridge",
+   "name": "Syafrubesi Bridge",
+   "name_ne": null,
+   "location": "Syafrubesi, Gosaikunda, Rasuwa",
+   "lat": 28.1574778,
+   "lon": 85.3324917,
+   "bridge_type": "motorable",
+   "status": "under_repair",
+   "status_detail": "Washed out. Same Syabrubesi Bailey-bridge construction effort as the hydropower Bailey bridge nearby; work under way but not reported complete as of 19 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": "https://risingnepaldaily.com/news/66824",
+   "source_title": "Rising Nepal Daily: Works to build Bailey bridge begin in Rasuwagadhi",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Syafrubesi Bridge",
+    "osm_id": "way/84566285"
+   }
+  },
+  {
+   "id": "devighat-midhill-trisuli",
+   "name": "Trisuli River Bridge, Near Devighat, Midhill Highway",
+   "name_ne": null,
+   "location": "Near Devighat, Bidur, Nuwakot",
+   "lat": 27.8703389,
+   "lon": 85.116225,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "Mid-Hill Highway bridge over the main Trisuli (not the Tadi Khola crossing). No Bailey/repair plan reported; NDRRMA's alternative route bypasses it via Pipaltar-Pasang Lhamu Highway-Dhamle-Niranjana-Bagkhor-Harre-Deurali-Kolputar as of 19 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": "https://kathmandupost.com/national/2026/09/19/mud-and-steep-cliffs-hamper-efforts-to-reopen-flood-hit-roads",
+   "source_title": "Kathmandu Post 19 Sep / NDRRMA SitRep #18 (Eng)",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Trisuli River Bridge, Near Devighat, Midhill Highway",
+    "osm_id": "way/342320931"
+   }
+  },
+  {
+   "id": "betrawati-old",
+   "name": "Betrawati Old Bridge",
+   "name_ne": null,
+   "location": "Betrawati, Uttargaya, Rasuwa",
+   "lat": 27.9743389,
+   "lon": 85.1858111,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "Washed out; permanently replaced in function by the new Betrawati Bailey bridge site once complete (still under construction as of 20 Sep). OSM way way/1553178219 (19 m) is the unnamed destroyed span; the named 'Falaakhu River Bridge' (way/341461646) is assigned to the Bailey replacement entry.",
+   "as_of": "2026-09-20",
+   "source_url": "https://data.humdata.org/dataset/hot_flood_npl",
+   "source_title": "HOTOSM hot_flood_npl bridge_damage layer",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Betrawati Old Bridge",
+    "osm_id": "way/1553178219"
+   }
+  },
+  {
+   "id": "trisuli-bazar-old",
+   "name": "Trisuli River Bridge, Trisuli Bazzar (Old)",
+   "name_ne": null,
+   "location": "Trisuli Bazar, Bidur, Nuwakot",
+   "lat": 27.9218278,
+   "lon": 85.14945,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "Washed out. Design for a ~48 m Bailey bridge at Trishuli Bazaar was completed per early-Sep reports, but no installation-start or completion news found through 19 Sep; the Galchhi right-bank detour (Kalleritar-Koshikhola-Pimaltar-Darshantar) remains the operating bypass for this crossing. OSM way resolved by distance: way/237590767 ('trishuli bridge') is 19 m from the report. The research note's way/1219434228 and way/340581850 are 1.7 km away at Simchaur, not here.",
+   "as_of": "2026-09-19",
+   "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
+   "source_title": "Meroauto: Rs 32.5 million allocated for road repairs as Bailey bridges planned at three sites",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Trisuli River Bridge ,Trisuli Bazzar(Old)",
+    "osm_id": "way/237590767"
+   }
+  },
+  {
+   "id": "trisuli-bazar-new",
+   "name": "Trisuli River Bridge, Trisuli Bazzar (New)",
+   "name_ne": null,
+   "location": "Trisuli Bazar, Bidur, Nuwakot",
+   "lat": 27.9212361,
+   "lon": 85.1479639,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "Washed out; same status/context as the Old Trisuli Bazar bridge above - Bailey bridge designed but not yet reported installed as of 19 Sep. OSM way resolved by distance: way/1463147997 ('Trishuli Naya Pul') is 4 m from the report.",
+   "as_of": "2026-09-19",
+   "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
+   "source_title": "Meroauto 6 Sep 2026",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Trisuli River Bridge ,Trisuli Bazzar(New)",
+    "osm_id": "way/1463147997"
+   }
+  },
+  {
+   "id": "naya-pul-khalte",
+   "name": "Naya Pul Trishuli, Khalte (CH 37+810)",
+   "name_ne": null,
+   "location": "Khalte, Uttargaya, Rasuwa",
+   "lat": 27.9953417,
+   "lon": 85.1848889,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "Washed out; no bridge-specific repair news found. This crossing is on the still-obstructed Trishuli-Betrawati road section; Rasuwa-bound traffic is being routed via the Dhikure-Phedibesi-Chogate-Bhorle-Jibjibe-Bogatitar detour onto the Pasang Lhamu Highway instead. No OSM span matched: both ways the research offered are ~9 km away, and the only ways within 60 m here are Standing approach roads, so osm_id is left null.",
+   "as_of": "2026-09-19",
+   "source_url": null,
+   "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Naya Pul Trishuli, Khalte CH 37+810",
+    "osm_id": null
+   }
+  },
+  {
+   "id": "tupche-aama-ko-pul",
+   "name": "Tupche Aama ko Pul (foot suspension bridge)",
+   "name_ne": null,
+   "location": "Tupche, Bidur, Nuwakot",
+   "lat": 27.964,
+   "lon": 85.1734,
+   "bridge_type": "foot_suspension",
+   "status": "destroyed",
+   "status_detail": "A separate pedestrian suspension bridge near Tupche, distinct from the motorable Trisuli bridge at the same settlement. No repair-specific news found; falls within the 33-bridge 'needs full reconstruction' category cited for the wider suspension-bridge damage survey (53 of 64 footbridges Muglin-Timure damaged, 33 needing full rebuild). No HDX ground report covers this footbridge (the nearby 'Trisuli River Bridge Tupche' report is the motorable span), so it draws as its own curated point.",
+   "as_of": "2026-09-20",
+   "source_url": "https://kathmandupost.com/visual-stories/2026/09/15/footbridges-rise-again-from-flood-wreckage",
+   "source_title": "Kathmandu Post: Footbridges rise again from flood wreckage (15 Sep 2026)",
+   "confidence": "medium",
+   "match": {
+    "report_name": null,
+    "osm_id": "way/281810148"
+   }
+  },
+  {
+   "id": "furke-khola-malekhu",
+   "name": "Trishuli River Bridge, Furke Khola (Malekhu)",
+   "name_ne": null,
+   "location": "Malelkhu, Siddhalek, Dhading",
+   "lat": 27.8025444,
+   "lon": 84.844075,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "Washed out, 118 m span ('Phurke Khola bridge'). This bridge normally connects to Dhadingbesi; access was restored instead via the Maltar-Gajuritar-Kewarinighat alternative route rather than by repairing this bridge. No repair-start news found for the bridge itself as of 19 Sep.",
+   "as_of": "2026-09-19",
+   "source_url": "https://peoplesreview.com.np/2026/09/13/rs-73-billion-needed-to-rebuild-flood-damaged-roads-bridges/",
+   "source_title": "Peoples' Review: Rs 73 billion needed to rebuild flood-damaged roads, bridges",
+   "confidence": "medium",
+   "match": {
+    "report_name": "Trishuli River Bridge, Furke Khola",
+    "osm_id": "way/435417464"
+   }
+  },
+  {
+   "id": "miteri-rasuwagadhi",
+   "name": "Miteri Bridge, Rasuwagadhi (Nepal-China Friendship Bridge)",
+   "name_ne": "मितेरी पुल",
+   "location": "Rasuwagadhi, Gosaikunda, Rasuwa",
+   "lat": 28.2789444,
+   "lon": 85.3780972,
+   "bridge_type": "motorable",
+   "status": "destroyed",
+   "status_detail": "The main China-funded Miteri Bridge (built 2019, previously washed out and rebuilt as a 91 m Bailey bridge after a July 2025 flood, reopened Jan 2026) was washed out again in the 26 Aug 2026 flood, along with the temporary Bailey/'Resuo temporary bridge' built after the 2025 event (also flagged Destroyed in OSM). No rebuild timeline found as of 20 Sep 2026; this is the Nepal-China border crossing bridge. OSM way resolved by distance: way/1552746559 (21 m). The duplicate way/1443180803 and the temporary way/1552746560 ('热索临时便桥') are the same crossing, also Destroyed.",
+   "as_of": "2026-09-20",
+   "source_url": "https://myrepublica.nagariknetwork.com/news/miteri-bridge-rebuilt-rasuwagadhi-border-set-to-reopen-60-25.html",
+   "source_title": "myRepublica: Friendship Bridge rebuilt, Rasuwagadhi border set to reopen (background, Jan 2026) + HDX bridge_damage (Aug 2026 re-destruction)",
+   "confidence": "high",
+   "match": {
+    "report_name": "Miteri Bridge, Rasuwagadhi",
+    "osm_id": "way/1552746559"
+   }
+  }
+ ]
+}

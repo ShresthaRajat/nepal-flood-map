@@ -9,6 +9,14 @@ Trishuli rivers, Nepal. Merges two sources:
 - **Detail layers**: Humanitarian OpenStreetMap Team response data from HDX — flood extent,
   OSM/Overture features with Standing/Damaged/Destroyed status, fAIr AI damage, ground-reported
   bridge conditions.
+- **Bridge type and repair**: every bridge ground report is classed motorable, footbridge or
+  type-not-recorded from the OSM span next to it, and coloured by repair status — destroyed,
+  damaged, under repair, repaired — from `data/bridge_status.json`, a hand-maintained file
+  compiled from NDRRMA situation reports and press coverage.
+- **Road accessibility**: both road overlays are coloured by whether a vehicle gets through today
+  rather than by how bad the damage was — white restored, orange under repair, red cut or
+  unreported — from `data/road_status.json`, 23 corridor segments compiled the same way. The hill
+  detour routes, which carry no mapped road features, draw as curated corridor ribbons.
 - **Road condition**: Copernicus EMS rapid-mapping grades (EMSR927) for every road and bridge
   segment in four assessed areas, plus a computed overlay of roads inside the observed flood extent.
 - **Ground evidence**: geotagged photographs and videos from the community

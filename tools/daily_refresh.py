@@ -40,6 +40,20 @@ admin_ward   tools/build_admin_ward.py -- rebuilds data/admin/admin_ward.geojson
 hydropower   tools/build_hydropower_points.py -- merges the HDX exposed
              hydropowers with the hand-geocoded extras.  Offline and
              deterministic, but it reads an HDX layer, so it follows the refresh.
+bridge_status tools/build_bridge_status.py -- joins the HDX bridge ground
+             reports, the OSM bridge spans and the hand-maintained repair status
+             in data/bridge_status.json -> data/hdx/derived/bridge_status.geojson
+             (bridge type per report, repair status where a SitRep or the press
+             has said something HDX has not).  Offline and deterministic, and it
+             reads two HDX layers, so it follows the refresh.  data/bridge_status.json
+             itself is hand-edited and is never written by this script.
+road_status  tools/build_road_status.py -- joins the hand-maintained corridor
+             segments in data/road_status.json to the flood-extent roads and the
+             Copernicus EMS grading -> data/hdx/derived/road_status.geojson, so
+             the road overlays can be coloured by whether a vehicle gets through
+             today rather than only by how bad the damage was.  Must follow
+             `ems` and `hdx`, which write both of its inputs; data/road_status.json
+             is hand-edited and is never written by this script.
 cutoff       OPT-IN (--with-cutoff).  tools/build_roads_tiles.sh (a 418 MB
              download) followed by tools/build_cutoff_wards.py (a long
              shortest-path analysis).  Off in the daily workflow; run it by
@@ -358,6 +372,16 @@ def step_hydropower(ctx):
     return rc, {}
 
 
+def step_bridge_status(ctx):
+    rc, _ = run_logged('bridge_status', [sys.executable, 'tools/build_bridge_status.py'])
+    return rc, {}
+
+
+def step_road_status(ctx):
+    rc, _ = run_logged('road_status', [sys.executable, 'tools/build_road_status.py'])
+    return rc, {}
+
+
 def step_cutoff(ctx):
     rc, _ = run_logged('cutoff_roads', ['bash', 'tools/build_roads_tiles.sh'])
     if rc != 0:
@@ -483,6 +507,8 @@ STEPS = [
     ('hdx', step_hdx, True),
     ('admin_ward', step_admin_ward, True),
     ('hydropower', step_hydropower, True),
+    ('bridge_status', step_bridge_status, True),
+    ('road_status', step_road_status, True),
     ('cutoff', step_cutoff, False),
     ('places', step_places, False),
     ('extent_munis', step_extent_munis, True),

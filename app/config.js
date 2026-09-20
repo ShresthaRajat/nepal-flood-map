@@ -265,6 +265,30 @@ dataset on HDX, snapshot of 20 September 2026. ${HDX_CREDIT}.</p>
       413 of the 4,409 features are individual OSM nodes rather than building or road outlines and are
       counted in the totals but not drawn as map markers), <b>bridge ground reports</b> and
       <b>exposed hydropowers</b>.</li>
+  <li><b>Bridge type and repair status</b> — the 58 bridge ground reports say how badly a crossing was
+      hit but not what kind of bridge it is, and nothing in the open data says whether it has been
+      repaired since. Both are added here (<code>tools/build_bridge_status.py</code>). Type comes from
+      the nearest OSM bridge span within 80 m: a footway, path or steps deck, or a suspension structure
+      that is not a road, is a footbridge; a road-class deck or one with a weight limit is motorable;
+      52 of the 220 corridor spans record neither a road or path class nor a suspension structure —
+      all but one of them tagged Destroyed, spans volunteers re-added after the flood with nothing but
+      <code>bridge=yes</code> — and are drawn as “type not recorded” rather than assumed to be road
+      bridges. Repair status comes from
+      <code>data/bridge_status.json</code>, a hand-maintained file of 17 overrides compiled from the
+      NDRRMA situation reports (#29 Nepali / #18 English, 19 Sep 2026) and the press: 5 repaired,
+      4 under repair and 8 destructions confirmed by a named source. Everything else keeps the HDX
+      status. Markers are red for destroyed, dark amber for damaged with no repair reported, orange
+      for under repair and green with a white fill for repaired; the arc is solid for a motorable
+      bridge, dashed for a footbridge and a hairline where the type is not recorded. Where a curated
+      bridge names an OSM span, that span is redrawn in the same colour. The headline cases: the Nepal
+      Army Acrow/Bailey bridge over the Tadi Khola at Devighat is open and carrying traffic, the Kolpu
+      Khola crossing is back to one lane, and Bailey bridges at Betrawati and Syabrubesi are still
+      being built. Suspension footbridges are tracked in aggregate rather than per span: a government
+      survey found 53 of the 64 footbridges between Muglin and Timure damaged, 20 of them repairable
+      and 33 needing full reconstruction; as of 19 Sep NDRRMA counted 5 under repair with 15 in
+      procurement, while a same-day press report named 12 under active repair targeted for completion
+      by about 6 October. Those counts are not reconciled and the named spans could not be geocoded,
+      so they are not on the map.</li>
   <li><b>Road damage grading</b> — the Copernicus Emergency Management Service rapid-mapping activation
       EMSR927 graded every road and bridge segment in four areas from 0.3–0.7 m post-event imagery: Timure
       and Syapru Besi (27 Aug), Bidur / Trisuli Bazar to Betrawati (27–28 Aug, monitoring update) and
@@ -283,6 +307,30 @@ dataset on HDX, snapshot of 20 September 2026. ${HDX_CREDIT}.</p>
       a report, 2 tributary bridges spared); between BhimDhunga and Benighat Copernicus or the nearest report
       within 120 m decides (10 red, 14 left out); from Benighat downstream bridges are left out unless
       Copernicus or a report says otherwise (1 footbridge red, 26 left out).</li>
+  <li><b>Road accessibility</b> — both road overlays above answer the same question, and it is not
+      the one people ask four weeks on: they say how bad the damage was when somebody last looked,
+      not whether a vehicle gets through today. That second answer exists only in the situation
+      reports and the press, so it is kept by hand in <code>data/road_status.json</code> — 23 corridor
+      segments, 11 restored, 5 under repair and 7 still cut — and joined to both overlays by
+      <code>tools/build_road_status.py</code>. A road draws white once a source says traffic is
+      getting through, whatever width it is down to; orange while work is under way; and red
+      otherwise, which includes every stretch nobody has reported on, so the colour never claims
+      more than a source said. 483 of the 2,154 road features are recoloured, matched within 120 m
+      of a curated corridor (200 m for trunk and primary) and only where the road's own name and
+      highway class are compatible, so a highway's status cannot bleed onto a farm track crossing
+      under it. The picture as of SitRep 18 (19 Sep): Galchhi through Devighat, Battar, Bidur and
+      Trishuli Bazar to Gerkhu is open and two-lane, the Prithvi Highway is through at Krishnabhir,
+      the last 0.8 km of the Bidur–Betrawati section is still being blasted and gravelled, and
+      everything from Betrawati through Kalikasthan and beyond Dhunche to Syabrubesi, Timure and
+      Rasuwagadhi has no confirmed vehicle repair — traffic reaches Dhunche over the
+      Dhikure–Jibjibe–Bogatitar and Tokha–Saramthali–Bogatitar hill routes instead. Those hill
+      routes carry no mapped road features to recolour, because they run outside the flood extent
+      and the Copernicus areas, so they are drawn as translucent corridor ribbons under the roads.
+      One consequence worth knowing: on the Copernicus layer the colour now carries accessibility
+      rather than the grade, so Destroyed and Damaged no longer differ by colour — the grade is in
+      the popup, and the solid-versus-dashed split still separates a firm grade from a possible
+      one. 82 stretches Copernicus graded Destroyed on 27 August have since been cleared and
+      reopened, which is exactly what this overlay is for.</li>
   <li><b>Highways and main roads</b> — the national OSM roads export on HDX (9 Aug 2026), clipped to the
       corridor and its approaches and drawn underneath the HOT roads with the same styling: national
       highways (trunk and primary) yellow, everything else white. Nepal's highways are under-tagged in
@@ -297,7 +345,12 @@ Standing / Damaged / Destroyed status is volunteer-recorded and incomplete — t
 building on the map does not mean its absence on the ground, and building footprints are hand-traced
 and only approximate individual roofs. The fAIr damage layer is AI-scored and limited to a single
 upper-valley tile; it is not a validated damage assessment. Bridge conditions in the ground-report
-layer come from volunteer field reports of varying age. Coordinates shown are approximate.</p>
+layer come from volunteer field reports of varying age, and the repair status layered on top of them is
+compiled by hand from situation reports and news coverage as of 19 September 2026 — it is a reading of
+what was published, not a field inspection, each entry carries its own confidence, and a bridge with no
+entry is simply one nothing has been published about. The same applies to road accessibility: it is
+a reading of the situation reports and the press as of 19 September 2026, not a drive-through, and a
+road drawn red may simply be one nobody has reported on. Coordinates shown are approximate.</p>
 
 <h3>Administrative boundaries</h3>
 <p>District and municipality (local level) boundaries are from OCHA's Common Operational

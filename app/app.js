@@ -317,10 +317,88 @@ const ROAD_STATUS = ['match', ['to-string', ['get', 'status']],
   ['Damaged', 'damaged'], CFG.STATUS.damaged,
   ['Destroyed', 'destroyed', 'Washed out', 'washed out'], CFG.STATUS.destroyed,
   ROAD_WHITE];
-/* A footbridge is a path-class span, or a suspension deck that is not a road. */
+/* Bridge type, in the three classes tools/build_bridge_status.py uses -- the
+ * same rules, applied to the tiled spans in the browser instead of to the
+ * GeoJSON, so the drawn line and the marker over it never disagree.
+ *
+ * A footbridge is a path-class span, or a suspension deck that is not a road.
+ * A motorable span is road-class, or carries a weight limit.  Everything else
+ * is "type not recorded": 52 of the 220 corridor bridges record neither a road
+ * or path class nor a suspension structure, and 52 of the 53 features in that
+ * class are tagged Destroyed -- they are spans volunteers re-added after the
+ * flood with nothing but bridge=yes.  Those are never folded into motorable --
+ * drawing them as road bridges would claim vehicle access OSM does not
+ * record.  tools/build_bridge_status.py applies the same three rules to the
+ * GeoJSON; the two agree on all 383 spans across the two datasets. */
 const IS_FOOTBRIDGE = ['any', inHw(HW.path),
   ['all', ['in', ['to-string', ['get', 'bridge_structure']], ['literal', ['simple-suspension', 'suspension']]],
           ['!', inHw(HW_ROADLIKE)]]];
+const IS_MOTORABLE = ['all', ['!', IS_FOOTBRIDGE],
+  ['any', inHw(HW_ROADLIKE), ['!=', ['to-string', ['coalesce', ['get', 'maxweight'], '']], '']]];
+const IS_BRIDGE_UNKNOWN = ['all', ['!', IS_FOOTBRIDGE], ['!', IS_MOTORABLE]];
+
+/* Repair status, from data/bridge_status.json joined onto the ground reports
+ * and the OSM spans by tools/build_bridge_status.py (owner request, 20 Sep
+ * 2026: tell a repaired bridge from one still being rebuilt).  Destroyed keeps
+ * the red it has always had; "damaged" here is HDX's Damaged with no repair
+ * news attached, which is a different claim from "being rebuilt now", so it
+ * takes a darker amber than the orange that means work is under way. */
+const REPAIR = {
+  repaired:     '#16a34a',
+  under_repair: '#f97316',
+  damaged:      '#b45309',
+  destroyed:    CFG.STATUS.destroyed,
+  intact:       CFG.STATUS.standing,
+  unknown:      CFG.STATUS.standing,
+};
+const REPAIR_KEYS = ['repaired', 'under_repair', 'damaged', 'destroyed', 'intact', 'unknown'];
+const BTYPE_KEYS = ['motorable', 'foot', 'unknown'];
+const REPAIR_LABEL = { repaired: 'Repaired', under_repair: 'Under repair', damaged: 'Damaged',
+  destroyed: 'Destroyed', intact: 'Intact', unknown: 'Not recorded' };
+const BTYPE_LABEL = { motorable: 'Motorable', foot: 'Footbridge / suspension', unknown: 'Type not recorded' };
+/* `match` over a fixed key list, so anything unexpected in the data lands on
+ * the trailing default rather than producing a value nothing is registered
+ * for -- an icon-image that resolves to an unregistered name makes MapLibre
+ * fire styleimagemissing for every feature. */
+const keyExpr = (field, keys) => {
+  const e = ['match', ['to-string', ['get', field]]];
+  for (const k of keys) e.push(k, k);
+  e.push('unknown');
+  return e;
+};
+const REPAIR_KEY = keyExpr('repair_status', REPAIR_KEYS);
+const BTYPE_KEY = keyExpr('bridge_type', BTYPE_KEYS);
+const REPAIR_COLOR = (() => {
+  const e = ['match', ['to-string', ['get', 'repair_status']]];
+  for (const k of REPAIR_KEYS) e.push(k, REPAIR[k]);
+  e.push(REPAIR.unknown);
+  return e;
+})();
+
+/* Road accessibility, from data/road_status.json joined onto the two road
+ * overlays by tools/build_road_status.py (owner request, 20 Sep 2026).  The
+ * question is not how bad the damage was, it is whether a vehicle gets through
+ * today, so the palette borrows the map's existing road convention rather than
+ * the damage one: a road that is open draws white with its dark casing like
+ * every other open road, whatever width it is down to.  Orange is work under
+ * way and red is cut, the red these overlays already drew.  Anything nobody has
+ * reported on stays red, so the colour never claims more than a source said. */
+const ROAD_STATUS_COLORS = {
+  restored:     ROAD_WHITE,
+  under_repair: '#f97316',
+  damaged:      DAMAGE_ROAD_RED,
+};
+const RSTATUS_KEYS = ['restored', 'under_repair', 'damaged'];
+const RSTATUS_LABEL = { restored: 'Restored', under_repair: 'Under repair', damaged: 'Damaged / closed' };
+const LANE_LABEL = { 'two-lane': 'two-lane', 'one-lane': 'one-lane', track: 'track only' };
+const ROAD_STATUS_COLOR = (() => {
+  const e = ['match', ['to-string', ['get', 'road_status']]];
+  for (const k of RSTATUS_KEYS) e.push(k, ROAD_STATUS_COLORS[k]);
+  e.push(DAMAGE_ROAD_RED);
+  return e;
+})();
+const IS_RESTORED_ROAD = ['==', ['to-string', ['get', 'road_status']], 'restored'];
+const OF_KIND = k => ['==', ['to-string', ['get', 'feature_kind']], k];
 const gt = t => ['==', ['geometry-type'], t];
 const andF = (...fs) => ['all', ...fs.filter(Boolean)];
 
@@ -433,13 +511,27 @@ function squareIcon(fill) {
 // owner direction, 10 Sep 2026 ("transparent... outline with no fill").  A
 // 1 px white halo is drawn wider, behind the coloured stroke, for contrast
 // against dark imagery.
-function semicircleIcon(stroke) {
+/* `opts` carries the bridge-type cue and the repaired fill (owner request, 20 Sep
+ * 2026): `dashed` draws the arc as a dashed stroke, which is how a pedestrian or
+ * suspension footbridge is told from the solid arc of a motorable one; `width`
+ * thins the arc for a span whose type OSM does not record; `fill` paints the
+ * interior, used only for repaired bridges (green arc, white fill) so a bridge
+ * that is open again reads as solid rather than as another hollow outline. */
+function semicircleIcon(stroke, opts) {
+  const o = opts || {};
   return iconCanvas((ctx, sz, pad) => {
     const r = (sz - 2 * pad) / 2, cx = sz / 2, cy = sz - pad - r;
     const path = rr => { ctx.beginPath(); ctx.arc(cx, cy, rr, Math.PI, 0, false); ctx.closePath(); };
     ctx.lineJoin = 'round';
     path(r); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 6 * SHAPE_ICON_RATIO; ctx.stroke();
-    path(r); ctx.strokeStyle = stroke;    ctx.lineWidth = 2 * SHAPE_ICON_RATIO; ctx.stroke();
+    if (o.fill) { path(r); ctx.fillStyle = o.fill; ctx.fill(); }
+    path(r);
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = (o.width || 2) * SHAPE_ICON_RATIO;
+    // The dash has to be coarse to survive the icon being drawn 12 px wide.
+    if (o.dashed) ctx.setLineDash([6 * SHAPE_ICON_RATIO, 4.5 * SHAPE_ICON_RATIO]);
+    ctx.stroke();
+    ctx.setLineDash([]);
   });
 }
 // Filled circle with the same baked dark stroke as squareIcon: the photo half of
@@ -490,6 +582,18 @@ SHAPE_ICONS['bridge-damaged'] = () => semicircleIcon(CFG.STATUS.damaged);
 SHAPE_ICONS['bridge-destroyed'] = () => semicircleIcon(CFG.STATUS.destroyed);
 SHAPE_ICONS['bridge-standing'] = () => semicircleIcon(CFG.STATUS.standing);
 SHAPE_ICONS['bridge-hot'] = () => semicircleIcon(HOT_BRIDGE_COLOR);
+/* The ground-report markers carry two things at once: repair status in the
+ * colour and bridge type in the arc, so one image is needed per combination of
+ * the two (6 x 3 = 18).  icon-image picks between them with REPAIR_ICON below,
+ * whose `match` arms are these same key lists -- every name that expression can
+ * produce is registered here, and no other name can come out of it. */
+for (const st of REPAIR_KEYS) for (const bt of BTYPE_KEYS)
+  SHAPE_ICONS['bridge-' + st + '-' + bt] = () => semicircleIcon(REPAIR[st], {
+    dashed: bt === 'foot',
+    width: bt === 'unknown' ? 1.25 : 2,
+    fill: st === 'repaired' ? '#ffffff' : null,
+  });
+const REPAIR_ICON = ['concat', 'bridge-', REPAIR_KEY, '-', BTYPE_KEY];
 /* Crowd-sourced photographs and videos from the Rasuwa Flood Evidence Map.  One
  * fuchsia not otherwise in the palette (the CATS list's #f032e6 is the closest,
  * and only appears on a raw HOT catalogue row that is off by default), so a piece
@@ -565,7 +669,13 @@ function buildDefs() {
     collapse: { type: 'geojson', data: HDX + 'derived/collapse_origin.geojson', attribution: 'UNOSAT (CC BY-SA)' },
     places: { type: 'geojson', data: HDX + 'derived/places.geojson', attribution: '© OpenStreetMap contributors' },
     flood_extent: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_flood_extent.geojson' },
-    bridge_damage: { type: 'geojson', data: HDX + 'hot_flood_npl/hot_flood_npl_bridge_damage.geojson' },
+    // The 58 HDX bridge ground reports joined to the OSM spans (for bridge type)
+    // and to data/bridge_status.json (for repair status) by
+    // tools/build_bridge_status.py.  The raw bridge_damage layer is still read
+    // directly by the search index and the Bridge ground reports panel, but the
+    // map draws this one.
+    bridge_status: { type: 'geojson', data: HDX + 'derived/bridge_status.geojson',
+      attribution: ATTR_HDX + '; repair status curated from NDRRMA situation reports and press reporting' },
     // Merged by tools/build_hydropower_points.py: the 10 surveyed HDX points plus
     // 9 hand-geocoded plants, named with the spellings data/reports.json uses.
     hydro: { type: 'geojson', data: HDX + 'derived/hydropower_points.geojson',
@@ -582,11 +692,15 @@ function buildDefs() {
     waterways_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_waterways/{z}/{x}/{y}.pbf')],
       minzoom: 8, maxzoom: 13, bounds: [84.2738, 27.434, 86.0755, 28.5237],
       attribution: '© OpenStreetMap contributors (ODbL) via HDX' },
-    // Copernicus EMS EMSR927 road/bridge damage grades (tools/build_ems_roads.py).
-    ems_roads: { type: 'geojson', data: HDX + 'derived/ems_road_grading.geojson',
-      attribution: 'Copernicus Emergency Management Service (© 2026 European Union), EMSR927, CC BY 4.0' },
-    // HOT flood-area roads clipped to the observed flood extent (tools/build_flooded_roads.py).
-    flooded_roads: { type: 'geojson', data: HDX + 'derived/roads_in_flood_extent.geojson', attribution: ATTR_HDX },
+    // Both road overlays, recoloured by current accessibility: the Copernicus EMS
+    // EMSR927 grades (tools/build_ems_roads.py) and the HOT flood-area roads clipped
+    // to the observed flood extent (tools/build_flooded_roads.py), joined to the
+    // hand-maintained corridor segments in data/road_status.json by
+    // tools/build_road_status.py.  One source for all three feature kinds
+    // ('flooded', 'ems', 'segment'), told apart by filter.
+    road_status: { type: 'geojson', data: HDX + 'derived/road_status.geojson',
+      attribution: ATTR_HDX + '; Copernicus Emergency Management Service (© 2026 European Union), EMSR927, '
+        + 'CC BY 4.0; road accessibility curated from NDRRMA situation reports and press reporting' },
     // National OSM highways, pre-tiled by tools/build_roads_tiles.sh: context beyond the 1 km corridor.
     roads_np: { type: 'vector', tiles: [abs(HDX + 'tiles/hotosm_npl_roads/{z}/{x}/{y}.pbf')],
       minzoom: 7, maxzoom: 13, bounds: [84.27, 27.43, 86.08, 28.52],
@@ -719,9 +833,15 @@ function buildDefs() {
 
   /* Roads and bridges get a casing + white line per dash class. */
   function roadLayers(id, r, isBridge) {
+    // Bridges split three ways rather than two (owner request, 20 Sep 2026):
+    // line-dasharray still is not data-driven, so each type is its own filtered
+    // layer.  Motorable spans stay the heavy solid line they were; footbridges
+    // keep the dotted path styling; spans OSM records no type for get a medium
+    // long dash of their own instead of being drawn as road bridges.
     const specs = isBridge
-      ? [['span', ['!', IS_FOOTBRIDGE], 2.5, null, 'butt'],
-         ['foot', IS_FOOTBRIDGE, 1.5, [1, 2], 'round']]
+      ? [['span', IS_MOTORABLE, 2.5, null, 'butt'],
+         ['foot', IS_FOOTBRIDGE, 1.5, [1, 2], 'round'],
+         ['unk', IS_BRIDGE_UNKNOWN, 2, [6, 3], 'butt']]
       : [['road', ['!', ['any', inHw(HW.track), inHw(HW.path)]], 1.5, null, 'butt'],
          ['track', inHw(HW.track), 1.5, [4, 2], 'butt'],
          ['path', inHw(HW.path), 1.5, [1, 2], 'round']];
@@ -913,15 +1033,16 @@ function buildDefs() {
     'minor-damage', CFG.FAIR['minor-damage'],
     'no-visible-damage', CFG.FAIR['no-visible-damage'], 'no-damage', CFG.FAIR['no-damage'],
     CFG.FAIR['no-data']];
-  // Only Damaged/Destroyed bridges are shown at all (BRIDGE_SHOWN below) -- Standing/Intact
-  // spans are untouched and not worth a map marker (owner direction, 10 Sep 2026) -- so the
-  // icon expression only needs to choose between the two 'bridge-*' images that exist for them.
-  // Case-insensitive and covers the "Washed out" HDX spelling of Destroyed, same as statusExpr().
-  const bridgeIcon = ['match', ['to-string', ['get', 'status']],
-    ['Destroyed', 'destroyed', 'Washed out', 'washed out'], 'bridge-destroyed',
-    ['Damaged', 'damaged'], 'bridge-damaged', 'bridge-destroyed'];
-  const BRIDGE_SHOWN = ['match', ['to-string', ['get', 'status']],
-    ['Damaged', 'damaged', 'Destroyed', 'destroyed', 'Washed out', 'washed out'], true, false];
+  // Standing/Intact spans are still not worth a map marker (owner direction, 10 Sep
+  // 2026), with one exception: a bridge somebody has curated a status for is on the
+  // map whatever the ground survey said about it, because the curation is the newer
+  // claim.  `source_title` is the marker -- every curated entry carries one and no
+  // derived-from-HDX feature does.  The span features are drawn by their own line
+  // layers below, so the marker layer skips them.
+  const HAS_CURATION = ['!=', ['to-string', ['coalesce', ['get', 'source_title'], '']], ''];
+  const BRIDGE_SHOWN = ['all',
+    ['!=', ['to-string', ['get', 'feature_kind']], 'span'],
+    ['any', ['!=', ['to-string', ['get', 'repair_status']], 'intact'], HAS_CURATION]];
 
   push(
     { id: 'waterways_np-fill', type: 'fill', source: 'waterways_np', 'source-layer': 'waterways', layout: { visibility: 'none' },
@@ -977,54 +1098,107 @@ function buildDefs() {
         // clear them at the largest icon sizes.
         'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true },
       paint: { 'text-color': '#fef9c3', 'text-halo-color': 'rgba(0,0,0,.85)', 'text-halo-width': 1.6 } },
+    // The OSM spans a curated entry names by way id, redrawn over the tiled bridge
+    // layers in their repair colour, so the bridge line itself changes and not only
+    // the marker above it.  A repaired span is a green line on a white casing; every
+    // other status keeps the dark casing the tiled roads use.  Fixed widths rather
+    // than hwWidth(): these features carry no `highway` tag to weigh them by.
+    { id: 'bridge_status-span-casing', type: 'line', source: 'bridge_status',
+      filter: ['==', ['to-string', ['get', 'feature_kind']], 'span'],
+      layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'butt' },
+      paint: { 'line-color': ['case', ['==', ['to-string', ['get', 'repair_status']], 'repaired'], '#ffffff', '#000000'],
+               'line-opacity': ['case', ['==', ['to-string', ['get', 'repair_status']], 'repaired'], 0.9, 0.45],
+               'line-width': ['interpolate', ['linear'], ['zoom'], 10, 3.4, 14, 5.4, 18, 9] } },
+    { id: 'bridge_status-span', type: 'line', source: 'bridge_status',
+      filter: ['==', ['to-string', ['get', 'feature_kind']], 'span'],
+      layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'butt' },
+      paint: { 'line-color': REPAIR_COLOR, 'line-opacity': 0.95,
+               'line-width': ['interpolate', ['linear'], ['zoom'], 10, 1.6, 14, 3.2, 18, 6] } },
     // Outlined semicircle icon rather than a filled circle dot (owner direction, 10 Sep
     // 2026): flat edge anchored on the point reads like a bridge arch over the river, and
     // a transparent interior with just a status-coloured stroke reads as "outline, not a
-    // filled dot" against the imagery.  Only Damaged/Destroyed render -- BRIDGE_SHOWN drops
-    // Standing/Intact spans entirely (owner direction, 10 Sep 2026: "should not be on the
-    // map at all").
-    { id: 'bridge_damage-point', type: 'symbol', source: 'bridge_damage', filter: BRIDGE_SHOWN,
+    // filled dot" against the imagery.  The stroke now carries repair status and the arc
+    // carries bridge type -- solid for motorable, dashed for a footbridge, hairline where
+    // OSM records no type -- and a repaired bridge fills white inside its green arc.
+    { id: 'bridge_damage-point', type: 'symbol', source: 'bridge_status', filter: BRIDGE_SHOWN,
       layout: { visibility: 'none',
-        'icon-image': bridgeIcon, 'icon-size': 12 / SHAPE_ICON_PX, 'icon-anchor': 'bottom',
+        'icon-image': REPAIR_ICON, 'icon-size': 12 / SHAPE_ICON_PX, 'icon-anchor': 'bottom',
         'icon-allow-overlap': true, 'icon-ignore-placement': true } },
   );
-  // def === status: bridgeIcon is already status-driven (there is no separate "default"
+  // def === status: REPAIR_ICON is already status-driven (there is no separate "default"
   // colouring), so the toggle is a correctness no-op here, not a visual change -- but it
   // must still resolve to a valid 'bridge-*' icon name (never STATUS_EXPR, a colour) or
   // MapLibre would fire styleimagemissing.
-  PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'icon-image', def: bridgeIcon, status: bridgeIcon });
+  PAINT_TARGETS.push({ id: 'bridge_damage-point', prop: 'icon-image', def: REPAIR_ICON, status: REPAIR_ICON });
+
+  /* The curated corridors themselves, under everything else: a wide translucent
+   * ribbon in the status colour.  Without it the hill detour routes would say
+   * nothing at all -- they run outside the flood extent and the Copernicus areas,
+   * so there are no road features along them to recolour, and a reader looking for
+   * "how do I get to Dhunche" would see only the cut highway.
+   *
+   * It fades out above z12 and is gone by z14.5.  A segment is four to eight
+   * waypoints, so the line between them is a chord, not an alignment: at corridor
+   * scale that reads correctly as "this way through", but zoomed to a street it
+   * would draw a straight band across hillsides where no road exists, which is a
+   * claim the data cannot support.  By the zoom where that would matter the
+   * individual roads underneath are themselves recoloured, so nothing is lost. */
+  push(
+    { id: 'road_status-segment', type: 'line', source: 'road_status', filter: OF_KIND('segment'),
+      layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': ROAD_STATUS_COLOR,
+               'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.3, 12, 0.3, 13.5, 0.12, 14.5, 0],
+               'line-width': ['interpolate', ['linear'], ['zoom'], 8, 4, 12, 9, 15, 16] } },
+  );
 
   // Roads that lie inside the mapped water, computed by clipping the HOT roads to the flood
-  // extent polygon: red with the road casing, on top of the roads so the affected stretches
-  // read even where HOT has not recorded a status yet (616 of 879 segments are still "Standing").
-  // Where Copernicus EMS graded a segment its grade wins: Destroyed/Damaged kept, No visible damage dropped.
+  // extent polygon, drawn on top of the roads so the affected stretches read even where HOT
+  // has not recorded a status yet (616 of 879 segments are still "Standing").  The colour is
+  // now current accessibility rather than damage: white where a situation report says traffic
+  // is getting through, orange where work is under way, red everywhere else -- which is every
+  // stretch nobody has reported on, so the overlay never over-claims.  A restored road gets a
+  // slightly stronger casing, because white on white basemap needs the outline to read.
   // Bridges are decided by river position and the ground reports in tools/build_flooded_roads.py, not by
   // the polygon (a deck always intersects it): upstream of BhimDhunga every bridge is red unless a report says Intact;
   // BhimDhunga to Benighat the nearest report decides; Benighat and downstream is unaffected.
   push(
-    { id: 'flooded_roads-casing', type: 'line', source: 'flooded_roads', layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': '#000000', 'line-opacity': 0.25, 'line-width': hwWidth(1.5) } },
-    { id: 'flooded_roads-line', type: 'line', source: 'flooded_roads', layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': DAMAGE_ROAD_RED, 'line-opacity': 0.95, 'line-width': hwWidth(0) } },
+    { id: 'flooded_roads-casing', type: 'line', source: 'road_status', filter: OF_KIND('flooded'),
+      layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': '#000000', 'line-opacity': ['case', IS_RESTORED_ROAD, 0.55, 0.25],
+               'line-width': hwWidth(1.5) } },
+    { id: 'flooded_roads-line', type: 'line', source: 'road_status', filter: OF_KIND('flooded'),
+      layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': ROAD_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': hwWidth(0) } },
   );
 
-  // Copernicus EMS grading, segment by segment from 0.3–0.7 m post-event imagery: the closest thing
-  // to an authoritative road condition.  Only damage is drawn: solid for Destroyed / Damaged, dashed
-  // for "Possibly damaged" (line-dasharray is not data-driven, hence two layers).  "No visible damage"
-  // and "Not Analysed" segments stay in the file (build_flooded_roads.py uses the former to clear the
-  // computed overlay) but are not drawn (owner direction, 6 Sep 2026).
-  const EMS_COLOR = ['match', ['get', 'grade'],
-    'Destroyed', DAMAGE_ROAD_RED, 'Damaged', '#f97316', '#f59e0b'];
+  /* Copernicus EMS grading, segment by segment from 0.3-0.7 m post-event imagery.
+   * Only damage is drawn: solid for Destroyed / Damaged, dashed for "Possibly
+   * damaged" (line-dasharray is not data-driven, hence two layers).  "No visible
+   * damage" and "Not Analysed" segments stay in the file (build_flooded_roads.py
+   * uses the former to clear the computed overlay) but are not drawn (owner
+   * direction, 6 Sep 2026).
+   *
+   * The colour used to carry the grade (red / orange / amber).  It now carries
+   * current accessibility instead, on the same three-colour scale as the overlay
+   * above, and the grade is left to the solid-versus-dashed split and the popup
+   * (owner request, 20 Sep 2026).  That is a real trade: Destroyed and Damaged no
+   * longer differ by colour.  It is the right trade here because orange can only
+   * mean one thing on one map, and 82 stretches Copernicus graded Destroyed on
+   * 27 August have since been cleared and reopened -- a reader needs to see that
+   * they are open now, with the August grade a click away, rather than the other
+   * way round. */
   const EMS_W = ['interpolate', ['linear'], ['zoom'], 10, 1.4, 14, 2.8, 17, 4.6];
-  const EMS_SHOWN = ['match', ['get', 'grade'], ['Destroyed', 'Damaged', 'Possibly damaged'], true, false];
-  const EMS_FIRM = ['match', ['get', 'grade'], ['Destroyed', 'Damaged'], true, false];
+  const EMS_SHOWN = ['all', OF_KIND('ems'),
+    ['match', ['get', 'grade_ems'], ['Destroyed', 'Damaged', 'Possibly damaged'], true, false]];
+  const EMS_FIRM = ['match', ['get', 'grade_ems'], ['Destroyed', 'Damaged'], true, false];
   push(
-    { id: 'ems_roads-casing', type: 'line', source: 'ems_roads', filter: EMS_SHOWN, layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': '#000000', 'line-opacity': 0.3, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.6, 14, 4.4, 17, 6.8] } },
-    { id: 'ems_roads-solid', type: 'line', source: 'ems_roads', filter: EMS_FIRM, layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': EMS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W } },
-    { id: 'ems_roads-dashed', type: 'line', source: 'ems_roads', filter: ['all', EMS_SHOWN, ['!', EMS_FIRM]], layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': EMS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W, 'line-dasharray': [2, 1.5] } },
+    { id: 'ems_roads-casing', type: 'line', source: 'road_status', filter: EMS_SHOWN, layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': '#000000', 'line-opacity': ['case', IS_RESTORED_ROAD, 0.6, 0.3],
+               'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.6, 14, 4.4, 17, 6.8] } },
+    { id: 'ems_roads-solid', type: 'line', source: 'road_status', filter: ['all', EMS_SHOWN, EMS_FIRM], layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': ROAD_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W } },
+    { id: 'ems_roads-dashed', type: 'line', source: 'road_status', filter: ['all', EMS_SHOWN, ['!', EMS_FIRM]], layout: { visibility: 'none', 'line-join': 'round' },
+      paint: { 'line-color': ROAD_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W, 'line-dasharray': [2, 1.5] } },
   );
 
   // Settlement labels (tools/build_places.py): district HQs and cities from z7, towns and the
@@ -1105,12 +1279,14 @@ function buildDefs() {
       sub: 'OSM volunteers \u00b7 colour = status',
       title: 'Destroyed and damaged features, volunteer-recorded in OpenStreetMap',
       color: DAMAGE_RED, hot: true, ids: [], on: true },
-    // 58 ground reports total; 15 Standing/Intact spans are not drawn at all (owner
-    // direction, 10 Sep 2026), so only the 43 Damaged/Destroyed bridges are on the map --
-    // see BRIDGE_SHOWN.  Swatch drawn hollow (outline, no fill) to match the map icon.
-    { key: 'bridge_damage', label: 'Bridge damage', sub: 'ground reports \u00b7 damaged & destroyed only',
-      title: 'Bridge damage from ground reports; only the damaged and destroyed spans are drawn',
-      color: CFG.STATUS.destroyed, ids: ['bridge_damage-point'], on: false, count: 43, shape: 'semicircle', outline: true },
+    // 58 ground reports plus the curated bridges no ground report covers; Intact spans
+    // are still not drawn unless somebody has curated a status for them (owner direction,
+    // 10 Sep 2026, and see BRIDGE_SHOWN), which leaves 45 markers.  Swatch drawn hollow
+    // (outline, no fill) to match the map icon.
+    { key: 'bridge_damage', label: 'Bridge damage & repair', sub: 'ground reports \u00b7 colour = repair status',
+      title: 'Bridge ground reports coloured by repair status, with the repaired and part-rebuilt spans redrawn',
+      color: CFG.STATUS.destroyed, ids: ['bridge_status-span-casing', 'bridge_status-span', 'bridge_damage-point'],
+      on: false, count: 45, shape: 'semicircle', outline: true },
     { key: 'fair', label: 'Building damage, fAIr AI', color: CFG.FAIR['destroyed'], ids: ['fair-fill', 'fair-line', 'fair-point'], on: true, count: 8421,
       title: 'Building damage classified by the fAIr AI model' },
     { key: 'fair_aoi', label: 'fAIr analysed tiles', color: '#f8fafc', ids: ['fair_aoi-line'], on: false, outline: true,
@@ -1119,12 +1295,20 @@ function buildDefs() {
     // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
     { key: 'damage_edits', label: 'Building damage, analyst grading', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: false, count: 65,
       title: 'Building damage graded by hand in the Damage editor' },
-    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', color: DAMAGE_ROAD_RED,
+    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', sub: 'colour = open, under repair or cut',
+      color: DAMAGE_ROAD_RED,
       ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548,
-      title: 'Road damage grading, Copernicus EMS, 27\u201331 Aug 2026' },
-    { key: 'flooded_roads', label: 'Roads inside flood extent', color: DAMAGE_ROAD_RED,
+      title: 'Copernicus EMS road grading, 27\u201331 Aug 2026, coloured by whether the stretch is open now' },
+    { key: 'flooded_roads', label: 'Roads inside flood extent', sub: 'colour = open, under repair or cut',
+      color: DAMAGE_ROAD_RED,
       ids: ['flooded_roads-casing', 'flooded_roads-line'], on: false, count: 879,
-      title: 'Roads inside the flood extent (computed by clipping the HOT roads to the extent polygon)' },
+      title: 'Roads inside the flood extent (computed by clipping the HOT roads to the extent polygon), coloured by whether the stretch is open now' },
+    // The curated corridors as a translucent ribbon: the only thing on the map that
+    // says anything about the hill detour routes, which carry no road features to
+    // recolour because they run outside the flood extent and the Copernicus areas.
+    { key: 'road_status_segments', label: 'Road status corridors', sub: 'curated \u00b7 NDRRMA SitRep 18 & press',
+      color: ROAD_STATUS_COLORS.under_repair, ids: ['road_status-segment'], on: false, count: 18,
+      title: 'Curated road accessibility corridors, including the hill detour routes that carry no mapped road features' },
     // hot: applyHot() shows the flood or corridor outline to match the Extent switch.
     { key: 'hot_aoi', label: 'Area of interest outline', color: 'rgba(203,213,225,.6)', outline: true, hot: true, ids: [], on: false,
       title: 'Area of interest outline (HOT + upstream to the glacier)' },
@@ -2461,6 +2645,16 @@ function renderSidebar() {
     add(cutoffEntry.color, 'Ward cut off from its usual route: pale at a 10-30 km detour, '
       + 'deep pink where no road to the district HQ or Kathmandu is left', false, cutoffEntry.shape);
   }
+  // Bridge markers say two things at once, so the legend does too: the colour is
+  // repair status and the arc is bridge type.  Repaired is the one filled swatch,
+  // matching the white-filled green arc on the map.
+  lg.appendChild(el('div', 'hd', 'Bridge repair status (ground reports)'));
+  add(REPAIR.destroyed, 'Destroyed', true, 'semicircle');
+  add(REPAIR.damaged, 'Damaged, no repair reported', true, 'semicircle');
+  add(REPAIR.under_repair, 'Under repair or being rebuilt now', true, 'semicircle');
+  add(REPAIR.repaired, 'Repaired and carrying traffic again', true, 'semicircle filled');
+  add(CFG.STATUS.standing, 'Motorable bridge (solid arc)', true, 'semicircle');
+  add(CFG.STATUS.standing, 'Footbridge or suspension bridge (dashed arc)', true, 'semicircle dashed');
   lBlock.appendChild(lg);
 
   const roadLg = el('div', 'roadlg');
@@ -2470,14 +2664,22 @@ function renderSidebar() {
     '<div class="r"><i class="rl w3"></i>Secondary and tertiary</div>' +
     '<div class="r"><i class="rl w2"></i>Residential, service</div>' +
     '<div class="r"><i class="rl w2 dash"></i>Track</div>' +
-    '<div class="r"><i class="rl w1 dot"></i>Path, steps, footbridge</div>' +
-    '<div class="r"><i class="rl w4 heavy"></i>Road bridge span</div>' +
-    '<div class="r"><i class="rl w3 red"></i>Flood-damaged road (HOT status) or inside the observed flood extent</div>' +
+    '<div class="r"><i class="rl w1 dot"></i>Path, steps</div>' +
+    '<div class="r"><i class="rl w4 heavy"></i>Motorable bridge span</div>' +
+    '<div class="r"><i class="rl w1 dot"></i>Footbridge / suspension (pedestrian)</div>' +
+    '<div class="r"><i class="rl w2 longdash"></i>Bridge, type not recorded in OSM</div>' +
+    '<div class="r"><i class="rl w3 red"></i>Flood-damaged road (HOT status)</div>' +
+    '<div class="r"><span class="note">52 of 220 corridor bridges record no road or path class and no suspension structure (all but one of them destroyed re-added spans) and are drawn as type not recorded. ' +
+    'Repair status is curated from NDRRMA SitReps and press (as of 19 Sep); see data/bridge_status.json.</span></div>' +
     '<div class="r"><span class="note">Beyond the 1 km corridor, roads come from the national OSM export (trunk to tertiary only).</span></div>' +
-    '<div class="hd">Copernicus EMS road grading (EMSR927)</div>' +
-    '<div class="r"><i class="rl w3 ems-destroyed"></i>Destroyed</div>' +
-    '<div class="r"><i class="rl w3 ems-damaged"></i>Damaged</div>' +
-    '<div class="r"><i class="rl w2 ems-possible dash"></i>Possibly damaged</div>' +
+    '<div class="hd">Road status \u2014 can a vehicle get through today</div>' +
+    '<div class="r"><i class="rl w3 rs-restored"></i>Restored \u2014 traffic is getting through, at two lanes, one lane or track width</div>' +
+    '<div class="r"><i class="rl w3 rs-repair"></i>Under repair \u2014 work under way, not through yet</div>' +
+    '<div class="r"><i class="rl w3 rs-damaged"></i>Damaged or closed, and every stretch nobody has reported on</div>' +
+    '<div class="r"><i class="rl w4 rs-ribbon"></i>Curated corridor, including the hill detours that carry no mapped road (fades out when zoomed in)</div>' +
+    '<div class="r"><i class="rl w2 dash"></i>Copernicus graded the stretch only "possibly damaged"</div>' +
+    '<div class="r"><span class="note">Applies to both road overlays. Curated from NDRRMA SitRep 18 (19 Sep) and press; see data/road_status.json. ' +
+    'Colour is accessibility, not damage: the Copernicus Destroyed and Damaged grades no longer differ by colour and are in the popup instead.</span></div>' +
     '<div class="hd">Contours (GLO-30)</div>' +
     '<div class="r"><i class="rl ct idx"></i>Index line, multiple of 100 m</div>' +
     '<div class="r"><i class="rl ct"></i>Intermediate line</div>';
@@ -2783,27 +2985,41 @@ function renderSearch(parent) {
 }
 
 // ----------------------------------------------------------- bridges panel
+/* Reads the derived layer rather than the raw HDX reports, so the panel says the
+ * same thing the map does: bridge type from the OSM span, repair status from
+ * data/bridge_status.json where one is curated.  The original HDX status is
+ * still there as status_hdx and is what the summary chips count, so the panel
+ * keeps reporting the ground survey as well as the repairs since.  The row
+ * order is unchanged (washed out, damaged, intact, then by name); the repair
+ * status shows as the row's coloured dot and leads the sub-line. */
 const BRIDGE_ORDER = ['Washed out', 'Damaged', 'Intact'];
 async function renderBridges(det, body) {
-  const d = await gj('hot_flood_npl/hot_flood_npl_bridge_damage.geojson');
+  const d = await gj('derived/bridge_status.geojson');
   if (!d || !d.features) { body.innerHTML = '<p class="note">Bridge ground reports not available.</p>'; return; }
-  const rows = d.features.map(f => ({ p: f.properties || {}, c: centroid(f.geometry) })).filter(r => r.c);
+  const rows = d.features.filter(f => (f.properties || {}).feature_kind !== 'span')
+    .map(f => ({ p: f.properties || {}, c: centroid(f.geometry) })).filter(r => r.c);
   const counts = {};
-  for (const r of rows) counts[r.p.status || 'Unknown'] = (counts[r.p.status || 'Unknown'] || 0) + 1;
+  for (const r of rows) {
+    const k = r.p.status_hdx || 'Curated';
+    counts[k] = (counts[k] || 0) + 1;
+  }
   const rank = st => { const i = BRIDGE_ORDER.indexOf(st); return i < 0 ? 99 : i; };
-  rows.sort((a, b) => rank(a.p.status) - rank(b.p.status) || String(a.p.name).localeCompare(String(b.p.name)));
+  rows.sort((a, b) => rank(a.p.status_hdx) - rank(b.p.status_hdx) || String(a.p.name).localeCompare(String(b.p.name)));
   const head = det.querySelector('summary');
   if (head) head.innerHTML = 'Bridge ground reports <span class="n">' +
     Object.keys(counts).sort((a, b) => rank(a) - rank(b))
       .map(k => '<i class="chip" style="background:' + statusColour(k) + '"></i>' + counts[k]).join(' ') + '</span>';
   body.innerHTML = '';
   for (const r of rows) {
+    const rs = r.p.repair_status || 'unknown';
+    const bits = [REPAIR_LABEL[rs] || rs, BTYPE_LABEL[r.p.bridge_type] || BTYPE_LABEL.unknown];
+    if (r.p.location) bits.push(r.p.location);
+    if (r.p.adm3) bits.push(r.p.adm3);
+    if (r.p.length_m) bits.push(r.p.length_m + ' m');
     const row = el('div', 'brow');
-    row.innerHTML = '<i class="chip" style="background:' + statusColour(r.p.status) + '"></i>' +
+    row.innerHTML = '<i class="chip" style="background:' + (REPAIR[rs] || REPAIR.unknown) + '"></i>' +
       '<span class="t"><b>' + esc(r.p.name || 'Unnamed bridge') + '</b>' +
-      '<span class="sub">' + esc(r.p.status || '') + (r.p.location ? ' · ' + esc(r.p.location) : '') +
-      (r.p.adm3_name ? ' · ' + esc(r.p.adm3_name) : '') +
-      (r.p.length_m ? ' · ' + esc(r.p.length_m) + ' m' : '') + '</span></span>';
+      '<span class="sub">' + bits.map(esc).join(' · ') + '</span></span>';
     row.addEventListener('click', () => {
       dropPin(r.c, 15);
       if (maps.post) new maplibregl.Popup({ maxWidth: '340px' })
@@ -3467,20 +3683,61 @@ function popupHTML(label, props) {
   const ne = p.name_ne && p.name_ne !== name ? p.name_ne : '';
   const type = [p.feature_type, p.amenity, p.highway, p.man_made, p.place, p.bridge_structure,
                 p.building, p.shop, p.tourism].find(v => v && v !== 'yes');
+  // A span's deck class (highway) and its structure (bridge_structure) are two
+  // different facts and a suspension footbridge carries both, so the type line
+  // shows the pair rather than only whichever the list reached first.
+  const type2 = p.bridge_structure && p.bridge_structure !== type ? p.bridge_structure : null;
   let h = '<div class="pop-h">' + esc(name || label) + (ne ? ' <span class="ne">' + esc(ne) + '</span>' : '') + '</div>';
   const meta = [];
   if (name) meta.push(esc(label));
   if (type) meta.push(esc(String(type).replace(/_/g, ' ')));
+  if (type2) meta.push(esc(String(type2).replace(/_/g, ' ')));
+  if (p.bridge_type) meta.push(esc(BTYPE_LABEL[p.bridge_type] || p.bridge_type));
   if (p.adm3_name) meta.push(esc(p.adm3_name));
+  else if (p.adm3) meta.push(esc(p.adm3));
   else if (p.municipality) meta.push(esc(p.municipality) + (p.district ? ', ' + esc(p.district) : ''));
   if (p.capacity_mw != null) meta.push(esc(p.capacity_mw) + ' MW');
   if (p.damage_type) meta.push(esc(p.damage_type));
   if (meta.length) h += '<div class="pop-m">' + meta.join(' · ') + '</div>';
   if (p.status) h += '<div><span class="chip lg" style="background:' + statusColour(p.status) + '">' + esc(p.status) + '</span></div>';
+  /* Bridges carry two statuses that mean different things and both belong on the
+   * face of the popup: the repair status curated in data/bridge_status.json, and
+   * the HDX ground survey it was checked against.  Where the curation says more
+   * than one word, the detail, the date it was last confirmed and the source it
+   * rests on follow, so a reader can weigh "repaired" for themselves. */
+  if (p.repair_status) {
+    h += '<div><span class="chip lg" style="background:' + (REPAIR[p.repair_status] || REPAIR.unknown) + '">' +
+      esc(REPAIR_LABEL[p.repair_status] || p.repair_status) + '</span>' +
+      (p.status_hdx ? ' <span class="chip lg" style="background:' + statusColour(p.status_hdx) + '">' +
+        esc(p.status_hdx) + ', ground survey</span>' : '') + '</div>';
+  }
+  /* Road accessibility (data/road_status.json via tools/build_road_status.py).
+   * The lane count belongs next to the status, because "restored" over a track
+   * and "restored" over two lanes are very different answers to "can I drive
+   * it".  The Copernicus grade follows where there is one, since the colour no
+   * longer carries it. */
+  if (p.road_status) {
+    const rc = ROAD_STATUS_COLORS[p.road_status] || DAMAGE_ROAD_RED;
+    h += '<div><span class="chip lg' + (rc === ROAD_WHITE ? ' pale' : '') + '" style="background:' + rc + '">' +
+      esc(RSTATUS_LABEL[p.road_status] || p.road_status) +
+      (p.lane ? ', ' + esc(LANE_LABEL[p.lane] || p.lane) : '') + '</span>' +
+      (p.grade_ems ? ' <span class="chip lg" style="background:' + statusColour(p.grade_ems) + '">Copernicus: ' +
+        esc(p.grade_ems) + '</span>' : '') +
+      (p.status_hdx ? ' <span class="chip lg" style="background:' + statusColour(p.status_hdx) + '">' +
+        esc(p.status_hdx) + ', OSM</span>' : '') + '</div>';
+    if (p.segment_name && p.segment_id) h += '<div class="pop-loc">Section: ' + esc(p.segment_name) + '</div>';
+  }
   // Hand-geocoded points say so on the face of the popup, not just in the
   // attribute table: a settlement-level pin is a different claim from a survey.
   if (p.location) h += '<div class="pop-loc">Location: ' + esc(p.location) + '</div>';
   if (p.notes) h += '<div class="pop-n">' + esc(p.notes) + '</div>';
+  if (p.status_detail) h += '<div class="pop-n">' + esc(p.status_detail) + '</div>';
+  if (p.as_of || p.source_title || p.source_url) {
+    const src = popLink(p.source_url, p.source_title || p.source_url) || esc(p.source_title || '');
+    h += '<div class="pop-m">' +
+      [p.as_of ? 'As of ' + esc(p.as_of) : '', src,
+       p.confidence ? esc(p.confidence) + ' confidence' : ''].filter(Boolean).join(' · ') + '</div>';
+  }
   return h + popupAttrs(p);
 }
 /* The raw property table every popup ends with, split out so the evidence branch

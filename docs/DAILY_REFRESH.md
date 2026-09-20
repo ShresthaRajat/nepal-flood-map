@@ -35,6 +35,8 @@ precede `hdx`, and everything that reads an HDX layer has to follow it.
 | `hdx` | `tools/refresh_hdx.sh` | both dataset dirs, `data/hdx/tiles/`, `data/hdx/pmtiles/`, `app/config.js`, `README.md`, `docs/LICENSING.md` | on, skipped when unchanged |
 | `admin_ward` | `tools/build_admin_ward.py` | `data/admin/admin_ward.geojson` | on |
 | `hydropower` | `tools/build_hydropower_points.py` | `data/hdx/derived/hydropower_points.geojson` | on |
+| `bridge_status` | `tools/build_bridge_status.py` | `data/hdx/derived/bridge_status.geojson` | on |
+| `road_status` | `tools/build_road_status.py` | `data/hdx/derived/road_status.geojson` | on |
 | `cutoff` | `build_roads_tiles.sh` then `build_cutoff_wards.py` | `data/hdx/tiles/hotosm_npl_roads/`, `data/hdx/derived/cutoff_wards.geojson` | **off** |
 | `places` | `tools/build_places.py` | `data/hdx/derived/places.geojson` | **off** |
 | `extent_munis` | `tools/list_flood_municipalities.py` | nothing — warns only | on |

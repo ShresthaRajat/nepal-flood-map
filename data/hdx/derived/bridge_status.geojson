@@ -1,0 +1,2019 @@
+{
+ "type": "FeatureCollection",
+ "name": "bridge_status",
+ "as_of": "2026-09-19",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bahubali Jharana Pul",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "43+850",
+    "adm3": "Uttargaya",
+    "length_m": 25.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1927778,
+     28.0380556
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Betrawati New Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Washed out",
+    "status_detail": "Design complete; foundation excavation under way as of 19 Sep. A 70 m Bailey bridge from India was handed to the Road Division in Hetauda on 12 Sep for this site; components/Acrow parts were being loaded at the Nepal Army's No. 28 Battalion in Bharatpur on 18 Sep for transport. Not yet open to traffic as of 20 Sep. Mapped onto the HDX 'Betrawati New Bridge' ground report; the '(Old)' report stays destroyed.",
+    "as_of": "2026-09-19",
+    "source_url": "https://kathmandupost.com/national/2026/09/13/india-sends-three-bailey-bridges-to-restore-flood-hit-connectivity",
+    "source_title": "Kathmandu Post 13 Sep / NDRRMA SitRep #18 (Eng) & #29 (Nep)",
+    "confidence": "high",
+    "location": "Betrawati (35+180)",
+    "adm3": "Uttargaya",
+    "length_m": 70.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/341461646"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1858111,
+     27.9743389
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Betrawati Old Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out; permanently replaced in function by the new Betrawati Bailey bridge site once complete (still under construction as of 20 Sep). OSM way way/1553178219 (19 m) is the unnamed destroyed span; the named 'Falaakhu River Bridge' (way/341461646) is assigned to the Bailey replacement entry.",
+    "as_of": "2026-09-20",
+    "source_url": "https://data.humdata.org/dataset/hot_flood_npl",
+    "source_title": "HOTOSM hot_flood_npl bridge_damage layer",
+    "confidence": "medium",
+    "location": "Betrawati",
+    "adm3": "Uttargaya",
+    "length_m": 70.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553178219"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1858111,
+     27.9743389
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bhotekoshi Bridge at Chilime",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Chilime",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/341557608"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3432806,
+     28.1828028
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bimali Khola",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "56+800",
+    "adm3": "Gosaikunda",
+    "length_m": 40.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2771472,
+     28.1085417
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bire Khola",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "27+840",
+    "adm3": "Bidur",
+    "length_m": 20.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1554211461"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1538889,
+     27.9244444
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Chilime Bridge, Chilime Khola",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Chilime",
+    "adm3": "Aamachhodingmo",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/341557606"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3422194,
+     28.1816528
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Crossing 0+700",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "50+260",
+    "adm3": "Kalika",
+    "length_m": 10.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553951066"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2225944,
+     28.0818972
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Dhobi Khola",
+    "bridge_type": "unknown",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "27+220",
+    "adm3": "Bidur",
+    "length_m": 15.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1486111,
+     27.9202778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gerkhu khola",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "29+050",
+    "adm3": "Bidur",
+    "length_m": 10.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/379104231"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1547222,
+     27.9305556
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ghatte Khola",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/897866243"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3618028,
+     28.2267111
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gundre Khola",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "27+980",
+    "adm3": "Bidur",
+    "length_m": 15.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553092937"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1536111,
+     27.9233333
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Haku khola",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "57+000",
+    "adm3": "Gosaikunda",
+    "length_m": 35.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2789639,
+     28.1101556
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Haku1 Bailey Bridge at Hydropower, Trishuli",
+    "bridge_type": "foot",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1554502334"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2810306,
+     28.1129528
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Haku2 Bailey Bridge at Hydropower, Trishuli",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "",
+    "adm3": "Aamachhodingmo",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2751389,
+     28.1083667
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hydropower Bailey Bridge Trishuli, Chumlingtar",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Chumlingtar",
+    "adm3": "Gandaki",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1539397947"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.6409583,
+     27.860075
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hydropower Bailey Bridge at Bhotekoshi, Syaphrubeshi",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out. Department of Roads plans, in a second construction phase, to install Bailey bridges over the Bhotekoshi and Chilime rivers at Syafrubesi; a Bailey bridge for Syabrubesi is being prepared, after which routing toward the border will be decided. Not yet complete as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://risingnepaldaily.com/news/66824",
+    "source_title": "Rising Nepal Daily: Works to build Bailey bridge begin in Rasuwagadhi",
+    "confidence": "medium",
+    "location": "Syafrubesi",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1017959928"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3399278,
+     28.1643861
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Jhangar Khola",
+    "bridge_type": "unknown",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "5+760",
+    "adm3": "Belkotgadhi",
+    "length_m": 15.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0244333,
+     27.8346389
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kolpu Khola Bridge (New)",
+    "bridge_type": "motorable",
+    "repair_status": "repaired",
+    "status_hdx": "Damaged",
+    "status_detail": "Same Kolphu Bridge crossing as the old bridge; one-lane traffic restored after minor repairs (13-19 Sep NDRRMA SitReps). Same crossing and same OSM span (way/209012420) as the '(Old)' entry.",
+    "as_of": "2026-09-19",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+    "confidence": "medium",
+    "location": "2+520",
+    "adm3": "Belkotgadhi",
+    "length_m": 40.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/209012420"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0162111,
+     27.8101111
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kolpu Khola Bridge (Old)",
+    "bridge_type": "motorable",
+    "repair_status": "repaired",
+    "status_hdx": "Damaged",
+    "status_detail": "Referred to as 'Kolphu Bridge' in NDRRMA SitReps: reopened to one-lane traffic after minor repairs, reported consistently 13-19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+    "confidence": "high",
+    "location": "",
+    "adm3": "Belkotgadhi",
+    "length_m": 40.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/209012420"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0162111,
+     27.8101111
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mahesh khola",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "0+520",
+    "adm3": "Galchhi",
+    "length_m": 41.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/209012932"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0008333,
+     27.8002778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mailung Bailey Bridge at Mailung Bazaar",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "",
+    "adm3": "Uttargaya",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2075333,
+     28.0718944
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Miteri Bridge, Rasuwagadhi",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "The main China-funded Miteri Bridge (built 2019, previously washed out and rebuilt as a 91 m Bailey bridge after a July 2025 flood, reopened Jan 2026) was washed out again in the 26 Aug 2026 flood, along with the temporary Bailey/'Resuo temporary bridge' built after the 2025 event (also flagged Destroyed in OSM). No rebuild timeline found as of 20 Sep 2026; this is the Nepal-China border crossing bridge. OSM way resolved by distance: way/1552746559 (21 m). The duplicate way/1443180803 and the temporary way/1552746560 ('热索临时便桥') are the same crossing, also Destroyed.",
+    "as_of": "2026-09-20",
+    "source_url": "https://myrepublica.nagariknetwork.com/news/miteri-bridge-rebuilt-rasuwagadhi-border-set-to-reopen-60-25.html",
+    "source_title": "myRepublica: Friendship Bridge rebuilt, Rasuwagadhi border set to reopen (background, Jan 2026) + HDX bridge_damage (Aug 2026 re-destruction)",
+    "confidence": "high",
+    "location": "Rasuwagadhi",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1552746559"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3780972,
+     28.2789444
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Naya Pul Trishuli, Khalte CH 37+810",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out; no bridge-specific repair news found. This crossing is on the still-obstructed Trishuli-Betrawati road section; Rasuwa-bound traffic is being routed via the Dhikure-Phedibesi-Chogate-Bhorle-Jibjibe-Bogatitar detour onto the Pasang Lhamu Highway instead. No OSM span matched: both ways the research offered are ~9 km away, and the only ways within 60 m here are Standing approach roads, so osm_id is left null.",
+    "as_of": "2026-09-19",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+    "confidence": "medium",
+    "location": "Khalte CH 37+810",
+    "adm3": "Uttargaya",
+    "length_m": 50.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553974285"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1848889,
+     27.9953417
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sano bharkhu",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "63+200",
+    "adm3": "Gosaikunda",
+    "length_m": 20.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553347892"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3187139,
+     28.1455639
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sukaure Khola",
+    "bridge_type": "unknown",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "40+210",
+    "adm3": "Kispang",
+    "length_m": 20.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1797778,
+     28.0143389
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Suspension Bridge at Devighat near Jalshrot tatha Sinchai Division",
+    "bridge_type": "foot",
+    "repair_status": "repaired",
+    "status_hdx": "Washed out",
+    "status_detail": "A tuin (rope crossing) was completed at Devighat as one of 3 emergency rope crossings finished (with Indreni Chaur and Syaphrubesi) per NDRRMA SitRep #29 (19 Sep); this is a stop-gap, not the original suspension bridge rebuilt. osm_id left null: the rope crossing is not the mapped suspension span, so the OSM line is not recoloured.",
+    "as_of": "2026-09-19",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #29 (Nepali, 19 Sep 2026)",
+    "confidence": "medium",
+    "location": "Devighat",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/303036276"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1365,
+     27.8923417
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Syafrubesi Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out. Same Syabrubesi Bailey-bridge construction effort as the hydropower Bailey bridge nearby; work under way but not reported complete as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://risingnepaldaily.com/news/66824",
+    "source_title": "Rising Nepal Daily: Works to build Bailey bridge begin in Rasuwagadhi",
+    "confidence": "medium",
+    "location": "Syafrubesi",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/84566285"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3324917,
+     28.1574778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tandi Khola Bridge, Devighat (New)",
+    "bridge_type": "motorable",
+    "repair_status": "repaired",
+    "status_hdx": "Washed out",
+    "status_detail": "60 m, 5.5 m wide, 50-tonne Nepal Army Acrow/Bailey bridge over the Tadi Khola at Devighat Bazaar, replacing the two washed-out Tandi Khola bridges (old and new). Installation began 6 Sep, fully complete and carrying traffic by 14 Sep; still described as installed and operating on 19 Sep. Reconnects Devighat Bazaar with Jiling. Mapped onto the HDX 'Tandi Khola Bridge, Devighat (New)' ground report: the Bailey carries the crossing the two washed-out Tandi Khola spans used to carry. The '(Old)' report stays destroyed.",
+    "as_of": "2026-09-19",
+    "source_url": "https://kathmandupost.com/national/2026/09/19/mud-and-steep-cliffs-hamper-efforts-to-reopen-flood-hit-roads",
+    "source_title": "Kathmandu Post: Mud and steep cliffs hamper efforts to reopen flood-hit roads",
+    "confidence": "high",
+    "location": "Devighat(CH 16+570)",
+    "adm3": "Bidur",
+    "length_m": 55.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/168199206"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.109075,
+     27.858575
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tandi Khola Bridge, Devighat (Old)",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Devighat",
+    "adm3": "Bidur",
+    "length_m": 55.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553160833"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.109075,
+     27.858575
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Thade Khola",
+    "bridge_type": "unknown",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "52+320",
+    "adm3": "Gosaikunda",
+    "length_m": 35.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2519361,
+     28.0915556
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Thado Khola (Crossing 0+750",
+    "bridge_type": "unknown",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "50+300",
+    "adm3": "Kalika",
+    "length_m": 10.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2255556,
+     28.0827778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Thulo khola",
+    "bridge_type": "motorable",
+    "repair_status": "damaged",
+    "status_hdx": "Damaged",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "13+260",
+    "adm3": "Belkotgadhi",
+    "length_m": 20.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/341768633"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0810639,
+     27.8545667
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Timure Bridge 1",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Timure",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1552948001"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3776972,
+     28.271275
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Timure Bridge 2",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Timure",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1033190356"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.3582778,
+     28.2399778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli 3A Dam-2",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "46+990",
+    "adm3": "Uttargaya",
+    "length_m": 30.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553948209"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2066861,
+     28.0620528
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli 3A Dam-3",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "47+040",
+    "adm3": "Uttargaya",
+    "length_m": 15.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553948209"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.206325,
+     28.0625778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli Bridge Mailung Chipleti",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "47+200",
+    "adm3": "Uttargaya",
+    "length_m": 60.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/912360483"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2058333,
+     28.0652778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, Baireni Syaltar Sadak",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Below Galchhi",
+    "adm3": "Galchhi",
+    "length_m": 150.0,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.9904889,
+     27.8042833
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, Benighat",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Benighat",
+    "adm3": "Gandaki",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/343903499"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.7770806,
+     27.8105889
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, BhimDhunga Lami Danda Sadak",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Near Galchhi",
+    "adm3": "Galchhi",
+    "length_m": 140.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553613627"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0027722,
+     27.8026889
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, Buddhasinghghat",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Buddhasinghghat",
+    "adm3": "Belkotgadhi",
+    "length_m": 140.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553215633"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0619361,
+     27.8594806
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, Furke Khola",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out, 118 m span ('Phurke Khola bridge'). This bridge normally connects to Dhadingbesi; access was restored instead via the Maltar-Gajuritar-Kewarinighat alternative route rather than by repairing this bridge. No repair-start news found for the bridge itself as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://peoplesreview.com.np/2026/09/13/rs-73-billion-needed-to-rebuild-flood-damaged-roads-bridges/",
+    "source_title": "Peoples' Review: Rs 73 billion needed to rebuild flood-damaged roads, bridges",
+    "confidence": "medium",
+    "location": "Malelkhu",
+    "adm3": "Siddhalek",
+    "length_m": 118.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/435417464"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.844075,
+     27.8025444
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, Keurini, Fosretar",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Keurini, Fosretar",
+    "adm3": "Galchhi",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1493017039"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0223333,
+     27.832525
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli River Bridge, Ratmate",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Ratmate",
+    "adm3": "Tarakeshwor",
+    "length_m": 150.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553509538"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0411889,
+     27.8560972
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli 216 Audit 1 Bailey Bridge",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Audit 1, Trisuli 216",
+    "adm3": "Aamachhodingmo",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2884222,
+     28.1202833
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli Khola Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "60+020",
+    "adm3": "Gosaikunda",
+    "length_m": 20.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553166291"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2994722,
+     28.1272639
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge ,Simchaur",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Simchaur",
+    "adm3": "Bidur",
+    "length_m": 100.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1219434228"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1385028,
+     27.9094861
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge ,Trisuli Bazzar(New)",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out; same status/context as the Old Trisuli Bazar bridge above - Bailey bridge designed but not yet reported installed as of 19 Sep. OSM way resolved by distance: way/1463147997 ('Trishuli Naya Pul') is 4 m from the report.",
+    "as_of": "2026-09-19",
+    "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
+    "source_title": "Meroauto 6 Sep 2026",
+    "confidence": "medium",
+    "location": "Trisuli Bazzar",
+    "adm3": "Bidur",
+    "length_m": 60.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1463147997"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1479639,
+     27.9212361
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge ,Trisuli Bazzar(Old)",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "Washed out. Design for a ~48 m Bailey bridge at Trishuli Bazaar was completed per early-Sep reports, but no installation-start or completion news found through 19 Sep; the Galchhi right-bank detour (Kalleritar-Koshikhola-Pimaltar-Darshantar) remains the operating bypass for this crossing. OSM way resolved by distance: way/237590767 ('trishuli bridge') is 19 m from the report. The research note's way/1219434228 and way/340581850 are 1.7 km away at Simchaur, not here.",
+    "as_of": "2026-09-19",
+    "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
+    "source_title": "Meroauto: Rs 32.5 million allocated for road repairs as Bailey bridges planned at three sites",
+    "confidence": "medium",
+    "location": "Trisuli Bazzar",
+    "adm3": "Bidur",
+    "length_m": 60.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/237590767"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.14945,
+     27.9218278
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge Tupche",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Tupche",
+    "adm3": "Bidur",
+    "length_m": 100.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1552982421"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1728111,
+     27.9637778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, Fisling Gorkha",
+    "bridge_type": "motorable",
+    "repair_status": "intact",
+    "status_hdx": "Intact",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Fishling",
+    "adm3": "Gandaki",
+    "length_m": 145.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1408714154"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.6620639,
+     27.8446278
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, Ghatbesi",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Ghatbesi",
+    "adm3": "Siddhalek",
+    "length_m": 200.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1484953717"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.9018806,
+     27.8068861
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, JareBagaicha",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "JareBagaicha",
+    "adm3": "Siddhalek",
+    "length_m": 120.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1378017630"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.9242806,
+     27.7979278
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, Mastar Dhading",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Damaged",
+    "status_detail": "HDX baseline records this as 'Damaged' (not washed out). The Dhadingbesi-Parewatar-Nepaltar-Gajuritar-Piplatar-Adamtar-Belintar-Keurinatar-Mastar alternative route rejoins the Prithvi Highway near here and reconnected Dhading headquarters to the network by 13 Sep, implying this crossing/road is passable; road-division repairs ('सडक विभागबाट मर्मत') mentioned in NDRRMA SitRep for this general stretch. HDX records this as Damaged, not washed out; 'under repair' rests on the SitRep's mention of road-division repairs on this stretch plus the alternative route rejoining the highway here. Low confidence.",
+    "as_of": "2026-09-13",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-12 (13 Sep 2026)",
+    "confidence": "low",
+    "location": "Near Hamlet Resort",
+    "adm3": "Galchhi",
+    "length_m": 140.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1432603259"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84.9652639,
+     27.8118583
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, Near Devighat, Midhill Highway",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": "Mid-Hill Highway bridge over the main Trisuli (not the Tadi Khola crossing). No Bailey/repair plan reported; NDRRMA's alternative route bypasses it via Pipaltar-Pasang Lhamu Highway-Dhamle-Niranjana-Bagkhor-Harre-Deurali-Kolputar as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://kathmandupost.com/national/2026/09/19/mud-and-steep-cliffs-hamper-efforts-to-reopen-flood-hit-roads",
+    "source_title": "Kathmandu Post 19 Sep / NDRRMA SitRep #18 (Eng)",
+    "confidence": "medium",
+    "location": "Near DeviGhat",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/342320931"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.116225,
+     27.8703389
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge,Khadgabhanjyang Srikhali Sadak",
+    "bridge_type": "unknown",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "Srikhali",
+    "adm3": "Bidur",
+    "length_m": 180.0,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553053157"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0987083,
+     27.8593167
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Upper Trishuli Hydrower Bailey Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Washed out",
+    "status_detail": null,
+    "as_of": null,
+    "source_url": null,
+    "source_title": null,
+    "confidence": null,
+    "location": "",
+    "adm3": "Uttargaya",
+    "length_m": null,
+    "feature_kind": "report",
+    "matched_osm_id": "way/1553951070"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.2128444,
+     28.0759778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Betrawati temporary footbridge (~30 m), Bidur-10",
+    "bridge_type": "foot",
+    "repair_status": "repaired",
+    "status_hdx": null,
+    "status_detail": "Temporary footbridge built Bhadra 28 (~13 Sep), washed out again by flooding after overnight rain, then rebuilt; reported standing and in use on 15 Sep. No HDX ground report covers this temporary footbridge, so it draws as its own curated point.",
+    "as_of": "2026-09-15",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-14 (15 Sep 2026)",
+    "confidence": "medium",
+    "location": "Betrawati, Bidur-10",
+    "adm3": null,
+    "length_m": null,
+    "feature_kind": "curated",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.186,
+     27.974
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tupche Aama ko Pul (foot suspension bridge)",
+    "bridge_type": "foot",
+    "repair_status": "destroyed",
+    "status_hdx": null,
+    "status_detail": "A separate pedestrian suspension bridge near Tupche, distinct from the motorable Trisuli bridge at the same settlement. No repair-specific news found; falls within the 33-bridge 'needs full reconstruction' category cited for the wider suspension-bridge damage survey (53 of 64 footbridges Muglin-Timure damaged, 33 needing full rebuild). No HDX ground report covers this footbridge (the nearby 'Trisuli River Bridge Tupche' report is the motorable span), so it draws as its own curated point.",
+    "as_of": "2026-09-20",
+    "source_url": "https://kathmandupost.com/visual-stories/2026/09/15/footbridges-rise-again-from-flood-wreckage",
+    "source_title": "Kathmandu Post: Footbridges rise again from flood wreckage (15 Sep 2026)",
+    "confidence": "medium",
+    "location": "Tupche, Bidur, Nuwakot",
+    "adm3": null,
+    "length_m": null,
+    "feature_kind": "curated",
+    "matched_osm_id": "way/281810148"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1734,
+     27.964
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Falaakhu River Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Destroyed",
+    "status_detail": "Design complete; foundation excavation under way as of 19 Sep. A 70 m Bailey bridge from India was handed to the Road Division in Hetauda on 12 Sep for this site; components/Acrow parts were being loaded at the Nepal Army's No. 28 Battalion in Bharatpur on 18 Sep for transport. Not yet open to traffic as of 20 Sep. Mapped onto the HDX 'Betrawati New Bridge' ground report; the '(Old)' report stays destroyed.",
+    "as_of": "2026-09-19",
+    "source_url": "https://kathmandupost.com/national/2026/09/13/india-sends-three-bailey-bridges-to-restore-flood-hit-connectivity",
+    "source_title": "Kathmandu Post 13 Sep / NDRRMA SitRep #18 (Eng) & #29 (Nep)",
+    "confidence": "high",
+    "location": "Betrawati, Uttargaya, Rasuwa / Nuwakot border",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/341461646"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.185882,
+      27.9739074
+     ],
+     [
+      85.1856624,
+      27.9744799
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Betrawati Old Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Destroyed",
+    "status_detail": "Washed out; permanently replaced in function by the new Betrawati Bailey bridge site once complete (still under construction as of 20 Sep). OSM way way/1553178219 (19 m) is the unnamed destroyed span; the named 'Falaakhu River Bridge' (way/341461646) is assigned to the Bailey replacement entry.",
+    "as_of": "2026-09-20",
+    "source_url": "https://data.humdata.org/dataset/hot_flood_npl",
+    "source_title": "HOTOSM hot_flood_npl bridge_damage layer",
+    "confidence": "medium",
+    "location": "Betrawati, Uttargaya, Rasuwa",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/1553178219"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.1857682,
+      27.9745016
+     ],
+     [
+      85.1859216,
+      27.974072
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, Near Devighat, Midhill Highway",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Destroyed",
+    "status_detail": "Mid-Hill Highway bridge over the main Trisuli (not the Tadi Khola crossing). No Bailey/repair plan reported; NDRRMA's alternative route bypasses it via Pipaltar-Pasang Lhamu Highway-Dhamle-Niranjana-Bagkhor-Harre-Deurali-Kolputar as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://kathmandupost.com/national/2026/09/19/mud-and-steep-cliffs-hamper-efforts-to-reopen-flood-hit-roads",
+    "source_title": "Kathmandu Post 19 Sep / NDRRMA SitRep #18 (Eng)",
+    "confidence": "medium",
+    "location": "Near Devighat, Bidur, Nuwakot",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/342320931"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.1157473,
+      27.870932
+     ],
+     [
+      85.1159042,
+      27.8707679
+     ],
+     [
+      85.1164683,
+      27.8701778
+     ],
+     [
+      85.11696,
+      27.869664
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "devighat-Tadi bridge",
+    "bridge_type": "motorable",
+    "repair_status": "repaired",
+    "status_hdx": "Standing",
+    "status_detail": "60 m, 5.5 m wide, 50-tonne Nepal Army Acrow/Bailey bridge over the Tadi Khola at Devighat Bazaar, replacing the two washed-out Tandi Khola bridges (old and new). Installation began 6 Sep, fully complete and carrying traffic by 14 Sep; still described as installed and operating on 19 Sep. Reconnects Devighat Bazaar with Jiling. Mapped onto the HDX 'Tandi Khola Bridge, Devighat (New)' ground report: the Bailey carries the crossing the two washed-out Tandi Khola spans used to carry. The '(Old)' report stays destroyed.",
+    "as_of": "2026-09-19",
+    "source_url": "https://kathmandupost.com/national/2026/09/19/mud-and-steep-cliffs-hamper-efforts-to-reopen-flood-hit-roads",
+    "source_title": "Kathmandu Post: Mud and steep cliffs hamper efforts to reopen flood-hit roads",
+    "confidence": "high",
+    "location": "Devighat, Bidur-5, Nuwakot",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/168199206"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.1088901,
+      27.8583444
+     ],
+     [
+      85.1092389,
+      27.8588683
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Furke Khola Bridge",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Standing",
+    "status_detail": "Washed out, 118 m span ('Phurke Khola bridge'). This bridge normally connects to Dhadingbesi; access was restored instead via the Maltar-Gajuritar-Kewarinighat alternative route rather than by repairing this bridge. No repair-start news found for the bridge itself as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://peoplesreview.com.np/2026/09/13/rs-73-billion-needed-to-rebuild-flood-damaged-roads-bridges/",
+    "source_title": "Peoples' Review: Rs 73 billion needed to rebuild flood-damaged roads, bridges",
+    "confidence": "medium",
+    "location": "Malelkhu, Siddhalek, Dhading",
+    "adm3": "Siddhalek",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/435417464"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      84.8445053,
+      27.8019177
+     ],
+     [
+      84.8438618,
+      27.8028976
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kolpu Khola Bridge (New)",
+    "bridge_type": "motorable",
+    "repair_status": "repaired",
+    "status_hdx": "Standing",
+    "status_detail": "Same Kolphu Bridge crossing as the old bridge; one-lane traffic restored after minor repairs (13-19 Sep NDRRMA SitReps). Same crossing and same OSM span (way/209012420) as the '(Old)' entry.",
+    "as_of": "2026-09-19",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-18 (19 Sep 2026)",
+    "confidence": "medium",
+    "location": "Belkotgadhi, Nuwakot",
+    "adm3": "Galchhi",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/209012420"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.0162554,
+      27.8102138
+     ],
+     [
+      85.0162674,
+      27.8097821
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trisuli River Bridge, Mastar Dhading",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Standing",
+    "status_detail": "HDX baseline records this as 'Damaged' (not washed out). The Dhadingbesi-Parewatar-Nepaltar-Gajuritar-Piplatar-Adamtar-Belintar-Keurinatar-Mastar alternative route rejoins the Prithvi Highway near here and reconnected Dhading headquarters to the network by 13 Sep, implying this crossing/road is passable; road-division repairs ('सडक विभागबाट मर्मत') mentioned in NDRRMA SitRep for this general stretch. HDX records this as Damaged, not washed out; 'under repair' rests on the SitRep's mention of road-division repairs on this stretch plus the alternative route rejoining the highway here. Low confidence.",
+    "as_of": "2026-09-13",
+    "source_url": null,
+    "source_title": "NDRRMA SitRep #ENG-12 (13 Sep 2026)",
+    "confidence": "low",
+    "location": "Near Hamlet Resort, Galchhi, Dhading",
+    "adm3": "Galchhi",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/1432603259"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      84.9645883,
+      27.8115692
+     ],
+     [
+      84.964863,
+      27.8116853
+     ],
+     [
+      84.9659939,
+      27.8122717
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "热索桥 रसुवागढी मितेरी पुल",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Destroyed",
+    "status_detail": "The main China-funded Miteri Bridge (built 2019, previously washed out and rebuilt as a 91 m Bailey bridge after a July 2025 flood, reopened Jan 2026) was washed out again in the 26 Aug 2026 flood, along with the temporary Bailey/'Resuo temporary bridge' built after the 2025 event (also flagged Destroyed in OSM). No rebuild timeline found as of 20 Sep 2026; this is the Nepal-China border crossing bridge. OSM way resolved by distance: way/1552746559 (21 m). The duplicate way/1443180803 and the temporary way/1552746560 ('热索临时便桥') are the same crossing, also Destroyed.",
+    "as_of": "2026-09-20",
+    "source_url": "https://myrepublica.nagariknetwork.com/news/miteri-bridge-rebuilt-rasuwagadhi-border-set-to-reopen-60-25.html",
+    "source_title": "myRepublica: Friendship Bridge rebuilt, Rasuwagadhi border set to reopen (background, Jan 2026) + HDX bridge_damage (Aug 2026 re-destruction)",
+    "confidence": "high",
+    "location": "Rasuwagadhi, Gosaikunda, Rasuwa",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/1552746559"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.3778505,
+      28.2790566
+     ],
+     [
+      85.3779083,
+      28.2790741
+     ],
+     [
+      85.3779661,
+      28.2790915
+     ],
+     [
+      85.3782845,
+      28.2782733
+     ],
+     [
+      85.3782266,
+      28.2782559
+     ],
+     [
+      85.3781687,
+      28.2782384
+     ],
+     [
+      85.3778505,
+      28.2790566
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Pasang Lhamu Highway",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Destroyed",
+    "status_detail": "Washed out. Same Syabrubesi Bailey-bridge construction effort as the hydropower Bailey bridge nearby; work under way but not reported complete as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://risingnepaldaily.com/news/66824",
+    "source_title": "Rising Nepal Daily: Works to build Bailey bridge begin in Rasuwagadhi",
+    "confidence": "medium",
+    "location": "Syafrubesi, Gosaikunda, Rasuwa",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/84566285"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.3324711,
+      28.1576481
+     ],
+     [
+      85.3325784,
+      28.1570978
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hydropower Bailey Bridge at Bhotekoshi, Syaphrubeshi",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": "Destroyed",
+    "status_detail": "Washed out. Department of Roads plans, in a second construction phase, to install Bailey bridges over the Bhotekoshi and Chilime rivers at Syafrubesi; a Bailey bridge for Syabrubesi is being prepared, after which routing toward the border will be decided. Not yet complete as of 19 Sep.",
+    "as_of": "2026-09-19",
+    "source_url": "https://risingnepaldaily.com/news/66824",
+    "source_title": "Rising Nepal Daily: Works to build Bailey bridge begin in Rasuwagadhi",
+    "confidence": "medium",
+    "location": "Syafrubesi, Gosaikunda, Rasuwa",
+    "adm3": "Gosaikunda",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/1017959928"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.3401547,
+      28.1640037
+     ],
+     [
+      85.3398138,
+      28.1644629
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli Naya Pul",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Destroyed",
+    "status_detail": "Washed out; same status/context as the Old Trisuli Bazar bridge above - Bailey bridge designed but not yet reported installed as of 19 Sep. OSM way resolved by distance: way/1463147997 ('Trishuli Naya Pul') is 4 m from the report.",
+    "as_of": "2026-09-19",
+    "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
+    "source_title": "Meroauto 6 Sep 2026",
+    "confidence": "medium",
+    "location": "Trisuli Bazar, Bidur, Nuwakot",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/1463147997"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.1478758,
+      27.9215446
+     ],
+     [
+      85.1479673,
+      27.9212007
+     ],
+     [
+      85.1480475,
+      27.9208994
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "trishuli bridge",
+    "bridge_type": "motorable",
+    "repair_status": "destroyed",
+    "status_hdx": "Destroyed",
+    "status_detail": "Washed out. Design for a ~48 m Bailey bridge at Trishuli Bazaar was completed per early-Sep reports, but no installation-start or completion news found through 19 Sep; the Galchhi right-bank detour (Kalleritar-Koshikhola-Pimaltar-Darshantar) remains the operating bypass for this crossing. OSM way resolved by distance: way/237590767 ('trishuli bridge') is 19 m from the report. The research note's way/1219434228 and way/340581850 are 1.7 km away at Simchaur, not here.",
+    "as_of": "2026-09-19",
+    "source_url": "https://www.en.meroauto.com/rs-32-5-million-allocated-for-road-repairs-as-bailey-bridges-planned-at-three-sites/",
+    "source_title": "Meroauto: Rs 32.5 million allocated for road repairs as Bailey bridges planned at three sites",
+    "confidence": "medium",
+    "location": "Trisuli Bazar, Bidur, Nuwakot",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/237590767"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.14937,
+      27.9221046
+     ],
+     [
+      85.1494991,
+      27.9216655
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tupche Aama ko pool",
+    "bridge_type": "foot",
+    "repair_status": "destroyed",
+    "status_hdx": "Destroyed",
+    "status_detail": "A separate pedestrian suspension bridge near Tupche, distinct from the motorable Trisuli bridge at the same settlement. No repair-specific news found; falls within the 33-bridge 'needs full reconstruction' category cited for the wider suspension-bridge damage survey (53 of 64 footbridges Muglin-Timure damaged, 33 needing full rebuild). No HDX ground report covers this footbridge (the nearby 'Trisuli River Bridge Tupche' report is the motorable span), so it draws as its own curated point.",
+    "as_of": "2026-09-20",
+    "source_url": "https://kathmandupost.com/visual-stories/2026/09/15/footbridges-rise-again-from-flood-wreckage",
+    "source_title": "Kathmandu Post: Footbridges rise again from flood wreckage (15 Sep 2026)",
+    "confidence": "medium",
+    "location": "Tupche, Bidur, Nuwakot",
+    "adm3": "Bidur",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/281810148"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.1732352,
+      27.9641916
+     ],
+     [
+      85.173644,
+      27.9637426
+     ]
+    ]
+   }
+  }
+ ]
+}
