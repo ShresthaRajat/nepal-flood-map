@@ -1,0 +1,208 @@
+name: daily refresh
+
+# Re-runs the data pipeline once a day and commits the result back to main.
+# Everything the job does lives in tools/daily_refresh.py; this file only
+# provides it with GDAL, `unar`, a warm cache and a token that can push.
+#
+# Timing: HOT's overnight re-export of the two HDX flood datasets lands between
+# roughly 03:00 and 10:06 UTC (the newest resources on 20 Sep 2026 were stamped
+# 03:05 and 10:06 UTC). Running at 11:00 UTC picks up the whole of that window
+# on the same calendar day, and is 16:45 NPT, so a refresh triggered by hand in
+# the Nepal evening still lands in office hours for whoever reviews it.
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+    inputs:
+      force_hdx:
+        description: 'Refresh HDX even when upstream looks unchanged (~25 min)'
+        type: boolean
+        default: false
+      with_cutoff:
+        description: 'Also rebuild the road network and cut-off wards (418 MB download, slow)'
+        type: boolean
+        default: false
+      with_places:
+        description: 'Also rebuild places.geojson from Overpass (flaky)'
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Check upstream and print the plan, change nothing'
+        type: boolean
+        default: false
+
+# One refresh at a time. Never cancel a running one: refresh_hdx.sh deletes
+# data/hdx/tiles/<dataset> before re-tiling, so a cancelled run would leave the
+# working tree half-written with no chance to restore it.
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    # GDAL with the MVT driver, gdal2tiles and the osgeo Python bindings, which
+    # is all the pipeline needs beyond the standard library.
+    container: ghcr.io/osgeo/gdal:ubuntu-full-latest
+    steps:
+      # git has to be installed before checkout: without it actions/checkout
+      # silently falls back to downloading a tarball, leaving no .git directory
+      # and no way to commit or push.
+      - name: Install the tools the GDAL image does not ship
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends \
+            git ca-certificates curl unzip unar
+          git --version
+          command -v unar
+
+      - uses: actions/checkout@v4
+        with:
+          # The pack is about 1.1 GB (221k committed tile files, no LFS), so a
+          # full history clone is out of the question. depth 1 is enough to
+          # commit on top of main; daily_refresh.py deepens to 50 only if it
+          # has to rebase a rejected push.
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Trust the workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      # The imagery watcher's state.json records every scene it has already
+      # seen. Without it a cold run only arms itself and builds nothing, so the
+      # cache is what makes the watcher useful in CI at all. The unique key
+      # plus the prefix restore-key gives "always resume from the newest save".
+      - name: Restore the imagery watch state
+        uses: actions/cache@v4
+        with:
+          path: work/imagery_watch
+          key: imagery-state-${{ github.run_id }}
+          restore-keys: |
+            imagery-state-
+
+      # Static upstream downloads: the Copernicus EMS GeoPackages and the 2018
+      # HRRP ward .rar. Neither changes unless the tool that names them changes,
+      # so the tool file hash is the right cache key.
+      - name: Restore the static source downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            work/ems
+            work/hrrp_wards
+          key: static-src-${{ hashFiles('tools/build_ems_roads.py', 'tools/build_admin_ward.py') }}
+          restore-keys: |
+            static-src-
+
+      - name: Refresh
+        env:
+          GIT_AUTHOR_NAME: nepal-flood-bot
+          GIT_COMMITTER_NAME: nepal-flood-bot
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          FORCE_HDX: ${{ inputs.force_hdx }}
+          WITH_CUTOFF: ${{ inputs.with_cutoff }}
+          WITH_PLACES: ${{ inputs.with_places }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        # Note the if/then blocks rather than `[ x = y ] && FLAGS=...`: GitHub
+        # runs this with `bash -e`, so a test that is simply false would abort
+        # the whole step.
+        run: |
+          set -o pipefail
+          FLAGS="--with-imagery"
+          if [ "$FORCE_HDX" = "true" ]; then FLAGS="$FLAGS --force-hdx"; fi
+          if [ "$WITH_CUTOFF" = "true" ]; then FLAGS="$FLAGS --with-cutoff"; fi
+          if [ "$WITH_PLACES" = "true" ]; then FLAGS="$FLAGS --with-places"; fi
+          if [ "$DRY_RUN" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+          else
+            FLAGS="$FLAGS --push"
+          fi
+          echo "running: python3 tools/daily_refresh.py $FLAGS"
+          python3 tools/daily_refresh.py $FLAGS
+
+      # Uploaded even when a step failed: the per-step logs are the only place
+      # the GDAL and curl output survives.
+      - name: Upload the step logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-refresh-logs
+          path: |
+            work/daily_refresh/*.log
+            data/refresh_status.json
+          retention-days: 14
+          if-no-files-found: warn
+
+  # A separate job on the plain runner, because the GDAL container has no `gh`
+  # and adding the GitHub apt source to it for one API call is not worth it.
+  sitrep-issue:
+    needs: refresh
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      # A dry run writes no status file, and a job that died early may have
+      # uploaded no artifact at all; neither is a reason to fail. The probe
+      # step below treats a missing file as "nothing to report".
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: daily-refresh-logs
+          path: status
+
+      - name: Read the SitRep probe result
+        id: probe
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          try:
+              s = json.load(open('status/data/refresh_status.json'))
+          except (OSError, ValueError):
+              print('found=false'); raise SystemExit
+          d = ((s.get('steps') or {}).get('sitrep') or {}).get('detail') or {}
+          nf = d.get('newest_found') or {}
+          nep, eng = nf.get('nep'), nf.get('eng')
+          newest = nep or eng
+          if not newest:
+              print('found=false'); raise SystemExit
+          label = ' / '.join(f'{k.upper()} #{v["number"]}' for k, v in (('nep', nep), ('eng', eng)) if v)
+          print('found=true')
+          print(f'title=NDRRMA SitRep {label} available - update data/reports.json')
+          print(f'url={newest["url"]}')
+          print(f'date={newest["date"]}')
+          print(f'as_of={d.get("reports_as_of")}')
+          print(f'age={d.get("reports_age_days")}')
+          PY
+
+      - name: Open an issue if there is a newer SitRep
+        if: steps.probe.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: ${{ steps.probe.outputs.title }}
+          PDF_URL: ${{ steps.probe.outputs.url }}
+          PDF_DATE: ${{ steps.probe.outputs.date }}
+          AS_OF: ${{ steps.probe.outputs.as_of }}
+          AGE: ${{ steps.probe.outputs.age }}
+        run: |
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+            --search "$TITLE in:title" --json title --jq 'length')
+          if [ "$existing" != "0" ]; then
+            echo "an open issue with this title already exists; nothing to do"
+            exit 0
+          fi
+          {
+            echo "A situation report newer than the ones data/reports.json cites is published."
+            echo
+            echo "- Newest found: $PDF_URL ($PDF_DATE)"
+            echo "- \`data/reports.json\` \`as_of\`: $AS_OF ($AGE days old)"
+            echo
+            echo "The casualty and displacement figures are hand-transcribed from the Nepali PDF;"
+            echo "there is no parser, so this needs a person. See \`docs/DAILY_REFRESH.md\`."
+            echo
+            echo "Opened automatically by \`.github/workflows/daily-refresh.yml\`."
+          } > body.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file body.md

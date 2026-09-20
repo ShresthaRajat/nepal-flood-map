@@ -4,3 +4,4 @@ node_modules/
 /work/
 /data/hdx/hotosm_npl_waterways/hotosm_npl_waterways_clip.geojson
 /data/hdx/gpkg/
+__pycache__/
