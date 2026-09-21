@@ -1,36 +1,36 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-09-20T14:16:58+00:00",
+ "finished": "2026-09-21T16:56:42+00:00",
  "git": {},
  "hdx": {
-  "changed": false,
+  "changed": true,
   "datasets": {
    "hot_flood_npl": {
-    "basis": "fingerprint matches",
-    "changed": false,
-    "checked_at": "2026-09-20T14:15:36+00:00",
+    "basis": "fingerprint differs",
+    "changed": true,
+    "checked_at": "2026-09-21T16:53:15+00:00",
     "dataset": "hot_flood_npl",
-    "fingerprint": "5c552c5127fd5d6b",
-    "metadata_modified": "2026-09-20T10:54:49.923101",
-    "newest_resource": "2026-09-20T10:06:02.786556",
+    "fingerprint": "4f6067510e1f259e",
+    "metadata_modified": "2026-09-21T16:07:46.183224",
+    "newest_resource": "2026-09-21T16:05:25.062861",
     "previous": "5c552c5127fd5d6b",
     "repo_snapshot": "2026-09-20T10:02:51Z"
    },
    "hot_flood_npl_corridor": {
-    "basis": "fingerprint matches",
-    "changed": false,
-    "checked_at": "2026-09-20T14:15:36+00:00",
+    "basis": "fingerprint differs",
+    "changed": true,
+    "checked_at": "2026-09-21T16:53:15+00:00",
     "dataset": "hot_flood_npl_corridor",
-    "fingerprint": "1102cbc9fa603d4a",
-    "metadata_modified": "2026-09-20T09:52:12.612429",
-    "newest_resource": "2026-09-20T03:05:55.836005",
+    "fingerprint": "eef37b200c886b9a",
+    "metadata_modified": "2026-09-21T03:07:04.173560",
+    "newest_resource": "2026-09-21T03:05:04.806557",
     "previous": "1102cbc9fa603d4a",
     "repo_snapshot": "2026-09-20T03:03:03Z"
    }
   },
   "forced": false,
-  "will_refresh": false
+  "will_refresh": true
  },
  "selected": [
   "ems",
@@ -38,21 +38,31 @@
   "hdx",
   "admin_ward",
   "hydropower",
+  "bridge_status",
+  "road_status",
   "extent_munis",
-  "sitrep"
+  "sitrep",
+  "imagery"
  ],
- "started": "2026-09-20T14:15:36+00:00",
+ "started": "2026-09-21T16:53:15+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
-   "duration_s": 6.1,
+   "duration_s": 7.0,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  },
+  "bridge_status": {
+   "detail": {},
+   "duration_s": 0.1,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "ems": {
    "detail": {},
-   "duration_s": 2.3,
+   "duration_s": 7.8,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -95,24 +105,41 @@
     ],
     "removed": []
    },
-   "duration_s": 0.6,
+   "duration_s": 0.2,
    "exit_code": 0,
    "note": "matches app/app.js",
    "status": "ok"
   },
   "hdx": {
    "detail": {
-    "reason": "unchanged",
-    "refreshed": false
+    "reason": "upstream changed",
+    "refreshed": true
    },
-   "duration_s": 0.0,
+   "duration_s": 107.3,
    "exit_code": 0,
-   "note": "unchanged",
+   "note": "upstream changed",
    "status": "ok"
   },
   "hydropower": {
    "detail": {},
    "duration_s": 0.2,
+   "exit_code": 0,
+   "note": "",
+   "status": "ok"
+  },
+  "imagery": {
+   "detail": {
+    "initialised": true,
+    "layers_added": []
+   },
+   "duration_s": 3.0,
+   "exit_code": 0,
+   "note": "armed (no state)",
+   "status": "ok"
+  },
+  "road_status": {
+   "detail": {},
+   "duration_s": 6.2,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -124,20 +151,28 @@
      "nep": 29
     },
     "newest_found": {
-     "eng": null,
-     "nep": null
+     "eng": {
+      "date": "2026-09-20",
+      "number": 19,
+      "url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_ENG_19_20092026.pdf"
+     },
+     "nep": {
+      "date": "2026-09-21",
+      "number": 31,
+      "url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_31_NEP_21092026.pdf"
+     }
     },
-    "reports_age_days": 1,
+    "reports_age_days": 2,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 45.3,
+   "duration_s": 64.0,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 25.5,
+   "duration_s": 10.6,
    "exit_code": 0,
    "note": "",
    "status": "ok"
