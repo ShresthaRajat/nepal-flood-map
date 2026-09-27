@@ -6,7 +6,7 @@ window.CFG = (function () {
 
 // HOT packs every OSM/Overture layer of a dataset into one PMTiles source-layer
 // and distinguishes them by `category` + `source`.  Counts mirror HOT's own
-// overview page (26 Sep 2026).
+// overview page (27 Sep 2026).
 const CATS = [
   ['bridges','osm','Bridges (OSM)','#e6194B'],
   ['buildings','osm','Buildings (OSM)','#3cb44b'],
@@ -39,7 +39,7 @@ const COUNTS = {
     'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':405,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':537,
     'roads|osm':2301,'waterways|osm':400 },
-  corridor: { 'bridges|osm':220,'buildings|osm':52363,'buildings|overture':52646,'destroyed_features|osm':4057,
+  corridor: { 'bridges|osm':220,'buildings|osm':52363,'buildings|overture':52646,'destroyed_features|osm':4137,
     'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':96,
     'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':98,
     'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
@@ -245,7 +245,7 @@ with distance from the valley floor instead of stopping abruptly.</p>
 <h3>HOT / HDX response data</h3>
 <p>From the Humanitarian OpenStreetMap Team's
 <a href="${HDX_URL}" target="_blank" rel="noopener">Nepal Flood 2026 Flood Affected Area, Bhote Koshi and Trishuli</a>
-dataset on HDX, snapshot of 26 September 2026. ${HDX_CREDIT}.</p>
+dataset on HDX, snapshot of 27 September 2026. ${HDX_CREDIT}.</p>
 <ul>
   <li><b>Flood-affected area</b> — everything inside the observed flood extent plus a 200 m buffer:
       OSM buildings, roads, bridges, waterways, facilities and settlement names.</li>
