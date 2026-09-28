@@ -1,7 +1,7 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-09-27T15:34:14+00:00",
+ "finished": "2026-09-28T18:27:54+00:00",
  "git": {},
  "hdx": {
   "changed": true,
@@ -9,24 +9,24 @@
    "hot_flood_npl": {
     "basis": "fingerprint differs",
     "changed": true,
-    "checked_at": "2026-09-27T15:31:08+00:00",
+    "checked_at": "2026-09-28T18:24:11+00:00",
     "dataset": "hot_flood_npl",
-    "fingerprint": "7f5b362261fcb4a2",
-    "metadata_modified": "2026-09-27T10:53:37.026722",
-    "newest_resource": "2026-09-27T10:06:01.868150",
-    "previous": "af4bcd0f35fc288c",
-    "repo_snapshot": "2026-09-26T10:01:53Z"
+    "fingerprint": "2de29c1b4ccea5d6",
+    "metadata_modified": "2026-09-28T16:10:10.908143",
+    "newest_resource": "2026-09-28T16:07:59.100125",
+    "previous": "7f5b362261fcb4a2",
+    "repo_snapshot": "2026-09-27T10:02:56Z"
    },
    "hot_flood_npl_corridor": {
     "basis": "fingerprint differs",
     "changed": true,
-    "checked_at": "2026-09-27T15:31:08+00:00",
+    "checked_at": "2026-09-28T18:24:11+00:00",
     "dataset": "hot_flood_npl_corridor",
-    "fingerprint": "fde92533cce2855d",
-    "metadata_modified": "2026-09-27T03:08:26.928664",
-    "newest_resource": "2026-09-27T03:06:28.482706",
-    "previous": "5373c5be63ea7143",
-    "repo_snapshot": "2026-09-26T03:03:00Z"
+    "fingerprint": "a66ae662f26c7d26",
+    "metadata_modified": "2026-09-28T10:02:10.617223",
+    "newest_resource": "2026-09-28T03:10:13.092878",
+    "previous": "fde92533cce2855d",
+    "repo_snapshot": "2026-09-27T03:03:18Z"
    }
   },
   "forced": false,
@@ -44,11 +44,11 @@
   "sitrep",
   "imagery"
  ],
- "started": "2026-09-27T15:31:08+00:00",
+ "started": "2026-09-28T18:24:11+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
-   "duration_s": 3.4,
+   "duration_s": 3.3,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -62,7 +62,7 @@
   },
   "ems": {
    "detail": {},
-   "duration_s": 0.4,
+   "duration_s": 0.3,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -115,7 +115,7 @@
     "reason": "upstream changed",
     "refreshed": true
    },
-   "duration_s": 87.8,
+   "duration_s": 85.2,
    "exit_code": 0,
    "note": "upstream changed",
    "status": "ok"
@@ -130,16 +130,18 @@
   "imagery": {
    "detail": {
     "initialised": false,
-    "layers_added": []
+    "layers_added": [
+     "post_s2_20260928"
+    ]
    },
-   "duration_s": 9.1,
+   "duration_s": 52.6,
    "exit_code": 0,
-   "note": "+0 layers",
+   "note": "+1 layers",
    "status": "ok"
   },
   "road_status": {
    "detail": {},
-   "duration_s": 3.3,
+   "duration_s": 3.5,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -162,17 +164,17 @@
       "url": "https://ndrrma.gov.np/mediafiles/publications/SitRep_35_NEP_25092026.pdf"
      }
     },
-    "reports_age_days": 8,
+    "reports_age_days": 9,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 70.3,
+   "duration_s": 67.4,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 8.5,
+   "duration_s": 8.8,
    "exit_code": 0,
    "note": "",
    "status": "ok"
