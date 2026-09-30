@@ -45,7 +45,8 @@ CATALOG = os.path.join(ROOT, 'data', 'imagery.json')
 
 CORRIDOR = (84.375, 27.683528, 85.78125, 28.613459)       # the Sentinel-2 layer window
 FOCUS = {'trisuli_bazar': (85.13, 27.90, 85.18, 27.95), 'betrawati': (85.135, 27.93, 85.235, 28.02),
-         'upper_valley': (85.29, 28.11, 85.44, 28.37), 'mailung_gorge': (85.17, 28.01, 85.31, 28.12)}
+         'upper_valley': (85.29, 28.11, 85.44, 28.37), 'mailung_gorge': (85.17, 28.01, 85.31, 28.12),
+         'collapse_origin': (85.43, 28.24, 85.58, 28.36)}   # matches app/config.js 'origin' zoom target
 EVENT_DATE = '2026-08-26'
 S2_MAX_CLOUD = 40
 VANTOR_MAX_CLOUD = 50
