@@ -49713,7 +49713,7 @@
      "BUILDINGS"
     ],
     "percent_mapped": 100,
-    "percent_validated": 63,
+    "percent_validated": 100,
     "total_contributors": 5,
     "active_mappers": 0,
     "area_sq_km": 92.98,
@@ -49721,7 +49721,7 @@
      "Nepal"
     ],
     "created": "2026-09-15T12:57:30.479000Z",
-    "last_updated": "2026-09-29T16:49:48.771000Z",
+    "last_updated": "2026-09-30T14:10:55.494000Z",
     "difficulty": "MODERATE",
     "changeset_comment": "#hotosm-project-65676 #nepal-flood-2026-trisuli-bhotekoshi Added/updated roads and buildings",
     "due_date": "2026-09-08T18:15:00Z",
