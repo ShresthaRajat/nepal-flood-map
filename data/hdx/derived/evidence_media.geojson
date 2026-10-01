@@ -1,7 +1,7 @@
 {
  "type": "FeatureCollection",
  "name": "evidence_media",
- "generated": "2026-09-20T14:09:43Z",
+ "generated": "2026-10-01T21:48:40Z",
  "source": "https://archive.rasuwaflood.org/api/items?all=1",
  "note": "Published items from the Rasuwa Flood Evidence Map (VIVA-D); see tools/build_evidence_media.py. Crowd-sourced: `precision` says whether the coordinate is the photograph's own GPS or a pin the uploader dropped. Rights stay with the photographers; contact details are not carried here.",
  "features": [
@@ -1241,25 +1241,25 @@
     "submitted_at": "2026-08-30T20:07:04.375Z",
     "taken_by": "Nikhil saini",
     "owner": null,
-    "location_source": "User-set",
+    "location_source": "Community update",
     "precision": "approximate",
     "source_url": "https://x.com/iNikhilsaini/status/2092638042536456651/video/1",
     "source_platform": "x",
     "media_url": "https://storage.googleapis.com/rasuwa-flood-media-viva/download/1788120432272-x-2092638042536456651.mp4",
     "thumb_url": "https://archive.rasuwaflood.org/api/items/41/thumbnail",
     "item_url": "https://archive.rasuwaflood.org/",
-    "community_notes": null,
+    "community_notes": "[2026-10-01T18:55:53.027Z] Updated from Sanam's insights",
     "mime_type": "video/mp4",
-    "adm3_name": "Aamachhodingmo",
-    "district": "Rasuwa",
+    "adm3_name": "Bidur",
+    "district": "Nuwakot",
     "source": "viva-d",
     "source_ref": "https://archive.rasuwaflood.org/api/items?all=1"
    },
    "geometry": {
     "type": "Point",
     "coordinates": [
-     85.294933,
-     28.125413
+     85.149536,
+     27.930345
     ]
    }
   },
