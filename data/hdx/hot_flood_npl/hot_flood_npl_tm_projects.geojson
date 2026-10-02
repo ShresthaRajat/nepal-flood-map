@@ -49705,7 +49705,7 @@
     "project_id": 65676,
     "name": "Nepal Flood 2026 Response - Third-Pass Data Quality Review",
     "campaign": "2026 Nepal Floods",
-    "status": "PUBLISHED",
+    "status": "ARCHIVED",
     "priority": "HIGH",
     "organisation": "MapBuds",
     "mapping_types": [
@@ -49721,7 +49721,7 @@
      "Nepal"
     ],
     "created": "2026-09-15T12:57:30.479000Z",
-    "last_updated": "2026-09-30T14:10:55.494000Z",
+    "last_updated": "2026-10-01T02:17:41.042000Z",
     "difficulty": "MODERATE",
     "changeset_comment": "#hotosm-project-65676 #nepal-flood-2026-trisuli-bhotekoshi Added/updated roads and buildings",
     "due_date": "2026-09-08T18:15:00Z",
