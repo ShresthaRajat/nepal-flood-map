@@ -44,7 +44,7 @@ const COUNTS = {
     'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':98,
     'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
     'police_stations|overture':2,'populated_places|osm':149,'populated_places|overture':43,'residential_areas|osm':1473,
-    'roads|osm':5377,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
+    'roads|osm':5379,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.
