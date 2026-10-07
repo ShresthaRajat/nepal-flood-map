@@ -1,7 +1,7 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-10-06T17:24:53+00:00",
+ "finished": "2026-10-07T17:53:51+00:00",
  "git": {},
  "hdx": {
   "changed": true,
@@ -9,18 +9,18 @@
    "hot_flood_npl": {
     "basis": "fingerprint differs",
     "changed": true,
-    "checked_at": "2026-10-06T17:20:07+00:00",
+    "checked_at": "2026-10-07T17:50:08+00:00",
     "dataset": "hot_flood_npl",
-    "fingerprint": "f0411c44bbd89526",
-    "metadata_modified": "2026-10-05T23:03:08.419132",
-    "newest_resource": "2026-10-05T23:01:36.636608",
-    "previous": "1497838e65744d90",
+    "fingerprint": "bbcf497adb4ee22b",
+    "metadata_modified": "2026-10-06T23:02:02.633957",
+    "newest_resource": "2026-10-06T23:00:39.877886",
+    "previous": "f0411c44bbd89526",
     "repo_snapshot": null
    },
    "hot_flood_npl_corridor": {
     "basis": "fingerprint matches",
     "changed": false,
-    "checked_at": "2026-10-06T17:20:07+00:00",
+    "checked_at": "2026-10-07T17:50:08+00:00",
     "dataset": "hot_flood_npl_corridor",
     "fingerprint": "4d8b1b5a1f872418",
     "metadata_modified": "2026-10-04T09:55:23.752423",
@@ -44,11 +44,11 @@
   "sitrep",
   "imagery"
  ],
- "started": "2026-10-06T17:20:07+00:00",
+ "started": "2026-10-07T17:50:08+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
-   "duration_s": 4.3,
+   "duration_s": 4.5,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -115,7 +115,7 @@
     "reason": "upstream changed",
     "refreshed": true
    },
-   "duration_s": 103.2,
+   "duration_s": 114.0,
    "exit_code": 0,
    "note": "upstream changed",
    "status": "ok"
@@ -130,18 +130,16 @@
   "imagery": {
    "detail": {
     "initialised": false,
-    "layers_added": [
-     "post_s2_20261006"
-    ]
+    "layers_added": []
    },
-   "duration_s": 86.6,
+   "duration_s": 9.9,
    "exit_code": 0,
-   "note": "+1 layers",
+   "note": "+0 layers",
    "status": "ok"
   },
   "road_status": {
    "detail": {},
-   "duration_s": 4.2,
+   "duration_s": 5.0,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -156,17 +154,17 @@
      "eng": null,
      "nep": null
     },
-    "reports_age_days": 17,
+    "reports_age_days": 18,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 75.1,
+   "duration_s": 75.6,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 10.0,
+   "duration_s": 10.8,
    "exit_code": 0,
    "note": "",
    "status": "ok"
