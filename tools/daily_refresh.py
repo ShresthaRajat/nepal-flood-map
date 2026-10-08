@@ -444,12 +444,14 @@ def step_sitrep(ctx):
     eng = max((int(m.group(1)) for k in sources
                if (m := re.fullmatch(r'ndrrma_sitrep_en(?:g)?(\d+)', k))), default=0)
     today = dt.date.today()
-    dates = [(today - dt.timedelta(days=i)).strftime('%d%m%Y') for i in range(7)]
+    # 21-day / +14-number window: with 7 days / +6 the probe could never catch up once a
+    # week passed without a hit (ENG #19-#25 of 20-26 Sep were missed that way).
+    dates = [(today - dt.timedelta(days=i)).strftime('%d%m%Y') for i in range(21)]
     found = {}
     for lang, latest, pattern in (('nep', nep, 'SitRep_{n}_NEP_{d}.pdf'),
                                   ('eng', eng, 'SitRep_ENG_{n}_{d}.pdf')):
         best = None
-        for n in range(latest + 1, latest + 7):
+        for n in range(latest + 1, latest + 15):
             for d in dates:
                 url = NDRRMA + pattern.format(n=n, d=d)
                 if head_ok(url):

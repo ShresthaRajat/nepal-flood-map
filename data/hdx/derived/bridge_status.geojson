@@ -1,7 +1,7 @@
 {
  "type": "FeatureCollection",
  "name": "bridge_status",
- "as_of": "2026-09-19",
+ "as_of": "2026-10-08",
  "features": [
   {
    "type": "Feature",
@@ -1540,6 +1540,110 @@
   {
    "type": "Feature",
    "properties": {
+    "name": "Gumba (Dhunge) - Trisuli Bazar Suspension Bridge (new, under construction)",
+    "bridge_type": "foot",
+    "repair_status": "under_repair",
+    "status_hdx": null,
+    "status_detail": "New ~250 m suspension bridge from below the Buddhist temple at Dhunge (Gumba Danda) across the Trishuli to Trisuli Bazar, planned by the Federation of Contractors' Associations of Nepal (president Nicholas Pandey) with the Ministry of Infrastructure Development, announced 5 Sep 2026 to serve 50,000+ people including the district hospital, Kispang and Meghang. Construction under way per the map owner's field report of 8 Oct 2026. Not a repair: a new span. Alignment from the owner's sketch on the map, 8 Oct: from the bazar bank at the western tip of the town (about 27.9220N 85.1458E) south-east across the channel to the Dhunge/Gumba bank by the highway (about 27.9203N 85.1479E), about 270 m; the drawn span (match.trace) is a straight line between those two points, about 280 m, read off the owner's sketch to roughly 30 m; the point is its midpoint.",
+    "as_of": "2026-10-08",
+    "source_url": "https://nepalkhabar.com/economy/286092-2026-9-5-11-26-58",
+    "source_title": "Nepalkhabar, 5 Sep 2026: contractors' federation to build 250 m suspension bridge from Dhunge to Trisuli Bazar; owner's field report 8 Oct 2026 (construction under way)",
+    "confidence": "medium",
+    "location": "Trisuli Bazar (west end of town) to Dhunge / Gumba Danda, Bidur-1, Nuwakot",
+    "adm3": null,
+    "length_m": null,
+    "feature_kind": "curated",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1469,
+     27.9211
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Phosretar Suspension Bridge, Trishuli River",
+    "bridge_type": "foot",
+    "repair_status": "under_repair",
+    "status_hdx": null,
+    "status_detail": "One of 13 suspension bridges the Ministry of Infrastructure Development reported as repaired and in the final stage before reopening on 6 Asoj (about 22 Sep 2026); no reopening confirmation found as of 8 Oct. Placed at the OSM suspension footbridge immediately south of Pimaltar; location confidence low.",
+    "as_of": "2026-09-22",
+    "source_url": "https://www.annapurnapost.com/story/508106/",
+    "source_title": "Annapurna Post, 22 Sep 2026: 13 flood-damaged suspension bridges repaired, 33 awaiting reconstruction",
+    "confidence": "low",
+    "location": "Phosretar, Belkotgadhi-5 (Nuwakot) to Galchhi-1 (Dhading)",
+    "adm3": null,
+    "length_m": null,
+    "feature_kind": "curated",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.0217,
+     27.8315
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Pimaltar-Jagaram Suspension Bridge, Trishuli River",
+    "bridge_type": "foot",
+    "repair_status": "repaired",
+    "status_hdx": null,
+    "status_detail": "Rebuilt by the Suspension Bridge Division, Lalitpur (Bagmati Province Local Infrastructure Development Department) at the request of Tarkeshwor Rural Municipality after the 26 Aug flood damaged it; reopened to foot and motorcycle traffic around 7 Asoj 2083 (about 23-24 Sep 2026). First suspension bridge in the corridor confirmed reopened. The exact span is inferred from the only named OSM suspension footbridge next to Pimaltar; the opening date is approximate.",
+    "as_of": "2026-09-24",
+    "source_url": "https://www.onlinekhabar.com/2026/09/2024255/suspension-bridge-built-in-trishuli-after-flood-connecting-the-border-photo-feature",
+    "source_title": "OnlineKhabar (Nepali), 24 Sep 2026: suspension bridge rebuilt over the Trishuli after the flood (photo feature); also Ratopati English 'Reconstruction of suspension bridge in Belkotgadhi, Nuwakot'",
+    "confidence": "medium",
+    "location": "Pimaltar, Belkotgadhi-7 (Nuwakot) to Jagaram, Tarkeshwor-2 (Dhading)",
+    "adm3": null,
+    "length_m": null,
+    "feature_kind": "curated",
+    "matched_osm_id": "way/302755357"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.02338,
+     27.83527
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Trishuli-Dhunge Bailey Bridge (new, Bidur Municipality)",
+    "bridge_type": "motorable",
+    "repair_status": "under_repair",
+    "status_hdx": null,
+    "status_detail": "70 m Bailey bridge funded entirely by Bidur Municipality, design approved by the Department of Roads DG; construction started about 7 Asoj (23 Sep 2026) with completion expected in about two weeks per ward chair Lenin Ranjit. Replaces the motorable link lost with the two Trisuli Bazar road bridges. Placed at the old bridge site; exact alignment unconfirmed.",
+    "as_of": "2026-09-23",
+    "source_url": "https://annapurnapost.com/story/508192/",
+    "source_title": "Annapurna Post, 23 Sep 2026: Bidur Municipality builds Bailey bridge at Trishuli-Dhunge; Nepal Japan 18 Sep 2026 on Bidur's bridge priorities",
+    "confidence": "low",
+    "location": "Behind the Agricultural Development Bank, Trisuli Bazar to Dhunge, Bidur-1, Nuwakot",
+    "adm3": null,
+    "length_m": null,
+    "feature_kind": "curated",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     85.1487,
+     27.9222
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
     "name": "Tupche Aama ko Pul (foot suspension bridge)",
     "bridge_type": "foot",
     "repair_status": "destroyed",
@@ -1854,6 +1958,42 @@
   {
    "type": "Feature",
    "properties": {
+    "name": "Suspension Bridge",
+    "bridge_type": "foot",
+    "repair_status": "repaired",
+    "status_hdx": "Standing",
+    "status_detail": "Rebuilt by the Suspension Bridge Division, Lalitpur (Bagmati Province Local Infrastructure Development Department) at the request of Tarkeshwor Rural Municipality after the 26 Aug flood damaged it; reopened to foot and motorcycle traffic around 7 Asoj 2083 (about 23-24 Sep 2026). First suspension bridge in the corridor confirmed reopened. The exact span is inferred from the only named OSM suspension footbridge next to Pimaltar; the opening date is approximate.",
+    "as_of": "2026-09-24",
+    "source_url": "https://www.onlinekhabar.com/2026/09/2024255/suspension-bridge-built-in-trishuli-after-flood-connecting-the-border-photo-feature",
+    "source_title": "OnlineKhabar (Nepali), 24 Sep 2026: suspension bridge rebuilt over the Trishuli after the flood (photo feature); also Ratopati English 'Reconstruction of suspension bridge in Belkotgadhi, Nuwakot'",
+    "confidence": "medium",
+    "location": "Pimaltar, Belkotgadhi-7 (Nuwakot) to Jagaram, Tarkeshwor-2 (Dhading)",
+    "adm3": "Belkotgadhi",
+    "length_m": null,
+    "feature_kind": "span",
+    "matched_osm_id": "way/302755357"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.0238072,
+      27.8351338
+     ],
+     [
+      85.0233807,
+      27.8352666
+     ],
+     [
+      85.020991,
+      27.8362238
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
     "name": "Pasang Lhamu Highway",
     "bridge_type": "motorable",
     "repair_status": "under_repair",
@@ -2011,6 +2151,38 @@
      [
       85.173644,
       27.9637426
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gumba (Dhunge) - Trisuli Bazar Suspension Bridge (new, under construction)",
+    "bridge_type": "foot",
+    "repair_status": "under_repair",
+    "status_hdx": null,
+    "status_detail": "New ~250 m suspension bridge from below the Buddhist temple at Dhunge (Gumba Danda) across the Trishuli to Trisuli Bazar, planned by the Federation of Contractors' Associations of Nepal (president Nicholas Pandey) with the Ministry of Infrastructure Development, announced 5 Sep 2026 to serve 50,000+ people including the district hospital, Kispang and Meghang. Construction under way per the map owner's field report of 8 Oct 2026. Not a repair: a new span. Alignment from the owner's sketch on the map, 8 Oct: from the bazar bank at the western tip of the town (about 27.9220N 85.1458E) south-east across the channel to the Dhunge/Gumba bank by the highway (about 27.9203N 85.1479E), about 270 m; the drawn span (match.trace) is a straight line between those two points, about 280 m, read off the owner's sketch to roughly 30 m; the point is its midpoint.",
+    "as_of": "2026-10-08",
+    "source_url": "https://nepalkhabar.com/economy/286092-2026-9-5-11-26-58",
+    "source_title": "Nepalkhabar, 5 Sep 2026: contractors' federation to build 250 m suspension bridge from Dhunge to Trisuli Bazar; owner's field report 8 Oct 2026 (construction under way)",
+    "confidence": "medium",
+    "location": "Trisuli Bazar (west end of town) to Dhunge / Gumba Danda, Bidur-1, Nuwakot",
+    "adm3": null,
+    "length_m": 277.7,
+    "feature_kind": "span",
+    "matched_osm_id": null
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      85.14584,
+      27.92196
+     ],
+     [
+      85.1479,
+      27.92025
      ]
     ]
    }

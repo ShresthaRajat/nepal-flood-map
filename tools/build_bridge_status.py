@@ -226,6 +226,14 @@ def build(check=False):
         wid = m.get('osm_id')
         if wid is not None and wid not in spans:
             errs.append('%s: match.osm_id %r is not in either bridges_osm export' % (oid, wid))
+        tr = m.get('trace')
+        if tr is not None:
+            ok = (isinstance(tr, list) and len(tr) >= 2 and all(
+                isinstance(c, list) and len(c) == 2 and 84 < c[0] < 86 and 27 < c[1] < 29 for c in tr))
+            if not ok:
+                errs.append('%s: match.trace must be a list of >= 2 [lon, lat] pairs inside the corridor' % oid)
+            if wid is not None:
+                errs.append('%s: match.trace and match.osm_id are exclusive; drop one' % oid)
 
     # -- bind each override to a report -------------------------------------
     # A named binding wins and locks that report: a report claimed by name is out
@@ -317,6 +325,23 @@ def build(check=False):
             'feature_kind': 'span', 'matched_osm_id': wid,
         }), ov)
         out.append({'type': 'Feature', 'properties': props, 'geometry': sf['geometry']})
+
+    # -- one feature per hand-traced span (match.trace) -----------------------
+    # For a bridge OSM has no way for yet, e.g. a new span under construction:
+    # the owner traces the alignment on the map and the builder draws it exactly
+    # like an OSM span, so it takes the status colour of the entry.
+    for ov in sorted(overrides, key=lambda o: o['id']):
+        tr = (ov.get('match') or {}).get('trace')
+        if not tr:
+            continue
+        length = sum(haversine(tr[i], tr[i + 1]) for i in range(len(tr) - 1))
+        props = apply_override(blank({
+            'name': ov.get('name'), 'location': ov.get('location'),
+            'bridge_type': 'unknown', 'length_m': round(length, 1),
+            'feature_kind': 'span', 'matched_osm_id': None,
+        }), ov)
+        out.append({'type': 'Feature', 'properties': props,
+                    'geometry': {'type': 'LineString', 'coordinates': tr}})
 
     # -- summary -------------------------------------------------------------
     points = [f for f in out if f['properties']['feature_kind'] != 'span']
