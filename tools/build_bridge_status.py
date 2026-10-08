@@ -32,7 +32,20 @@ apart by `feature_kind`:
 
 Properties on every feature: name, bridge_type, repair_status, status_hdx,
 status_detail, as_of, source_url, source_title, confidence, location, adm3,
-length_m, feature_kind, matched_osm_id.
+length_m, feature_kind, matched_osm_id, uid.
+
+`uid` is the identity the map's Road & bridge status editor keys on:
+`report:<HDX report name>`, `curated:<curated id>`, `span:<OSM way id>` and,
+for a hand-traced span, `trace:<curated id>`.
+
+OWNER OVERRIDES, APPLIED LAST.  `data/edits/status_edits.geojson` (exported
+from that editor, committed by hand, features with `layer` = `bridge`) sits on
+top of data/bridge_status.json, which stays the primary source.  A feature it
+names by uid takes the owner's status as `repair_status` (repaired /
+under_repair / damaged / destroyed), keeps the old one as `status_base`, and
+records `status_override`, `override_as_of`, `override_source`,
+`override_source_url` and `override_note`.  Only the features an edit names
+gain those keys, so an empty file leaves the output unchanged.
 
 Stdlib only; the repo root comes from this file's location, so it runs the same
 from a laptop, from cron or from the GitHub Actions workflow.  Deterministic:
@@ -53,6 +66,8 @@ REPORTS = os.path.join(HDX, 'hot_flood_npl', 'hot_flood_npl_bridge_damage.geojso
 SPANS = [os.path.join(HDX, 'hot_flood_npl_corridor', 'bridges_osm.geojson'),
          os.path.join(HDX, 'hot_flood_npl', 'bridges_osm.geojson')]
 CURATED = os.path.join(ROOT, 'data', 'bridge_status.json')
+EDITS = os.path.join(ROOT, 'data', 'edits', 'status_edits.geojson')
+OVERRIDE_STATUSES = {'repaired', 'under_repair', 'damaged', 'destroyed'}
 OUT = os.path.join(HDX, 'derived', 'bridge_status.geojson')
 
 # A ground report is a hand-dropped pin on a river crossing and the OSM span is a
@@ -171,7 +186,7 @@ def blank(props=None):
            'status_hdx': None, 'status_detail': None, 'as_of': None,
            'source_url': None, 'source_title': None, 'confidence': None,
            'location': None, 'adm3': None, 'length_m': None,
-           'feature_kind': 'report', 'matched_osm_id': None}
+           'feature_kind': 'report', 'matched_osm_id': None, 'uid': None}
     if props:
         out.update(props)
     return out
@@ -191,6 +206,45 @@ def apply_override(props, ov):
     if ct and props.get('bridge_type') in (None, 'unknown'):
         props['bridge_type'] = ct
     return props
+
+
+def apply_status_edits(out):
+    """data/edits/status_edits.geojson, layer 'bridge', applied last by uid."""
+    if not os.path.exists(EDITS):
+        return
+    try:
+        feats = load(EDITS).get('features') or []
+    except (OSError, ValueError) as e:
+        print('   status edits: could not read %s (%s); none applied'
+              % (os.path.relpath(EDITS, ROOT), e), file=sys.stderr)
+        return
+    edits = {}
+    for f in feats:
+        p = (f or {}).get('properties') or {}
+        if p.get('layer') == 'bridge' and p.get('uid'):
+            edits[str(p['uid'])] = p
+    if not edits:
+        return
+    used = set()
+    for f in out:
+        p = f['properties']
+        e = edits.get(p.get('uid'))
+        if e is None:
+            continue
+        used.add(p['uid'])
+        if e.get('status') not in OVERRIDE_STATUSES:
+            print('   status edits: bridge:%s unknown status %r, skipped' % (p['uid'], e.get('status')),
+                  file=sys.stderr)
+            continue
+        p['status_base'] = p['repair_status']
+        p['repair_status'] = e['status']
+        p.update({'status_override': e['status'], 'override_as_of': e.get('as_of') or None,
+                  'override_source': e.get('source_title') or None,
+                  'override_source_url': e.get('source_url') or None,
+                  'override_note': e.get('note') or None})
+    print('   status edits: %d of %d owner overrides applied' % (len(used), len(edits)))
+    for u in sorted(set(edits) - used):
+        print('   status edits: bridge:%s matches no feature, not applied' % u, file=sys.stderr)
 
 
 def build(check=False):
@@ -283,6 +337,7 @@ def build(check=False):
             'status_hdx': p.get('status'), 'location': p.get('location'),
             'adm3': p.get('adm3_name'), 'length_m': p.get('length_m'),
             'feature_kind': 'report', 'matched_osm_id': oid,
+            'uid': 'report:%s' % p.get('name'),
         })
         ov = bound.get(p.get('name'))
         if ov:
@@ -302,7 +357,7 @@ def build(check=False):
         props = apply_override(blank({
             'name': ov.get('name'), 'location': ov.get('location'),
             'feature_kind': 'curated', 'matched_osm_id': wid,
-            'bridge_type': 'unknown',
+            'bridge_type': 'unknown', 'uid': 'curated:%s' % ov['id'],
         }), ov)
         out.append({'type': 'Feature', 'properties': props,
                     'geometry': {'type': 'Point', 'coordinates': [ov['lon'], ov['lat']]}})
@@ -322,7 +377,7 @@ def build(check=False):
             'location': ov.get('location'), 'status_hdx': sf['properties'].get('status'),
             'adm3': sf['properties'].get('adm3_name'),
             'bridge_type': classify(sf['properties']),
-            'feature_kind': 'span', 'matched_osm_id': wid,
+            'feature_kind': 'span', 'matched_osm_id': wid, 'uid': 'span:%s' % wid,
         }), ov)
         out.append({'type': 'Feature', 'properties': props, 'geometry': sf['geometry']})
 
@@ -338,10 +393,12 @@ def build(check=False):
         props = apply_override(blank({
             'name': ov.get('name'), 'location': ov.get('location'),
             'bridge_type': 'unknown', 'length_m': round(length, 1),
-            'feature_kind': 'span', 'matched_osm_id': None,
+            'feature_kind': 'span', 'matched_osm_id': None, 'uid': 'trace:%s' % ov['id'],
         }), ov)
         out.append({'type': 'Feature', 'properties': props,
                     'geometry': {'type': 'LineString', 'coordinates': tr}})
+
+    apply_status_edits(out)
 
     # -- summary -------------------------------------------------------------
     points = [f for f in out if f['properties']['feature_kind'] != 'span']

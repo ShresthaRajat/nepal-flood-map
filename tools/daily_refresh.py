@@ -54,6 +54,11 @@ road_status  tools/build_road_status.py -- joins the hand-maintained corridor
              today rather than only by how bad the damage was.  Must follow
              `ems` and `hdx`, which write both of its inputs; data/road_status.json
              is hand-edited and is never written by this script.
+             ems, bridge_status and road_status all apply the owner's
+             overrides in data/edits/status_edits.geojson last (exported from
+             the map's Road & bridge status editor).  It is tracked, read from
+             the checkout and deliberately not in COMMIT_PATHS: hand-edited,
+             never written here.
 cutoff       OPT-IN (--with-cutoff).  tools/build_roads_tiles.sh (a 418 MB
              download) followed by tools/build_cutoff_wards.py (a long
              shortest-path analysis).  Off in the daily workflow; run it by

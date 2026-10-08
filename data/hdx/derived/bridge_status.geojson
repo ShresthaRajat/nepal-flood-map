@@ -19,7 +19,8 @@
     "adm3": "Uttargaya",
     "length_m": 25.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Bahubali Jharana Pul"
    },
    "geometry": {
     "type": "Point",
@@ -45,7 +46,8 @@
     "adm3": "Uttargaya",
     "length_m": 70.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/341461646"
+    "matched_osm_id": "way/341461646",
+    "uid": "report:Betrawati New Bridge"
    },
    "geometry": {
     "type": "Point",
@@ -71,7 +73,8 @@
     "adm3": "Uttargaya",
     "length_m": 70.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553178219"
+    "matched_osm_id": "way/1553178219",
+    "uid": "report:Betrawati Old Bridge"
    },
    "geometry": {
     "type": "Point",
@@ -97,7 +100,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/341557608"
+    "matched_osm_id": "way/341557608",
+    "uid": "report:Bhotekoshi Bridge at Chilime"
    },
    "geometry": {
     "type": "Point",
@@ -123,7 +127,8 @@
     "adm3": "Gosaikunda",
     "length_m": 40.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Bimali Khola"
    },
    "geometry": {
     "type": "Point",
@@ -149,7 +154,8 @@
     "adm3": "Bidur",
     "length_m": 20.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1554211461"
+    "matched_osm_id": "way/1554211461",
+    "uid": "report:Bire Khola"
    },
    "geometry": {
     "type": "Point",
@@ -175,7 +181,8 @@
     "adm3": "Aamachhodingmo",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/341557606"
+    "matched_osm_id": "way/341557606",
+    "uid": "report:Chilime Bridge, Chilime Khola"
    },
    "geometry": {
     "type": "Point",
@@ -201,7 +208,8 @@
     "adm3": "Kalika",
     "length_m": 10.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553951066"
+    "matched_osm_id": "way/1553951066",
+    "uid": "report:Crossing 0+700"
    },
    "geometry": {
     "type": "Point",
@@ -227,7 +235,8 @@
     "adm3": "Bidur",
     "length_m": 15.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Dhobi Khola"
    },
    "geometry": {
     "type": "Point",
@@ -253,7 +262,8 @@
     "adm3": "Bidur",
     "length_m": 10.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/379104231"
+    "matched_osm_id": "way/379104231",
+    "uid": "report:Gerkhu khola"
    },
    "geometry": {
     "type": "Point",
@@ -279,7 +289,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/897866243"
+    "matched_osm_id": "way/897866243",
+    "uid": "report:Ghatte Khola"
    },
    "geometry": {
     "type": "Point",
@@ -305,7 +316,8 @@
     "adm3": "Bidur",
     "length_m": 15.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553092937"
+    "matched_osm_id": "way/1553092937",
+    "uid": "report:Gundre Khola"
    },
    "geometry": {
     "type": "Point",
@@ -331,7 +343,8 @@
     "adm3": "Gosaikunda",
     "length_m": 35.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Haku khola"
    },
    "geometry": {
     "type": "Point",
@@ -357,7 +370,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1554502334"
+    "matched_osm_id": "way/1554502334",
+    "uid": "report:Haku1 Bailey Bridge at Hydropower, Trishuli"
    },
    "geometry": {
     "type": "Point",
@@ -383,7 +397,8 @@
     "adm3": "Aamachhodingmo",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Haku2 Bailey Bridge at Hydropower, Trishuli"
    },
    "geometry": {
     "type": "Point",
@@ -409,7 +424,8 @@
     "adm3": "Gandaki",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1539397947"
+    "matched_osm_id": "way/1539397947",
+    "uid": "report:Hydropower Bailey Bridge Trishuli, Chumlingtar"
    },
    "geometry": {
     "type": "Point",
@@ -435,7 +451,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1017959928"
+    "matched_osm_id": "way/1017959928",
+    "uid": "report:Hydropower Bailey Bridge at Bhotekoshi, Syaphrubeshi"
    },
    "geometry": {
     "type": "Point",
@@ -461,7 +478,8 @@
     "adm3": "Belkotgadhi",
     "length_m": 15.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Jhangar Khola"
    },
    "geometry": {
     "type": "Point",
@@ -487,7 +505,8 @@
     "adm3": "Belkotgadhi",
     "length_m": 40.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/209012420"
+    "matched_osm_id": "way/209012420",
+    "uid": "report:Kolpu Khola Bridge (New)"
    },
    "geometry": {
     "type": "Point",
@@ -513,7 +532,8 @@
     "adm3": "Belkotgadhi",
     "length_m": 40.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/209012420"
+    "matched_osm_id": "way/209012420",
+    "uid": "report:Kolpu Khola Bridge (Old)"
    },
    "geometry": {
     "type": "Point",
@@ -539,7 +559,8 @@
     "adm3": "Galchhi",
     "length_m": 41.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/209012932"
+    "matched_osm_id": "way/209012932",
+    "uid": "report:Mahesh khola"
    },
    "geometry": {
     "type": "Point",
@@ -565,7 +586,8 @@
     "adm3": "Uttargaya",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Mailung Bailey Bridge at Mailung Bazaar"
    },
    "geometry": {
     "type": "Point",
@@ -591,7 +613,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1552746559"
+    "matched_osm_id": "way/1552746559",
+    "uid": "report:Miteri Bridge, Rasuwagadhi"
    },
    "geometry": {
     "type": "Point",
@@ -617,7 +640,8 @@
     "adm3": "Uttargaya",
     "length_m": 50.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553974285"
+    "matched_osm_id": "way/1553974285",
+    "uid": "report:Naya Pul Trishuli, Khalte CH 37+810"
    },
    "geometry": {
     "type": "Point",
@@ -643,7 +667,8 @@
     "adm3": "Gosaikunda",
     "length_m": 20.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553347892"
+    "matched_osm_id": "way/1553347892",
+    "uid": "report:Sano bharkhu"
    },
    "geometry": {
     "type": "Point",
@@ -669,7 +694,8 @@
     "adm3": "Kispang",
     "length_m": 20.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Sukaure Khola"
    },
    "geometry": {
     "type": "Point",
@@ -695,7 +721,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/303036276"
+    "matched_osm_id": "way/303036276",
+    "uid": "report:Suspension Bridge at Devighat near Jalshrot tatha Sinchai Division"
    },
    "geometry": {
     "type": "Point",
@@ -721,7 +748,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/84566285"
+    "matched_osm_id": "way/84566285",
+    "uid": "report:Syafrubesi Bridge"
    },
    "geometry": {
     "type": "Point",
@@ -747,7 +775,8 @@
     "adm3": "Bidur",
     "length_m": 55.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/168199206"
+    "matched_osm_id": "way/168199206",
+    "uid": "report:Tandi Khola Bridge, Devighat (New)"
    },
    "geometry": {
     "type": "Point",
@@ -773,7 +802,8 @@
     "adm3": "Bidur",
     "length_m": 55.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553160833"
+    "matched_osm_id": "way/1553160833",
+    "uid": "report:Tandi Khola Bridge, Devighat (Old)"
    },
    "geometry": {
     "type": "Point",
@@ -799,7 +829,8 @@
     "adm3": "Gosaikunda",
     "length_m": 35.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Thade Khola"
    },
    "geometry": {
     "type": "Point",
@@ -825,7 +856,8 @@
     "adm3": "Kalika",
     "length_m": 10.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Thado Khola (Crossing 0+750"
    },
    "geometry": {
     "type": "Point",
@@ -851,7 +883,8 @@
     "adm3": "Belkotgadhi",
     "length_m": 20.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/341768633"
+    "matched_osm_id": "way/341768633",
+    "uid": "report:Thulo khola"
    },
    "geometry": {
     "type": "Point",
@@ -877,7 +910,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1552948001"
+    "matched_osm_id": "way/1552948001",
+    "uid": "report:Timure Bridge 1"
    },
    "geometry": {
     "type": "Point",
@@ -903,7 +937,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1033190356"
+    "matched_osm_id": "way/1033190356",
+    "uid": "report:Timure Bridge 2"
    },
    "geometry": {
     "type": "Point",
@@ -929,7 +964,8 @@
     "adm3": "Uttargaya",
     "length_m": 30.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553948209"
+    "matched_osm_id": "way/1553948209",
+    "uid": "report:Trishuli 3A Dam-2"
    },
    "geometry": {
     "type": "Point",
@@ -955,7 +991,8 @@
     "adm3": "Uttargaya",
     "length_m": 15.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553948209"
+    "matched_osm_id": "way/1553948209",
+    "uid": "report:Trishuli 3A Dam-3"
    },
    "geometry": {
     "type": "Point",
@@ -981,7 +1018,8 @@
     "adm3": "Uttargaya",
     "length_m": 60.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/912360483"
+    "matched_osm_id": "way/912360483",
+    "uid": "report:Trishuli Bridge Mailung Chipleti"
    },
    "geometry": {
     "type": "Point",
@@ -1007,7 +1045,8 @@
     "adm3": "Galchhi",
     "length_m": 150.0,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Trishuli River Bridge, Baireni Syaltar Sadak"
    },
    "geometry": {
     "type": "Point",
@@ -1033,7 +1072,8 @@
     "adm3": "Gandaki",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/343903499"
+    "matched_osm_id": "way/343903499",
+    "uid": "report:Trishuli River Bridge, Benighat"
    },
    "geometry": {
     "type": "Point",
@@ -1059,7 +1099,8 @@
     "adm3": "Galchhi",
     "length_m": 140.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553613627"
+    "matched_osm_id": "way/1553613627",
+    "uid": "report:Trishuli River Bridge, BhimDhunga Lami Danda Sadak"
    },
    "geometry": {
     "type": "Point",
@@ -1085,7 +1126,8 @@
     "adm3": "Belkotgadhi",
     "length_m": 140.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553215633"
+    "matched_osm_id": "way/1553215633",
+    "uid": "report:Trishuli River Bridge, Buddhasinghghat"
    },
    "geometry": {
     "type": "Point",
@@ -1111,7 +1153,8 @@
     "adm3": "Siddhalek",
     "length_m": 118.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/435417464"
+    "matched_osm_id": "way/435417464",
+    "uid": "report:Trishuli River Bridge, Furke Khola"
    },
    "geometry": {
     "type": "Point",
@@ -1137,7 +1180,8 @@
     "adm3": "Galchhi",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1493017039"
+    "matched_osm_id": "way/1493017039",
+    "uid": "report:Trishuli River Bridge, Keurini, Fosretar"
    },
    "geometry": {
     "type": "Point",
@@ -1163,7 +1207,8 @@
     "adm3": "Tarakeshwor",
     "length_m": 150.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553509538"
+    "matched_osm_id": "way/1553509538",
+    "uid": "report:Trishuli River Bridge, Ratmate"
    },
    "geometry": {
     "type": "Point",
@@ -1189,7 +1234,8 @@
     "adm3": "Aamachhodingmo",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "report:Trisuli 216 Audit 1 Bailey Bridge"
    },
    "geometry": {
     "type": "Point",
@@ -1215,7 +1261,8 @@
     "adm3": "Gosaikunda",
     "length_m": 20.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553166291"
+    "matched_osm_id": "way/1553166291",
+    "uid": "report:Trisuli Khola Bridge"
    },
    "geometry": {
     "type": "Point",
@@ -1241,7 +1288,8 @@
     "adm3": "Bidur",
     "length_m": 100.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1219434228"
+    "matched_osm_id": "way/1219434228",
+    "uid": "report:Trisuli River Bridge ,Simchaur"
    },
    "geometry": {
     "type": "Point",
@@ -1267,7 +1315,8 @@
     "adm3": "Bidur",
     "length_m": 60.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1463147997"
+    "matched_osm_id": "way/1463147997",
+    "uid": "report:Trisuli River Bridge ,Trisuli Bazzar(New)"
    },
    "geometry": {
     "type": "Point",
@@ -1293,7 +1342,8 @@
     "adm3": "Bidur",
     "length_m": 60.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/237590767"
+    "matched_osm_id": "way/237590767",
+    "uid": "report:Trisuli River Bridge ,Trisuli Bazzar(Old)"
    },
    "geometry": {
     "type": "Point",
@@ -1319,7 +1369,8 @@
     "adm3": "Bidur",
     "length_m": 100.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1552982421"
+    "matched_osm_id": "way/1552982421",
+    "uid": "report:Trisuli River Bridge Tupche"
    },
    "geometry": {
     "type": "Point",
@@ -1345,7 +1396,8 @@
     "adm3": "Gandaki",
     "length_m": 145.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1408714154"
+    "matched_osm_id": "way/1408714154",
+    "uid": "report:Trisuli River Bridge, Fisling Gorkha"
    },
    "geometry": {
     "type": "Point",
@@ -1371,7 +1423,8 @@
     "adm3": "Siddhalek",
     "length_m": 200.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1484953717"
+    "matched_osm_id": "way/1484953717",
+    "uid": "report:Trisuli River Bridge, Ghatbesi"
    },
    "geometry": {
     "type": "Point",
@@ -1397,7 +1450,8 @@
     "adm3": "Siddhalek",
     "length_m": 120.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1378017630"
+    "matched_osm_id": "way/1378017630",
+    "uid": "report:Trisuli River Bridge, JareBagaicha"
    },
    "geometry": {
     "type": "Point",
@@ -1423,7 +1477,8 @@
     "adm3": "Galchhi",
     "length_m": 140.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1432603259"
+    "matched_osm_id": "way/1432603259",
+    "uid": "report:Trisuli River Bridge, Mastar Dhading"
    },
    "geometry": {
     "type": "Point",
@@ -1449,7 +1504,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/342320931"
+    "matched_osm_id": "way/342320931",
+    "uid": "report:Trisuli River Bridge, Near Devighat, Midhill Highway"
    },
    "geometry": {
     "type": "Point",
@@ -1475,7 +1531,8 @@
     "adm3": "Bidur",
     "length_m": 180.0,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553053157"
+    "matched_osm_id": "way/1553053157",
+    "uid": "report:Trisuli River Bridge,Khadgabhanjyang Srikhali Sadak"
    },
    "geometry": {
     "type": "Point",
@@ -1501,7 +1558,8 @@
     "adm3": "Uttargaya",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1553951070"
+    "matched_osm_id": "way/1553951070",
+    "uid": "report:Upper Trishuli Hydrower Bailey Bridge"
    },
    "geometry": {
     "type": "Point",
@@ -1527,7 +1585,8 @@
     "adm3": null,
     "length_m": null,
     "feature_kind": "curated",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "curated:betrawati-temp-footbridge"
    },
    "geometry": {
     "type": "Point",
@@ -1553,7 +1612,8 @@
     "adm3": null,
     "length_m": null,
     "feature_kind": "curated",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "curated:gumba-trisuli-bazar-suspension"
    },
    "geometry": {
     "type": "Point",
@@ -1579,7 +1639,8 @@
     "adm3": null,
     "length_m": null,
     "feature_kind": "curated",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "curated:phosretar-suspension"
    },
    "geometry": {
     "type": "Point",
@@ -1605,7 +1666,8 @@
     "adm3": null,
     "length_m": null,
     "feature_kind": "curated",
-    "matched_osm_id": "way/302755357"
+    "matched_osm_id": "way/302755357",
+    "uid": "curated:pimaltar-jagaram-suspension"
    },
    "geometry": {
     "type": "Point",
@@ -1631,7 +1693,8 @@
     "adm3": null,
     "length_m": null,
     "feature_kind": "curated",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "curated:trisuli-dhunge-bailey"
    },
    "geometry": {
     "type": "Point",
@@ -1657,7 +1720,8 @@
     "adm3": null,
     "length_m": null,
     "feature_kind": "curated",
-    "matched_osm_id": "way/281810148"
+    "matched_osm_id": "way/281810148",
+    "uid": "curated:tupche-aama-ko-pul"
    },
    "geometry": {
     "type": "Point",
@@ -1683,7 +1747,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/341461646"
+    "matched_osm_id": "way/341461646",
+    "uid": "span:way/341461646"
    },
    "geometry": {
     "type": "LineString",
@@ -1715,7 +1780,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/1553178219"
+    "matched_osm_id": "way/1553178219",
+    "uid": "span:way/1553178219"
    },
    "geometry": {
     "type": "LineString",
@@ -1747,7 +1813,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/342320931"
+    "matched_osm_id": "way/342320931",
+    "uid": "span:way/342320931"
    },
    "geometry": {
     "type": "LineString",
@@ -1787,7 +1854,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/168199206"
+    "matched_osm_id": "way/168199206",
+    "uid": "span:way/168199206"
    },
    "geometry": {
     "type": "LineString",
@@ -1819,7 +1887,8 @@
     "adm3": "Siddhalek",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/435417464"
+    "matched_osm_id": "way/435417464",
+    "uid": "span:way/435417464"
    },
    "geometry": {
     "type": "LineString",
@@ -1851,7 +1920,8 @@
     "adm3": "Galchhi",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/209012420"
+    "matched_osm_id": "way/209012420",
+    "uid": "span:way/209012420"
    },
    "geometry": {
     "type": "LineString",
@@ -1883,7 +1953,8 @@
     "adm3": "Galchhi",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/1432603259"
+    "matched_osm_id": "way/1432603259",
+    "uid": "span:way/1432603259"
    },
    "geometry": {
     "type": "LineString",
@@ -1919,7 +1990,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/1552746559"
+    "matched_osm_id": "way/1552746559",
+    "uid": "span:way/1552746559"
    },
    "geometry": {
     "type": "LineString",
@@ -1971,7 +2043,8 @@
     "adm3": "Belkotgadhi",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/302755357"
+    "matched_osm_id": "way/302755357",
+    "uid": "span:way/302755357"
    },
    "geometry": {
     "type": "LineString",
@@ -2007,7 +2080,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/84566285"
+    "matched_osm_id": "way/84566285",
+    "uid": "span:way/84566285"
    },
    "geometry": {
     "type": "LineString",
@@ -2039,7 +2113,8 @@
     "adm3": "Gosaikunda",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/1017959928"
+    "matched_osm_id": "way/1017959928",
+    "uid": "span:way/1017959928"
    },
    "geometry": {
     "type": "LineString",
@@ -2071,7 +2146,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/1463147997"
+    "matched_osm_id": "way/1463147997",
+    "uid": "span:way/1463147997"
    },
    "geometry": {
     "type": "LineString",
@@ -2107,7 +2183,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/237590767"
+    "matched_osm_id": "way/237590767",
+    "uid": "span:way/237590767"
    },
    "geometry": {
     "type": "LineString",
@@ -2139,7 +2216,8 @@
     "adm3": "Bidur",
     "length_m": null,
     "feature_kind": "span",
-    "matched_osm_id": "way/281810148"
+    "matched_osm_id": "way/281810148",
+    "uid": "span:way/281810148"
    },
    "geometry": {
     "type": "LineString",
@@ -2171,7 +2249,8 @@
     "adm3": null,
     "length_m": 277.7,
     "feature_kind": "span",
-    "matched_osm_id": null
+    "matched_osm_id": null,
+    "uid": "trace:gumba-trisuli-bazar-suspension"
    },
    "geometry": {
     "type": "LineString",

@@ -70,6 +70,23 @@ Output: `data/hdx/derived/road_status.geojson`, with `feature_kind`:
               detour routes, which run outside the flood extent and the
               Copernicus areas and so have no road features to recolour.
 
+Every feature carries a `uid`: the OSM way id for `flooded`, the Copernicus
+`<product>#<fid>` for `ems`, the curated `id` for `segment`.  Together with
+`feature_kind` that is the key the map's Road & bridge status editor uses.
+
+OWNER OVERRIDES, APPLIED LAST.  `data/edits/status_edits.geojson` is exported
+from that editor and committed by hand.  It is a layer on top of everything
+above, not a replacement for data/road_status.json, which stays the primary
+source: after the join, a feature it names by (layer, uid) takes the owner's
+status (restored / under_repair / damaged / destroyed) and lane, keeps what it
+had before as `status_base` / `lane_base`, and records `status_override`,
+`override_as_of`, `override_source`, `override_source_url`, `override_note` and
+`override_lane`.  The owner has looked at the stretch, so this is the one place
+a Copernicus Destroyed grade can be overruled.  For `ems` features a
+`status_override` already carried by ems_road_grading.geojson is honoured when
+the edits file has nothing for that uid.  With the file empty or absent the
+output is exactly what the join alone gives.
+
 Stdlib only; the repo root comes from this file's location.  Deterministic:
 same inputs, byte-identical output.
 
@@ -92,6 +109,7 @@ DESTROYED = [os.path.join(HDX, 'hot_flood_npl_corridor', 'destroyed_features_osm
              os.path.join(HDX, 'hot_flood_npl', 'destroyed_features_osm.geojson')]
 CURATED = os.path.join(ROOT, 'data', 'road_status.json')
 OUT = os.path.join(DERIVED, 'road_status.geojson')
+EDITS = os.path.join(ROOT, 'data', 'edits', 'status_edits.geojson')
 
 # A curated waypoint list is a corridor, not a survey: sampling it every 25 m
 # keeps the buffer test honest on a long straight leg between two waypoints.
@@ -118,6 +136,9 @@ DESTROYED_WORDS = {'destroyed', 'washed out'}
 DAMAGED_WORDS = {'damaged', 'major damage', 'major-damage'}
 
 STATUS_ORDER = ['restored', 'under_repair', 'damaged']
+# 'destroyed' is only ever set by an owner override (data/edits/status_edits.geojson):
+# the curated corridors and the join speak of damaged / closed, never of destroyed.
+OVERRIDE_STATUSES = STATUS_ORDER + ['destroyed']
 KIND_ORDER = ['flooded', 'ems', 'segment']
 GRADE_ORDER = ['Destroyed', 'Damaged', 'Possibly damaged', 'No visible damage', 'Not Analysed']
 
@@ -467,7 +488,13 @@ def build():
             'kind_ems': p.get('kind'), 'locality': p.get('locality'),
             'length_m': p.get('length_m'), 'surface': p.get('surface'),
             'bridge': p.get('bridge'), 'osm_id': p.get('id'),
+            'uid': p.get('uid') if kind == 'ems' else p.get('id'),
         }
+        # Carried through for apply_status_edits(), dropped again there.
+        if kind == 'ems' and p.get('status_override'):
+            props['_ems_override'] = {k: p.get(k) for k in (
+                'status_override', 'override_as_of', 'override_source', 'override_source_url',
+                'override_note', 'override_lane')}
         return {'type': 'Feature', 'properties': props, 'geometry': f['geometry']}
 
     for f in flooded:
@@ -498,8 +525,9 @@ def build():
                         'captured': captured[s['id']],
                         'status_hdx': None, 'grade_ems': None, 'kind_ems': None,
                         'locality': None, 'length_m': None, 'surface': None,
-                        'bridge': None, 'osm_id': None}})
+                        'bridge': None, 'osm_id': None, 'uid': s['id']}})
 
+    apply_status_edits(out)
     report(out, segments, captured, held, blocked)
     for e in errs:
         print('   ERROR %s' % e, file=sys.stderr)
@@ -508,19 +536,80 @@ def build():
     return fc, (1 if errs else 0)
 
 
+def load_status_edits():
+    """The owner's overrides for the three road kinds, keyed (layer, uid)."""
+    if not os.path.exists(EDITS):
+        return {}
+    try:
+        feats = load(EDITS).get('features') or []
+    except (OSError, ValueError) as e:
+        print('   status edits: could not read %s (%s); none applied'
+              % (os.path.relpath(EDITS, ROOT), e), file=sys.stderr)
+        return {}
+    out = {}
+    for f in feats:
+        p = (f or {}).get('properties') or {}
+        if p.get('layer') in KIND_ORDER and p.get('uid') not in (None, ''):
+            out[(p['layer'], str(p['uid']))] = p
+    return out
+
+
+def apply_status_edits(out):
+    """Applied after the join, so an edit always has the last word.  Adds
+    properties only to the features it touches, so an empty file changes
+    nothing."""
+    edits = load_status_edits()
+    used = set()
+    for f in out:
+        p = f['properties']
+        baked = p.pop('_ems_override', None)
+        key = (p['feature_kind'], str(p.get('uid')))
+        e = edits.get(key)
+        if e is not None:
+            if e.get('status') not in OVERRIDE_STATUSES:
+                print('   status edits: %s:%s unknown status %r, skipped' % (key + (e.get('status'),)),
+                      file=sys.stderr)
+                used.add(key)
+                continue
+            lane = e.get('lane')
+            ov = {'status_override': e['status'], 'override_as_of': e.get('as_of') or None,
+                  'override_source': e.get('source_title') or None,
+                  'override_source_url': e.get('source_url') or None,
+                  'override_note': e.get('note') or None,
+                  'override_lane': None if lane in (None, '', 'unknown') else lane}
+            used.add(key)
+        elif baked:
+            ov = baked
+        else:
+            continue
+        p['status_base'] = p['road_status']
+        p['lane_base'] = p['lane']
+        p['road_status'] = ov['status_override']
+        if ov.get('override_lane'):
+            p['lane'] = ov['override_lane']
+        p.update(ov)
+    if edits:
+        print('   status edits: %d of %d owner overrides applied' % (len(used), len(edits)))
+    for key in sorted(set(edits) - used):
+        print('   status edits: %s:%s matches no feature by uid, not applied here' % key, file=sys.stderr)
+
+
 def report(out, segments, captured, held, blocked):
+    # 'destroyed' gets a column only when an owner override has set it.
+    statuses = [s for s in OVERRIDE_STATUSES
+                if s in STATUS_ORDER or any(f['properties']['road_status'] == s for f in out)]
     grid = {}
     for f in out:
         k = (f['properties']['feature_kind'], f['properties']['road_status'])
         grid[k] = grid.get(k, 0) + 1
-    w = max(len(s) for s in STATUS_ORDER)
+    w = max(len(s) for s in statuses)
     print('\n   features by kind x road status')
-    print('   %-9s %s %6s' % ('', ' '.join('%*s' % (w, s) for s in STATUS_ORDER), 'total'))
+    print('   %-9s %s %6s' % ('', ' '.join('%*s' % (w, s) for s in statuses), 'total'))
     for k in KIND_ORDER:
-        row = [grid.get((k, s), 0) for s in STATUS_ORDER]
+        row = [grid.get((k, s), 0) for s in statuses]
         if sum(row):
             print('   %-9s %s %6d' % (k, ' '.join('%*d' % (w, n) for n in row), sum(row)))
-    tot = [sum(grid.get((k, s), 0) for k in KIND_ORDER) for s in STATUS_ORDER]
+    tot = [sum(grid.get((k, s), 0) for k in KIND_ORDER) for s in statuses]
     print('   %-9s %s %6d' % ('total', ' '.join('%*d' % (w, n) for n in tot), sum(tot)))
 
     dg = {}
@@ -530,9 +619,9 @@ def report(out, segments, captured, held, blocked):
             continue
         dg[(p['damage_grade'] or 'no grade', p['road_status'])] = dg.get((p['damage_grade'] or 'no grade', p['road_status']), 0) + 1
     print('\n   road features by damage grade x road status')
-    print('   %-18s %s %6s' % ('', ' '.join('%*s' % (w, s) for s in STATUS_ORDER), 'total'))
+    print('   %-18s %s %6s' % ('', ' '.join('%*s' % (w, s) for s in statuses), 'total'))
     for g in GRADE_ORDER + ['no grade']:
-        row = [dg.get((g, s), 0) for s in STATUS_ORDER]
+        row = [dg.get((g, s), 0) for s in statuses]
         if sum(row):
             print('   %-18s %s %6d' % (g, ' '.join('%*d' % (w, n) for n in row), sum(row)))
     print('   held at red because the alignment is graded Destroyed: %d' % blocked['destroyed'])

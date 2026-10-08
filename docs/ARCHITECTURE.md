@@ -742,8 +742,8 @@ two sliders reading the same number when either is moved.
 
 ### Local editing tools
 
-Two owner-only tools live at the bottom of the right rail. Neither talks to a
-server and neither writes a committed file; both keep their working state in
+Three owner-only tools live at the bottom of the right rail. None talks to a
+server and none writes a committed file; all keep their working state in
 `localStorage` and export it for you to commit by hand.
 
 The **Damage editor** (`#dmgEd`, `EDIT_KEY = nf26.damage_edits`) is hidden
@@ -781,6 +781,75 @@ override — while a candidate that has not been saved yet carries its geometry 
 Save. Each completed gesture pushes onto a 50-deep geometry undo stack, and a
 run of arrow presses coalesces into one step; **Undo geometry** in the panel
 walks it back.
+
+The **Road & bridge status editor** (`#statEd` in the rail, `#statBar` over
+the map, `SEDIT_KEY = nf26.status_edits`) corrects the road and bridge layers
+where they have gone stale: the Copernicus EMSR927 grading is a 27–31 Aug
+snapshot, and many of the stretches and bridges it drew red have since been
+cleared or rebuilt. It shows under the same flags as the Damage editor
+(`?edit=1` or `?tools=1`), and the two take turns: switching one on switches
+the other off. With it on, the feature popups and box zoom stand down; a click
+selects one road segment or bridge, Shift- or Cmd/Ctrl-click adds or removes
+one, and the **Box** tool (or a Shift-drag with either tool) selects every
+pickable feature inside a rectangle. Selection and hover are drawn as blue and
+yellow halos (`sedit_hl-*`, a `line-gap-width` pair either side of the line so
+the status colour stays visible), filtered by key. The panel over the map sets
+status (restored / under repair / damaged / destroyed; a bridge says repaired
+for restored), lanes (two-lane / one-lane / track / unknown, roads only),
+as-of date (default today), source title and URL and a note, and applies them
+to the whole selection; **Clear override** withdraws them. Esc clears the
+selection, then leaves the editor.
+
+Pickable layers and the identity each override keys on, `<layer>:<uid>`, with
+`uid` written by the builders into the derived files:
+
+| layer | features | uid |
+|---|---|---|
+| `ems` | Copernicus segments (`ems_roads-*`) | `<product>#<fid>`, the GeoPackage feature id within the EMS product |
+| `flooded` | roads inside the flood extent (`flooded_roads-line`) | OSM way id |
+| `segment` | curated corridors (`road_status-segment`) | `id` in `data/road_status.json` |
+| `bridge` | ground reports, curated points, spans (`bridge_damage-point`, `bridge_status-span`) | `report:<HDX name>`, `curated:<id>`, `span:<OSM way id>`, `trace:<id>` |
+
+Rendering merges the overrides into the app's own copy of
+`derived/road_status.geojson` and `derived/bridge_status.geojson` and
+`setData()`s it to both maps, rather than using feature-state: the bridge
+marker is an `icon-image`, a layout property feature-state cannot reach, and one
+mechanism for both sources lets every existing paint expression and the popups
+read the overridden `road_status` / `repair_status` unchanged. An overridden
+feature is not styled differently; its popup says "Status overridden on
+<date>, source …" and what it was before. The two derived layers are fetched a
+second time only when there is an override to draw or the editor is opened.
+On the Copernicus layer restored now draws green (`REPAIR.repaired`, #16a34a,
+`EMS_STATUS_COLOR`) rather than white, and an owner-set `destroyed` draws dark
+red (#991b1b) on every road layer.
+
+Storage mirrors the Damage editor. The committed file
+`data/edits/status_edits.geojson` (`CFG.STATUS_EDITS_URL`; a 404 is ignored)
+is loaded at start-up, together with any `status_override` the builders baked
+into the derived layers, and the `localStorage` map is laid over it, local
+winning; clearing a committed override stores `{cleared: true}` under its key
+so a reload does not bring it back. **Export** downloads `status_edits.geojson`,
+a FeatureCollection with one Feature per effective override (feature `id` =
+key, the feature's geometry copied for robustness) and properties `layer`,
+`uid`, `status`, `lane`, `as_of`, `source_title`, `source_url`, `note`,
+`edited_at`; save it over `data/edits/status_edits.geojson` and commit it to
+publish. **Import** loads such a file into the working copy.
+
+The builders apply the committed file last, on top of the hand-curated
+`data/road_status.json` and `data/bridge_status.json`, which stay the primary
+source: `tools/build_ems_roads.py` sets `status_override`, `override_as_of`,
+`override_source`, `override_source_url`, `override_note` and `override_lane`
+on the segments it names (by uid, falling back to the copied geometry's end
+points when a product has been superseded); `tools/build_road_status.py` sets
+`road_status` and `lane` on the `ems`, `flooded` and `segment` features it
+names, keeping the previous values as `status_base` / `lane_base` (an owner
+override is the one thing allowed to overrule a Copernicus Destroyed grade);
+and `tools/build_bridge_status.py` sets `repair_status` the same way. Each
+reports how many edits applied and names any that match nothing. Only the
+features an edit names gain the override keys, so an empty file reproduces the
+previous output byte for byte apart from `uid`. The file is tracked in git and
+outside `COMMIT_PATHS`, so the daily refresh reads it from the checkout and
+never writes it.
 
 **Image align** (`#imgAl`, `IMGALIGN_KEY = nf26.imgalign`) hand-fits an
 ungeoreferenced photograph over the imagery. It is a fitting aid rather than

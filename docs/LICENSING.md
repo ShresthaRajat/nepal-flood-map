@@ -116,6 +116,11 @@ re-projection do not change the underlying license.
   (7 Sep 2026). The grades are this project's own work; the footprints are
   copied from Overture Maps (293) and OpenStreetMap (29), so the layer carries
   their attribution and terms above. 5 polygons were drawn by hand.
+- **Owner road and bridge status overrides** — `data/edits/status_edits.geojson`,
+  set in this app's Road & bridge status editor. The statuses are this
+  project's own reading of the sources each record names; the copied
+  geometries come from Copernicus EMS EMSR927 (CC BY 4.0) and OpenStreetMap
+  (ODbL) and carry their terms above.
 
 - **Rasuwa Flood Evidence Map (VIVA-D)** — `data/hdx/derived/evidence_media.geojson`,
   an hourly snapshot of the public archive at

@@ -21,6 +21,20 @@ Grades: Destroyed, Damaged, Possibly damaged, No visible damage, Not Analysed.
 Source: https://data.humdata.org/dataset/npl-flood-emsr927 (CC BY 4.0)
 Citation: Copernicus Emergency Management Service (© 2026 European Union), EMSR927
 
+Every feature carries a `uid`, `<product>#<fid>`: the GeoPackage feature id
+within the product it came from.  It is stable for as long as Copernicus does
+not supersede the product, which is what the owner's status edits key on.
+
+Owner status overrides.  `data/edits/status_edits.geojson` (exported from the
+map's Road & bridge status editor and committed by hand) is applied last: a
+feature whose `uid` it names gets `status_override` (restored / under_repair /
+damaged / destroyed) plus `override_as_of`, `override_source`,
+`override_source_url`, `override_note` and `override_lane`, so the derived file
+carries the reading even without the browser.  An edit whose uid is gone (a
+superseded product) falls back to the copied geometry's end points and vertex
+count, and is reported either way.  With the file empty or absent the output is
+exactly what the grading alone gives.
+
 Output: data/hdx/derived/ems_road_grading.geojson (tracked).  Downloads go to
 work/ems/ (gitignored).  Requires the GDAL Python bindings (osgeo) and curl.
 """
@@ -35,6 +49,8 @@ ogr.UseExceptions()
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORK = os.path.join(ROOT, 'work', 'ems')
 OUT = os.path.join(ROOT, 'data', 'hdx', 'derived', 'ems_road_grading.geojson')
+EDITS = os.path.join(ROOT, 'data', 'edits', 'status_edits.geojson')
+ROAD_STATUSES = {'restored', 'under_repair', 'damaged', 'destroyed'}
 BASE = 'https://rapidmapping.emergency.copernicus.eu/backend/EMSR927'
 
 # (aoi, product path, locality).  The ?type=gpkg download is a bare GeoPackage.
@@ -79,12 +95,75 @@ for aoi, path, locality in PRODUCTS:
             'aoi': aoi, 'locality': locality, 'product': product,
             'post_event_date': src_date.get(p['dmg_src_id']),
             'method': p['det_method'],
+            'uid': f'{product}#{f.GetFID()}',
         }
         features.append({'type': 'Feature', 'properties': props, 'geometry': json.loads(g.ExportToJson())})
         counts[grade] = counts.get(grade, 0) + 1
         n += 1
     print(f'   {aoi} {locality:12s} {product}: {n} line features')
 
+
+
+def geom_sig(g):
+    """End points (6 dp) and vertex count: the fallback identity for an edit
+    whose uid no longer exists because Copernicus superseded the product."""
+    c = (g or {}).get('coordinates') or []
+    if (g or {}).get('type') == 'MultiLineString':
+        c = [p for part in c for p in part]
+    if not c or not isinstance(c[0], list):
+        return None
+    r = lambda p: (round(p[0], 6), round(p[1], 6))
+    return (r(c[0]), r(c[-1]), len(c))
+
+
+def apply_status_edits(features):
+    """data/edits/status_edits.geojson, layer 'ems', applied last by uid."""
+    if not os.path.exists(EDITS):
+        return
+    try:
+        with open(EDITS, encoding='utf-8') as fh:
+            edits = [e for e in (json.load(fh).get('features') or [])
+                     if ((e or {}).get('properties') or {}).get('layer') == 'ems']
+    except (OSError, ValueError) as e:
+        print(f'   status edits: could not read {os.path.relpath(EDITS, ROOT)} ({e}); none applied', file=sys.stderr)
+        return
+    if not edits:
+        return
+    by_uid = {f['properties']['uid']: f for f in features}
+    by_sig = {}
+    for f in features:
+        by_sig.setdefault(geom_sig(f['geometry']), []).append(f)
+    n, missing = 0, []
+    for e in edits:
+        ep = e['properties']
+        if ep.get('status') not in ROAD_STATUSES:
+            print(f"   status edits: {ep.get('uid')}: unknown status {ep.get('status')!r}, skipped", file=sys.stderr)
+            continue
+        f = by_uid.get(ep.get('uid'))
+        if f is None:
+            cands = by_sig.get(geom_sig(e.get('geometry')), [])
+            if len(cands) == 1:
+                f = cands[0]
+                print(f"   status edits: {ep.get('uid')} matched {f['properties']['uid']} by geometry")
+        if f is None:
+            missing.append(ep.get('uid'))
+            continue
+        lane = ep.get('lane')
+        f['properties'].update({
+            'status_override': ep['status'],
+            'override_as_of': ep.get('as_of') or None,
+            'override_source': ep.get('source_title') or None,
+            'override_source_url': ep.get('source_url') or None,
+            'override_note': ep.get('note') or None,
+            'override_lane': None if lane in (None, '', 'unknown') else lane,
+        })
+        n += 1
+    print(f'   status edits: {n} of {len(edits)} owner overrides applied')
+    for u in missing:
+        print(f'   status edits: {u} matches no segment, not applied', file=sys.stderr)
+
+
+apply_status_edits(features)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, 'w') as fh:
     json.dump({'type': 'FeatureCollection', 'name': 'ems_road_grading',

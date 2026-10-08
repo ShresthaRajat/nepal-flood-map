@@ -48,6 +48,13 @@ precede `hdx`, and everything that reads an HDX layer has to follow it.
 gitignored and therefore absent on a fresh checkout, and which
 `build_flooded_roads.py` reads from inside `refresh_hdx.sh`.
 
+`ems`, `bridge_status` and `road_status` each apply the owner's status
+overrides in `data/edits/status_edits.geojson` last (exported from the map's
+Road & bridge status editor, see ARCHITECTURE.md, Local editing tools). The
+file is tracked, so the Actions checkout has it; it is hand-edited, outside
+the commit pathspecs, and never written by the refresh. An edit that no
+longer matches a feature is named in the step log rather than failing the run.
+
 `cutoff` is off because `build_roads_tiles.sh` downloads 418 MB and
 `build_cutoff_wards.py` then runs a long shortest-path analysis; the road
 network does not change daily. `places` is off because it queries Overpass,

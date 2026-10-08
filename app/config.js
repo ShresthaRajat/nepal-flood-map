@@ -102,6 +102,9 @@ const SCENES = {
 // Damage editor: the committed baseline the editor loads at start-up, on top of
 // which the analyst's localStorage working copy is layered.  A 404 is ignored.
 const DAMAGE_EDITS_URL = 'data/edits/damage_edits.geojson';
+// Road & bridge status editor: the committed owner overrides, layered under the
+// localStorage working copy (nf26.status_edits) and applied by the three builders.
+const STATUS_EDITS_URL = 'data/edits/status_edits.geojson';
 
 const COVERAGE_LABEL = {
   corridor: 'Whole corridor',
@@ -288,14 +291,23 @@ dataset on HDX, snapshot of 3 October 2026. ${HDX_CREDIT}.</p>
       and 33 needing full reconstruction; as of 19 Sep NDRRMA counted 5 under repair with 15 in
       procurement, while a same-day press report named 12 under active repair targeted for completion
       by about 6 October. Those counts are not reconciled and the named spans could not be geocoded,
-      so they are not on the map.</li>
+      so they are not on the map. On top of all of that sit the owner’s own status overrides,
+      set in the map’s Road &amp; bridge status editor after checking a bridge against newer imagery or
+      reporting and committed as <code>data/edits/status_edits.geojson</code>; the builder applies them
+      last, and the popup of an overridden bridge says so, with the date and the source.</li>
   <li><b>Road damage grading</b> — the Copernicus Emergency Management Service rapid-mapping activation
       EMSR927 graded every road and bridge segment in four areas from 0.3–0.7 m post-event imagery: Timure
       and Syapru Besi (27 Aug), Bidur / Trisuli Bazar to Betrawati (27–28 Aug, monitoring update) and
       Phosretar / Galchhi to Benighat (31 Aug). Grades are Destroyed, Damaged, Possibly damaged, No visible
       damage and Not analysed; only Destroyed, Damaged and Possibly damaged are drawn. The 557 segments graded No visible damage
       are used to clear the computed overlay below, and the 116 Not analysed ones are omitted. The Mailung gorge between Betrawati and Syapru Besi was not covered. Where a
-      grade exists it overrides the computed overlay below. CC BY 4.0, © 2026 European Union.</li>
+      grade exists it overrides the computed overlay below. CC BY 4.0, © 2026 European Union.
+      The grading is a 27–31 Aug snapshot and many of these stretches have since been cleared, so the
+      colour is current accessibility rather than the grade: green where the road is restored, orange
+      under repair, red damaged or closed, dark red destroyed. Where the owner has checked a segment
+      against newer imagery or reporting, an override from <code>data/edits/status_edits.geojson</code>
+      (set in the map’s Road &amp; bridge status editor) decides the colour, ahead of the Copernicus grade;
+      the popup says when and on what source.</li>
   <li><b>Roads inside the flood extent</b> — computed here by clipping the HOT flood-area roads to the
       27 Aug 2026 flood extent polygon: 879 stretches, 175 km. Of those, 263 already carry a Destroyed
       status and 616 are still recorded as Standing, so this overlay shows exposure, not confirmed damage,
@@ -452,5 +464,5 @@ partners. Map glyphs from the MapLibre demo font stack.</p>
 `;
 
 return { CATS, COUNTS, STATUS, FAIR, PLACES, HOME, DEFAULT_VIEW, SCENES, COVERAGE_LABEL, HDX_CREDIT, HDX_URL, NOTES_HTML,
-         DAMAGE_EDITS_URL };
+         DAMAGE_EDITS_URL, STATUS_EDITS_URL };
 })();

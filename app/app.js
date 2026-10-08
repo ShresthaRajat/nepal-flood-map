@@ -387,15 +387,29 @@ const ROAD_STATUS_COLORS = {
   restored:     ROAD_WHITE,
   under_repair: '#f97316',
   damaged:      DAMAGE_ROAD_RED,
+  // Only an owner override (Road & bridge status editor) sets this one; the
+  // curated corridors and the join never go further than damaged / closed.
+  destroyed:    '#991b1b',
 };
-const RSTATUS_KEYS = ['restored', 'under_repair', 'damaged'];
-const RSTATUS_LABEL = { restored: 'Restored', under_repair: 'Under repair', damaged: 'Destroyed / closed' };
+const RSTATUS_KEYS = ['restored', 'under_repair', 'damaged', 'destroyed'];
+const RSTATUS_LABEL = { restored: 'Restored', under_repair: 'Under repair', damaged: 'Destroyed / closed',
+  destroyed: 'Destroyed' };
+/* The Copernicus EMS layer draws restored in the bridges' repaired green rather
+ * than white (owner request, 8 Oct 2026): it is a damage layer, so a white
+ * stretch read as "not graded" rather than "cleared and reopened". */
+const EMS_STATUS_COLORS = Object.assign({}, ROAD_STATUS_COLORS, { restored: REPAIR.repaired });
 const GRADE_SOURCE_LABEL = { ems: 'Copernicus EMSR927', 'ems-inherited': 'Copernicus EMSR927',
   'osm-status': 'OpenStreetMap', 'osm-destroyed-features': 'OpenStreetMap' };
 const LANE_LABEL = { 'two-lane': 'two-lane', 'one-lane': 'one-lane', track: 'track only' };
 const ROAD_STATUS_COLOR = (() => {
   const e = ['match', ['to-string', ['get', 'road_status']]];
   for (const k of RSTATUS_KEYS) e.push(k, ROAD_STATUS_COLORS[k]);
+  e.push(DAMAGE_ROAD_RED);
+  return e;
+})();
+const EMS_STATUS_COLOR = (() => {
+  const e = ['match', ['to-string', ['get', 'road_status']]];
+  for (const k of RSTATUS_KEYS) e.push(k, EMS_STATUS_COLORS[k]);
   e.push(DAMAGE_ROAD_RED);
   return e;
 })();
@@ -1200,9 +1214,9 @@ function buildDefs() {
       paint: { 'line-color': '#000000', 'line-opacity': ['case', IS_RESTORED_ROAD, 0.6, 0.3],
                'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.6, 14, 4.4, 17, 6.8] } },
     { id: 'ems_roads-solid', type: 'line', source: 'road_status', filter: ['all', EMS_SHOWN, EMS_FIRM], layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': ROAD_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W } },
+      paint: { 'line-color': EMS_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W } },
     { id: 'ems_roads-dashed', type: 'line', source: 'road_status', filter: ['all', EMS_SHOWN, ['!', EMS_FIRM]], layout: { visibility: 'none', 'line-join': 'round' },
-      paint: { 'line-color': ROAD_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W, 'line-dasharray': [2, 1.5] } },
+      paint: { 'line-color': EMS_STATUS_COLOR, 'line-opacity': 0.95, 'line-width': EMS_W, 'line-dasharray': [2, 1.5] } },
   );
 
   // Settlement labels (tools/build_places.py): district HQs and cities from z7, towns and the
@@ -1299,7 +1313,7 @@ function buildDefs() {
     // working copy from the Damage editor (owner direction, 7 Sep 2026: viewable as its own layer).
     { key: 'damage_edits', label: 'Building damage, analyst grading', color: '#f97316', ids: ['edits-fill', 'edits-line'], on: false, count: 65,
       title: 'Building damage graded by hand in the Damage editor' },
-    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', sub: 'colour = status per segment; Copernicus grade wins',
+    { key: 'ems_roads', label: 'Road damage, Copernicus EMS', sub: 'colour = status now; owner override, then Copernicus grade',
       color: DAMAGE_ROAD_RED,
       ids: ['ems_roads-casing', 'ems_roads-solid', 'ems_roads-dashed'], on: true, count: 548,
       title: 'Copernicus EMS road grading, 27\u201331 Aug 2026, coloured by whether the stretch is open now' },
@@ -1625,6 +1639,23 @@ function buildDefs() {
       paint: { 'fill-color': '#5eb0ff', 'fill-opacity': 0.25 } },
     { id: 'edit_sel-line', type: 'line', source: 'edit_sel',
       paint: { 'line-color': '#ffffff', 'line-width': 2.4, 'line-opacity': 0.95 } },
+    // Road & bridge status editor: selection (blue) and hover (yellow) halos,
+    // drawn as a pair of lines either side of the feature (line-gap-width) so the
+    // status colour underneath stays readable.  Filtered by `<layer>:<uid>` key;
+    // seditSyncHl() rewrites the filters on both maps.
+    { id: 'sedit_hl-road', type: 'line', source: 'road_status', filter: seditIn(SEDIT_ROAD_KEY, []),
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': SEDIT_HL_COLOR(SEDIT_ROAD_KEY), 'line-width': 2, 'line-opacity': 0.95,
+               'line-gap-width': ['interpolate', ['linear'], ['zoom'], 10, 3, 14, 5, 17, 7] } },
+    { id: 'sedit_hl-span', type: 'line', source: 'bridge_status',
+      filter: ['all', gt('LineString'), seditIn(SEDIT_BRIDGE_KEY, [])],
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': SEDIT_HL_COLOR(SEDIT_BRIDGE_KEY), 'line-width': 2, 'line-opacity': 0.95,
+               'line-gap-width': ['interpolate', ['linear'], ['zoom'], 10, 3, 14, 5, 18, 8] } },
+    { id: 'sedit_hl-pt', type: 'circle', source: 'bridge_status',
+      filter: ['all', gt('Point'), seditIn(SEDIT_BRIDGE_KEY, [])],
+      paint: { 'circle-radius': 10, 'circle-color': 'rgba(0,0,0,0)', 'circle-translate': [0, -5],
+               'circle-stroke-width': 2.2, 'circle-stroke-color': SEDIT_HL_COLOR(SEDIT_BRIDGE_KEY) } },
     { id: 'edit_draw-fill', type: 'fill', source: 'edit_draw',
       filter: ['==', ['geometry-type'], 'Polygon'],
       paint: { 'fill-color': '#5eb0ff', 'fill-opacity': 0.2 } },
@@ -2596,6 +2627,9 @@ function renderSidebar() {
   // damage editor (owner tool, ?edit=1 or ?tools=1) ------------------------
   const dmgEditor = buildDamageEditor();
   if (EDITOR_TOOL) cpad.appendChild(dmgEditor);
+  // road & bridge status editor (owner tool, same flags) --------------------
+  const statEditor = buildStatusEditor();
+  if (EDITOR_TOOL) cpad.appendChild(statEditor);
 
   // image align (owner tool, ?align=1 or ?tools=1) --------------------------
   if (ALIGN_TOOL) cpad.appendChild(buildImageAlign());
@@ -2680,13 +2714,16 @@ function renderSidebar() {
     '<div class="r"><i class="rl w3 rs-restored"></i>Restored (alignment open) \u2014 at two lanes, one lane or track width</div>' +
     '<div class="r"><i class="rl w3 rs-repair"></i>Under repair \u2014 work under way, not through yet</div>' +
     '<div class="r"><i class="rl w3 rs-damaged"></i>Destroyed / closed, and every stretch nobody has reported on</div>' +
+    '<div class="r"><i class="rl w3 rs-restored-ems"></i>Restored, on the Copernicus EMS layer (green there, white on the flood-extent roads)</div>' +
+    '<div class="r"><i class="rl w3 rs-destroyed"></i>Destroyed \u2014 confirmed by an owner status override</div>' +
     '<div class="r"><i class="rl w4 rs-ribbon"></i>Route open / under repair (corridor, not alignment) \u2014 low zoom only</div>' +
     '<div class="r"><i class="rl w2 dash"></i>Copernicus graded the stretch only "possibly damaged"</div>' +
     '<div class="r"><span class="note">Applies to both road overlays. The per-segment damage grade decides first: a stretch Copernicus EMSR927 or ' +
     'OpenStreetMap records as destroyed stays red however open the route through it is, because an open route is open by diverting around it. ' +
     'A route being open is shown by the corridor ribbon, which is why it is drawn only when zoomed out. ' +
     'Routes curated from NDRRMA SitRep 18 (19 Sep) and press; see data/road_status.json. ' +
-    'Destroyed and Damaged no longer differ by colour \u2014 the grade is in the popup.</span></div>' +
+    'Destroyed and Damaged no longer differ by colour \u2014 the grade is in the popup. ' +
+    'Owner status overrides (data/edits/status_edits.geojson) draw like any other status and are named in the popup.</span></div>' +
     '<div class="hd">Contours (GLO-30)</div>' +
     '<div class="r"><i class="rl ct idx"></i>Index line, multiple of 100 m</div>' +
     '<div class="r"><i class="rl ct"></i>Intermediate line</div>';
@@ -3724,7 +3761,7 @@ function popupHTML(label, props) {
    * it".  The Copernicus grade follows where there is one, since the colour no
    * longer carries it. */
   if (p.road_status) {
-    const rc = ROAD_STATUS_COLORS[p.road_status] || DAMAGE_ROAD_RED;
+    const rc = (p.feature_kind === 'ems' ? EMS_STATUS_COLORS : ROAD_STATUS_COLORS)[p.road_status] || DAMAGE_ROAD_RED;
     const gsrc = GRADE_SOURCE_LABEL[p.damage_source] || p.damage_source;
     h += '<div><span class="chip lg' + (rc === ROAD_WHITE ? ' pale' : '') + '" style="background:' + rc + '">' +
       esc(RSTATUS_LABEL[p.road_status] || p.road_status) +
@@ -3738,6 +3775,17 @@ function popupHTML(label, props) {
     // Why a red line sits on an open route, or an orange one on a restored route.
     if (p.status_note) h += '<div class="pop-n">' + esc(p.status_note) + '</div>';
     if (p.segment_name && p.segment_id) h += '<div class="pop-loc">Route: ' + esc(p.segment_name) + '</div>';
+  }
+  /* An owner override (Road & bridge status editor, or baked in by the builders
+   * from data/edits/status_edits.geojson) draws exactly like a curated status;
+   * this line is the only place it shows, with when, on what and what it replaced. */
+  if (p.status_override) {
+    const was = p.repair_status ? REPAIR_LABEL[p.status_base] : RSTATUS_LABEL[p.status_base];
+    const osrc = popLink(p.override_source_url, p.override_source || p.override_source_url) ||
+      esc(p.override_source || '');
+    h += '<div class="pop-n">Status overridden' + (p.override_as_of ? ' on ' + esc(fmtDate(p.override_as_of)) : '') +
+      (osrc ? ', source ' + osrc : '') + (was || p.status_base ? ' (was ' + esc(was || p.status_base) + ')' : '') + '.' +
+      (p.override_note ? ' ' + esc(p.override_note) : '') + '</div>';
   }
   // Hand-geocoded points say so on the face of the popup, not just in the
   // attribute table: a settlement-level pin is a different claim from a survey.
@@ -3912,6 +3960,7 @@ function wirePopups(m) {
   m.on('click', ev => {
     if (imgAlign.on) return;             // the image-align tool owns the pointer while it is on
     if (editorActive()) return;          // the damage editor owns clicks while a mode is on
+    if (sedit.on) return;                // so does the road & bridge status editor
     const hits = m.queryRenderedFeatures(ev.point, { layers: live() });
     if (!hits.length) return;
     const html = hits.slice(0, 4)
@@ -3923,6 +3972,7 @@ function wirePopups(m) {
     $('#readout').textContent = ev.lngLat.lat.toFixed(5) + '°N, ' + ev.lngLat.lng.toFixed(5) + '°E · z' + m.getZoom().toFixed(1);
     if (imgAlign.on) { m.getCanvas().style.cursor = imgAlignCursor(m, ev.point); return; }
     if (editorActive()) { m.getCanvas().style.cursor = editorCursor(m, ev.point); return; }
+    if (sedit.on) { seditHover(m, ev); return; }
     if (hoverTimer) return;
     hoverTimer = setTimeout(() => {
       hoverTimer = 0;
@@ -4581,6 +4631,7 @@ function editorClick(m, ev) {
 }
 
 function setEditorMode(mode) {
+  if (mode !== 'off' && sedit.on) setStatusEditor(false);   // one editor owns the pointer at a time
   editor.mode = mode;
   if (mode !== 'draw') editor.ring = [];
   if (mode === 'off') clearSel();
@@ -4916,6 +4967,717 @@ function buildDamageEditor() {
 
   block.appendChild(det);
   renderEditList();
+  return block;
+}
+
+// ======================================================================== //
+// Road & bridge status editor                                              //
+// ------------------------------------------------------------------------ //
+// The Copernicus EMSR927 grading is a 27-31 Aug snapshot and the curated
+// corridors and bridges in data/road_status.json / data/bridge_status.json
+// move only as fast as somebody transcribes a SitRep, so many roads and
+// bridges drawn red have since reopened.  This lets the owner click or
+// box-select segments and bridges and mark them restored (repaired) / under
+// repair / damaged / destroyed, with the map recolouring at once.
+//
+// Same arrangement as the Damage editor: the working copy lives in
+// localStorage (SEDIT_KEY), keyed `<layer>:<uid>`, and is layered over the
+// committed file at CFG.STATUS_EDITS_URL; Export hands back that file to
+// commit, and tools/build_ems_roads.py, build_road_status.py and
+// build_bridge_status.py apply it last, so the daily refresh keeps it.
+//
+// Rendering merges the overrides into our own copy of the two derived layers
+// and setData()s it to both maps, rather than feature-state: the bridge marker
+// is an icon-image, a layout property feature-state cannot drive, and one
+// mechanism for both sources keeps every existing paint expression (and the
+// popups) reading the overridden value unchanged.  Nothing is fetched beyond
+// the edits file until there is an override to draw or the editor is opened.
+//
+// Layers and their uid (written by the builders):
+//   ems      Copernicus segment, `<product>#<fid>`        road_status.geojson
+//   flooded  road inside the flood extent, OSM way id     road_status.geojson
+//   segment  curated corridor, data/road_status.json id   road_status.geojson
+//   bridge   report:<HDX name> | curated:<id> | span:<OSM way id> | trace:<id>
+//                                                         bridge_status.geojson
+// ======================================================================== //
+
+const SEDIT_KEY = 'nf26.status_edits';
+const SEDIT_FILE = 'data/edits/status_edits.geojson';
+// One status list for both kinds; a bridge says "repaired" where a road says "restored".
+const SEDIT_STATUS = [
+  { key: 'restored',     label: 'Restored',     blabel: 'Repaired' },
+  { key: 'under_repair', label: 'Under repair', blabel: 'Under repair' },
+  { key: 'damaged',      label: 'Damaged',      blabel: 'Damaged' },
+  { key: 'destroyed',    label: 'Destroyed',    blabel: 'Destroyed' },
+];
+const SEDIT_LANES = [['two-lane', 'Two-lane'], ['one-lane', 'One-lane'], ['track', 'Track'], ['unknown', 'Unknown']];
+const SEDIT_LAYER_LABEL = { ems: 'Copernicus EMS segment', flooded: 'Road inside flood extent',
+  segment: 'Road status corridor', bridge: 'Bridge' };
+// The style layers a click or a box picks from.  Only the drawn ones answer.
+const SEDIT_PICK_IDS = ['bridge_damage-point', 'bridge_status-span', 'ems_roads-solid', 'ems_roads-dashed',
+  'flooded_roads-line', 'road_status-segment'];
+const SEDIT_FILES = { road_status: 'derived/road_status.geojson', bridge_status: 'derived/bridge_status.geojson' };
+// Every property an override touches, snapshotted per feature at load so that
+// clearing an override puts back exactly what the builder wrote.
+const SEDIT_OV_PROPS = ['status_override', 'status_base', 'lane_base', 'override_as_of', 'override_source',
+  'override_source_url', 'override_note', 'override_lane'];
+const SEDIT_PROPS = ['road_status', 'lane', 'repair_status', ...SEDIT_OV_PROPS];
+const SEDIT_PICK_PX = 5;    // click tolerance either side of a thin line
+const SEDIT_BOX_PX = 4;     // a drag shorter than this is a click, not a box
+// Halo filters and colour, keyed on the same `<layer>:<uid>` string the store uses.
+const SEDIT_ROAD_KEY = ['concat', ['to-string', ['get', 'feature_kind']], ':', ['to-string', ['get', 'uid']]];
+const SEDIT_BRIDGE_KEY = ['concat', 'bridge:', ['to-string', ['get', 'uid']]];
+const seditIn = (keyExpr, keys) => ['in', keyExpr, ['literal', keys]];
+const SEDIT_HL_COLOR = (keyExpr, hov) => ['case', ['==', keyExpr, hov || ''], '#fde047', '#5eb0ff'];
+
+const sedit = {
+  on: false,             // the editor owns the pointer
+  tool: 'click',         // 'click' | 'box'
+  fileBase: new Map(),   // key -> record, from the committed file
+  base: new Map(),       // fileBase plus overrides the builders baked into the derived layers
+  local: {},             // working copy: key -> record, or {cleared: true} over a committed one
+  data: {},              // source id -> our copy of the derived FeatureCollection
+  index: new Map(),      // key -> {src, f, snap}
+  loading: null,         // the one in-flight seditLoad()
+  sel: [],               // selected keys
+  hover: null,           // key under the pointer
+  box: null,             // in-progress box: {m, x0, y0, x1, y1, add, node}
+  boxEnd: 0,             // when the last box finished, so its trailing click is ignored
+  form: null,            // the panel's field values for the current selection
+  ui: {},                // sidebar nodes, filled by buildStatusEditor()
+};
+
+const seditLayer = k => k.slice(0, k.indexOf(':'));
+const seditUid = k => k.slice(k.indexOf(':') + 1);
+const seditIsBridge = k => k.startsWith('bridge:');
+function seditKey(src, p) {
+  if (!p || p.uid == null || p.uid === '' || p.uid === 'null') return null;
+  return src === 'bridge_status' ? 'bridge:' + p.uid : p.feature_kind ? p.feature_kind + ':' + p.uid : null;
+}
+/* A status in the vocabulary of the feature it lands on. */
+const seditStatusFor = (k, st) => seditIsBridge(k) ? (st === 'restored' ? 'repaired' : st)
+  : (st === 'repaired' ? 'restored' : st);
+const seditFormStatus = st => st === 'repaired' ? 'restored' : st;
+function seditToday() {
+  const d = new Date(), z = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate());
+}
+function seditColor(k, st) {
+  if (seditIsBridge(k)) return REPAIR[st] || REPAIR.unknown;
+  return (seditLayer(k) === 'ems' ? EMS_STATUS_COLORS : ROAD_STATUS_COLORS)[st] || DAMAGE_ROAD_RED;
+}
+const seditLabel = (k, st) => (seditIsBridge(k) ? REPAIR_LABEL[st] : RSTATUS_LABEL[st]) || st || '';
+
+// ------------------------------------------------------------ store and IO
+function seditRecord(f) {
+  const p = (f && f.properties) || {};
+  if (!p.layer || p.uid == null || p.uid === '' || !p.status) return null;
+  const k = p.layer + ':' + p.uid;
+  return { layer: String(p.layer), uid: String(p.uid), status: seditStatusFor(k, p.status),
+    lane: p.lane || null, as_of: p.as_of || null, source_title: p.source_title || null,
+    source_url: p.source_url || null, note: p.note || null, edited_at: p.edited_at || null,
+    geometry: (f && f.geometry) || null };
+}
+function seditSave() {
+  try { localStorage.setItem(SEDIT_KEY, JSON.stringify(sedit.local)); }
+  catch (e) { toast('Could not save status edits locally (storage full or blocked)'); }
+}
+function seditRead() {
+  try {
+    const j = JSON.parse(localStorage.getItem(SEDIT_KEY) || 'null');
+    return j && typeof j === 'object' && !Array.isArray(j) ? j : {};
+  } catch (e) { return {}; }
+}
+/* Committed overrides, then the working copy on top: local wins, and a local
+ * {cleared: true} withdraws a committed one. */
+function seditEffective() {
+  const out = new Map(sedit.base);
+  for (const [k, r] of Object.entries(sedit.local)) {
+    if (!r) continue;
+    if (r.cleared) out.delete(k); else if (r.status) out.set(k, r);
+  }
+  return out;
+}
+const seditLocalCount = () => Object.keys(sedit.local).length;
+
+/* The committed file first; the derived layers only when something needs drawing.
+ * A 404 (nothing published yet) is not an error. */
+async function initStatusEdits() {
+  sedit.local = seditRead();
+  try {
+    const r = await fetch((CFG.STATUS_EDITS_URL || SEDIT_FILE), { cache: 'no-cache' });
+    if (r.ok) {
+      const j = await r.json();
+      for (const f of (j && Array.isArray(j.features) ? j.features : [])) {
+        const rec = seditRecord(f);
+        if (rec) sedit.fileBase.set(rec.layer + ':' + rec.uid, rec);
+      }
+    }
+  } catch (e) { /* not published yet */ }
+  sedit.base = new Map(sedit.fileBase);
+  if (sedit.fileBase.size || seditLocalCount()) await seditLoad();
+  seditRenderList();
+}
+
+/* Our own copy of road_status.geojson and bridge_status.geojson, indexed by key. */
+function seditLoad() {
+  if (!sedit.loading) sedit.loading = (async () => {
+    const baked = new Map();
+    for (const [src, file] of Object.entries(SEDIT_FILES)) {
+      let fc = null;
+      try { fc = await getJSON(HDX + file); } catch (e) { fc = null; }
+      if (!fc || !Array.isArray(fc.features)) { toast('Could not load ' + file + ' for the status editor'); continue; }
+      sedit.data[src] = fc;
+      for (const f of fc.features) {
+        const p = f.properties || (f.properties = {});
+        const k = seditKey(src, p);
+        if (!k) continue;
+        const snap = {};
+        for (const n of SEDIT_PROPS) if (n in p) snap[n] = p[n];
+        sedit.index.set(k, { src, f, snap });
+        // An override the builder already baked in counts as committed, so the
+        // map agrees with the derived file even where the edits file did not load.
+        if (p.status_override) baked.set(k, { layer: seditLayer(k), uid: seditUid(k), status: p.status_override,
+          lane: p.override_lane || null, as_of: p.override_as_of || null, source_title: p.override_source || null,
+          source_url: p.override_source_url || null, note: p.override_note || null, edited_at: null,
+          geometry: f.geometry });
+      }
+    }
+    sedit.base = new Map([...baked, ...sedit.fileBase]);
+    seditApply();
+  })();
+  return sedit.loading;
+}
+
+/* Rebuild every indexed feature from its snapshot, unwind what the builder
+ * baked in, apply the effective override, and push both sources to both maps. */
+function seditApply() {
+  const eff = seditEffective();
+  for (const [k, it] of sedit.index) {
+    const p = it.f.properties, s = it.snap;
+    const sf = it.src === 'bridge_status' ? 'repair_status' : 'road_status';
+    for (const n of SEDIT_PROPS) { if (n in s) p[n] = s[n]; else delete p[n]; }
+    if (p.status_override) {
+      if ('status_base' in p) p[sf] = p.status_base;
+      if ('lane_base' in p) p.lane = p.lane_base;
+      for (const n of SEDIT_OV_PROPS) delete p[n];
+    }
+    const ov = eff.get(k);
+    if (!ov) continue;
+    p.status_base = p[sf];
+    p[sf] = seditStatusFor(k, ov.status);
+    if (sf === 'road_status') {
+      p.lane_base = p.lane;
+      if (ov.lane && ov.lane !== 'unknown') p.lane = ov.lane;
+      p.override_lane = ov.lane && ov.lane !== 'unknown' ? ov.lane : null;
+    }
+    p.status_override = p[sf];
+    p.override_as_of = ov.as_of || null;
+    p.override_source = ov.source_title || null;
+    p.override_source_url = ov.source_url || null;
+    p.override_note = ov.note || null;
+  }
+  for (const [src, fc] of Object.entries(sedit.data))
+    eachMap(m => { const s = m.getSource(src); if (s) s.setData(fc); });
+}
+function seditRefresh() { seditSave(); seditApply(); seditRenderList(); seditRenderForm(); }
+
+// --------------------------------------------------------------- selection
+function seditSyncHl() {
+  const keys = sedit.hover && !sedit.sel.includes(sedit.hover) ? [...sedit.sel, sedit.hover] : sedit.sel;
+  const color = keyExpr => SEDIT_HL_COLOR(keyExpr, sedit.hover);
+  eachMap(m => {
+    if (m.getLayer('sedit_hl-road')) {
+      m.setFilter('sedit_hl-road', seditIn(SEDIT_ROAD_KEY, keys));
+      m.setPaintProperty('sedit_hl-road', 'line-color', color(SEDIT_ROAD_KEY));
+    }
+    if (m.getLayer('sedit_hl-span')) {
+      m.setFilter('sedit_hl-span', ['all', gt('LineString'), seditIn(SEDIT_BRIDGE_KEY, keys)]);
+      m.setPaintProperty('sedit_hl-span', 'line-color', color(SEDIT_BRIDGE_KEY));
+    }
+    if (m.getLayer('sedit_hl-pt')) {
+      m.setFilter('sedit_hl-pt', ['all', gt('Point'), seditIn(SEDIT_BRIDGE_KEY, keys)]);
+      m.setPaintProperty('sedit_hl-pt', 'circle-stroke-color', color(SEDIT_BRIDGE_KEY));
+    }
+  });
+}
+function seditSetSel(keys) {
+  sedit.sel = keys.filter((k, i) => k && keys.indexOf(k) === i);
+  sedit.form = null;
+  seditSyncHl();
+  seditRenderForm();
+  seditMarkRows();
+}
+function seditToggle(k) {
+  seditSetSel(sedit.sel.includes(k) ? sedit.sel.filter(x => x !== k) : [...sedit.sel, k]);
+}
+function seditClearSel() { if (sedit.sel.length) seditSetSel([]); }
+
+/* Keys under a screen box, topmost first, one per feature. */
+function seditHits(m, box) {
+  const ids = SEDIT_PICK_IDS.filter(id => layerLive(m, id));
+  if (!ids.length) return [];
+  const out = [];
+  for (const h of m.queryRenderedFeatures(box, { layers: ids })) {
+    const k = seditKey(h.source || (h.layer && h.layer.source), h.properties);
+    if (k && !out.includes(k)) out.push(k);
+  }
+  return out;
+}
+const seditHitsAt = (m, pt) => seditHits(m,
+  [[pt.x - SEDIT_PICK_PX, pt.y - SEDIT_PICK_PX], [pt.x + SEDIT_PICK_PX, pt.y + SEDIT_PICK_PX]]);
+
+// --------------------------------------------------------------- pointer
+function seditHover(m, ev) {
+  if (sedit.box) { seditBoxMove(m, ev); return; }
+  const k = seditHitsAt(m, ev.point)[0] || null;
+  m.getCanvas().style.cursor = k ? 'pointer' : 'crosshair';
+  if (k !== sedit.hover) { sedit.hover = k; seditSyncHl(); }
+}
+function seditClick(m, ev) {
+  if (!sedit.on || imgAlign.on) return;
+  if (Date.now() - sedit.boxEnd < 300) return;      // the tail of a box drag
+  const oe = ev.originalEvent || {};
+  const additive = !!(oe.shiftKey || oe.ctrlKey || oe.metaKey);
+  const k = seditHitsAt(m, ev.point)[0];
+  if (!k) {
+    if (!additive) seditClearSel();
+    else if (!seditHits(m, [[0, 0], [m.getCanvas().clientWidth, m.getCanvas().clientHeight]]).length)
+      toast('Turn on Road damage, Copernicus EMS or Bridge damage & repair under Overlays first');
+    return;
+  }
+  if (additive) seditToggle(k); else seditSetSel([k]);
+}
+/* Box select: a drag with the Box tool, or a Shift-drag with either tool
+ * (box zoom stands down while the editor is on).  Shift adds to the selection. */
+function seditDown(m, ev) {
+  if (!sedit.on || imgAlign.on || sedit.box) return;
+  const oe = ev.originalEvent || {};
+  if (oe.button != null && oe.button !== 0) return;
+  if (sedit.tool !== 'box' && !oe.shiftKey) return;
+  sedit.box = { m, x0: ev.point.x, y0: ev.point.y, x1: ev.point.x, y1: ev.point.y,
+    add: !!(oe.shiftKey || oe.ctrlKey || oe.metaKey), node: null };
+  m.dragPan.disable();
+  if (ev.preventDefault) ev.preventDefault();
+}
+function seditBoxMove(m, ev) {
+  const b = sedit.box;
+  if (!b || b.m !== m) return;
+  b.x1 = ev.point.x; b.y1 = ev.point.y;
+  if (!b.node) {
+    if (Math.abs(b.x1 - b.x0) < SEDIT_BOX_PX && Math.abs(b.y1 - b.y0) < SEDIT_BOX_PX) return;
+    b.node = el('div', 'sedit-box');
+    m.getCanvasContainer().appendChild(b.node);
+  }
+  const st = b.node.style;
+  st.left = Math.min(b.x0, b.x1) + 'px'; st.top = Math.min(b.y0, b.y1) + 'px';
+  st.width = Math.abs(b.x1 - b.x0) + 'px'; st.height = Math.abs(b.y1 - b.y0) + 'px';
+}
+function seditUp() {
+  const b = sedit.box;
+  if (!b) return;
+  sedit.box = null;
+  if (b.m.dragPan) b.m.dragPan.enable();
+  if (!b.node) return;                 // a click: the click handler takes it
+  b.node.remove();
+  sedit.boxEnd = Date.now();
+  const keys = seditHits(b.m, [[Math.min(b.x0, b.x1), Math.min(b.y0, b.y1)], [Math.max(b.x0, b.x1), Math.max(b.y0, b.y1)]]);
+  seditSetSel(b.add ? [...sedit.sel, ...keys] : keys);
+  if (!keys.length) toast('No road segment or bridge inside the box');
+}
+
+async function setStatusEditor(on) {
+  if (on && editorActive()) setEditorMode('off');   // one editor owns the pointer at a time
+  sedit.on = !!on;
+  if (!sedit.on) {
+    sedit.hover = null;
+    const bx = sedit.box;
+    sedit.box = null;
+    if (bx) { if (bx.node) bx.node.remove(); if (bx.m.dragPan) bx.m.dragPan.enable(); }
+    seditSetSel([]);
+  }
+  eachMap(m => {
+    m.getCanvas().style.cursor = sedit.on ? 'crosshair' : '';
+    // Shift-drag is the box select while the editor is on, so box zoom stands down.
+    if (m.boxZoom) { if (sedit.on || editor.mode === 'pick') m.boxZoom.disable(); else m.boxZoom.enable(); }
+  });
+  for (const b of document.querySelectorAll('#statEd .seg button[data-so]'))
+    b.setAttribute('aria-pressed', String((b.dataset.so === 'on') === sedit.on));
+  if (sedit.ui.bar) sedit.ui.bar.hidden = !sedit.on;
+  if (sedit.on && sedit.ui.det) sedit.ui.det.open = true;
+  seditRenderForm();
+  if (!sedit.on) return;
+  await seditLoad();
+  if (!sedit.on) return;
+  const m = maps.post;
+  if (m && !SEDIT_PICK_IDS.some(id => layerLive(m, id)))
+    toast('Turn on Road damage, Copernicus EMS or Bridge damage & repair under Overlays to pick from them');
+}
+function seditSetTool(t) {
+  sedit.tool = t;
+  if (sedit.ui.bar) for (const b of sedit.ui.bar.querySelectorAll('.seg button[data-st]'))
+    b.setAttribute('aria-pressed', String(b.dataset.st === t));
+}
+
+function wireStatusEditor() {
+  const bar = el('div');
+  bar.id = 'statBar';
+  bar.hidden = true;
+  const head = el('div', 'sb-h');
+  head.appendChild(el('b', null, 'Road &amp; bridge status'));
+  const tools = el('div', 'seg');
+  for (const [v, t] of [['click', 'Click'], ['box', 'Box']]) {
+    const b = el('button', null, t);
+    b.dataset.st = v;
+    b.title = v === 'box' ? 'Drag a rectangle to select everything inside it (Shift-drag works with either tool)'
+      : 'Click to select one; Shift- or ' + EDIT_MOD + '-click to add or remove';
+    b.setAttribute('aria-pressed', String(sedit.tool === v));
+    b.addEventListener('click', () => seditSetTool(v));
+    tools.appendChild(b);
+  }
+  const close = el('button', 'mini', '×');
+  close.title = 'Leave the status editor';
+  close.addEventListener('click', () => setStatusEditor(false));
+  head.append(tools, close);
+  bar.appendChild(head);
+  sedit.ui.form = el('div', 'sb-body');
+  bar.appendChild(sedit.ui.form);
+  sedit.ui.bar = bar;
+  const stage = $('#stage');
+  if (stage) stage.appendChild(bar);
+
+  eachMap(m => {
+    m.on('click', ev => seditClick(m, ev));
+    m.on('mousedown', ev => seditDown(m, ev));
+    m.on('mouseup', seditUp);
+  });
+  // A pointer released off the canvas would otherwise leave dragPan disabled.
+  window.addEventListener('mouseup', seditUp);
+  // Esc: drop the selection first, then leave the editor.  Not while typing.
+  window.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape' || !sedit.on) return;
+    const t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) { t.blur(); return; }
+    if (sedit.sel.length) seditClearSel(); else setStatusEditor(false);
+    ev.preventDefault();
+  });
+  seditRenderForm();
+}
+
+// --------------------------------------------------------------- edits
+async function seditApplySel() {
+  const f = sedit.form;
+  if (!sedit.sel.length || !f) return;
+  if (!f.status) { toast('Choose a status first'); return; }
+  await seditLoad();                    // a click can land before the layers have loaded
+  const now = new Date().toISOString();
+  for (const k of sedit.sel) {
+    const it = sedit.index.get(k);
+    const bridge = seditIsBridge(k);
+    sedit.local[k] = { layer: seditLayer(k), uid: seditUid(k), status: seditStatusFor(k, f.status),
+      lane: bridge ? null : (f.lane || 'unknown'), as_of: f.as_of || seditToday(),
+      source_title: (f.source_title || '').trim() || null, source_url: (f.source_url || '').trim() || null,
+      note: (f.note || '').trim() || null, edited_at: now, geometry: it ? it.f.geometry : null };
+  }
+  const n = sedit.sel.length, st = f.status;
+  sedit.sel = [];
+  sedit.form = null;
+  seditSyncHl();
+  seditRefresh();
+  toast(n + ' marked ' + (SEDIT_STATUS.find(s => s.key === st) || {}).label.toLowerCase() + ' — ' +
+    seditEffective().size + ' override' + (seditEffective().size === 1 ? '' : 's'));
+}
+/* Withdraw the override on each key: a local one is dropped, a committed one
+ * is masked with {cleared: true} so a reload does not bring it back. */
+function seditClear(keys) {
+  const eff = seditEffective();
+  const ks = keys.filter(k => eff.has(k));
+  if (!ks.length) { toast('Nothing overridden in the selection'); return; }
+  if (ks.length > 1 && !confirm('Clear the status override on ' + ks.length + ' features?')) return;
+  const now = new Date().toISOString();
+  for (const k of ks) {
+    if (sedit.base.has(k)) sedit.local[k] = { cleared: true, edited_at: now };
+    else delete sedit.local[k];
+  }
+  seditRefresh();
+  toast(ks.length + ' override' + (ks.length === 1 ? '' : 's') + ' cleared');
+}
+
+function seditFC() {
+  const eff = seditEffective();
+  const feats = [...eff.keys()].sort().map(k => {
+    const r = eff.get(k), it = sedit.index.get(k);
+    return { type: 'Feature', id: k, geometry: (it && it.f.geometry) || r.geometry || null,
+      properties: { layer: r.layer, uid: r.uid, status: r.status, lane: r.lane || null, as_of: r.as_of || null,
+        source_title: r.source_title || null, source_url: r.source_url || null, note: r.note || null,
+        edited_at: r.edited_at || null } };
+  });
+  return { type: 'FeatureCollection', name: 'nepal_flood_2026_status_edits', features: feats };
+}
+const seditBlob = () => JSON.stringify(seditFC(), null, 1) + '\n';
+async function seditExport() {
+  await seditLoad();
+  const fc = seditFC();
+  if (!fc.features.length) { toast('Nothing to export yet'); return; }
+  const url = URL.createObjectURL(new Blob([seditBlob()], { type: 'application/geo+json' }));
+  const a = el('a');
+  a.href = url; a.download = 'status_edits.geojson';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast('Exported ' + fc.features.length + ' override' + (fc.features.length === 1 ? '' : 's'));
+}
+async function seditCopy() {
+  await seditLoad();
+  try { await navigator.clipboard.writeText(seditBlob()); toast('GeoJSON copied'); }
+  catch (e) { toast('Copy failed — use Export instead'); }
+}
+function seditImport(file) {
+  const fr = new FileReader();
+  fr.onload = async () => {
+    let j = null;
+    try { j = JSON.parse(String(fr.result)); } catch (e) { toast('Not valid JSON'); return; }
+    const feats = j && Array.isArray(j.features) ? j.features : (j && j.type === 'Feature' ? [j] : null);
+    if (!feats) { toast('Not a GeoJSON FeatureCollection'); return; }
+    let added = 0, updated = 0;
+    for (const f of feats) {
+      const rec = seditRecord(f);
+      if (!rec) continue;
+      const k = rec.layer + ':' + rec.uid;
+      if (seditEffective().has(k)) updated++; else added++;
+      sedit.local[k] = rec;
+    }
+    await seditLoad();
+    seditRefresh();
+    const orphan = feats.map(seditRecord).filter(r => r && !sedit.index.has(r.layer + ':' + r.uid)).length;
+    toast('Imported ' + added + ' new, ' + updated + ' updated' + (orphan ? ' — ' + orphan + ' match no feature' : ''));
+  };
+  fr.readAsText(file);
+}
+function seditClearAll() {
+  const eff = seditEffective();
+  if (!eff.size && !seditLocalCount()) return;
+  if (!confirm('Clear all ' + eff.size + ' status overrides? This cannot be undone.')) return;
+  const now = new Date().toISOString();
+  sedit.local = {};
+  for (const k of sedit.base.keys()) sedit.local[k] = { cleared: true, edited_at: now };
+  seditSetSel([]);
+  seditRefresh();
+}
+function seditZoom(k) {
+  const it = sedit.index.get(k), r = seditEffective().get(k);
+  const g = (it && it.f.geometry) || (r && r.geometry);
+  if (!maps.post || !g) return;
+  maps.post.fitBounds(editBBox(g), { padding: 120, maxZoom: 17, duration: 700 });
+}
+function seditName(k) {
+  const it = sedit.index.get(k), p = it ? it.f.properties : {};
+  return p.name || p.segment_name || p.locality || seditUid(k);
+}
+
+// ------------------------------------------------------------ panel and rail
+/* The on-map panel: what is selected, and the form that applies to all of it. */
+function seditRenderForm() {
+  const box = sedit.ui.form;
+  if (!box) return;
+  box.innerHTML = '';
+  const sels = sedit.sel;
+  if (!sels.length) {
+    box.appendChild(el('p', 'note', 'Click a road segment or bridge to select it; Shift- or ' + EDIT_MOD +
+      '-click adds or removes one. <b>Box</b>, or Shift-drag with either tool, selects everything inside a ' +
+      'rectangle. Esc clears the selection, then leaves the editor.'));
+    return;
+  }
+  const eff = seditEffective();
+  const roads = sels.filter(k => !seditIsBridge(k)), bridges = sels.filter(seditIsBridge);
+  if (sels.length === 1) {
+    const k = sels[0], it = sedit.index.get(k), p = it ? it.f.properties : {};
+    const st = p[seditIsBridge(k) ? 'repair_status' : 'road_status'];
+    box.appendChild(el('div', 'dmg-h', esc(seditName(k))));
+    box.appendChild(el('p', 'meta', esc(SEDIT_LAYER_LABEL[seditLayer(k)] || seditLayer(k)) + ' · <b>' +
+      esc(seditUid(k)) + '</b>' + (p.grade_ems ? ' · ' + esc(p.grade_ems) : '') +
+      (st ? ' · now ' + esc(seditLabel(k, st)) : '') + (eff.has(k) ? ' · overridden' : '')));
+  } else {
+    const by = {};
+    for (const k of sels) by[seditLayer(k)] = (by[seditLayer(k)] || 0) + 1;
+    const n = sels.filter(k => eff.has(k)).length;
+    box.appendChild(el('div', 'dmg-h', sels.length + ' features selected'));
+    box.appendChild(el('p', 'meta', Object.entries(by).map(([l, c]) => '<b>' + c + '</b> ' +
+      esc(SEDIT_LAYER_LABEL[l] || l).toLowerCase()).join(' · ') + (n ? ' · ' + n + ' overridden' : '')));
+  }
+
+  // The form opens on the shared override where every selected feature agrees.
+  if (!sedit.form) {
+    const recs = sels.map(k => eff.get(k) || null);
+    const same = f => recs.every(r => r && r[f] === recs[0][f]) ? recs[0][f] : null;
+    sedit.form = { status: recs[0] && same('status') ? seditFormStatus(recs[0].status) : '',
+      lane: (recs[0] && same('lane')) || 'unknown', as_of: (recs[0] && same('as_of')) || seditToday(),
+      source_title: (recs[0] && same('source_title')) || '', source_url: (recs[0] && same('source_url')) || '',
+      note: (recs[0] && same('note')) || '' };
+  }
+  const f = sedit.form;
+  const radios = (name, opts, cur, onPick) => {
+    const g = el('div', 'sb-radios');
+    for (const [v, t] of opts) {
+      const lab = el('label');
+      const r = el('input'); r.type = 'radio'; r.name = name; r.value = v; r.checked = cur === v;
+      r.addEventListener('change', () => { if (r.checked) onPick(v); });
+      lab.append(r, document.createTextNode(' ' + t));
+      g.appendChild(lab);
+    }
+    return g;
+  };
+  const stLabel = s => !bridges.length ? s.label : !roads.length ? s.blabel
+    : (s.label === s.blabel ? s.label : s.label + ' / ' + s.blabel.toLowerCase());
+  box.appendChild(el('label', 'sb-l', 'Status'));
+  box.appendChild(radios('sedit-st', SEDIT_STATUS.map(s => [s.key, stLabel(s)]), f.status, v => { f.status = v; }));
+  if (roads.length) {
+    box.appendChild(el('label', 'sb-l', 'Lanes' + (bridges.length ? ' (roads only)' : '')));
+    box.appendChild(radios('sedit-ln', SEDIT_LANES, f.lane, v => { f.lane = v; }));
+  }
+  const input = (label, key, type, ph) => {
+    box.appendChild(el('label', 'sb-l', label));
+    const i = el('input'); i.type = type; i.value = f[key] || ''; if (ph) i.placeholder = ph;
+    i.addEventListener('input', () => { f[key] = i.value; });
+    box.appendChild(i);
+  };
+  input('As of', 'as_of', 'date');
+  input('Source title', 'source_title', 'text', 'e.g. NDRRMA SitRep 31, Kathmandu Post');
+  input('Source URL', 'source_url', 'url', 'https://');
+  box.appendChild(el('label', 'sb-l', 'Note'));
+  const ta = el('textarea'); ta.rows = 2; ta.value = f.note || '';
+  ta.placeholder = sels.length === 1 ? 'Optional' : 'Optional — applied to all ' + sels.length;
+  ta.addEventListener('input', () => { f.note = ta.value; });
+  box.appendChild(ta);
+
+  const acts = el('div', 'chips');
+  const apply = el('button', null, sels.length === 1 ? 'Apply' : 'Apply to ' + sels.length);
+  apply.addEventListener('click', seditApplySel);
+  acts.appendChild(apply);
+  const nOv = sels.filter(k => eff.has(k)).length;
+  if (nOv) {
+    const clr = el('button', null, nOv === 1 && sels.length === 1 ? 'Clear override' : 'Clear ' + nOv + ' overrides');
+    clr.title = 'Remove the override so the Copernicus grade or the curated status shows again';
+    clr.addEventListener('click', () => seditClear(sels));
+    acts.appendChild(clr);
+  }
+  const des = el('button', null, 'Deselect');
+  des.addEventListener('click', seditClearSel);
+  acts.appendChild(des);
+  box.appendChild(acts);
+}
+
+/* Counts per status and the scrollable list of overrides in the right rail. */
+function seditRenderList() {
+  const u = sedit.ui;
+  if (!u.list) return;
+  const eff = seditEffective();
+  if (u.n) u.n.textContent = String(eff.size);
+  if (u.pending) {
+    const n = seditLocalCount();
+    u.pending.textContent = n ? n + ' local change' + (n === 1 ? '' : 's') + ' not yet in ' +
+      (CFG.STATUS_EDITS_URL || SEDIT_FILE) + ' — export and commit to publish.' : '';
+  }
+  u.counts.innerHTML = '';
+  for (const s of SEDIT_STATUS) {
+    const c = [...eff.entries()].filter(([, r]) => seditFormStatus(r.status) === s.key).length;
+    const chip = el('span', 'chip lg', s.label + (s.blabel !== s.label ? ' / ' + s.blabel.toLowerCase() : '') + ' ' + c);
+    chip.style.background = s.key === 'restored' ? REPAIR.repaired : seditColor('ems:x', s.key);
+    u.counts.appendChild(chip);
+  }
+  u.list.innerHTML = '';
+  u.rows = new Map();
+  if (!eff.size) { u.list.appendChild(el('p', 'note', 'No overrides yet.')); return; }
+  const keys = [...eff.keys()].sort((a, b) =>
+    String(eff.get(b).edited_at || '').localeCompare(String(eff.get(a).edited_at || '')) || a.localeCompare(b));
+  for (const k of keys) {
+    const r = eff.get(k);
+    const row = el('div', 'brow');
+    const chip = el('span', 'chip');
+    chip.style.background = seditColor(k, r.status);
+    const t = el('div', 't');
+    t.innerHTML = '<span>' + esc(seditName(k)) + '</span><span class="sub">' + esc(seditLabel(k, r.status)) +
+      (r.lane && r.lane !== 'unknown' ? ', ' + esc(LANE_LABEL[r.lane] || r.lane) : '') + ' · ' +
+      esc(SEDIT_LAYER_LABEL[seditLayer(k)] || seditLayer(k)) + (r.as_of ? ' · ' + esc(fmtDate(r.as_of)) : '') +
+      (sedit.local[k] ? ' · local' : '') + (sedit.index.size && !sedit.index.has(k) ? ' · no matching feature' : '') +
+      '</span>';
+    const acts = el('div', 'acts');
+    const z = el('button', 'mini', 'zoom');
+    z.title = 'Zoom to this feature';
+    z.addEventListener('click', ev => { ev.stopPropagation(); seditZoom(k); });
+    const d = el('button', 'mini', '×');
+    d.title = 'Clear this override';
+    d.addEventListener('click', ev => { ev.stopPropagation(); seditClear([k]); });
+    acts.append(z, d);
+    row.append(chip, t, acts);
+    row.addEventListener('click', ev => {
+      if (!sedit.on) return void seditZoom(k);
+      if (ev.shiftKey || ev.ctrlKey || ev.metaKey) { seditToggle(k); return; }
+      seditZoom(k);
+      seditSetSel([k]);
+    });
+    u.rows.set(k, row);
+    u.list.appendChild(row);
+  }
+  seditMarkRows();
+}
+function seditMarkRows() {
+  const rows = sedit.ui.rows;
+  if (!rows) return;
+  for (const [k, row] of rows) row.classList.toggle('on', sedit.sel.includes(k));
+}
+
+function buildStatusEditor() {
+  const block = el('div', 'block');
+  const det = el('details'); det.id = 'statEd';
+  sedit.ui.det = det;
+  const sum = el('summary', null, 'Road &amp; bridge status <span class="n">0</span>');
+  det.appendChild(sum);
+  sedit.ui.n = sum.querySelector('.n');
+  det.appendChild(el('p', 'note', 'Mark Copernicus EMS road segments, flood-extent roads, corridors and bridges ' +
+    'restored / under repair / damaged / destroyed where the grading or the curated status is out of date. ' +
+    'Stays on your machine until you export it.'));
+
+  const modeF = el('div', 'field');
+  modeF.appendChild(el('label', null, 'Editor'));
+  const seg = el('div', 'seg');
+  for (const [v, t] of [['off', 'Off'], ['on', 'Select on map']]) {
+    const b = el('button', null, t);
+    b.dataset.so = v;
+    b.setAttribute('aria-pressed', String((v === 'on') === sedit.on));
+    b.addEventListener('click', () => setStatusEditor(v === 'on'));
+    seg.appendChild(b);
+  }
+  modeF.appendChild(seg);
+  det.appendChild(modeF);
+  det.appendChild(el('p', 'note', 'While it is on, the panel over the map takes the selection and the feature ' +
+    'popups stand down; Off (or Esc twice) restores them. The Damage editor and this one take turns.'));
+
+  sedit.ui.counts = el('div', 'dmg-counts');
+  det.appendChild(sedit.ui.counts);
+  sedit.ui.list = el('div', 'lazy dmg-list');
+  det.appendChild(sedit.ui.list);
+  sedit.ui.pending = el('p', 'note');
+  det.appendChild(sedit.ui.pending);
+
+  const acts = el('div', 'chips');
+  acts.style.marginTop = '7px';
+  const exp = el('button', null, 'Export'); exp.addEventListener('click', seditExport);
+  const cp = el('button', null, 'Copy'); cp.addEventListener('click', seditCopy);
+  const imp = el('button', null, 'Import');
+  const file = el('input'); file.type = 'file'; file.accept = '.geojson,.json,application/geo+json,application/json';
+  file.style.display = 'none';
+  file.addEventListener('change', () => { if (file.files && file.files[0]) seditImport(file.files[0]); file.value = ''; });
+  imp.addEventListener('click', () => file.click());
+  const clr = el('button', null, 'Clear all'); clr.addEventListener('click', seditClearAll);
+  acts.append(exp, cp, imp, clr, file);
+  det.appendChild(acts);
+  det.appendChild(el('p', 'note',
+    'Export, then save to <code>' + esc(CFG.STATUS_EDITS_URL || SEDIT_FILE) + '</code> and commit it to publish. ' +
+    'The builders (<code>build_ems_roads.py</code>, <code>build_road_status.py</code>, ' +
+    '<code>build_bridge_status.py</code>) apply it last, so the daily refresh keeps it.'));
+
+  block.appendChild(det);
+  seditRenderList();
   return block;
 }
 
@@ -5778,8 +6540,10 @@ async function main() {
   setSwipe(state.swipe, false);
   wireDivider(); wireKeyboard(); wireMediaViewer();
   wireDamageEditor();
+  wireStatusEditor();
   if (ALIGN_TOOL) wireImageAlign();
   initDamageEdits();
+  initStatusEdits();
 
   // Default view: Trisuli Bazar at street scale (owner direction, 7 Sep 2026); CFG.HOME stays the pan limit.
   if (!state.center) maps.post.jumpTo({ center: CFG.DEFAULT_VIEW.center, zoom: CFG.DEFAULT_VIEW.zoom });
