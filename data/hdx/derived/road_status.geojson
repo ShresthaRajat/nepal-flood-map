@@ -99604,7 +99604,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "under_repair",
+    "road_status": "restored",
     "damage_grade": "Possibly damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -99628,7 +99628,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#304"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#304",
+    "status_base": "under_repair",
+    "lane_base": "track",
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -99871,7 +99879,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Destroyed",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -99895,7 +99903,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#309"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#309",
+    "status_base": "damaged",
+    "lane_base": "track",
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -101534,7 +101550,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Destroyed",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -101558,7 +101574,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#331"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#331",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -103521,7 +103545,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Possibly damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -103545,7 +103569,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#356"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#356",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -103864,7 +103896,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "destroyed",
     "damage_grade": "Possibly damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -103888,7 +103920,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#361"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#361",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "destroyed",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -105996,7 +106036,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "destroyed",
     "damage_grade": "Destroyed",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -106020,7 +106060,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#385"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#385",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "destroyed",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -118820,7 +118868,7 @@
    "properties": {
     "name": "Pasang Lhamu Highway",
     "highway": null,
-    "road_status": "under_repair",
+    "road_status": "restored",
     "damage_grade": "Possibly damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -118844,7 +118892,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#565"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#565",
+    "status_base": "under_repair",
+    "lane_base": "track",
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -118958,7 +119014,7 @@
    "properties": {
     "name": null,
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Destroyed",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -118982,7 +119038,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#567"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#567",
+    "status_base": "damaged",
+    "lane_base": "one-lane",
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -119005,7 +119069,7 @@
    "properties": {
     "name": null,
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Possibly damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -119029,7 +119093,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#568"
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#568",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -146261,7 +146333,7 @@
    "properties": {
     "name": null,
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Possibly damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -146285,7 +146357,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#216"
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#216",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -149690,7 +149770,7 @@
    "properties": {
     "name": null,
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Destroyed",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -149714,7 +149794,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#239"
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#239",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -166394,7 +166482,7 @@
    "properties": {
     "name": null,
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Destroyed",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -166418,7 +166506,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#429"
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#429",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",
@@ -172799,7 +172895,7 @@
    "properties": {
     "name": "Suspension Bridge",
     "highway": null,
-    "road_status": "damaged",
+    "road_status": "restored",
     "damage_grade": "Damaged",
     "damage_source": "ems",
     "in_flood_extent": null,
@@ -172823,7 +172919,15 @@
     "surface": null,
     "bridge": null,
     "osm_id": null,
-    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#512"
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#512",
+    "status_base": "damaged",
+    "lane_base": null,
+    "status_override": "restored",
+    "override_as_of": "2026-10-08",
+    "override_source": null,
+    "override_source_url": null,
+    "override_note": null,
+    "override_lane": null
    },
    "geometry": {
     "type": "MultiLineString",

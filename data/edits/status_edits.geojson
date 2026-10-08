@@ -1,5 +1,580 @@
 {
  "type": "FeatureCollection",
  "name": "nepal_flood_2026_status_edits",
- "features": []
+ "features": [
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#304",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.14428267,
+       27.91848173
+      ],
+      [
+       85.1441509,
+       27.9183727
+      ],
+      [
+       85.14408398,
+       27.91826601
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#304",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:14:28.228Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#309",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.14691845,
+       27.91983184
+      ],
+      [
+       85.1468546,
+       27.9198136
+      ],
+      [
+       85.1459673,
+       27.9197022
+      ],
+      [
+       85.1459278,
+       27.9197227
+      ],
+      [
+       85.1449548,
+       27.9190659
+      ],
+      [
+       85.1446579,
+       27.9187487
+      ],
+      [
+       85.1444052,
+       27.9185771
+      ],
+      [
+       85.1443462,
+       27.9185343
+      ],
+      [
+       85.14428267,
+       27.91848173
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#309",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:14:21.155Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#331",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.1531296,
+       27.93033566
+      ],
+      [
+       85.1535474,
+       27.9305511
+      ],
+      [
+       85.1538452,
+       27.9306037
+      ],
+      [
+       85.1542525,
+       27.9306633
+      ],
+      [
+       85.15451133,
+       27.93074047
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#331",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:15:13.785Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#356",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.15772644,
+       27.93629215
+      ],
+      [
+       85.15766925,
+       27.93684145
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#356",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:15:24.128Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#361",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.15766935,
+       27.93687329
+      ],
+      [
+       85.1577785,
+       27.9372865
+      ],
+      [
+       85.15785773,
+       27.93753929
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#361",
+    "status": "destroyed",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:15:52.057Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#385",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.15785773,
+       27.93753929
+      ],
+      [
+       85.1578882,
+       27.9376365
+      ],
+      [
+       85.1581229,
+       27.9381045
+      ],
+      [
+       85.1583335,
+       27.9384114
+      ],
+      [
+       85.1585856,
+       27.9386779
+      ],
+      [
+       85.1588565,
+       27.938967
+      ],
+      [
+       85.1588751,
+       27.9389884
+      ],
+      [
+       85.159578,
+       27.9397976
+      ],
+      [
+       85.1597675,
+       27.9400325
+      ],
+      [
+       85.1599535,
+       27.9402845
+      ],
+      [
+       85.1600876,
+       27.9405677
+      ],
+      [
+       85.1602016,
+       27.9408722
+      ],
+      [
+       85.1603343,
+       27.9411818
+      ],
+      [
+       85.1607776,
+       27.9420212
+      ],
+      [
+       85.1609358,
+       27.9422783
+      ],
+      [
+       85.1610394,
+       27.9426012
+      ],
+      [
+       85.1612281,
+       27.9432776
+      ],
+      [
+       85.1618388,
+       27.944425
+      ],
+      [
+       85.1623063,
+       27.9455154
+      ],
+      [
+       85.16245481,
+       27.94570605
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#385",
+    "status": "destroyed",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:15:41.146Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#565",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.14780385,
+       27.9201312
+      ],
+      [
+       85.1470576,
+       27.9198716
+      ],
+      [
+       85.14691845,
+       27.91983184
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#565",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:14:34.987Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#567",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.1474954,
+       27.9221708
+      ],
+      [
+       85.14730113,
+       27.92216744
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#567",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:15:01.688Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI03_GRA_MONIT01_v1#568",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.14730113,
+       27.92216744
+      ],
+      [
+       85.1472639,
+       27.9221668
+      ],
+      [
+       85.1471441,
+       27.9221933
+      ],
+      [
+       85.1470243,
+       27.9223036
+      ],
+      [
+       85.1468183,
+       27.9224986
+      ],
+      [
+       85.1467087,
+       27.9225392
+      ],
+      [
+       85.14665097,
+       27.92252769
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI03_GRA_MONIT01_v1#568",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:14:46.566Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI05_GRA_MONIT01_v2#216",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.00261407,
+       27.80293411
+      ],
+      [
+       85.00269931,
+       27.80280625
+      ],
+      [
+       85.00342574,
+       27.80183949
+      ]
+     ],
+     [
+      [
+       85.00342946,
+       27.80183454
+      ],
+      [
+       85.00343178,
+       27.80183146
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#216",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:16:45.539Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI05_GRA_MONIT01_v2#239",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.01613634,
+       27.81011692
+      ],
+      [
+       85.01613759,
+       27.81010953
+      ]
+     ],
+     [
+      [
+       85.01614078,
+       27.81009063
+      ],
+      [
+       85.0161977,
+       27.8097536
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#239",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:16:54.014Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI05_GRA_MONIT01_v2#429",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.0712522,
+       27.85324279
+      ],
+      [
+       85.0723384,
+       27.8549105
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#429",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:18:16.805Z"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ems:EMSR927_AOI05_GRA_MONIT01_v2#512",
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       85.08214261,
+       27.85546213
+      ],
+      [
+       85.08209217,
+       27.85560827
+      ],
+      [
+       85.08201461,
+       27.85578612
+      ],
+      [
+       85.08157881,
+       27.85653379
+      ],
+      [
+       85.08121954,
+       27.8571985
+      ],
+      [
+       85.0810388,
+       27.85750279
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "layer": "ems",
+    "uid": "EMSR927_AOI05_GRA_MONIT01_v2#512",
+    "status": "restored",
+    "lane": "unknown",
+    "as_of": "2026-10-08",
+    "source_title": null,
+    "source_url": null,
+    "note": null,
+    "edited_at": "2026-10-08T14:16:23.685Z"
+   }
+  }
+ ]
 }
