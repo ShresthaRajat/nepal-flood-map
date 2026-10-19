@@ -1,7 +1,7 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-10-18T14:27:43+00:00",
+ "finished": "2026-10-19T17:30:43+00:00",
  "git": {},
  "hdx": {
   "changed": true,
@@ -9,18 +9,18 @@
    "hot_flood_npl": {
     "basis": "fingerprint differs",
     "changed": true,
-    "checked_at": "2026-10-18T14:17:04+00:00",
+    "checked_at": "2026-10-19T17:20:24+00:00",
     "dataset": "hot_flood_npl",
-    "fingerprint": "19a2c780334ecb36",
-    "metadata_modified": "2026-10-17T23:03:24.232416",
-    "newest_resource": "2026-10-17T23:01:38.161257",
-    "previous": "f039322667303248",
+    "fingerprint": "3b1e573025207f79",
+    "metadata_modified": "2026-10-18T23:02:27.567925",
+    "newest_resource": "2026-10-18T23:00:33.742449",
+    "previous": "19a2c780334ecb36",
     "repo_snapshot": null
    },
    "hot_flood_npl_corridor": {
     "basis": "fingerprint matches",
     "changed": false,
-    "checked_at": "2026-10-18T14:17:04+00:00",
+    "checked_at": "2026-10-19T17:20:24+00:00",
     "dataset": "hot_flood_npl_corridor",
     "fingerprint": "6407480a47bdc6f5",
     "metadata_modified": "2026-10-08T19:45:49.113463",
@@ -44,11 +44,11 @@
   "sitrep",
   "imagery"
  ],
- "started": "2026-10-18T14:17:04+00:00",
+ "started": "2026-10-19T17:20:24+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
-   "duration_s": 5.8,
+   "duration_s": 4.2,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -62,7 +62,7 @@
   },
   "ems": {
    "detail": {},
-   "duration_s": 0.4,
+   "duration_s": 0.3,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -115,7 +115,7 @@
     "reason": "upstream changed",
     "refreshed": true
    },
-   "duration_s": 112.1,
+   "duration_s": 107.9,
    "exit_code": 0,
    "note": "upstream changed",
    "status": "ok"
@@ -130,18 +130,16 @@
   "imagery": {
    "detail": {
     "initialised": false,
-    "layers_added": [
-     "post_s2_20261018"
-    ]
+    "layers_added": []
    },
-   "duration_s": 44.5,
+   "duration_s": 5.9,
    "exit_code": 0,
-   "note": "+1 layers",
+   "note": "+0 layers",
    "status": "ok"
   },
   "road_status": {
    "detail": {},
-   "duration_s": 6.2,
+   "duration_s": 4.7,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -156,17 +154,17 @@
      "eng": null,
      "nep": null
     },
-    "reports_age_days": 29,
+    "reports_age_days": 30,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 458.0,
+   "duration_s": 483.8,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 10.8,
+   "duration_s": 9.5,
    "exit_code": 0,
    "note": "",
    "status": "ok"
