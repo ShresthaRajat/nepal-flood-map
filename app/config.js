@@ -34,17 +34,17 @@ const CATS = [
 ];
 
 const COUNTS = {
-  flood: { 'bridges|osm':163,'buildings|osm':20143,'buildings|overture':19913,'destroyed_features|osm':3833,
-    'education_facilities|osm':60,'education_facilities|overture':13,'financial_services|osm':29,'health_facilities|osm':5,
-    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':405,
+  flood: { 'bridges|osm':165,'buildings|osm':20143,'buildings|overture':19913,'destroyed_features|osm':3831,
+    'education_facilities|osm':60,'education_facilities|overture':12,'financial_services|osm':29,'health_facilities|osm':5,
+    'health_facilities|overture':3,'helipads|osm':14,'open_spaces|osm':65,'points_of_interest|osm':410,
     'points_of_interest|overture':170,'police_stations|osm':9,'populated_places|osm':54,'residential_areas|osm':534,
-    'roads|osm':2302,'waterways|osm':400 },
-  corridor: { 'bridges|osm':220,'buildings|osm':52115,'buildings|overture':52646,'destroyed_features|osm':3858,
+    'roads|osm':2304,'waterways|osm':402 },
+  corridor: { 'bridges|osm':226,'buildings|osm':52116,'buildings|overture':52646,'destroyed_features|osm':3856,
     'education_facilities|osm':146,'education_facilities|overture':20,'financial_services|osm':96,
-    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':98,
-    'open_spaces|overture':18,'points_of_interest|osm':576,'points_of_interest|overture':248,'police_stations|osm':11,
+    'health_facilities|osm':18,'health_facilities|overture':12,'helipads|osm':21,'open_spaces|osm':99,
+    'open_spaces|overture':18,'points_of_interest|osm':584,'points_of_interest|overture':250,'police_stations|osm':11,
     'police_stations|overture':2,'populated_places|osm':149,'populated_places|overture':43,'residential_areas|osm':1473,
-    'roads|osm':5379,'roads|overture':3451,'waterways|osm':570,'waterways|overture':465 },
+    'roads|osm':5389,'roads|overture':3451,'waterways|osm':573,'waterways|overture':465 },
 };
 
 // Status palette used by the "colour by status" switch and the legend.

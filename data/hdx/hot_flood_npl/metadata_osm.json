@@ -13,85 +13,85 @@
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/buildings/hot_flood_npl_buildings_osm_item.json",
       "type": "application/json",
-      "title": "Buildings"
+      "title": "Buildings of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/destroyed_features/hot_flood_npl_destroyed_features_osm_item.json",
       "type": "application/json",
-      "title": "Destroyed and Damaged Features"
+      "title": "Destroyed and Damaged Features of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/roads/hot_flood_npl_roads_osm_item.json",
       "type": "application/json",
-      "title": "Roads"
+      "title": "Roads of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/waterways/hot_flood_npl_waterways_osm_item.json",
       "type": "application/json",
-      "title": "Waterways"
+      "title": "Waterways of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/bridges/hot_flood_npl_bridges_osm_item.json",
       "type": "application/json",
-      "title": "Bridges"
+      "title": "Bridges of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/education_facilities/hot_flood_npl_education_facilities_osm_item.json",
       "type": "application/json",
-      "title": "Education Facilities"
+      "title": "Education Facilities of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/health_facilities/hot_flood_npl_health_facilities_osm_item.json",
       "type": "application/json",
-      "title": "Health Facilities"
+      "title": "Health Facilities of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/populated_places/hot_flood_npl_populated_places_osm_item.json",
       "type": "application/json",
-      "title": "Settlement Names"
+      "title": "Settlement Names of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/residential_areas/hot_flood_npl_residential_areas_osm_item.json",
       "type": "application/json",
-      "title": "Residential Areas"
+      "title": "Residential Areas of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/financial_services/hot_flood_npl_financial_services_osm_item.json",
       "type": "application/json",
-      "title": "Financial Services"
+      "title": "Financial Services of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/points_of_interest/hot_flood_npl_points_of_interest_osm_item.json",
       "type": "application/json",
-      "title": "Points of Interest"
+      "title": "Points of Interest of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/open_spaces/hot_flood_npl_open_spaces_osm_item.json",
       "type": "application/json",
-      "title": "Open Spaces"
+      "title": "Open Spaces of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/helipads/hot_flood_npl_helipads_osm_item.json",
       "type": "application/json",
-      "title": "Helipads"
+      "title": "Helipads of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/police_stations/hot_flood_npl_police_stations_osm_item.json",
       "type": "application/json",
-      "title": "Police Stations"
+      "title": "Police Stations of Nepal"
     },
     {
       "rel": "self",
@@ -100,14 +100,28 @@
     },
     {
       "rel": "root",
-      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/combined/hot_flood_npl_osm_metadata.json",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/catalog.json",
       "type": "application/json"
     },
     {
       "rel": "via",
       "href": "https://data.humdata.org/dataset/hot_flood_npl",
       "title": "HDX dataset"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/overview/hot_flood_npl_overview.html",
+      "type": "text/html",
+      "title": "Dataset page"
     }
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json"
   ],
   "item_assets": {
     "gpkg": {
@@ -127,6 +141,13 @@
     "shp": {
       "title": "Shapefile",
       "type": "application/zip",
+      "roles": [
+        "data"
+      ]
+    },
+    "geoparquet": {
+      "title": "GeoParquet",
+      "type": "application/vnd.apache.parquet",
       "roles": [
         "data"
       ]
@@ -154,8 +175,8 @@
     "temporal": {
       "interval": [
         [
-          "2026-10-04T03:58:19Z",
-          "2026-10-04T03:58:19Z"
+          "2026-10-20T11:20:18Z",
+          "2026-10-20T11:20:18Z"
         ]
       ]
     }
@@ -185,7 +206,7 @@
   ],
   "providers": [
     {
-      "name": "OpenStreetMap (Postpass 2026-10-04T03:58:19Z)",
+      "name": "OpenStreetMap (Postpass 2026-10-20T11:20:18Z)",
       "roles": [
         "producer",
         "licensor"
@@ -212,5 +233,17 @@
     "oex:source": [
       "osm"
     ]
+  },
+  "assets": {
+    "pmtiles": {
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_FLOOD/combined/hot_flood_npl.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "Vector Tiles, All Layers",
+      "file:size": 2672472,
+      "roles": [
+        "visual",
+        "overview"
+      ]
+    }
   }
 }

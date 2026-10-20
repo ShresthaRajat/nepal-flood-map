@@ -13,19 +13,19 @@
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/education_facilities/hot_flood_npl_corridor_education_facilities_overture_item.json",
       "type": "application/json",
-      "title": "Education Facilities"
+      "title": "Education Facilities of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/health_facilities/hot_flood_npl_corridor_health_facilities_overture_item.json",
       "type": "application/json",
-      "title": "Health Facilities"
+      "title": "Health Facilities of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/points_of_interest/hot_flood_npl_corridor_points_of_interest_overture_item.json",
       "type": "application/json",
-      "title": "Points of Interest"
+      "title": "Points of Interest of Nepal"
     },
     {
       "rel": "self",
@@ -34,14 +34,28 @@
     },
     {
       "rel": "root",
-      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/combined/hot_flood_npl_corridor_overture_metadata.json",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/catalog.json",
       "type": "application/json"
     },
     {
       "rel": "via",
       "href": "https://data.humdata.org/dataset/hot_flood_npl_corridor",
       "title": "HDX dataset"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/overview/hot_flood_npl_corridor_overview.html",
+      "type": "text/html",
+      "title": "Dataset page"
     }
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json"
   ],
   "item_assets": {
     "geojson": {
@@ -71,6 +85,13 @@
       "roles": [
         "data"
       ]
+    },
+    "geoparquet": {
+      "title": "GeoParquet",
+      "type": "application/vnd.apache.parquet",
+      "roles": [
+        "data"
+      ]
     }
   },
   "title": "Nepal Flood 2026 River Corridor, Bhote Koshi and Trishuli",
@@ -88,8 +109,8 @@
     "temporal": {
       "interval": [
         [
-          "2026-08-19T00:00:00Z",
-          "2026-08-19T00:00:00Z"
+          "2026-09-23T00:00:00Z",
+          "2026-09-23T00:00:00Z"
         ]
       ]
     }
@@ -105,7 +126,7 @@
   ],
   "providers": [
     {
-      "name": "OvertureMap 2026-08-19.0",
+      "name": "OvertureMap 2026-09-23.1",
       "roles": [
         "producer",
         "licensor"
@@ -121,5 +142,17 @@
     "oex:source": [
       "overture"
     ]
+  },
+  "assets": {
+    "pmtiles": {
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/combined/hot_flood_npl_corridor.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "Vector Tiles, All Layers",
+      "file:size": 5628331,
+      "roles": [
+        "visual",
+        "overview"
+      ]
+    }
   }
 }

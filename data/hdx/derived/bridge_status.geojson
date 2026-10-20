@@ -1168,7 +1168,7 @@
    "type": "Feature",
    "properties": {
     "name": "Trishuli River Bridge, Keurini, Fosretar",
-    "bridge_type": "motorable",
+    "bridge_type": "unknown",
     "repair_status": "destroyed",
     "status_hdx": "Washed out",
     "status_detail": null,
@@ -1180,7 +1180,7 @@
     "adm3": "Galchhi",
     "length_m": null,
     "feature_kind": "report",
-    "matched_osm_id": "way/1493017039",
+    "matched_osm_id": null,
     "uid": "report:Trishuli River Bridge, Keurini, Fosretar"
    },
    "geometry": {
@@ -2052,10 +2052,6 @@
      [
       85.0238072,
       27.8351338
-     ],
-     [
-      85.0233807,
-      27.8352666
      ],
      [
       85.020991,

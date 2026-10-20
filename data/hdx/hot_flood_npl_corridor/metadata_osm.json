@@ -13,85 +13,85 @@
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/buildings/hot_flood_npl_corridor_buildings_osm_item.json",
       "type": "application/json",
-      "title": "Buildings"
+      "title": "Buildings of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/destroyed_features/hot_flood_npl_corridor_destroyed_features_osm_item.json",
       "type": "application/json",
-      "title": "Destroyed and Damaged Features"
+      "title": "Destroyed and Damaged Features of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/roads/hot_flood_npl_corridor_roads_osm_item.json",
       "type": "application/json",
-      "title": "Roads"
+      "title": "Roads of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/waterways/hot_flood_npl_corridor_waterways_osm_item.json",
       "type": "application/json",
-      "title": "Waterways"
+      "title": "Waterways of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/bridges/hot_flood_npl_corridor_bridges_osm_item.json",
       "type": "application/json",
-      "title": "Bridges"
+      "title": "Bridges of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/education_facilities/hot_flood_npl_corridor_education_facilities_osm_item.json",
       "type": "application/json",
-      "title": "Education Facilities"
+      "title": "Education Facilities of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/health_facilities/hot_flood_npl_corridor_health_facilities_osm_item.json",
       "type": "application/json",
-      "title": "Health Facilities"
+      "title": "Health Facilities of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/populated_places/hot_flood_npl_corridor_populated_places_osm_item.json",
       "type": "application/json",
-      "title": "Settlement Names"
+      "title": "Settlement Names of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/residential_areas/hot_flood_npl_corridor_residential_areas_osm_item.json",
       "type": "application/json",
-      "title": "Residential Areas"
+      "title": "Residential Areas of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/financial_services/hot_flood_npl_corridor_financial_services_osm_item.json",
       "type": "application/json",
-      "title": "Financial Services"
+      "title": "Financial Services of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/points_of_interest/hot_flood_npl_corridor_points_of_interest_osm_item.json",
       "type": "application/json",
-      "title": "Points of Interest"
+      "title": "Points of Interest of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/open_spaces/hot_flood_npl_corridor_open_spaces_osm_item.json",
       "type": "application/json",
-      "title": "Open Spaces"
+      "title": "Open Spaces of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/helipads/hot_flood_npl_corridor_helipads_osm_item.json",
       "type": "application/json",
-      "title": "Helipads"
+      "title": "Helipads of Nepal"
     },
     {
       "rel": "item",
       "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/police_stations/hot_flood_npl_corridor_police_stations_osm_item.json",
       "type": "application/json",
-      "title": "Police Stations"
+      "title": "Police Stations of Nepal"
     },
     {
       "rel": "self",
@@ -100,14 +100,28 @@
     },
     {
       "rel": "root",
-      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/combined/hot_flood_npl_corridor_osm_metadata.json",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/catalog.json",
       "type": "application/json"
     },
     {
       "rel": "via",
       "href": "https://data.humdata.org/dataset/hot_flood_npl_corridor",
       "title": "HDX dataset"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/overview/hot_flood_npl_corridor_overview.html",
+      "type": "text/html",
+      "title": "Dataset page"
     }
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json"
   ],
   "item_assets": {
     "gpkg": {
@@ -127,6 +141,13 @@
     "shp": {
       "title": "Shapefile",
       "type": "application/zip",
+      "roles": [
+        "data"
+      ]
+    },
+    "geoparquet": {
+      "title": "GeoParquet",
+      "type": "application/vnd.apache.parquet",
       "roles": [
         "data"
       ]
@@ -154,8 +175,8 @@
     "temporal": {
       "interval": [
         [
-          "2026-10-04T02:58:19Z",
-          "2026-10-04T02:58:19Z"
+          "2026-10-20T11:24:26Z",
+          "2026-10-20T11:24:26Z"
         ]
       ]
     }
@@ -185,7 +206,7 @@
   ],
   "providers": [
     {
-      "name": "OpenStreetMap (Postpass 2026-10-04T02:58:19Z)",
+      "name": "OpenStreetMap (Postpass 2026-10-20T11:24:26Z)",
       "roles": [
         "producer",
         "licensor"
@@ -212,5 +233,17 @@
     "oex:source": [
       "osm"
     ]
+  },
+  "assets": {
+    "pmtiles": {
+      "href": "https://production-raw-data-api.s3.amazonaws.com/ISO3/NPL_CORRIDOR/combined/hot_flood_npl_corridor.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "Vector Tiles, All Layers",
+      "file:size": 5627586,
+      "roles": [
+        "visual",
+        "overview"
+      ]
+    }
   }
 }
