@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02",
+ "generated": "2026-11-05",
  "grid_note": "Re-tiled from the trisuli-flood-map world-pixel grid (equirectangular, lon=84.52+1.08*wx/36169, lat=28.45-0.75*wy/28011) to Web Mercator XYZ with GDAL; registration preserved.",
  "layers": [
   {
@@ -1089,6 +1089,34 @@
    "source_ids": [
     "S2B_45RUL_20261102_0_L2A",
     "S2B_45RUM_20261102_0_L2A"
+   ]
+  },
+  {
+   "id": "post_s2_20261105",
+   "label": "5 Nov 2026 · Sentinel-2 10 m",
+   "side": "post",
+   "date": "2026-11-05",
+   "sensor": "Sentinel-2",
+   "provider": "ESA Copernicus / AWS open data",
+   "gsd_m": 10,
+   "bounds": [
+    84.375,
+    27.683528,
+    85.78125,
+    28.613459
+   ],
+   "minzoom": 8,
+   "maxzoom": 14,
+   "tiles": "tiles/post_s2_20261105/{z}/{x}/{y}.webp",
+   "attribution": "© ESA Copernicus Sentinel data 2026",
+   "coverage": "corridor",
+   "size_mb": 35.7,
+   "added_by": "imagery_watch",
+   "source_ids": [
+    "S2B_45RTL_20261105_1_L2A",
+    "S2B_45RTM_20261105_0_L2A",
+    "S2B_45RUL_20261105_1_L2A",
+    "S2B_45RUM_20261105_0_L2A"
    ]
   }
  ],
