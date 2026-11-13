@@ -1,7 +1,7 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-11-12T18:53:25+00:00",
+ "finished": "2026-11-13T18:32:38+00:00",
  "git": {},
  "hdx": {
   "changed": true,
@@ -9,18 +9,18 @@
    "hot_flood_npl": {
     "basis": "fingerprint differs",
     "changed": true,
-    "checked_at": "2026-11-12T18:42:05+00:00",
+    "checked_at": "2026-11-13T18:22:47+00:00",
     "dataset": "hot_flood_npl",
-    "fingerprint": "1c0861bd46dab36b",
-    "metadata_modified": "2026-11-12T00:03:54.681394",
-    "newest_resource": "2026-11-12T00:01:36.698292",
-    "previous": "b2fab0b76f26da0d",
+    "fingerprint": "019e258f0974b8ac",
+    "metadata_modified": "2026-11-13T00:03:40.006382",
+    "newest_resource": "2026-11-13T00:01:52.207442",
+    "previous": "1c0861bd46dab36b",
     "repo_snapshot": null
    },
    "hot_flood_npl_corridor": {
     "basis": "fingerprint matches",
     "changed": false,
-    "checked_at": "2026-11-12T18:42:05+00:00",
+    "checked_at": "2026-11-13T18:22:47+00:00",
     "dataset": "hot_flood_npl_corridor",
     "fingerprint": "c79d3678aa967dc4",
     "metadata_modified": "2026-10-22T09:54:49.612267",
@@ -44,11 +44,11 @@
   "sitrep",
   "imagery"
  ],
- "started": "2026-11-12T18:42:05+00:00",
+ "started": "2026-11-13T18:22:47+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
-   "duration_s": 4.2,
+   "duration_s": 4.3,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -115,7 +115,7 @@
     "reason": "upstream changed",
     "refreshed": true
    },
-   "duration_s": 100.4,
+   "duration_s": 95.6,
    "exit_code": 0,
    "note": "upstream changed",
    "status": "ok"
@@ -130,13 +130,11 @@
   "imagery": {
    "detail": {
     "initialised": false,
-    "layers_added": [
-     "post_s2_20261112"
-    ]
+    "layers_added": []
    },
-   "duration_s": 95.4,
+   "duration_s": 6.9,
    "exit_code": 0,
-   "note": "+1 layers",
+   "note": "+0 layers",
    "status": "ok"
   },
   "road_status": {
@@ -156,17 +154,17 @@
      "eng": null,
      "nep": null
     },
-    "reports_age_days": 54,
+    "reports_age_days": 55,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 462.7,
+   "duration_s": 467.5,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 9.2,
+   "duration_s": 9.5,
    "exit_code": 0,
    "note": "",
    "status": "ok"
