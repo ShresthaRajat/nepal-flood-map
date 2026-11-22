@@ -1,7 +1,7 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-11-21T18:03:49+00:00",
+ "finished": "2026-11-22T18:24:31+00:00",
  "git": {},
  "hdx": {
   "changed": true,
@@ -9,18 +9,18 @@
    "hot_flood_npl": {
     "basis": "fingerprint differs",
     "changed": true,
-    "checked_at": "2026-11-21T17:53:31+00:00",
+    "checked_at": "2026-11-22T18:13:30+00:00",
     "dataset": "hot_flood_npl",
-    "fingerprint": "e0313414d4162618",
-    "metadata_modified": "2026-11-21T00:06:50.674466",
-    "newest_resource": "2026-11-21T00:00:38.173620",
-    "previous": "3d1438d51202e0e7",
+    "fingerprint": "356331b71146ac98",
+    "metadata_modified": "2026-11-22T00:03:39.523835",
+    "newest_resource": "2026-11-22T00:00:38.017267",
+    "previous": "e0313414d4162618",
     "repo_snapshot": null
    },
    "hot_flood_npl_corridor": {
     "basis": "fingerprint matches",
     "changed": false,
-    "checked_at": "2026-11-21T17:53:31+00:00",
+    "checked_at": "2026-11-22T18:13:30+00:00",
     "dataset": "hot_flood_npl_corridor",
     "fingerprint": "c79d3678aa967dc4",
     "metadata_modified": "2026-10-22T09:54:49.612267",
@@ -44,11 +44,11 @@
   "sitrep",
   "imagery"
  ],
- "started": "2026-11-21T17:53:31+00:00",
+ "started": "2026-11-22T18:13:30+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
-   "duration_s": 3.4,
+   "duration_s": 4.5,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -105,7 +105,7 @@
     ],
     "removed": []
    },
-   "duration_s": 0.1,
+   "duration_s": 0.2,
    "exit_code": 0,
    "note": "matches app/app.js",
    "status": "ok"
@@ -115,7 +115,7 @@
     "reason": "upstream changed",
     "refreshed": true
    },
-   "duration_s": 90.1,
+   "duration_s": 102.6,
    "exit_code": 0,
    "note": "upstream changed",
    "status": "ok"
@@ -130,16 +130,18 @@
   "imagery": {
    "detail": {
     "initialised": false,
-    "layers_added": []
+    "layers_added": [
+     "post_s2_20261122"
+    ]
    },
-   "duration_s": 10.4,
+   "duration_s": 45.7,
    "exit_code": 0,
-   "note": "+0 layers",
+   "note": "+1 layers",
    "status": "ok"
   },
   "road_status": {
    "detail": {},
-   "duration_s": 3.8,
+   "duration_s": 4.9,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -154,17 +156,17 @@
      "eng": null,
      "nep": null
     },
-    "reports_age_days": 63,
+    "reports_age_days": 64,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 499.6,
+   "duration_s": 488.6,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 8.4,
+   "duration_s": 10.3,
    "exit_code": 0,
    "note": "",
    "status": "ok"
