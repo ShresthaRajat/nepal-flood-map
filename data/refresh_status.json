@@ -1,7 +1,7 @@
 {
  "dry_run": false,
  "failures": [],
- "finished": "2026-11-25T20:32:44+00:00",
+ "finished": "2026-11-26T20:07:16+00:00",
  "git": {},
  "hdx": {
   "changed": false,
@@ -9,7 +9,7 @@
    "hot_flood_npl": {
     "basis": "fingerprint matches",
     "changed": false,
-    "checked_at": "2026-11-25T20:22:44+00:00",
+    "checked_at": "2026-11-26T19:59:11+00:00",
     "dataset": "hot_flood_npl",
     "fingerprint": "4d7e13f44f56ff3a",
     "metadata_modified": "2026-11-24T00:04:43.055546",
@@ -20,7 +20,7 @@
    "hot_flood_npl_corridor": {
     "basis": "fingerprint matches",
     "changed": false,
-    "checked_at": "2026-11-25T20:22:44+00:00",
+    "checked_at": "2026-11-26T19:59:11+00:00",
     "dataset": "hot_flood_npl_corridor",
     "fingerprint": "c79d3678aa967dc4",
     "metadata_modified": "2026-10-22T09:54:49.612267",
@@ -44,7 +44,7 @@
   "sitrep",
   "imagery"
  ],
- "started": "2026-11-25T20:22:44+00:00",
+ "started": "2026-11-26T19:59:11+00:00",
  "steps": {
   "admin_ward": {
    "detail": {},
@@ -130,18 +130,16 @@
   "imagery": {
    "detail": {
     "initialised": false,
-    "layers_added": [
-     "post_s2_20261125"
-    ]
+    "layers_added": []
    },
-   "duration_s": 101.3,
+   "duration_s": 3.2,
    "exit_code": 0,
-   "note": "+1 layers",
+   "note": "+0 layers",
    "status": "ok"
   },
   "road_status": {
    "detail": {},
-   "duration_s": 4.7,
+   "duration_s": 4.6,
    "exit_code": 0,
    "note": "",
    "status": "ok"
@@ -156,17 +154,17 @@
      "eng": null,
      "nep": null
     },
-    "reports_age_days": 67,
+    "reports_age_days": 68,
     "reports_as_of": "2026-09-19"
    },
-   "duration_s": 477.6,
+   "duration_s": 461.8,
    "exit_code": 0,
    "note": "",
    "status": "ok"
   },
   "waterways": {
    "detail": {},
-   "duration_s": 9.6,
+   "duration_s": 8.6,
    "exit_code": 0,
    "note": "",
    "status": "ok"
